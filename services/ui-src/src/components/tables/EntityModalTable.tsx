@@ -67,6 +67,7 @@ export const EntityModalTable = ({
     disabled,
     dynamicRowsTemplate,
     formData,
+    showEditColumn: hasDynamicModalForm,
     tableId,
   };
 
@@ -86,7 +87,14 @@ export const EntityModalTable = ({
   };
   return (
     <Box sx={sx.box}>
-      <Heading as="h2">{verbiage?.title}</Heading>
+      {verbiage?.sectionTitle && (
+        <Heading as="h3" className="section-title">
+          {verbiage.sectionTitle}
+        </Heading>
+      )}
+      <Heading as="h4" className="table-title">
+        {verbiage?.title}
+      </Heading>
       {verbiage?.subtitle && (
         <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
       )}
@@ -126,6 +134,7 @@ export const EntityModalTable = ({
               hasDynamicModalForm={hasDynamicModalForm}
               hasStaticRows={bodyRows.length > 0}
               openModal={openModal}
+              showEditColumn={hasDynamicModalForm}
               tableId={tableId}
               updatedFieldsCallback={updatedFieldsCallback}
             />
@@ -195,7 +204,7 @@ export const sx = {
     },
   },
   box: {
-    h2: {
+    ".table-title": {
       fontSize: "xl",
       marginBottom: "spacer2",
       marginTop: "spacer4",

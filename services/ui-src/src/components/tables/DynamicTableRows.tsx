@@ -23,6 +23,7 @@ export const DynamicTableRows = ({
   hasDynamicModalForm,
   hasStaticRows,
   openModal = () => {},
+  showEditColumn = true,
   tableId,
   updatedFieldsCallback = () => [],
 }: Props) => {
@@ -132,39 +133,41 @@ export const DynamicTableRows = ({
                 })}
               </Td>
             ))}
-            <Td>
-              <Flex>
-                {!disabled && hasDynamicModalForm && (
-                  <Button
-                    aria-label={editLabel}
-                    onClick={() => openModal(dynamicId)}
-                    sx={sx.editButton}
-                    type="button"
-                    variant={"unstyled"}
-                  >
-                    Edit
-                  </Button>
-                )}
-                {!disabled && (
-                  <Button
-                    onClick={() =>
-                      removeDynamicRow(
-                        dynamicRowsTemplate.id,
-                        dynamicId,
-                        entityType,
-                        formData?.id,
-                        updatedFieldsCallback(dynamicId, localFieldData)
-                      )
-                    }
-                    sx={sx.removeButton}
-                    type="button"
-                    variant={"unstyled"}
-                  >
-                    <Image src={cancelIcon} alt={deleteLabel} />
-                  </Button>
-                )}
-              </Flex>
-            </Td>
+            {showEditColumn && (
+              <Td>
+                <Flex>
+                  {!disabled && hasDynamicModalForm && (
+                    <Button
+                      aria-label={editLabel}
+                      onClick={() => openModal(dynamicId)}
+                      sx={sx.editButton}
+                      type="button"
+                      variant={"unstyled"}
+                    >
+                      Edit
+                    </Button>
+                  )}
+                  {!disabled && (
+                    <Button
+                      onClick={() =>
+                        removeDynamicRow(
+                          dynamicRowsTemplate.id,
+                          dynamicId,
+                          entityType,
+                          formData?.id,
+                          updatedFieldsCallback(dynamicId, localFieldData)
+                        )
+                      }
+                      sx={sx.removeButton}
+                      type="button"
+                      variant={"unstyled"}
+                    >
+                      <Image src={cancelIcon} alt={deleteLabel} />
+                    </Button>
+                  )}
+                </Flex>
+              </Td>
+            )}
           </Tr>
         );
       })}
@@ -183,6 +186,7 @@ interface Props {
   hasStaticRows: boolean;
   openModal?: Function;
   label?: string;
+  showEditColumn?: boolean;
   tableId: string;
   updatedFieldsCallback?: Function;
 }

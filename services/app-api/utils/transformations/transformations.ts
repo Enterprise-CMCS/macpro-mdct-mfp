@@ -16,6 +16,7 @@ import {
   ReportRoute,
   SomeRequired,
   TargetPopulation,
+  TransformationRule,
   WorkPlanFieldDataForTransforms,
 } from "../types";
 
@@ -53,7 +54,7 @@ export const removeConditionalRoutes = <T extends ReportRoute>(
 export function* iterateAllForms(
   routes: ReportRoute[]
 ): Generator<FormJson, void, unknown> {
-  for (let route of routes) {
+  for (const route of routes) {
     if (route.form) {
       yield route.form;
     }
@@ -66,16 +67,18 @@ export function* iterateAllForms(
     if (route.children) {
       yield* iterateAllForms(route.children);
     }
+    // deprecated: route.initiatives removed as of Report Year 2026, Period 2
     if (route.initiatives) {
       for (const initiative of route.initiatives) {
-        // TODO: Update for v2
         if (initiative.entitySteps)
           yield* iterateAllForms(initiative.entitySteps);
       }
     }
+    // deprecated: route.entitySteps removed as of Report Year 2026, Period 2
     if (route.entitySteps) {
       yield* iterateAllForms(route.entitySteps);
     }
+    // deprecated: route.objectiveCards removed as of Report Year 2026, Period 2
     if (route.objectiveCards) {
       for (const objectiveCard of route.objectiveCards) {
         if (objectiveCard.modalForm) yield objectiveCard.modalForm;
@@ -124,20 +127,20 @@ export const transformFields = (
       return field;
     }
     switch (field.transformation.rule) {
-      case "nextTwelveQuarters":
+      case TransformationRule.NEXT_TWELVE_QUARTERS:
         return nextTwelveQuarters(field as FormField, reportYear, reportPeriod);
-      case "targetPopulations":
+      case TransformationRule.TARGET_POPULATIONS:
         // This transformation is only used within the SAR, based on data from its source WP.
         return targetPopulations(
           field as FormField,
           reportPeriod,
           workPlanFieldData?.targetPopulations
         );
-      case "firstQuarterOfThePeriod":
+      case TransformationRule.FIRST_QUARTER_OF_THE_PERIOD:
         return firstQuarterOfThePeriod(field, reportPeriod);
-      case "secondQuarterOfThePeriod":
+      case TransformationRule.SECOND_QUARTER_OF_THE_PERIOD:
         return secondQuarterOfThePeriod(field, reportPeriod);
-      case "fundingSources":
+      case TransformationRule.FUNDING_SOURCES:
         return fundingSources(
           field,
           reportPeriod,
@@ -145,7 +148,7 @@ export const transformFields = (
           workPlanFieldData,
           initiativeId
         );
-      case "quantitativeQuarters":
+      case TransformationRule.QUANTITATIVE_QUARTERS:
         return quantitativeQuarters(
           field,
           reportPeriod,
@@ -487,22 +490,24 @@ export const quantitativeQuarters = (
   return fieldsToAppend;
 };
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export const runSARTransformations = (
   route: DynamicModalOverlayReportPageShape,
   workPlanFieldData?: WorkPlanFieldDataForTransforms
 ): ReportRoute => {
+  // deprecated: route.template removed as of Report Year 2026, Period 2
+  if (!route.template) return route;
+
   if (!workPlanFieldData?.initiative)
     throw new Error(
       "Not implemented yet - Workplan must have initiatives that the SAR can build from"
     );
 
   const template = route.template;
-  route.initiatives = [];
-
-  // TODO: Update for v2
-  if (!template?.entitySteps) return route;
-
   delete route.template;
+  route.initiatives = [];
 
   for (let workPlanInitiative of workPlanFieldData.initiative) {
     let templateEntitySteps = structuredClone(template.entitySteps);
@@ -544,6 +549,9 @@ export const runSARTransformations = (
   return route;
 };
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 const generateSARFormsForInitiatives = (
   reportRoutes: (
     | ReportRoute
@@ -570,6 +578,8 @@ const generateSARFormsForInitiatives = (
  * out into their containing initiative. The ID of each field will
  * match up to IDs generated in the form template transformation,
  * so that the frontend hydration code will be able to match up the data.
+ *
+ * @deprecated No longer used as of Report Year 2026, Period 2
  */
 export const extractWorkPlanData = (
   sarFieldData: AnyObject,
@@ -579,7 +589,10 @@ export const extractWorkPlanData = (
   const quarters = reportPeriod === 1 ? [1, 2] : [3, 4];
 
   for (const initiative of sarFieldData.initiative) {
-    // TODO: Update for v2
+    /**
+     * Deprecated: initiative.fundingSources and initiative.evaluationPlan
+     * removed as of Report Year 2026, Period 2
+     */
     if (!initiative.fundingSources && !initiative.evaluationPlan) return;
 
     for (const fundingSource of initiative.fundingSources) {

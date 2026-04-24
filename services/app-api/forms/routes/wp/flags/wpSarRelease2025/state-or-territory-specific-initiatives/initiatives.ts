@@ -307,8 +307,8 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
                   validation: {
                     type: ValidationType.DATE,
                     parentOptionId:
-                      "defineInitiative_projectedStartDate-lwkRrUT61kbVMe1OeZWOql",
-                    parentFieldName: "defineInitiative_projectedStartDate",
+                      "defineInitiative_startDate-lwkRrUT61kbVMe1OeZWOql",
+                    parentFieldName: "defineInitiative_startDate",
                     nested: true,
                   },
                   props: {

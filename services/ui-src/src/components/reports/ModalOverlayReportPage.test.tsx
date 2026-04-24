@@ -2,6 +2,8 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ModalOverlayReportPage } from "components";
+// types
+import { ReportType } from "types";
 // utils
 import {
   RouterWrappedComponent,
@@ -12,7 +14,6 @@ import {
 } from "utils/testing/setupJest";
 import { useBreakpoint, useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
-import { ReportType } from "types";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;

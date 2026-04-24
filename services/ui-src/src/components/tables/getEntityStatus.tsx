@@ -9,6 +9,7 @@ import {
   OverlayModalTypes,
   isFieldElement,
   DynamicModalOverlayReportPageShape,
+  ReportType,
 } from "types";
 import { AnyObject } from "yup/lib/types";
 
@@ -108,7 +109,7 @@ export const getInitiativeStatus = (
 
   let reportChild;
   switch (report.reportType) {
-    case "WP":
+    case ReportType.WP:
       // Direct pull of the initiative formTemplate json chunk
       reportRoute = report.formTemplate
         .routes[3] as ModalOverlayReportPageShape;
@@ -123,17 +124,21 @@ export const getInitiativeStatus = (
       }
       break;
 
-    case "SAR":
+    // TODO: Update for v2
+    case ReportType.SAR:
+      // deprecated: route.initiatives removed as of Report Year 2026, Period 2
+
       // Direct pull of the initiative formTemplate json chunk
       reportRoute = report.formTemplate
         .routes[2] as DynamicModalOverlayReportPageShape;
       //get the intiative report child by the entity's initiative_name
       reportChild = (reportRoute as DynamicModalOverlayReportPageShape)[
         "initiatives"
-      ].find((child) => child.name === entity.initiative_name);
+      ]?.find((child) => child.name === entity.initiative_name);
       break;
   }
 
+  // deprecated: route.entitySteps removed as of Report Year 2026, Period 2
   if (reportChild?.entitySteps) {
     const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =
       reportChild.entitySteps;
@@ -166,7 +171,11 @@ export const getInitiativeStatus = (
   return EntityStatuses.INCOMPLETE;
 };
 
-//NOTE: this function works on the assumption that the fieldData saved is validated
+/**
+ * NOTE: this function works on the assumption that the fieldData saved is validated
+ *
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export const getInitiativeDashboardStatus = (
   formEntity: EntityDetailsOverlayShape | OverlayModalPageShape,
   entity: EntityShape

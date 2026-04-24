@@ -11,6 +11,7 @@ import {
   PageTypes,
   ReportJson,
   ReportRoute,
+  TransformationRule,
   WorkPlanFieldDataForTransforms,
 } from "../types";
 import {
@@ -79,7 +80,7 @@ describe("transformFormTemplate", () => {
                 id: "field1",
                 type: "sectionHeader",
                 transformation: {
-                  rule: "firstQuarterOfThePeriod",
+                  rule: TransformationRule.FIRST_QUARTER_OF_THE_PERIOD,
                 },
               },
             ],
@@ -111,7 +112,7 @@ describe("transformFormTemplate", () => {
                 id: "field1",
                 type: "sectionHeader",
                 transformation: {
-                  rule: "secondQuarterOfThePeriod",
+                  rule: TransformationRule.SECOND_QUARTER_OF_THE_PERIOD,
                 },
               },
             ],
@@ -143,7 +144,7 @@ describe("transformFormTemplate", () => {
                 id: "field1",
                 type: "text",
                 transformation: {
-                  rule: "nextTwelveQuarters",
+                  rule: TransformationRule.NEXT_TWELVE_QUARTERS,
                 },
               },
             ],
@@ -184,7 +185,7 @@ describe("transformFormTemplate", () => {
                 id: "field1",
                 type: "text",
                 transformation: {
-                  rule: "targetPopulations",
+                  rule: TransformationRule.TARGET_POPULATIONS,
                 },
               },
             ],
@@ -214,7 +215,7 @@ describe("transformFormTemplate", () => {
                 id: "field1",
                 type: "text",
                 transformation: {
-                  rule: "targetPopulations",
+                  rule: TransformationRule.TARGET_POPULATIONS,
                 },
               },
             ],
@@ -282,7 +283,7 @@ describe("transformFormTemplate", () => {
                 id: "field1",
                 type: "text",
                 transformation: {
-                  rule: "targetPopulations",
+                  rule: TransformationRule.TARGET_POPULATIONS,
                 },
               },
             ],
@@ -354,7 +355,7 @@ describe("transformFormTemplate", () => {
                       id: "field1",
                       type: "text",
                       transformation: {
-                        rule: "fundingSources",
+                        rule: TransformationRule.FUNDING_SOURCES,
                       },
                     },
                   ],
@@ -436,7 +437,7 @@ describe("transformFormTemplate", () => {
                         id: "field1",
                         type: "text",
                         transformation: {
-                          rule: "quantitativeQuarters",
+                          rule: TransformationRule.QUANTITATIVE_QUARTERS,
                         },
                       },
                     ],
@@ -538,6 +539,7 @@ describe("transformFormTemplate", () => {
       initiatives: [],
       name: "",
       path: "",
+      template: {},
     };
 
     expect(() => runSARTransformations(route, fieldData)).toThrow(

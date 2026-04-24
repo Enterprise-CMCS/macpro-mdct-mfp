@@ -90,6 +90,7 @@ export interface ReportFormFieldProps {
   label?: string;
   mask?: NumberMask | null;
   maxLength?: number;
+  sectionTitle?: string;
   styleAsOptional?: boolean;
   styleTitleAsOptional?: boolean;
   subType?: ReportFormFieldType;
@@ -244,7 +245,6 @@ export interface SARStateOrTerritorySpecificInitiativesRoute extends BaseRoute {
 export interface SARStateOrTerritorySpecificInitiativesV2Route extends BaseRoute {
   entityInfo: string[];
   entityType: StepEntityType;
-  initiatives: AnyObject[];
   overlayForm: ReportFormWithTables;
   pageType: string;
 }
