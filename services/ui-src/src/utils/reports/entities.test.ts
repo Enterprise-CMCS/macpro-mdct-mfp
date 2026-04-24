@@ -1,3 +1,4 @@
+import { EntityType } from "types";
 import { entityWasUpdated } from "./entities";
 
 describe("utils/reports/entities", () => {
@@ -5,7 +6,7 @@ describe("utils/reports/entities", () => {
     test("Should not find changes if objects are recursively equal", () => {
       const originalEntity = {
         id: "mock id",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         stuff: [
           {
             thing: "foo",
@@ -14,7 +15,7 @@ describe("utils/reports/entities", () => {
       };
       const updatedEntity = {
         id: "mock id",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         stuff: [
           {
             thing: "foo",
@@ -30,7 +31,7 @@ describe("utils/reports/entities", () => {
     test("Should find changes if objects are not equal", () => {
       const originalEntity = {
         id: "mock id",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         stuff: [
           {
             thing: "foo",
@@ -39,7 +40,7 @@ describe("utils/reports/entities", () => {
       };
       const updatedEntity = {
         id: "mock id",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         stuff: [
           {
             thing: "bar",
@@ -61,10 +62,10 @@ describe("utils/reports/entities", () => {
     test.skip("Should not be confused by property ordering", () => {
       const originalEntity = {
         id: "mock id",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
       };
       const updatedEntity = {
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         id: "mock id",
       };
 

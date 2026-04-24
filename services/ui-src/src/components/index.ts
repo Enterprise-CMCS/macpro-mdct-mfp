@@ -27,7 +27,6 @@ export { EntityStepCard } from "./cards/EntityStepCard";
 export { ObjectiveProgressEntity } from "./cards/ObjectiveProgressEntity";
 export { FundingSourcesEntity } from "./cards/FundingSourcesEntity";
 export { EvaluationPlanEntity } from "./cards/EvaluationPlanEntity";
-
 // drawers
 export { Drawer } from "./drawers/Drawer";
 export { ReportDrawer } from "./drawers/ReportDrawer";
@@ -84,16 +83,19 @@ export { LoginIDM } from "./logins/LoginIDM";
 export { Menu } from "./menus/Menu";
 export { MenuOption } from "./menus/MenuOption";
 export { Sidebar } from "./menus/Sidebar";
+
 // modals
 export { Modal } from "./modals/Modal";
 export { AddEditCalculationModal } from "./modals/AddEditCalculationModal";
 export { AddEditEntityModal } from "./modals/AddEditEntityModal";
+export { AddEditKeyMetricsModal } from "./modals/AddEditKeyMetricsModal";
 export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";
 export { CreateSarModal } from "./modals/CreateSarModal";
 export { CreateWorkPlanModal } from "./modals/CreateWorkPlanModal";
 export { CreateFinancialReportingModal } from "./modals/CreateFinancialReportingModal";
 export { DeleteEntityModal } from "./modals/DeleteEntityModal";
+
 // pages
 export { AdminPage } from "./pages/Admin/AdminPage";
 export { HomePage } from "./pages/Home/HomePage";

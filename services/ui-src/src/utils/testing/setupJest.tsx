@@ -28,7 +28,7 @@ import {
   MfpReportState,
   ReportShape,
   MfpEntityState,
-  entityTypes,
+  EntityType,
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
@@ -253,7 +253,7 @@ export const mockSARReportStore: MfpReportState = {
 export const mockEntityStore: MfpEntityState = {
   selectedEntity: {
     id: "mock-id",
-    type: entityTypes[0],
+    type: EntityType.INITIATIVE,
     initiative_name: "mock-initiative-name",
   },
   // ACTIONS
@@ -264,7 +264,7 @@ export const mockEntityStore: MfpEntityState = {
 export const mockEvaluationPlanEntityStore: MfpEntityState = {
   selectedEntity: {
     id: "mock-id",
-    type: "evaluationPlan",
+    type: EntityType.EVALUATION_PLAN,
     initiative_name: "mock-initiative-name",
     evaluationPlan: mockEvaluationPlan,
   },
@@ -276,7 +276,7 @@ export const mockEvaluationPlanEntityStore: MfpEntityState = {
 export const mockObjectiveProgressEntityStore: MfpEntityState = {
   selectedEntity: {
     id: "mock-id",
-    type: "objectiveProgress",
+    type: EntityType.OBJECTIVE_PROGRESS,
     initiative_name: "mock-initiative-name",
     objectiveProgress: mockObjectiveProgress,
   },

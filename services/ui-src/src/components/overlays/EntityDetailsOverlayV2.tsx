@@ -3,7 +3,12 @@ import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // components
 import { Form, ReportPageIntro } from "components";
 // types
-import { EntityShape, FormJson, ModalOverlayReportPageShape } from "types";
+import {
+  DynamicModalOverlayReportPageShape,
+  EntityShape,
+  FormJson,
+  ModalOverlayReportPageShape,
+} from "types";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
@@ -18,7 +23,6 @@ export const EntityDetailsOverlayV2 = ({
   route,
   selectedEntity,
   submitting = false,
-  setEntering,
   setSelectedEntity,
   validateOnRender,
 }: Props) => {
@@ -27,13 +31,6 @@ export const EntityDetailsOverlayV2 = ({
       ? "Save & return"
       : "Return";
   };
-  useEffect(() => {
-    setEntering(false);
-  }, []);
-
-  useEffect(() => {
-    setEntering(false);
-  }, []);
 
   useEffect(() => {
     setSelectedEntity(selectedEntity);
@@ -99,7 +96,7 @@ interface Props {
   editable?: boolean;
   form?: FormJson;
   onSubmit: Function;
-  route: ModalOverlayReportPageShape;
+  route: ModalOverlayReportPageShape | DynamicModalOverlayReportPageShape;
   selectedEntity?: EntityShape;
   setEntering: Function;
   setSelectedEntity: Function;

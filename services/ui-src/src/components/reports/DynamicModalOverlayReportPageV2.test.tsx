@@ -70,7 +70,10 @@ describe("<DynamicModalOverlayReportPage />", () => {
   });
 
   test("opens and closes overlay", async () => {
-    mockedUseStore.mockReturnValue(mockUseSARStore);
+    mockedUseStore.mockReturnValue({
+      ...mockUseSARStore,
+      setSelectedEntity: jest.fn(),
+    });
     render(dynamicModalOverlayReportPageComponent());
     const enterDetailsButton = screen.getByRole("button", {
       name: enterEntityDetailsButtonText,
@@ -81,7 +84,7 @@ describe("<DynamicModalOverlayReportPage />", () => {
     });
 
     const backButton = screen.getByRole("button", {
-      name: "Return to all initiatives",
+      name: mockModalOverlayReportPageJson.verbiage.backButtonText,
     });
     await act(async () => {
       await userEvent.click(backButton);

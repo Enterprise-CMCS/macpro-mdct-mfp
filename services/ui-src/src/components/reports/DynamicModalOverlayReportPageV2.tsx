@@ -1,34 +1,48 @@
 import { useState } from "react";
 // components
-import { Box, Button, Heading, Image } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import {
+  EntityDetailsOverlayV2,
+  EntityProvider,
   EntityRow,
   ReportPageFooter,
   ReportPageIntro,
   Table,
 } from "components";
 // types
-import { EntityShape, DynamicModalOverlayReportPageShape } from "types";
+import {
+  AnyObject,
+  DynamicModalOverlayReportPageShape,
+  EntityShape,
+  ReportShape,
+} from "types";
 // utils
 import { parseCustomHtml, useBreakpoint, useStore } from "utils";
-// assets
-import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 
 export const DynamicModalOverlayReportPageV2 = ({
   route,
   setSidebarHidden,
 }: Props) => {
   // Route Information
-  const { entityInfo, entityType, verbiage } = route;
+  const { entityInfo, entityType, overlayForm, verbiage } = route;
+
   // Context Information
   const { isTablet, isMobile } = useBreakpoint();
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
   const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
     undefined
   );
+  const [entering, setEntering] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   // State management
-  const { report } = useStore();
+  const { userIsAdmin, userIsReadOnly } = useStore().user ?? {};
+  const {
+    editable,
+    report = {} as ReportShape,
+    setSelectedEntity,
+  } = useStore();
+  const isDisabled = Boolean(userIsAdmin || userIsReadOnly);
 
   // Display Variables
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
@@ -55,6 +69,13 @@ export const DynamicModalOverlayReportPageV2 = ({
     setSidebarHidden(false);
   };
 
+  const onSubmit = async (_enteredData: AnyObject) => {
+    // TODO: Add updateReport settings
+    setSubmitting(false);
+    closeEntityDetailsOverlay();
+    setSidebarHidden(false);
+  };
+
   const tablePage = () => {
     return (
       <Box sx={sx.content}>
@@ -70,6 +91,7 @@ export const DynamicModalOverlayReportPageV2 = ({
         <Table content={tableHeaders()} sx={sx.table}>
           {reportFieldDataEntities.map((entity: EntityShape) => (
             <EntityRow
+              entering={entering}
               entity={entity}
               entityInfo={entityInfo}
               entityType={entityType}
@@ -87,23 +109,22 @@ export const DynamicModalOverlayReportPageV2 = ({
 
   const detailsOverlay = () => {
     return (
-      <Box>
-        <Button
-          leftIcon={<Image sx={sx.backIcon} src={arrowLeftBlue} alt="" />}
-          sx={sx.backButton}
-          variant="none"
-          onClick={() => closeEntityDetailsOverlay()}
-          aria-label={"Return to all initiatives"}
-        >
-          Return to all initiatives
-        </Button>
-        <ReportPageIntro
-          initiativeName={currentEntity?.initiative_name}
-          text={{
-            section: route.name,
-          }}
+      <EntityProvider>
+        <EntityDetailsOverlayV2
+          backButtonText={verbiage.backButtonText}
+          closeEntityDetailsOverlay={closeEntityDetailsOverlay}
+          disabled={isDisabled}
+          editable={editable}
+          form={overlayForm}
+          onSubmit={onSubmit}
+          route={route}
+          selectedEntity={currentEntity}
+          setSelectedEntity={setSelectedEntity}
+          submitting={submitting}
+          setEntering={setEntering}
+          validateOnRender={false}
         />
-      </Box>
+      </EntityProvider>
     );
   };
 
@@ -182,15 +203,9 @@ const sx = {
       },
     },
     tr: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      /**
-       * removes bottom border only for
-       * State or Territory-Specific Initiatives
-       */
       "&:last-of-type": {
         td: {
-          border: "none",
+          border: "0",
         },
       },
     },

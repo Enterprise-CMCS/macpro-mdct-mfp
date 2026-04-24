@@ -1,24 +1,25 @@
-import { ReactElement } from "react";
 // components
 import { Box, Heading } from "@chakra-ui/react";
-import { ExportedReportFieldRow, Table } from "components";
+import { Table } from "components";
 // types
 import {
   FormField,
   StandardReportPageShape,
   DrawerReportPageShape,
   FormLayoutElement,
-  isFieldElement,
   ReportType,
-  FieldChoice,
   ReportStatus,
   HeadingLevel,
   PageTypes,
 } from "types";
 // utils
-import { getReportVerbiage, useStore } from "utils";
-// assets
-import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
+import {
+  getReportVerbiage,
+  useStore,
+  sx,
+  renderFieldTableBody,
+  renderCalculationTables,
+} from "utils";
 
 export const ExportedReportFieldTable = ({
   section,
@@ -50,6 +51,13 @@ export const ExportedReportFieldTable = ({
   const hideHintText = reportType === ReportType.WP;
   const entityType = section.entityType;
 
+  const formId = section.form?.id;
+  const fieldData = report?.fieldData || {};
+  const percentageField = `fmap_${formId}Percentage`;
+  const formPercentage = fieldData?.[percentageField] || 100;
+
+  const calculationTables = section.form?.tables || [];
+
   // SAR "General Information" section layout is a unique case with multiple section headings within the same page
   if (reportType === ReportType.SAR && section.name === "General Information") {
     return renderGeneralInformation(
@@ -65,29 +73,39 @@ export const ExportedReportFieldTable = ({
   const currentLevel = parseInt(headingLevel.charAt(1), 10);
   const nextLevel = currentLevel + 1;
   const nextHeadingLevel = `h${nextLevel}`;
+  const isTableWithNoFormFields =
+    calculationTables.length > 0 && nonTableFields.length === 0;
 
   return (
     <>
-      {nonTableFields?.[0]?.props?.title && (
-        <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
-          {nonTableFields[0].props.title}
-        </Heading>
+      {calculationTables.length > 0 &&
+        renderCalculationTables(section, fieldData, formPercentage)}
+
+      {!isTableWithNoFormFields && (
+        <>
+          {nonTableFields?.[0]?.props?.title && (
+            <Heading as={nextHeadingLevel as HeadingLevel} sx={sx.subHeading}>
+              {nonTableFields[0].props.title}
+            </Heading>
+          )}
+          <Table
+            sx={sx.table}
+            className={formHasOnlyDynamicFields ? "two-column" : ""}
+            content={{
+              headRow: headRowItems,
+            }}
+            data-testid="exportTable"
+          >
+            {nonTableFields.length > 0 &&
+              renderFieldTableBody(
+                nonTableFields,
+                pageType,
+                !hideHintText,
+                entityType
+              )}
+          </Table>
+        </>
       )}
-      <Table
-        sx={sx.table}
-        className={formHasOnlyDynamicFields ? "two-column" : ""}
-        content={{
-          headRow: headRowItems,
-        }}
-        data-testid="exportTable"
-      >
-        {renderFieldTableBody(
-          nonTableFields,
-          pageType,
-          !hideHintText,
-          entityType
-        )}
-      </Table>
     </>
   );
 };
@@ -169,70 +187,8 @@ export const renderGeneralInformation = (
     );
   });
 };
-
-export const renderFieldTableBody = (
-  formFields: (FormField | FormLayoutElement)[],
-  pageType: string,
-  showHintText: boolean,
-  entityType?: string
-) => {
-  const tableRows: ReactElement[] = [];
-  // recursively renders field rows
-  const renderFieldRow = (
-    formField: FormField | FormLayoutElement,
-    parentFieldCheckedChoiceIds?: string[]
-  ) => {
-    tableRows.push(
-      <ExportedReportFieldRow
-        key={formField.id}
-        formField={formField}
-        pageType={pageType}
-        entityType={entityType}
-        parentFieldCheckedChoiceIds={parentFieldCheckedChoiceIds}
-        showHintText={showHintText}
-      />
-    );
-    // for drawer pages, render nested child field if any entity has a checked parent choice
-    if (pageType === PageTypes.DRAWER) {
-      return;
-    }
-
-    // Handle rendering nested children
-    if (isFieldElement(formField) && formField.props?.choices) {
-      formField.props.choices.forEach((choice: FieldChoice) => {
-        if (choice.children) {
-          choice.children.forEach((c) => renderFieldRow(c));
-        }
-      });
-    }
-  };
-
-  // map through form fields and call renderer
-  formFields.map((field: FormField | FormLayoutElement) => {
-    if (isFieldElement(field)) {
-      renderFieldRow(field);
-    }
-  });
-  return tableRows;
-};
-
 export interface Props {
   section: StandardReportPageShape | DrawerReportPageShape;
   showHintText?: boolean;
   headingLevel?: HeadingLevel;
 }
-
-const sx = {
-  table: sxSharedExportStyles.table,
-  heading: {
-    fontSize: "xl",
-    fontWeight: "bold",
-    color: "black",
-  },
-  subHeading: {
-    fontSize: "lg",
-    "& + table": {
-      marginTop: "spacer2",
-    },
-  },
-};

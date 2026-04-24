@@ -95,7 +95,7 @@ export const calculationTableDynamicTotalsOnSave = ({
 
   const updatedField = {
     id: dynamicFieldId,
-    name: dynamicFieldId,
+    name: currentField?.name || dynamicFieldId,
     ...currentField,
     [calculationTableSuffixes.total]: fieldValue,
     ...updatedFieldData<CalculatedSharesType>(fieldsToMap, field),
@@ -253,7 +253,7 @@ export const calculationTableDynamicTotalsOnChange = ({
   const currentField = templateFieldData[currentFieldIndex] || {};
   const updatedField = {
     id: dynamicFieldId,
-    name: dynamicFieldId,
+    name: currentField?.name || dynamicFieldId,
     ...currentField,
     // Update just the calculations on change, other fields will update on blur
     totalFederalShare: field.percentageShare,
@@ -388,7 +388,7 @@ export const summationTableDynamicTotalsOnSave = ({
 
   const updatedField = {
     id: dynamicFieldId,
-    name: dynamicFieldId,
+    name: currentField?.name || dynamicFieldId,
     ...currentField,
   };
 
@@ -451,7 +451,7 @@ export const summationTableDynamicTotalsOnChange = ({
   );
   fieldsToSum.push({
     id: dynamicFieldId,
-    name: dynamicFieldId,
+    name: currentField?.name || dynamicFieldId,
     ...currentField,
     [fieldType]: fieldValue,
   });

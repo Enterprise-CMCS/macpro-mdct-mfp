@@ -17,6 +17,7 @@ import {
   AnyObject,
   DynamicFieldShape,
   DynamicRowsTemplate,
+  EntityType,
   FormField,
   FormTableCell,
   FormTableRow,
@@ -28,23 +29,24 @@ import {
 import uuid from "react-uuid";
 import {
   autosaveFieldData,
+  combinedSum,
   createTempDynamicId,
   debounce,
   FieldInfo,
   formFieldFactory,
   getAutosaveFields,
   getFieldParts,
+  getValueToCombine,
   hydrateFormFields,
+  isCombinedCalculationField,
   isTempDynamicField,
+  labelTextWithOptional,
   maskResponseData,
   setPercentageAndValue,
   updateRenderFields,
   UpdatedFieldDataOnChange,
   updatedFieldDataOnFieldChange,
   useStore,
-  isCombinedCalculationField,
-  combinedSum,
-  getValueToCombine,
 } from "utils";
 
 export const DynamicTableContext = createContext<DynamicTableMethods>({
@@ -142,13 +144,17 @@ export const DynamicTableProvider = ({ children }: any) => {
     cell,
     columnId,
     disabled,
+    entityType,
     formData,
     id,
     percentage: formPercentage,
     rowId,
     rowIndex,
+    styleAsOptional = false,
   }: DisplayCellOptions) => {
-    if (typeof cell === "string") return cell;
+    if (typeof cell === "string") {
+      return styleAsOptional ? labelTextWithOptional(cell) : cell;
+    }
 
     const props = cell.props || {};
     const { initialValue, mask, readOnly } = props;
@@ -203,12 +209,37 @@ export const DynamicTableProvider = ({ children }: any) => {
       const { dynamicFieldId, dynamicTemplateId, fieldType } = getFieldParts(
         hydratedField.id
       );
-      const templateFieldData = localFieldData?.[dynamicTemplateId] || [];
-      const currentField = templateFieldData.find(
+      const entityData = entityType
+        ? localFieldData?.[entityType]?.find(
+            (t: DynamicFieldShape) => t.id === formData?.id
+          )
+        : undefined;
+
+      // if there is an entity type "Initiatives", handle Key Metrics
+      const templateFieldData = entityType
+        ? entityData?.[dynamicTemplateId]
+        : localFieldData?.[dynamicTemplateId];
+
+      const currentField = templateFieldData?.find(
         (field: DynamicFieldShape) => field.id === dynamicFieldId
       );
 
       hydrateValue = currentField?.[fieldType];
+
+      // handle Key Metrics table edge cases
+      if (entityType === EntityType.INITIATIVE) {
+        switch (fieldType) {
+          case "dataSource":
+            currentField?.dataSource[0]?.value === "Other, specify"
+              ? (hydrateValue = currentField?.otherText)
+              : (hydrateValue = currentField?.dataSource[0].value);
+            break;
+          case "baselineStartDate":
+            hydrateValue = `${hydrateValue} - ${currentField?.baselineEndDate}`;
+            break;
+        }
+      }
+
       hydratedProps = {
         ...hydratedField.props,
         hydrate: hydrateValue,
@@ -277,6 +308,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     row,
     rowIndex,
     section,
+    styleAsOptionalHeadRows = [],
     tableId,
   }: GenerateRows) => {
     let firstColumnWidth = dynamicRowsTemplate ? 30 : 36;
@@ -319,6 +351,11 @@ export const DynamicTableProvider = ({ children }: any) => {
       section === "thead" ? <VisuallyHidden>Options</VisuallyHidden> : null;
     const rowId = section === "tbody" ? "thead" : section;
 
+    const isOptional = (cell: FormTableCell) => {
+      if (typeof cell === "object") return false;
+      return styleAsOptionalHeadRows.includes(cell);
+    };
+
     return (
       <Tr
         key={`${section}-row-${rowIndex}`}
@@ -337,6 +374,7 @@ export const DynamicTableProvider = ({ children }: any) => {
               formData,
               rowId: `${rowId}-row-0-cell-${cellIndex}`,
               rowIndex,
+              styleAsOptional: isOptional(cell),
               tableId,
               ...cellPropsCallback(cell),
             })}
@@ -419,13 +457,25 @@ export const DynamicTableProvider = ({ children }: any) => {
   const removeDynamicRow = async (
     dynamicTemplateId: string,
     dynamicFieldId: string,
+    entityType?: string,
+    entityId?: string,
     updatedFields: FieldInfo[] = []
   ) => {
-    const rows = localFieldData?.[dynamicTemplateId] || [];
+    const entityData = entityType
+      ? localFieldData?.[entityType].find(
+          (t: DynamicFieldShape) => t.id === entityId
+        )
+      : undefined;
+    const rows = entityType
+      ? entityData?.[dynamicTemplateId]
+      : localFieldData?.[dynamicTemplateId];
+
     // Remove row to be deleted
-    const updatedRows = rows.filter(
-      (row: DynamicFieldShape) => row.id !== dynamicFieldId
-    );
+    const updatedRows =
+      rows?.filter((row: DynamicFieldShape) => {
+        return row.id !== dynamicFieldId;
+      }) || [];
+
     const fields = updatedFields.map((field) => {
       return field.name === dynamicTemplateId
         ? {
@@ -439,6 +489,21 @@ export const DynamicTableProvider = ({ children }: any) => {
       ...localFieldData,
       ...Object.fromEntries(fields.map(({ name, value }) => [name, value])),
     };
+
+    if (entityType) {
+      fieldData[entityType] = localFieldData?.[entityType].map(
+        (t: DynamicFieldShape) => {
+          if (t.id === entityId) {
+            return {
+              ...entityData,
+              [dynamicTemplateId]: updatedRows,
+            };
+          }
+          return t;
+        }
+      );
+    }
+
     setLocalFieldData(fieldData);
 
     const reportArgs = {
@@ -499,11 +564,13 @@ interface DisplayCellOptions {
   cell: string | FormField;
   columnId: string;
   disabled: boolean;
+  entityType?: EntityType;
   formData: AnyObject;
   id: string;
   percentage: number;
   rowId: string;
   rowIndex: number;
+  styleAsOptional?: boolean;
   tableId: string;
 }
 
@@ -534,6 +601,7 @@ interface GenerateRows {
   row: FormTableRow;
   rowIndex: number;
   section: string;
+  styleAsOptionalHeadRows?: string[];
   tableId?: string;
 }
 

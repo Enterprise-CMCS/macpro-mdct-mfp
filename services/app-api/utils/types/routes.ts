@@ -22,6 +22,7 @@ export interface ReportJsonFile {
     | PageRoute
     | ParentRoute
     | SARStateOrTerritorySpecificInitiativesRoute
+    | SARStateOrTerritorySpecificInitiativesV2Route
     | WPStateOrTerritorySpecificInitiativesRoute
   )[];
   type: ReportType;
@@ -70,6 +71,7 @@ export interface ReportFormFieldProps {
         decimalPlacesToRoundTo?: number;
         hint?: string;
         label?: string;
+        maxLength?: number;
       };
       type: ReportFormFieldType;
       validation?: NestedValidation;
@@ -91,6 +93,7 @@ export interface ReportFormFieldProps {
   styleAsOptional?: boolean;
   styleTitleAsOptional?: boolean;
   subType?: ReportFormFieldType;
+  subsectionTitle?: string;
   subtitle?: string | CustomHtmlElement[];
   title?: string;
 }
@@ -125,11 +128,13 @@ export interface FormTable {
   footRows: FormTableRows;
   headRows: FormTableRows;
   options?: AnyObject;
+  styleAsOptionalHeadRows?: string[];
   tableType: FormTableType;
   verbiage?: {
     emptyTableMessage?: string;
     errorMessage?: string | CustomHtmlElement[];
     percentage?: string;
+    sectionTitle?: string;
     subtitle?: string | CustomHtmlElement[];
     title: string;
   };
@@ -224,6 +229,7 @@ export interface WPTransitionBenchmarksRoute extends ModalRoute {
 }
 
 // SAR routes
+/** @deprecated No longer used as of Report Year 2026, Period 2 */
 export interface SARStateOrTerritorySpecificInitiativesRoute extends BaseRoute {
   entityInfo: string[];
   entityType: StepEntityType;
@@ -233,6 +239,14 @@ export interface SARStateOrTerritorySpecificInitiativesRoute extends BaseRoute {
     dashboard: Dashboard;
     entitySteps: SAREntityStep[];
   };
+}
+
+export interface SARStateOrTerritorySpecificInitiativesV2Route extends BaseRoute {
+  entityInfo: string[];
+  entityType: StepEntityType;
+  initiatives: AnyObject[];
+  overlayForm: ReportFormWithTables;
+  pageType: string;
 }
 
 // Steps

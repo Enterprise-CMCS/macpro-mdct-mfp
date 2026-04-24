@@ -395,7 +395,7 @@ describe("<CalculationTable />", () => {
       await userEvent.click(button);
 
       const deleteButton = screen.getByRole("button", {
-        name: `Delete ${mockDynamicFieldId}`,
+        name: `Delete Other: ${mockDynamicFieldId}`,
       });
       await userEvent.click(deleteButton);
 

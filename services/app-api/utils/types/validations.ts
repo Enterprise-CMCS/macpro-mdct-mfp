@@ -40,6 +40,7 @@ export interface CustomValidation {
 export interface NestedValidation {
   dependentFieldName?: string;
   nested: boolean;
+  options?: TextOptions | NumberOptions | DynamicOptions;
   parentFieldName: string;
   parentOptionId?: string;
   type: ValidationType;

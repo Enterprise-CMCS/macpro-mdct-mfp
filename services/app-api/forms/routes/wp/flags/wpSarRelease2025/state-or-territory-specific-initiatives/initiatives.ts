@@ -11,8 +11,8 @@ import {
 import { tableFieldDynamicRowsTemplateBuilder } from "../../../../../../utils/routes/tables";
 
 // Key Metrics table
-const keyMetricsTableId = "defineInitiative_keyMetrics";
-const keyMetricsHeaders = [
+export const keyMetricsTableId = "defineInitiative_keyMetrics";
+export const keyMetricsHeaders = [
   "Performance Indicator",
   "Data Source",
   "Baseline",
@@ -22,15 +22,15 @@ const keyMetricsHeaders = [
 ];
 
 // Key Metrics table - dynamic rows
-const keyMetricsDynamicRowId = `${keyMetricsTableId}_performanceIndicators`;
-const keyMetricsDynamicBodyList = [
+export const keyMetricsDynamicRowId = `${keyMetricsTableId}_performanceIndicators`;
+export const keyMetricsDynamicBodyList = [
   {
     id: keyMetricsDynamicRowId,
     label: "Key Metrics",
     readOnly: true,
   },
 ];
-const keyMetricsDynamicFieldsToReturn = [
+export const keyMetricsDynamicFieldsToReturn = [
   {
     id: "name",
     props: {
@@ -78,6 +78,7 @@ const keyMetricsDynamicFieldsToReturn = [
                 type: ValidationType.TEXT,
                 nested: true,
                 parentFieldName: `${keyMetricsDynamicRowId}-dataSource`,
+                parentFieldId: "18Wb9b2zMIF13pZwWstdJF",
               },
             },
           ],
@@ -157,18 +158,20 @@ const keyMetricsModalFieldsToReturn = keyMetricsDynamicFieldsToReturn.map(
   }
 );
 
+export const keyMetricsDynamicFieldValidations = {
+  baselineEndDate: ValidationType.DATE,
+  baselineStartDate: ValidationType.DATE,
+  baselineValue: ValidationType.TEXT,
+  dataSource: ValidationType.RADIO,
+  name: ValidationType.TEXT,
+  targetBenchmarkProjectedDate: ValidationType.DATE,
+  targetBenchmarkValue: ValidationType.TEXT,
+};
+
 const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   dynamicFieldsBodyList: keyMetricsDynamicBodyList,
   dynamicFieldsToReturn: keyMetricsDynamicFieldsToReturn,
-  dynamicFieldValidations: {
-    name: ValidationType.TEXT_OPTIONAL,
-    dataSource: ValidationType.RADIO,
-    baseline: ValidationType.TEXT_OPTIONAL,
-    baselineStartDate: ValidationType.DATE_OPTIONAL,
-    baselineEndDate: ValidationType.DATE_OPTIONAL,
-    targetBenchmark: ValidationType.TEXT_OPTIONAL,
-    targetBenchmarkProjectedDate: ValidationType.DATE_OPTIONAL,
-  },
+  dynamicFieldValidations: keyMetricsDynamicFieldValidations,
   dynamicModalList: keyMetricsModalList,
   dynamicModalFieldsToReturn: keyMetricsModalFieldsToReturn,
   dynamicModalVerbiage: {
@@ -190,7 +193,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
   entityType: StepEntityType.INITIATIVE,
   entityInfo: ["initiative_name", "initiative_wpTopic"],
   overlayForm: {
-    id: "stsidi",
+    id: "wp-state-or-territory-specific-initiatives",
     tables: [
       {
         id: keyMetricsTableId,
@@ -200,7 +203,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         headRows: [keyMetricsHeaders],
         tableType: FormTableType.ENTITY_MODAL,
         verbiage: {
-          emptyTableMessage: "No Key Metrics added.",
+          emptyTableMessage: "No Performance Indicators",
           title: "Key Metrics",
         },
       },
