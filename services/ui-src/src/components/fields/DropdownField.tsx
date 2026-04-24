@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useFormState } from "react-hook-form";
 import {
   DropdownChangeObject,
   Hint,
@@ -11,7 +11,7 @@ import uuid from "react-uuid";
 // utils
 import { labelTextWithOptional, parseCustomHtml, shimComponent } from "utils";
 // types
-import { DropdownChoice, DropdownOptions, SelectedOption } from "types";
+import { DropdownChoice, DropdownOptions } from "types";
 // constants
 import { dropdownDefaultOptionText } from "../../constants";
 
@@ -54,14 +54,12 @@ export const DropdownField = ({
   const [displayValue, setDisplayValue] =
     useState<DropdownChoice>(defaultValue);
 
-  // get form context and register field
+  // get form context
   const form = useFormContext();
-  const fieldIsRegistered = name in form.getValues();
+  const { errors } = useFormState({ control: form.control });
 
   useEffect(() => {
-    if (!fieldIsRegistered && !validateOnRender) {
-      form.register(name);
-    } else if (validateOnRender) {
+    if (validateOnRender) {
       form.trigger(name);
     }
   }, []);
@@ -75,18 +73,18 @@ export const DropdownField = ({
       setDisplayValue(fieldValue);
     }
     // else set hydrationValue or defaultValue as display value
-    else if (hydrationValue) {
+    else {
       setDisplayValue(hydrationValue);
-      form.setValue(name, hydrationValue);
+      form.setValue(name, hydrationValue, { shouldValidate: validateOnRender });
     }
   }, [hydrationValue]); // only runs on hydrationValue fetch/update
 
   // update form data
   const onChangeHandler = async (event: DropdownChangeObject) => {
-    const selectedOption: SelectedOption = {
-      label: event.target.name,
-      value: event.target.value,
-    };
+    const selectedValue = event.target.value;
+    const selectedOption =
+      formattedOptions.find((option) => option.value === selectedValue) ||
+      defaultValue;
     setDisplayValue(selectedOption);
     form.setValue(name, selectedOption, { shouldValidate: true });
   };
@@ -98,8 +96,7 @@ export const DropdownField = ({
   };
 
   // prepare error message, hint, and classes
-  const formErrorState = form?.formState?.errors;
-  const errorMessage = formErrorState?.[name]?.message as ReactNode;
+  const errorMessage = errors?.[name]?.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const ariaDescribedBy = parsedHint ? `${name}-hint` : undefined;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
