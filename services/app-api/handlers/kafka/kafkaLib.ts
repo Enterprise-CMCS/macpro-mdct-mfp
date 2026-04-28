@@ -90,13 +90,13 @@ const LazyProducer = (() => {
     }
 
     const kafka = new Kafka(config);
-    producer?.disconnect();
+    await producer?.disconnect();
     producer = kafka.producer();
     producer.on("producer.disconnect", disconnect);
     // If sendBatch is called twice before we can finish connecting once,
     // both calls will wait for the same connection promise.
     connectPromise ??= (async () => {
-      producer.connect();
+      await producer.connect();
       connected = true;
     })();
     await connectPromise;
