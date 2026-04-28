@@ -10,7 +10,7 @@ export const kafkaHandler = (callbacks: KafkaCallbacks) => {
     console.debug(`Raw event: ${JSON.stringify(event, null, 2)}`);
 
     const messages: { topic: string; message: Message }[] = [];
-    for (let record of event.Records ?? []) {
+    for (const record of event.Records ?? []) {
       const message = await convertToMessage(record, callbacks);
       if (message) {
         messages.push(message);
@@ -84,7 +84,7 @@ const LazyProducer = (() => {
   let connected = false;
 
   const connect = async (config: KafkaConfig) => {
-    for (let signal of ["SIGTERM", "SIGINT", "SIGUSR2", "beforeExit"]) {
+    for (const signal of ["SIGTERM", "SIGINT", "SIGUSR2", "beforeExit"]) {
       process.removeListener(signal, disconnect);
       process.once(signal, disconnect);
     }
