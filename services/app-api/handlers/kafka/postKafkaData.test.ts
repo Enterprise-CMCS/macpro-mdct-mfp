@@ -1,9 +1,7 @@
-import * as postKafkaData from "./postKafkaData";
+import { handler } from "./postKafkaData";
 import { Kafka } from "kafkajs";
 import { mockClient } from "aws-sdk-client-mock";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-
-const handler = (postKafkaData as any).handler;
 
 jest.spyOn(console, "debug").mockImplementation(jest.fn());
 jest.spyOn(console, "info").mockImplementation(jest.fn());
@@ -49,7 +47,7 @@ const wpFieldDataRecord = {
       status: { S: "Not started" },
     },
   },
-};
+} as any;
 
 const wpFormTemplateRecord = {
   eventName: "ObjectCreated",
@@ -63,7 +61,7 @@ const wpFormTemplateRecord = {
       key: "formTemplates/ft123.json",
     },
   },
-};
+} as any;
 
 const wpFormTemplate = { mock: "wpTemplate" };
 mockS3Get.mockResolvedValue({
@@ -208,13 +206,16 @@ describe("Kafka message sending", () => {
   it("should recognize all dynamo-related topics", async () => {
     const tables = ["wp-reports", "sar-reports"];
     const event = {
-      Records: tables.map((table) => ({
-        eventSourceARN: `asdf/local-${table}/qwer`,
-        dynamodb: {
-          Keys: { foo: { S: "bar" } },
-          NewImage: { foo: { S: "bar" } },
-        },
-      })),
+      Records: tables.map(
+        (table) =>
+          ({
+            eventSourceARN: `asdf/local-${table}/qwer`,
+            dynamodb: {
+              Keys: { foo: { S: "bar" } },
+              NewImage: { foo: { S: "bar" } },
+            },
+          }) as any
+      ),
     };
     await handler(event);
     expect(mockSendBatch).toHaveBeenCalledWith({
@@ -364,7 +365,7 @@ describe("Kafka message sending", () => {
   });
 
   it("should ignore events from unknown sources", async () => {
-    const nonDynamoNonS3Record = {};
+    const nonDynamoNonS3Record = {} as any;
     await handler({ Records: [nonDynamoNonS3Record] });
     expect(mockSendBatch).not.toHaveBeenCalled();
   });
@@ -448,9 +449,26 @@ describe("Kafka message sending", () => {
     expect(mockDisconnect).toHaveBeenCalled();
   });
 
+  it.skip("should connect only as needed", async () => {
+    // Delay connect to ensure the two calls will be in progress simultaneously
+    const delay = () => new Promise((res) => setTimeout(res, 200));
+    mockConnect.mockImplementationOnce(delay).mockImplementationOnce(delay);
+    const event = { Records: [wpFieldDataRecord] };
+
+    jest.resetModules();
+    expect(mockConnect).not.toHaveBeenCalled();
+
+    // Kick off both calls at once
+    await Promise.all([handler(event), handler(event)]);
+
+    // The first event starts a connection; the second event awaits it.
+    expect(mockConnect).toHaveBeenCalledTimes(1);
+  });
+
   it("should reconnect as needed", async () => {
     const event = { Records: [wpFieldDataRecord] };
 
+    jest.resetModules();
     expect(mockOn).not.toHaveBeenCalled();
     expect(mockConnect).not.toHaveBeenCalled();
 
