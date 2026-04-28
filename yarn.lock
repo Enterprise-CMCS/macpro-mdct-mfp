@@ -8323,7 +8323,7 @@ __metadata:
     "@types/prompts": "npm:^2.4.9"
     aws-lambda: "npm:^1.0.7"
     aws-sdk-client-mock: "npm:~4.1.0"
-    dompurify: "npm:^3.4.0"
+    dompurify: "npm:^3.4.1"
     dotenv: "npm:^16.4.5"
     jest: "npm:30.3.0"
     jsdom: "npm:^24.1.3"
@@ -9727,15 +9727,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "dompurify@npm:3.4.0"
+"dompurify@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "dompurify@npm:3.4.1"
   dependencies:
     "@types/trusted-types": "npm:^2.0.7"
   dependenciesMeta:
     "@types/trusted-types":
       optional: true
-  checksum: 10c0/5593ac44ee20b9aa521c2120884effc98927fb9128c548183c75e79e0a04357c62ee913a049a267c8f396cb8c9d520ecf72562826c5524c46d4fe03c12063638
+  checksum: 10c0/440a4246020cb54b82ef2cb66381e4d310a0c470f9994655e61b6122811f0eaa00a2f9665d2bed30ca3f58932ba7bb0d5e26fdfce61c8daf35d21a3f5a799e48
   languageName: node
   linkType: hard
 
@@ -13377,13 +13377,13 @@ __metadata:
   linkType: hard
 
 "postcss@npm:^8.5.3":
-  version: 8.5.8
-  resolution: "postcss@npm:8.5.8"
+  version: 8.5.12
+  resolution: "postcss@npm:8.5.12"
   dependencies:
     nanoid: "npm:^3.3.11"
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
-  checksum: 10c0/dd918f7127ee7c60a0295bae2e72b3787892296e1d1c3c564d7a2a00c68d8df83cadc3178491259daa19ccc54804fb71ed8c937c6787e08d8bd4bedf8d17044c
+  checksum: 10c0/5baebaf574c567bc1b3d61197f38af4ce5920b8f611c887fb6bc3dcc14af00253c169dbf19897bc889cce0b0d9818ab5eb4ea0caedf02b0bab10da8a43ce8c12
   languageName: node
   linkType: hard
 
@@ -15172,7 +15172,7 @@ __metadata:
     babel-jest: "npm:30.3.0"
     date-fns: "npm:^4.1.0"
     date-fns-tz: "npm:^3.2.0"
-    dompurify: "npm:^3.4.0"
+    dompurify: "npm:^3.4.1"
     framer-motion: "npm:^4.1.17"
     html-react-parser: "npm:^3.0.16"
     jest: "npm:30.3.0"
