@@ -118,20 +118,6 @@ export const reportNames: { [key in ReportType]: string } = {
   FINANCIAL_REPORT: "Financial Report",
 };
 
-export const tableTopics: { [key in ReportType]: string } = {
-  SAR: "sar-reports",
-  WP: "wp-reports",
-  FINANCIAL_REPORT: "financial-reports",
-};
-
-export const bucketTopics: Record<string, string> = {
-  SAR: "sar-form",
-  SAR_TEMPLATE: "sar-form-template",
-  WP: "wp-form",
-  WP_TEMPLATE: "wp-form-template",
-  FINANCIAL_REPORT: "financial-report-form",
-};
-
 export const DEFAULT_TARGET_POPULATION_NAMES = [
   "Older adults",
   "Individuals with physical disabilities (PD)",
