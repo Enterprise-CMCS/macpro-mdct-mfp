@@ -183,6 +183,8 @@ const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   verbiage: {
     buttonText: "Add key metric",
     hint: "",
+    deleteModalTitle: "Are you sure you want to delete this key metric?",
+    deleteModalConfirmButtonText: "Yes, delete key metric",
   },
 });
 

@@ -5,7 +5,6 @@ import { Table, Tbody } from "@chakra-ui/react";
 import { DynamicTableRows, DynamicTableProvider } from "components";
 // utils
 import { useStore } from "utils";
-import { ReportType } from "types";
 import {
   mockDynamicFieldId,
   mockDynamicTemplateId,
@@ -17,7 +16,7 @@ import {
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
 import userEvent from "@testing-library/user-event";
-import { EntityType } from "types";
+import { EntityType, ReportType } from "types";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {

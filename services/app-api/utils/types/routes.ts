@@ -115,6 +115,8 @@ export type FormTableRows = FormTableRow[];
 export interface DynamicRowsTemplateVerbiage {
   buttonText: string;
   hint: string;
+  deleteModalTitle?: string;
+  deleteModalConfirmButtonText?: string;
 }
 
 export interface DynamicRowsTemplate extends ReportFormField {

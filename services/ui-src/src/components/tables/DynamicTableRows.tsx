@@ -22,6 +22,7 @@ export const DynamicTableRows = ({
   formPercentage,
   hasDynamicModalForm,
   hasStaticRows,
+  openDeleteEntityModal,
   openModal = () => {},
   tableId,
   updatedFieldsCallback = () => [],
@@ -147,15 +148,18 @@ export const DynamicTableRows = ({
                 )}
                 {!disabled && (
                   <Button
-                    onClick={() =>
-                      removeDynamicRow(
-                        dynamicRowsTemplate.id,
-                        dynamicId,
-                        entityType,
-                        formData?.id,
-                        updatedFieldsCallback(dynamicId, localFieldData)
-                      )
-                    }
+                    onClick={() => {
+                      entityType === EntityType.INITIATIVE &&
+                      openDeleteEntityModal
+                        ? openDeleteEntityModal(dynamicId)
+                        : removeDynamicRow(
+                            dynamicRowsTemplate.id,
+                            dynamicId,
+                            entityType,
+                            formData?.id,
+                            updatedFieldsCallback(dynamicId, localFieldData)
+                          );
+                    }}
                     sx={sx.removeButton}
                     type="button"
                     variant={"unstyled"}
@@ -181,6 +185,7 @@ interface Props {
   formPercentage: number;
   hasDynamicModalForm: boolean;
   hasStaticRows: boolean;
+  openDeleteEntityModal?: Function;
   openModal?: Function;
   label?: string;
   tableId: string;

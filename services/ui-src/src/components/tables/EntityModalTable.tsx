@@ -16,13 +16,20 @@ import {
 } from "@chakra-ui/react";
 import {
   AddEditKeyMetricsModal,
+  DeleteEntityModal,
   DynamicTableContext,
   DynamicTableRows,
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 // types
-import { AnyObject, FormTable, ReportFormFieldType, ReportShape } from "types";
+import {
+  AnyObject,
+  EntityShape,
+  FormTable,
+  ReportFormFieldType,
+  ReportShape,
+} from "types";
 // utils
 import { parseCustomHtml } from "utils";
 
@@ -43,6 +50,9 @@ export const EntityModalTable = ({
   const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
     undefined
   );
+  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
+    undefined
+  );
 
   const {
     isOpen: keyMetricsModalIsOpen,
@@ -57,6 +67,23 @@ export const EntityModalTable = ({
   const closeModal = () => {
     setCurrentEntityId(undefined);
     keyMetricsModalOnCloseHandler();
+  };
+
+  // Delete entity modal disclosure and methods
+  const {
+    isOpen: deleteEntityModalIsOpen,
+    onOpen: deleteEntityModalOnOpenHandler,
+    onClose: deleteEntityModalOnCloseHandler,
+  } = useDisclosure();
+
+  const openDeleteEntityModal = (entity: EntityShape) => {
+    setSelectedEntity(entity);
+    deleteEntityModalOnOpenHandler();
+  };
+
+  const closeDeleteEntityModal = () => {
+    setSelectedEntity(undefined);
+    deleteEntityModalOnCloseHandler();
   };
 
   // Dynamic rows
@@ -84,6 +111,7 @@ export const EntityModalTable = ({
       },
     ];
   };
+
   return (
     <Box sx={sx.box}>
       <Heading as="h2">{verbiage?.title}</Heading>
@@ -125,6 +153,7 @@ export const EntityModalTable = ({
               formPercentage={0}
               hasDynamicModalForm={hasDynamicModalForm}
               hasStaticRows={bodyRows.length > 0}
+              openDeleteEntityModal={openDeleteEntityModal}
               openModal={openModal}
               tableId={tableId}
               updatedFieldsCallback={updatedFieldsCallback}
@@ -159,6 +188,7 @@ export const EntityModalTable = ({
             {dynamicRowsTemplate.verbiage.buttonText}
           </Button>
 
+          {/* Modals */}
           <AddEditKeyMetricsModal
             currentEntityId={currentEntityId}
             dynamicTemplateId={dynamicRowsTemplate.id}
@@ -172,9 +202,18 @@ export const EntityModalTable = ({
             report={report}
             userIsAdmin={false}
           />
+
+          <DeleteEntityModal
+            entityType={formData?.type}
+            selectedEntity={selectedEntity}
+            verbiage={dynamicRowsTemplate.verbiage}
+            modalDisclosure={{
+              isOpen: deleteEntityModalIsOpen,
+              onClose: closeDeleteEntityModal,
+            }}
+          />
         </>
       )}
-      {/* TODO: popup to confirm deletion of Key Metric */}
     </Box>
   );
 };
