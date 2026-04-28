@@ -1,4 +1,5 @@
 import { getReportFieldData } from "../../storage/reports";
+import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 import { getPossibleFieldsFromFormTemplate } from "../formTemplates/formTemplates";
 import { ReportFieldData, ReportJson, ReportType, State } from "../types";
 
@@ -15,7 +16,6 @@ import { ReportFieldData, ReportJson, ReportType, State } from "../types";
 const additionalFields = [
   "id",
   "type",
-  "isOtherEntity",
   "isRequired",
   "isCopied",
   "isInitiativeClosed",
@@ -71,59 +71,95 @@ const isExcludedFinancialReportNormalizedField = (
   );
 };
 
-const shouldExcludeCopiedField = (
+const isExcludedInitiativeField = async (fieldKey: string) => {
+  const wpSarRelease2025 = await isFeatureFlagEnabled("wpSarRelease2025");
+  if (!wpSarRelease2025) return false;
+
+  return (
+    fieldKey.startsWith("defineInitiative") ||
+    ["evaluationPlan", "fundingSources"].includes(fieldKey)
+  );
+};
+
+const shouldExcludeCopiedField = async (
   reportType: ReportType | undefined,
   fieldKey: string,
   entityType?: string
 ) => {
-  if (reportType !== ReportType.FINANCIAL_REPORT) return false;
-  const normalizedFieldName = getFieldKeySuffix(fieldKey);
-  const entityExcludedFields = entityType
-    ? (financialReportEntityExcludedNormalizedFieldNames[entityType] ?? [])
-    : [];
+  switch (reportType) {
+    case ReportType.WP:
+      return await isExcludedInitiativeField(fieldKey);
+    case ReportType.FINANCIAL_REPORT: {
+      const normalizedFieldName = getFieldKeySuffix(fieldKey);
+      const entityExcludedFields = entityType
+        ? (financialReportEntityExcludedNormalizedFieldNames[entityType] ?? [])
+        : [];
 
-  return (
-    financialReportExcludedFieldIds.includes(fieldKey) ||
-    isFinancialReportCommentField(fieldKey) ||
-    isExcludedFinancialReportNormalizedField(
-      normalizedFieldName,
-      entityExcludedFields
-    )
-  );
+      return (
+        financialReportExcludedFieldIds.includes(fieldKey) ||
+        isFinancialReportCommentField(fieldKey) ||
+        isExcludedFinancialReportNormalizedField(
+          normalizedFieldName,
+          entityExcludedFields
+        )
+      );
+    }
+    default:
+      return false;
+  }
 };
 
-const shouldExcludeCopiedEntityField = (
+const shouldExcludeCopiedEntityField = async (
   reportType: ReportType | undefined,
   fieldKey: string
 ) => {
-  if (reportType !== ReportType.FINANCIAL_REPORT) return true;
-
-  const normalizedFieldName = getFieldKeySuffix(fieldKey);
-  return !financialReportEntityIncludedNormalizedFieldNames.includes(
-    normalizedFieldName
-  );
+  switch (reportType) {
+    case ReportType.WP:
+      return await isExcludedInitiativeField(fieldKey);
+    case ReportType.FINANCIAL_REPORT: {
+      const normalizedFieldName = getFieldKeySuffix(fieldKey);
+      return !financialReportEntityIncludedNormalizedFieldNames.includes(
+        normalizedFieldName
+      );
+    }
+    default:
+      return true;
+  }
 };
 
-function pruneEntityData(
+const isNameField = (entityKey: string) => entityKey.includes("name");
+const isChoiceField = (entityKey: string) =>
+  ["key", "value"].includes(entityKey);
+
+async function pruneEntityData(
   sourceFieldData: ReportFieldData,
   key: string,
   entityData: ReportFieldData[],
   possibleFields: string[],
   reportType?: ReportType
 ) {
-  //adding fields to be copied over from entries
+  // adding fields to be copied over from entries
   const concatEntityFields = [...possibleFields, ...additionalFields];
-  entityData.forEach((entity, index) => {
+
+  for (const [index, entity] of entityData.entries()) {
     // Delete any key existing in the source data not valid in our template, or any entity key that's not a name.
     if (!concatEntityFields.includes(key)) {
       delete sourceFieldData[key];
-      return;
+      continue;
     }
 
-    Object.keys(entity).forEach((entityKey) => {
-      //check to see if the object is an array, this is for capturing substeps in the initiatives
-      if (Array.isArray(entity[entityKey])) {
-        pruneEntityData(
+    for (const entityKey of Object.keys(entity)) {
+      /**
+       * Check to see if the object is an array,
+       * this is for capturing entitySteps in initiatives v1
+       *
+       * In initiatives v2, only name and topic are copied
+       */
+      if (
+        Array.isArray(entity[entityKey]) &&
+        !(await isExcludedInitiativeField(entityKey))
+      ) {
+        await pruneEntityData(
           sourceFieldData,
           key,
           entity[entityKey] as ReportFieldData[],
@@ -131,27 +167,27 @@ function pruneEntityData(
           reportType
         );
       } else if (
-        shouldExcludeCopiedField(reportType, entityKey, key) ||
-        (shouldExcludeCopiedEntityField(reportType, entityKey) &&
-          !entityKey.includes("name") &&
-          !concatEntityFields.includes(entityKey) &&
-          !["key", "value"].includes(entityKey))
+        (await shouldExcludeCopiedField(reportType, entityKey, key)) ||
+        ((await shouldExcludeCopiedEntityField(reportType, entityKey)) &&
+          !isNameField(entityKey) &&
+          !isChoiceField(entityKey) &&
+          !concatEntityFields.includes(entityKey))
       ) {
         delete entityData[index][entityKey];
       }
-    });
+    }
 
     if (Object.keys(entity).length === 0) {
       delete entityData[index];
     } else {
-      entityData[index]["isCopied"] = true;
+      entityData[index].isCopied = true;
     }
-  });
+  }
 
-  //filter out any closeout data
+  // filter out any closeout data
   if (Array.isArray(sourceFieldData[key])) {
     const filteredData = (sourceFieldData[key] as ReportFieldData[]).filter(
-      (field) => !field["isInitiativeClosed"]
+      (field) => !field.isInitiativeClosed
     );
     sourceFieldData[key] = filteredData;
   }
@@ -175,15 +211,16 @@ export async function copyFieldDataFromSource(
 
   if (sourceFieldData) {
     const possibleFields = getPossibleFieldsFromFormTemplate(formTemplate);
-    Object.keys(sourceFieldData).forEach((key: string) => {
-      if (shouldExcludeCopiedField(formTemplate.type, key)) {
+
+    for (const key of Object.keys(sourceFieldData)) {
+      if (await shouldExcludeCopiedField(formTemplate.type, key)) {
         delete sourceFieldData[key];
-        return;
+        continue;
       }
 
       // Only iterate through entities, not choice lists
       if (Array.isArray(sourceFieldData[key])) {
-        pruneEntityData(
+        await pruneEntityData(
           sourceFieldData,
           key,
           sourceFieldData[key] as ReportFieldData[],
@@ -193,7 +230,7 @@ export async function copyFieldDataFromSource(
       } else if (!possibleFields.includes(key)) {
         delete sourceFieldData[key];
       }
-    });
+    }
 
     Object.assign(validatedFieldData, sourceFieldData);
   }

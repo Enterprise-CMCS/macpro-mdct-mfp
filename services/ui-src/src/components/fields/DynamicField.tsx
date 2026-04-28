@@ -234,7 +234,7 @@ export const DynamicField = ({
               errorMessage={fieldErrorState?.[index]?.name?.message}
               onChange={onChangeHandler}
               onBlur={onBlurHandler}
-              value={field.name}
+              value={field.name || ""}
             />
             {!disabled && (
               <Box sx={sx.removeBox}>
@@ -242,7 +242,7 @@ export const DynamicField = ({
                   <Image
                     sx={sx.removeImage}
                     src={cancelIcon}
-                    alt={`Delete ${field.name}`}
+                    alt={`Delete ${field.name || field.id}`}
                   />
                 </button>
               </Box>

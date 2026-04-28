@@ -1,14 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // components
-import { Form, ReportPageIntro } from "components";
+import { Alert, Form, ReportPageIntro } from "components";
 // types
+import { FieldValues, UseFormReturn } from "react-hook-form";
 import {
+  AlertTypes,
+  AnyObject,
   DynamicModalOverlayReportPageShape,
   EntityShape,
   FormJson,
   ModalOverlayReportPageShape,
 } from "types";
+// utils
+import { isClosedInitiative, toggleOptional } from "utils";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
@@ -18,22 +23,52 @@ export const EntityDetailsOverlayV2 = ({
   closeEntityDetailsOverlay,
   disabled = false,
   editable = true,
+  errorMessage,
   form = {} as FormJson,
   onSubmit,
   route,
   selectedEntity,
   submitting = false,
   setSelectedEntity,
-  validateOnRender,
+  validateOnRender = false,
 }: Props) => {
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [formJson, setFormJson] = useState<FormJson>(form);
+
+  const isDisabled = disabled || Boolean(selectedEntity?.isInitiativeClosed);
+  const viewOnly = !editable || isDisabled;
   const getSaveButtonText = () => {
-    return editable && !disabled && !selectedEntity?.isInitiativeClosed
-      ? "Save & return"
-      : "Return";
+    return viewOnly ? "Return" : "Save & return";
+  };
+  const submitProps = viewOnly
+    ? { onClick: () => closeEntityDetailsOverlay() }
+    : { form: form.id };
+
+  const getFields = (entity?: EntityShape) => {
+    const fields = entity?.isCopied
+      ? form.fields
+      : form.fields?.filter((f) => !f.forCopyoverOnly);
+    return fields || [];
+  };
+
+  const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {
+    const currentValues = hookForm.getValues() as EntityShape;
+    const isClosed = isClosedInitiative(currentValues);
+    const fields = getFields(selectedEntity);
+
+    setShowAlert(isClosed);
+    setFormJson(toggleOptional({ ...form, fields }, isClosed));
   };
 
   useEffect(() => {
     setSelectedEntity(selectedEntity);
+
+    const isClosed = isClosedInitiative(selectedEntity);
+    const fields = getFields(selectedEntity);
+
+    setShowAlert(isClosed);
+    setFormJson(toggleOptional({ ...form, fields }, isClosed));
+
     return () => {
       setSelectedEntity(undefined);
     };
@@ -62,13 +97,21 @@ export const EntityDetailsOverlayV2 = ({
         <Form
           autosave={true}
           className="overlay-form"
-          disabled={disabled}
+          disabled={isDisabled}
           dontReset={true}
           formData={selectedEntity}
-          formJson={form}
+          formJson={formJson}
           id={form.id}
+          onFormChange={onFormChange}
           onSubmit={onSubmit}
-          validateOnRender={validateOnRender || false}
+          validateOnRender={validateOnRender}
+        />
+      )}
+      {showAlert && errorMessage && (
+        <Alert
+          description={errorMessage.description}
+          status={AlertTypes.WARNING}
+          title={errorMessage.title}
         />
       )}
       <Box sx={sx.footerBox}>
@@ -80,7 +123,7 @@ export const EntityDetailsOverlayV2 = ({
           >
             Previous
           </Button>
-          <Button type="submit" form={form.id} sx={sx.saveButton}>
+          <Button sx={sx.saveButton} type="submit" {...submitProps}>
             {submitting ? <Spinner size="md" /> : getSaveButtonText()}
           </Button>
         </Flex>
@@ -94,6 +137,7 @@ interface Props {
   closeEntityDetailsOverlay: Function;
   disabled?: boolean;
   editable?: boolean;
+  errorMessage?: AnyObject;
   form?: FormJson;
   onSubmit: Function;
   route: ModalOverlayReportPageShape | DynamicModalOverlayReportPageShape;

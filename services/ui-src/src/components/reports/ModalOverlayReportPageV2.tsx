@@ -34,6 +34,7 @@ import {
   getReportVerbiage,
   resetClearProp,
   setClearedEntriesToDefaultValue,
+  isClosedInitiative,
   useBreakpoint,
   useStore,
 } from "utils";
@@ -70,10 +71,6 @@ export const ModalOverlayReportPageV2 = ({
 
   // Display route
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
-
-  reportFieldDataEntities.map(
-    (entity: EntityShape) => (entity.isOtherEntity = true)
-  );
 
   if (report?.reportType === ReportType.SAR) {
     reportFieldDataEntities.map(
@@ -163,9 +160,16 @@ export const ModalOverlayReportPageV2 = ({
         .filter((f) => !f.forTableOnly);
       const filteredFormData = filterFormData(enteredData, nonTableFields);
       const entriesToClear = getEntriesToClear(enteredData, nonTableFields);
+      const closeOutInitiative = isClosedInitiative(enteredData)
+        ? {
+            closedBy: full_name,
+            isInitiativeClosed: true,
+          }
+        : {};
       const newEntity = {
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
+        ...closeOutInitiative,
       };
       const newEntities = [...currentEntities];
       newEntities[selectedEntityIndex] = newEntity;
@@ -284,6 +288,7 @@ export const ModalOverlayReportPageV2 = ({
           closeEntityDetailsOverlay={closeEntityDetailsOverlay}
           disabled={isDisabled}
           editable={editable}
+          errorMessage={verbiage.errorMessage}
           form={form}
           onSubmit={onSubmit}
           route={route}

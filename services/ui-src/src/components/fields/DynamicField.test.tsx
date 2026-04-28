@@ -138,7 +138,7 @@ describe("<DynamicField />", () => {
       expect(appendButton).toBeVisible();
 
       // click remove
-      const removeButtons = screen.getAllByRole("button", { name: "Delete" });
+      const removeButtons = screen.getAllByRole("button", { name: /Delete/ });
       const removeButton = removeButtons[1];
       expect(removeButtons).toHaveLength(2);
 
@@ -164,7 +164,7 @@ describe("<DynamicField />", () => {
       expect(inputBoxLabel).toHaveLength(1);
 
       // click remove
-      const removeButton = screen.getAllByRole("button", { name: "Delete" })[0];
+      const removeButton = screen.getAllByRole("button", { name: /Delete/ })[0];
       await act(async () => {
         await userEvent.click(removeButton);
       });

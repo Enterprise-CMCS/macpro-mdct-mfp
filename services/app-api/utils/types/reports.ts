@@ -218,6 +218,7 @@ export interface ModalOverlayReportPageVerbiage extends EntityOverlayPageVerbiag
   emptyDashboardText?: string;
   accordion?: AnyObject;
   backButtonText?: string;
+  errorMessage?: AnyObject;
 }
 
 export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {

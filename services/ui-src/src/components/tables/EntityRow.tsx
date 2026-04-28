@@ -5,13 +5,14 @@ import { EntityStatusIcon, Table } from "components";
 // types
 import {
   AnyObject,
+  EntityDetailsOverlayShape,
+  EntityDetailsOverlayTypes,
   EntityShape,
   EntityStatuses,
   ModalDrawerEntityTypes,
-  OverlayModalTypes,
-  EntityDetailsOverlayTypes,
-  EntityDetailsOverlayShape,
   OverlayModalPageShape,
+  OverlayModalTypes,
+  ReportShape,
   ReportType,
 } from "types";
 // utils
@@ -45,49 +46,51 @@ export const EntityRow = ({
   // check for "other" target population entities
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
   const stepType = formEntity?.stepType;
-  const isSAR = report?.reportType === ReportType.SAR;
+  const isWP = report?.reportType === ReportType.WP;
+  const isReadOnly = !editable || (isInitiativeClosed && isWP);
+  const isNewAndRequired = !isCopied && !isRequired;
+
+  const getInitiativeStatusValue = (report: ReportShape) => {
+    const isCloseoutStep =
+      stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION;
+
+    if (formEntity && !isCloseoutStep) {
+      return getInitiativeDashboardStatus(formEntity, entity);
+    }
+
+    if (isCloseoutStep) {
+      if (isInitiativeClosed) return EntityStatuses.CLOSE;
+
+      const isCloseOutEnabled = getInitiativeStatus(report, entity, false, [
+        stepType,
+      ]);
+      return isCloseOutEnabled && isCopied
+        ? EntityStatuses.NO_STATUS
+        : EntityStatuses.DISABLED;
+    }
+
+    return getInitiativeStatus(report, entity, false, [
+      EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
+    ]);
+  };
 
   const setStatusByType = (entityType: string) => {
+    if (!report) return EntityStatuses.NO_STATUS;
+
     switch (entityType) {
       case OverlayModalTypes.INITIATIVE:
-        //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
-        if (
-          formEntity &&
-          stepType !== EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
-        ) {
-          return getInitiativeDashboardStatus(formEntity, entity);
-        } else if (
-          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
-        ) {
-          if (isInitiativeClosed) {
-            return EntityStatuses.CLOSE;
-          } else {
-            const isCloseOutEnabled = getInitiativeStatus(
-              report!,
-              entity,
-              false,
-              [stepType]
-            );
-            return isCloseOutEnabled && isCopied
-              ? EntityStatuses.NO_STATUS
-              : EntityStatuses.DISABLED;
-          }
-        } else {
-          return getInitiativeStatus(report!, entity, false, [
-            EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
-          ]);
-        }
+        return getInitiativeStatusValue(report);
       default:
-        return report && getEntityStatus(report, entity, entityType);
+        return getEntityStatus(report, entity, entityType);
     }
   };
 
-  let entityStatus = useMemo(() => {
+  const entityStatus = useMemo(() => {
     if (
       OverlayModalTypes.INITIATIVE &&
       formEntity &&
       isInitiativeClosed &&
-      report?.reportType === ReportType.WP
+      isWP
     ) {
       return EntityStatuses.CLOSE;
     }
@@ -117,9 +120,9 @@ export const EntityRow = ({
   const appendToEntityName = () => {
     switch (entityType) {
       case ModalDrawerEntityTypes.TARGET_POPULATIONS:
-        return !isRequired && `Other: `;
+        return !isRequired ? "Other: " : "";
       case OverlayModalTypes.INITIATIVE:
-        return isInitiativeClosed && !formEntity && "[Closed] ";
+        return isInitiativeClosed && !formEntity ? "[Closed] " : "";
       default:
         return "";
     }
@@ -174,7 +177,7 @@ export const EntityRow = ({
             justifyContent={isMobile ? "flex-start" : "flex-end"}
             display={"inline-block"}
           >
-            {!isRequired && !isCopied && openAddEditEntityModal && (
+            {isNewAndRequired && openAddEditEntityModal && (
               <Button
                 sx={sx.editNameButton}
                 id={editNameButtonId}
@@ -184,14 +187,14 @@ export const EntityRow = ({
                 pl={isMobile ? "0" : "1rem"}
                 pr={isMobile ? "1.5rem" : "2.5rem"}
               >
-                {!editable || (!isSAR && isInitiativeClosed)
+                {isReadOnly
                   ? verbiage.readOnlyEntityButtonText
                   : verbiage.editEntityButtonText}
               </Button>
             )}
             <Button
               sx={
-                !isRequired && !isCopied
+                isNewAndRequired
                   ? sx.editOtherEntityButton
                   : sx.editEntityButton
               }
@@ -201,11 +204,11 @@ export const EntityRow = ({
               disabled={entityStatus === EntityStatuses.DISABLED}
               aria-labelledby={`${editButtonId} ${rowId}`}
             >
-              {!editable || (!isSAR && isInitiativeClosed)
+              {isReadOnly
                 ? verbiage.readOnlyEntityDetailsButtonText
                 : verbiage.enterEntityDetailsButtonText}
             </Button>
-            {!isRequired && !isCopied && openDeleteEntityModal && (
+            {isNewAndRequired && openDeleteEntityModal && (
               <Button
                 sx={sx.deleteButton}
                 id={deleteButtonId}

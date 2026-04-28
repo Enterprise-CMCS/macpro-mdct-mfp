@@ -177,7 +177,7 @@ const addInitiative = (
     },
   ];
 
-  const initativeWorkPlanTopics = [
+  const initiativeWorkPlanTopics = [
     {
       key: "initiative_wpTopic-VjQ0OFqior9Dxu5RRNiZ5u",
       value: "Transitions and transition coordination services*",
@@ -189,6 +189,10 @@ const addInitiative = (
     {
       key: "initiative_wpTopic-SdaFlF3DJyzKcHCCu3Zylm",
       value: "Quality measurement and improvement*",
+    },
+    {
+      key: "initiative_wpTopic-8CpFrev6sMfRijIhafMj7V",
+      value: "Self-direction (*if applicable)",
     },
   ];
 
@@ -241,13 +245,15 @@ const addInitiative = (
     };
   } else {
     flaggedData = {
-      defineInitiative_projectedEndDate_value: "",
       defineInitiative_projectedEndDate: [
         {
-          key: "defineInitiative_projectedEndDate-TR6HoXF3Unf2QX0zzDg2Kp",
-          value: "No",
+          key: "defineInitiative_projectedEndDate-WNsSaAHeDvRD2Pjkz6DcOE",
+          value: "Yes",
         },
       ],
+      defineInitiative_projectedEndDate_value: dateFormat.format(
+        faker.date.future()
+      ),
       defineInitiative_projectedStartDate: dateFormat.format(faker.date.past()),
       evaluationPlan: addEvaluationPlan(year, period, 2),
       fundingSources: [
@@ -278,13 +284,12 @@ const addInitiative = (
     defineInitiative_targetPopulations: initiativeTargetPopulations,
     initiative_name: faker.music.songName(),
     initiative_wp_otherTopic: "",
-    isOtherEntity: true,
-    initiative_wpTopic: [initativeWorkPlanTopics[index]],
+    initiative_wpTopic: [initiativeWorkPlanTopics[index]],
     type: "initiative",
     ...flaggedData,
   });
 
-  return Array.from({ length: 3 }).map((_, index: number) =>
+  return Array.from({ length: 4 }).map((_, index: number) =>
     createInitiative(index)
   );
 };

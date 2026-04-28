@@ -21,6 +21,7 @@ export * from "./forms/forms";
 // reports
 export * from "./reports/entities";
 export * from "./reports/entitySteps";
+export * from "./reports/initiatives";
 export * from "./reports/reports";
 export * from "./reports/routing";
 // statusing

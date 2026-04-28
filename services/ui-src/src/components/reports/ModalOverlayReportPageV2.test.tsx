@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { ModalOverlayReportPageV2, ReportContext } from "components";
 // types
 import {
+  EntityShape,
   ReportFormFieldType,
   ReportStatus,
   ReportType,
@@ -368,6 +369,12 @@ describe("<ModalOverlayReportPageV2 />", () => {
       ...mockUseEntityStore,
       report: {
         ...mockUseEntityStore.report,
+        fieldData: {
+          ...mockUseEntityStore.report?.fieldData,
+          entityType: mockUseEntityStore.report?.fieldData.entityType.map(
+            (t: EntityShape) => ({ ...t, isCopied: true })
+          ),
+        },
         isCopied: true,
       },
     });

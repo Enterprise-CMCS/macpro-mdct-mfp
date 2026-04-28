@@ -6,7 +6,15 @@ import {
   FormField,
   PageTypes,
   ReportType,
+  ValidationType,
 } from "../types";
+import * as LD from "@launchdarkly/node-server-sdk";
+
+jest.mock("@launchdarkly/node-server-sdk", () => ({
+  init: jest.fn(),
+}));
+const waitForInitialization = jest.fn().mockResolvedValue(undefined);
+const variation = jest.fn().mockResolvedValue(true);
 
 jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
@@ -15,6 +23,12 @@ jest.mock("../../storage/reports", () => ({
 describe("Field data copy", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    process.env.launchDarklyServer = "mock-sdk-key";
+
+    (LD.init as jest.Mock).mockReturnValue({
+      variation,
+      waitForInitialization,
+    });
   });
 
   test("Should copy validated fields", async () => {
@@ -29,7 +43,7 @@ describe("Field data copy", () => {
             fields: [
               {
                 id: "mockFieldId",
-                validation: "number",
+                validation: ValidationType.NUMBER,
               },
             ],
           },
@@ -49,6 +63,7 @@ describe("Field data copy", () => {
     });
   });
 
+  // TODO: Investigate this comment
   test("Should overwrite populated fields, apparently", async () => {
     (getReportFieldData as jest.Mock).mockResolvedValueOnce({
       mockFieldId: "42",
@@ -63,7 +78,7 @@ describe("Field data copy", () => {
             fields: [
               {
                 id: "mockFieldId",
-                validation: "number",
+                validation: ValidationType.NUMBER,
               },
             ],
           },
@@ -130,6 +145,17 @@ describe("Field data copy", () => {
       mockEntityType: [
         {
           mockFieldId: "42",
+          defineInitiative_mockId: "mock",
+          evaluationPlan: [
+            {
+              id: "mockEvaluationPlan",
+            },
+          ],
+          fundingSources: [
+            {
+              id: "mockFundingSource",
+            },
+          ],
         },
       ],
     });
@@ -143,7 +169,15 @@ describe("Field data copy", () => {
             fields: [
               {
                 id: "mockFieldId",
-                validation: "number",
+                validation: ValidationType.NUMBER,
+              },
+              {
+                id: "defineInitiative_mockId",
+                validation: ValidationType.TEXT,
+              },
+              {
+                id: "evaluationPlan",
+                validation: ValidationType.NUMBER,
               },
             ],
           },
@@ -176,7 +210,6 @@ describe("Field data copy", () => {
           value: "mock value",
           id: "mock id",
           type: "mock type",
-          isOtherEntity: "mock is other",
           isRequired: "mock is required",
           isInitiativeClosed: false,
         },
@@ -212,7 +245,6 @@ describe("Field data copy", () => {
           value: "mock value",
           id: "mock id",
           type: "mock type",
-          isOtherEntity: "mock is other",
           isRequired: "mock is required",
           isInitiativeClosed: false,
           isCopied: true,
@@ -240,7 +272,7 @@ describe("Field data copy", () => {
             fields: [
               {
                 id: "mockFieldId",
-                validation: "number",
+                validation: ValidationType.NUMBER,
               },
             ],
           },
@@ -255,6 +287,7 @@ describe("Field data copy", () => {
       fieldData
     );
 
+    // TODO: Investigate this comment
     // I think this is a bug actually. Probably it should not copy this entity.
     expect(copiedData).toEqual({ mockEntityType: [] });
   });
@@ -315,7 +348,7 @@ describe("Field data copy", () => {
             fields: [
               {
                 id: "mockFieldId",
-                validation: "number",
+                validation: ValidationType.NUMBER,
               },
             ],
           },

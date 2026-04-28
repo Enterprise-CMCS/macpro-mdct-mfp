@@ -170,6 +170,7 @@ export const EntityModalTable = ({
 
           <AddEditKeyMetricsModal
             currentEntityId={currentEntityId}
+            disabled={disabled}
             dynamicTemplateId={dynamicRowsTemplate.id}
             entityType={formData?.type}
             form={dynamicRowsTemplate.props?.dynamicModalForm}
