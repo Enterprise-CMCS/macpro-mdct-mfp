@@ -89,7 +89,7 @@ const isInitiative = (initiative: any): initiative is Initiative => {
   if (typeof initiative.initiative_name !== "string") return false;
   if (!isChoiceArray(initiative.initiative_wpTopic)) return false;
 
-  // TODO: Update for v2
+  // deprecated: initiative.fundingSources removed as of Report Year 2026, Period 2
   if (initiative.fundingSources) {
     if (!Array.isArray(initiative.fundingSources)) return false;
     if (!initiative.fundingSources.every(isFundingSource)) return false;
@@ -100,6 +100,9 @@ const isInitiative = (initiative: any): initiative is Initiative => {
   return true;
 };
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 const isFundingSource = (
   fundingSource: any
 ): fundingSource is FundingSource => {

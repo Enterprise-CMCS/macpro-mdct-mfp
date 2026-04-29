@@ -106,9 +106,16 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     // sort errors in order of registration/page display
     const sortedErrors: string[] = sortFormErrors(formValidationSchema, errors);
     // focus the first error on the page and scroll to it
-    const fieldToFocus = document.querySelector(
-      `[name='${sortedErrors[0]}']`
-    )! as HTMLElement;
+    const firstError = sortedErrors[0];
+
+    // Get input with aria-invalid; choice lists don't use aria-invalid
+    const fieldToFocus = (document.querySelector(
+      `[name^='${firstError}'][aria-invalid="true"]`
+    ) ||
+      document.querySelector(
+        `[name^='${firstError}']`
+      )) as HTMLInputElement | null;
+
     fieldToFocus?.scrollIntoView({ behavior: "smooth", block: "center" });
     fieldToFocus?.focus({ preventScroll: true });
   };
@@ -274,6 +281,16 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
               {titleText}
             </Heading>
           )}
+          {field.props?.sectionTitle && (
+            <Heading as="h3" className="section-title">
+              {field.props.sectionTitle}
+            </Heading>
+          )}
+          {field.props?.subsectionTitle && (
+            <Heading as="h4" className="subsection-title">
+              {field.props.subsectionTitle}
+            </Heading>
+          )}
           {field.props?.subtitle && (
             <Box sx={sx.subtitle}>{parseCustomHtml(field.props.subtitle)}</Box>
           )}
@@ -427,12 +444,19 @@ const sx = {
     paddingBottom: 0,
   },
   ".overlay-form .verbiage-title": {
-    fontSize: "1.5rem",
+    fontSize: "2xl",
     marginTop: "spacer4",
     paddingTop: "spacer3",
-    b: {
-      fontWeight: "normal",
-    },
+  },
+  ".overlay-form .section-title": {
+    fontSize: "2xl",
+    marginTop: "spacer4",
+    paddingBottom: 0,
+  },
+  ".overlay-form .subsection-title": {
+    fontSize: "xl",
+    marginTop: "spacer4",
+    paddingBottom: 0,
   },
   ".overlay-form div + .verbiage-title": {
     borderTop: "1px solid",

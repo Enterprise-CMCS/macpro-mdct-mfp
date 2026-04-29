@@ -61,8 +61,6 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
     pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
     entityType: StepEntityType.INITIATIVE,
     entityInfo: ["initiative_name", "initiative_wpTopic"],
-    // Dynamically populated
-    initiatives: [],
     overlayForm: {
       id: "sar-state-or-territory-specific-initiatives",
       tables: [
@@ -96,7 +94,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
             label:
               "Describe any progress made under this initiative during the reporting period.",
             maxLength: 1800,
-            title: "Initiative Progress",
+            sectionTitle: "Initiative Progress",
           },
         },
         {
@@ -117,7 +115,6 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
         // Initiative Evaluation
         // Key Metrics table
         sarKeyMetricsDynamicRowsTemplate,
-
         // Findings and Sustainability
         {
           id: "initiativeEvaluation_describeQualitativeDetail",

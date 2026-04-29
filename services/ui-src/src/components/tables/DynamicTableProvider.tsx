@@ -308,6 +308,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     row,
     rowIndex,
     section,
+    showEditColumn = true,
     styleAsOptionalHeadRows = [],
     tableId,
   }: GenerateRows) => {
@@ -380,7 +381,7 @@ export const DynamicTableProvider = ({ children }: any) => {
             })}
           </Cell>
         ))}
-        {dynamicRowsTemplate && (
+        {dynamicRowsTemplate && showEditColumn && (
           <Cell sx={{ width: `${optionsWidth}%` }}>{content}</Cell>
         )}
       </Tr>
@@ -601,6 +602,7 @@ interface GenerateRows {
   row: FormTableRow;
   rowIndex: number;
   section: string;
+  showEditColumn?: boolean;
   styleAsOptionalHeadRows?: string[];
   tableId?: string;
 }

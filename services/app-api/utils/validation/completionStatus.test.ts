@@ -1,4 +1,4 @@
-import { PageTypes } from "../types";
+import { PageTypes, TransformationRule } from "../types";
 import { calculateCompletionStatus, isComplete } from "./completionStatus";
 
 describe("Completion Status Tests", () => {
@@ -685,7 +685,7 @@ describe("Completion Status Tests", () => {
                           nested: true,
                         },
                         transformation: {
-                          rule: "nextTwelveQuarters",
+                          rule: TransformationRule.NEXT_TWELVE_QUARTERS,
                         },
                       },
                     ],
