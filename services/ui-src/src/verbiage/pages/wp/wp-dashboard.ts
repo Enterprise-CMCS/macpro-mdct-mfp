@@ -15,7 +15,7 @@ const dashboardPageVerbiage: DashboardPageVerbiage = {
         "Edited by",
         "Status",
         "#",
-        "",
+        "Actions",
       ],
     },
     empty:
