@@ -127,7 +127,7 @@ export const DynamicTableRows = ({
                   entityType,
                   formData,
                   percentage: formPercentage,
-                  rowId: `thead-row-0-cell-${cellIndex}`,
+                  rowId: `${tableId}-thead-row-0-cell-${cellIndex}`,
                   rowIndex,
                   tableId,
                 })}
