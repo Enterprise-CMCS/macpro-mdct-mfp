@@ -252,7 +252,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     const renderedTableIds = new Set<string>();
     let tableIndex = 0;
 
-    const renderedFieldsAndTables = fields.map((field) => {
+    const renderedFieldsAndTables = fields.map((field, index) => {
       const { tableId } = getFieldParts(field.id);
 
       if (field.forTableOnly) {
@@ -276,7 +276,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
           : title;
 
       return (
-        <Fragment key={field.id}>
+        <Fragment key={`${field.id}-${index}`}>
           {titleText && (
             <Heading as="h3" className="verbiage-title">
               {titleText}

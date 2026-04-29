@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import { faker } from "@faker-js/faker";
 // types
 import {
+  EntityType,
   ReportFieldData,
   ReportStatus,
   ReportType,
@@ -285,7 +286,7 @@ const addInitiative = (
     initiative_name: faker.music.songName(),
     initiative_wp_otherTopic: "",
     initiative_wpTopic: [initiativeWorkPlanTopics[index]],
-    type: "initiative",
+    type: EntityType.INITIATIVE,
     ...flaggedData,
   });
 
