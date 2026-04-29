@@ -12,7 +12,6 @@ import {
   ModalDrawerEntityTypes,
   OverlayModalPageShape,
   OverlayModalTypes,
-  ReportShape,
   ReportType,
 } from "types";
 // utils
@@ -47,39 +46,36 @@ export const EntityRow = ({
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
   const stepType = formEntity?.stepType;
   const isWP = report?.reportType === ReportType.WP;
-  const isReadOnly = !editable || (isInitiativeClosed && isWP);
   const isNewAndRequired = !isCopied && !isRequired;
-
-  const getInitiativeStatusValue = (report: ReportShape) => {
-    const isCloseoutStep =
-      stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION;
-
-    if (formEntity && !isCloseoutStep) {
-      return getInitiativeDashboardStatus(formEntity, entity);
-    }
-
-    if (isCloseoutStep) {
-      if (isInitiativeClosed) return EntityStatuses.CLOSE;
-
-      const isCloseOutEnabled = getInitiativeStatus(report, entity, false, [
-        stepType,
-      ]);
-      return isCloseOutEnabled && isCopied
-        ? EntityStatuses.NO_STATUS
-        : EntityStatuses.DISABLED;
-    }
-
-    return getInitiativeStatus(report, entity, false, [
-      EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
-    ]);
-  };
+  const viewOnly = !editable || (isInitiativeClosed && isWP);
 
   const setStatusByType = (entityType: string) => {
     if (!report) return EntityStatuses.NO_STATUS;
 
     switch (entityType) {
       case OverlayModalTypes.INITIATIVE:
-        return getInitiativeStatusValue(report);
+        //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
+        if (
+          formEntity &&
+          stepType !== EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
+        ) {
+          return getInitiativeDashboardStatus(formEntity, entity);
+        } else if (
+          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
+        ) {
+          if (isInitiativeClosed) return EntityStatuses.CLOSE;
+
+          const isCloseOutEnabled = getInitiativeStatus(report, entity, false, [
+            stepType,
+          ]);
+          return isCloseOutEnabled && isCopied
+            ? EntityStatuses.NO_STATUS
+            : EntityStatuses.DISABLED;
+        }
+
+        return getInitiativeStatus(report, entity, false, [
+          EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
+        ]);
       default:
         return getEntityStatus(report, entity, entityType);
     }
@@ -187,7 +183,7 @@ export const EntityRow = ({
                 pl={isMobile ? "0" : "1rem"}
                 pr={isMobile ? "1.5rem" : "2.5rem"}
               >
-                {isReadOnly
+                {viewOnly
                   ? verbiage.readOnlyEntityButtonText
                   : verbiage.editEntityButtonText}
               </Button>
@@ -204,7 +200,7 @@ export const EntityRow = ({
               disabled={entityStatus === EntityStatuses.DISABLED}
               aria-labelledby={`${editButtonId} ${rowId}`}
             >
-              {isReadOnly
+              {viewOnly
                 ? verbiage.readOnlyEntityDetailsButtonText
                 : verbiage.enterEntityDetailsButtonText}
             </Button>
