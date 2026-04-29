@@ -14,11 +14,17 @@ jest.mock("@launchdarkly/node-server-sdk", () => ({
   init: jest.fn(),
 }));
 const waitForInitialization = jest.fn().mockResolvedValue(undefined);
-const variation = jest.fn().mockResolvedValue(true);
+const variation = jest.fn().mockResolvedValue(false);
 
 jest.mock("../../storage/reports", () => ({
   getReportFieldData: jest.fn(),
 }));
+
+const consoleSpy: {
+  log: jest.SpyInstance<void>;
+} = {
+  log: jest.spyOn(console, "log").mockImplementation(),
+};
 
 describe("Field data copy", () => {
   beforeEach(() => {
@@ -538,5 +544,140 @@ describe("Field data copy", () => {
         await runFinancialCopyCase(sourceFieldData, expected, [fieldId]);
       }
     );
+  });
+
+  describe("Copy initiative", () => {
+    const formTemplate = {
+      type: ReportType.WP,
+      routes: [
+        {
+          pageType: PageTypes.MODAL_DRAWER,
+          entityType: "mockEntityType",
+          drawerForm: {
+            fields: [
+              {
+                id: "mockFieldId",
+                validation: ValidationType.NUMBER,
+              },
+            ],
+          },
+        },
+      ],
+    } as ReportJson;
+
+    const mockInitiative = {
+      mockEntityType: [
+        {
+          mockSteps: [
+            {
+              mockFieldId: "mockStepId",
+              initiative_name: "Mock initiative name",
+              initiative_wpTopic: [
+                {
+                  key: "mockId",
+                  value: "Mock topic",
+                },
+              ],
+              defineInitiative_mock: "Mock description",
+            },
+          ],
+          evaluationPlan: [
+            {
+              id: "mockEvaluationPlanId",
+              value: "Mock value",
+            },
+          ],
+          fundingSources: [
+            {
+              id: "mockFundingSourceId",
+              value: "Mock value",
+            },
+          ],
+        },
+      ],
+    };
+
+    test("copy entire initiative with flag off", async () => {
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiative);
+      const copiedData = await copyFieldDataFromSource(
+        "CO",
+        "mock-source-id",
+        formTemplate,
+        {}
+      );
+      expect(consoleSpy.log).toHaveBeenCalled();
+      expect(copiedData).toEqual({
+        mockEntityType: [
+          {
+            mockSteps: [
+              {
+                mockFieldId: "mockStepId",
+                initiative_name: "Mock initiative name",
+                initiative_wpTopic: [
+                  {
+                    key: "mockId",
+                    value: "Mock topic",
+                    isCopied: true,
+                  },
+                ],
+                defineInitiative_mock: "Mock description",
+                isCopied: true,
+              },
+            ],
+            evaluationPlan: [
+              {
+                id: "mockEvaluationPlanId",
+                value: "Mock value",
+                isCopied: true,
+              },
+            ],
+            fundingSources: [
+              {
+                id: "mockFundingSourceId",
+                value: "Mock value",
+                isCopied: true,
+              },
+            ],
+            isCopied: true,
+          },
+        ],
+      });
+    });
+
+    test("copy only initiative name and topic with flag on", async () => {
+      (LD.init as jest.Mock).mockReturnValue({
+        variation: jest.fn().mockResolvedValue(true),
+        waitForInitialization,
+      });
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiative);
+      const copiedData = await copyFieldDataFromSource(
+        "CO",
+        "mock-source-id",
+        formTemplate,
+        {}
+      );
+      expect(consoleSpy.log).toHaveBeenCalled();
+      expect(copiedData).toEqual({
+        mockEntityType: [
+          {
+            mockSteps: [
+              {
+                mockFieldId: "mockStepId",
+                initiative_name: "Mock initiative name",
+                initiative_wpTopic: [
+                  {
+                    key: "mockId",
+                    value: "Mock topic",
+                    isCopied: true,
+                  },
+                ],
+                isCopied: true,
+              },
+            ],
+            isCopied: true,
+          },
+        ],
+      });
+    });
   });
 });

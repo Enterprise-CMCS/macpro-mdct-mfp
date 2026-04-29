@@ -50,34 +50,28 @@ export const EntityRow = ({
   const viewOnly = !editable || (isInitiativeClosed && isWP);
 
   const setStatusByType = (entityType: string) => {
-    if (!report) return EntityStatuses.NO_STATUS;
-
     switch (entityType) {
       case OverlayModalTypes.INITIATIVE:
-        //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
-        if (
-          formEntity &&
-          stepType !== EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
-        ) {
-          return getInitiativeDashboardStatus(formEntity, entity);
-        } else if (
-          stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION
-        ) {
-          if (isInitiativeClosed) return EntityStatuses.CLOSE;
-
-          const isCloseOutEnabled = getInitiativeStatus(report, entity, false, [
-            stepType,
-          ]);
+        if (stepType === EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION) {
+          const isCloseOutEnabled = getInitiativeStatus(
+            report!,
+            entity,
+            false,
+            [stepType]
+          );
           return isCloseOutEnabled && isCopied
             ? EntityStatuses.NO_STATUS
             : EntityStatuses.DISABLED;
+        } else if (stepType) {
+          //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
+          return getInitiativeDashboardStatus(formEntity, entity);
         }
 
-        return getInitiativeStatus(report, entity, false, [
+        return getInitiativeStatus(report!, entity, false, [
           EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
         ]);
       default:
-        return getEntityStatus(report, entity, entityType);
+        return getEntityStatus(report!, entity, entityType);
     }
   };
 
