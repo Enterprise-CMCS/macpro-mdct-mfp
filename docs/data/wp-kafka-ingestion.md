@@ -40,28 +40,28 @@ Examples of full topic names:
 
 Contains the report submission metadata, such as submission date, completion status, and due date.
 
-| Property             | Type       | Validation | Required? | Nested? | parentFieldName |
-| -------------------- | ---------- | ---------- | --------- | ------- | --------------- |
-| `reportType`         | text       | string     | true      |         |                 |
-| `state`              | text       | string     | true      |         |                 |
-| `id`                 | text       | string     | true      |         |                 |
-| `submissionName`     | text       | string     | true      |         |                 |
-| `status`             | text       | string     | true      |         |                 |
-| `fieldDataId`        | text       | string     | true      |         |                 |
-| `formTemplateId`     | text       | string     | true      |         |                 |
-| `createdAt`          | number     | number     | true      |         |                 |
-| `lastAltered`        | number     | number     | true      |         |                 |
-| `versionNumber`      | number     | number     |           |         |                 |
-| `dueDate`            | text       | string     | true      |         |                 |
-| `reportPeriod`       | number     | number     | true      |         |                 |
-| `reportYear`         | number     | number     | true      |         |                 |
-| `submissionCount`    | number     | number     |           |         |                 |
-| `archived`           | boolean    | bool       |           |         |                 |
-| `locked`             | boolean    | bool       |           |         |                 |
-| `associatedSar`      | text       | string     |           |         |                 |
-| `associatedWorkPlan` | text       | string     |           |         |                 |
-| `previousRevisions`  | text array | array      |           |         |                 |
-| `completionStatus`   | object     | mixed      |           |         |                 |
+| Property             | Type       | Validation | Required? |
+| -------------------- | ---------- | ---------- | --------- |
+| `reportType`         | text       | string     | true      |
+| `state`              | text       | string     | true      |
+| `id`                 | text       | string     | true      |
+| `submissionName`     | text       | string     | true      |
+| `status`             | text       | string     | true      |
+| `fieldDataId`        | text       | string     | true      |
+| `formTemplateId`     | text       | string     | true      |
+| `createdAt`          | number     | number     | true      |
+| `lastAltered`        | number     | number     | true      |
+| `versionNumber`      | number     | number     |           |
+| `dueDate`            | text       | string     | true      |
+| `reportPeriod`       | number     | number     | true      |
+| `reportYear`         | number     | number     | true      |
+| `submissionCount`    | number     | number     |           |
+| `archived`           | boolean    | bool       |           |
+| `locked`             | boolean    | bool       |           |
+| `associatedSar`      | text       | string     |           |
+| `associatedWorkPlan` | text       | string     |           |
+| `previousRevisions`  | text array | array      |           |
+| `completionStatus`   | object     | mixed      |           |
 
 ### 2. `wp-form`
 
@@ -121,14 +121,14 @@ The user-entered data for a report submission. This is unique to each state and 
 
 The schema for the form. It contains information about the content included for each route of the UI, including text content and form fields, as well as types and validation.
 
-| Property         | Type   | Validation | Required? | Nested? | parentFieldName |
-| ---------------- | ------ | ---------- | --------- | ------- | --------------- |
-| `type`           | text   |            | true      |         |                 |
-| `name`           | text   |            | true      |         |                 |
-| `basePath`       | text   |            | true      |         |                 |
-| `version`        | text   |            | true      |         |                 |
-| `routes`         | array  |            | true      |         |                 |
-| `validationJson` | object |            | true      |         |                 |
+| Property         | Type   | Validation | Required? |
+| ---------------- | ------ | ---------- | --------- |
+| `type`           | text   |            | true      |
+| `name`           | text   |            | true      |
+| `basePath`       | text   |            | true      |
+| `version`        | text   |            | true      |
+| `routes`         | array  |            | true      |
+| `validationJson` | object |            | true      |
 
 ---
 
