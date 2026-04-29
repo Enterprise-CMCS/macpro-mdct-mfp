@@ -16,7 +16,7 @@
 
 This document describes how downstream teams can ingest MFP Work Plan (WP) data from Kafka.
 
-There are three Kafka topics that comprise the WP data surface:
+There are three Kafka topics that stream WP data:
 
 | Topic Name         | Source   | Content                    |
 | ------------------ | -------- | -------------------------- |
@@ -79,6 +79,7 @@ The user-entered data for a report submission. This is unique to each state and 
 | `transitionBenchmarks_applicableToMfpDemonstration`                              | radio         | radio              | true      |         |                                                                |
 | `quarterlyProjections{YYYY}Q{1-4}`                                               | number        | validInteger       | true      | true    | `transitionBenchmarks_applicableToMfpDemonstration`            |
 | `strategy_explanation`                                                           | textarea      | text               | true      |         |                                                                |
+| `generalInformation_resubmissionInformation`                                     | textarea      | text               |           |         |                                                                |
 | `instructions_selfDirectedInitiatives`                                           | radio         | radio              | true      |         |                                                                |
 | `instructions_tribalInitiatives`                                                 | radio         | radio              | true      |         |                                                                |
 | `initiative_name`                                                                | textarea      | text               | true      |         |                                                                |
@@ -114,6 +115,7 @@ The user-entered data for a report submission. This is unique to each state and 
 - Radio/checkbox fields are arrays of `{ key, value }` objects.
 - `quarterlyProjections{YYYY}Q{1-4}` is dynamically generated based on the Work Plan's `reportYear` and `reportPeriod`. For report year 2026, this expands to `2026Q1` - `2028Q4`.
 - Target populations marked `applicableToMfpDemonstration = "No"` will not have quarterly projection fields.
+- `generalInformation_resubmissionInformation` is only present when the Work Plan is a resubmission.
 
 ### 3. `wp-form-template`
 
@@ -412,3 +414,7 @@ wp-form-template message key: formTemplates/template-789.json
   ]
 }
 ```
+
+#### Notes:
+
+- `defineInitiative_keyMetrics_performanceIndicators` may be an empty array if the user has not yet entered any indicators.
