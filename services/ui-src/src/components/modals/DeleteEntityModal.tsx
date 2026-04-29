@@ -1,20 +1,31 @@
 import { useContext, useState } from "react";
 // components
 import { Text } from "@chakra-ui/react";
-import { Modal, ReportContext } from "components";
+import { DynamicTableContext, Modal, ReportContext } from "components";
 
 // types
-import { AnyObject, EntityShape, ReportStatus } from "types";
+import {
+  AnyObject,
+  DynamicRowsTemplate,
+  EntityShape,
+  ReportStatus,
+} from "types";
 import { parseCustomHtml, useStore } from "utils";
 
 export const DeleteEntityModal = ({
+  dynamicRowsTemplate,
   entityType,
   entityIdLookup,
-  selectedEntity,
-  verbiage,
   modalDisclosure,
+  parentEntityId,
+  selectedEntity,
+  tableId,
   userDisabled,
+  verbiage,
+  updatedFields,
 }: Props) => {
+  const { removeDynamicRow } = useContext(DynamicTableContext);
+
   const { report, editable } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
@@ -62,29 +73,42 @@ export const DeleteEntityModal = ({
 
   const deleteProgramHandler = async () => {
     setDeleting(true);
-    const reportKeys = {
-      reportType: report?.reportType,
-      state: report?.state,
-      id: report?.id,
-    };
 
-    const entityTypes: string[] =
-      typeof entityType === "string" ? [entityType] : (entityType as string[]);
+    if (dynamicRowsTemplate && tableId === "defineInitiative_keyMetrics") {
+      removeDynamicRow(
+        dynamicRowsTemplate.id,
+        selectedEntity,
+        entityType,
+        parentEntityId,
+        updatedFields
+      );
+    } else {
+      const reportKeys = {
+        reportType: report?.reportType,
+        state: report?.state,
+        id: report?.id,
+      };
 
-    const entityName = entityTypes[0];
-    const updatedEntities = removeSelectedEntity(
-      structuredClone(report?.fieldData),
-      entityTypes.at(-1),
-      selectedEntity?.id
-    );
+      const entityTypes: string[] =
+        typeof entityType === "string"
+          ? [entityType]
+          : (entityType as string[]);
 
-    await updateReport(reportKeys, {
-      metadata: {
-        lastAlteredBy: full_name,
-        status: ReportStatus.IN_PROGRESS,
-      },
-      fieldData: { [entityName]: updatedEntities[entityName] },
-    });
+      const entityName = entityTypes[0];
+      const updatedEntities = removeSelectedEntity(
+        structuredClone(report?.fieldData),
+        entityTypes.at(-1),
+        selectedEntity?.id
+      );
+
+      await updateReport(reportKeys, {
+        metadata: {
+          lastAlteredBy: full_name,
+          status: ReportStatus.IN_PROGRESS,
+        },
+        fieldData: { [entityName]: updatedEntities[entityName] },
+      });
+    }
     setDeleting(false);
     modalDisclosure.onClose();
   };
@@ -107,13 +131,17 @@ export const DeleteEntityModal = ({
 };
 
 interface Props {
+  dynamicRowsTemplate?: DynamicRowsTemplate;
   entityType: string | string[];
   entityIdLookup?: AnyObject;
-  selectedEntity?: EntityShape;
-  verbiage: AnyObject;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
   };
+  parentEntityId?: string;
+  selectedEntity?: EntityShape;
+  tableId?: string;
   userDisabled?: boolean;
+  verbiage: AnyObject;
+  updatedFields?: AnyObject[];
 }

@@ -53,6 +53,7 @@ export const EntityModalTable = ({
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
+  const [updatedFields, setUpdatedFields] = useState<AnyObject[]>();
 
   const {
     isOpen: keyMetricsModalIsOpen,
@@ -76,8 +77,12 @@ export const EntityModalTable = ({
     onClose: deleteEntityModalOnCloseHandler,
   } = useDisclosure();
 
-  const openDeleteEntityModal = (entity: EntityShape) => {
+  const openDeleteEntityModal = (
+    entity: EntityShape,
+    updatedFields: AnyObject[]
+  ) => {
     setSelectedEntity(entity);
+    updatedFields && setUpdatedFields(updatedFields);
     deleteEntityModalOnOpenHandler();
   };
 
@@ -204,13 +209,17 @@ export const EntityModalTable = ({
           />
 
           <DeleteEntityModal
+            dynamicRowsTemplate={dynamicRowsTemplate}
             entityType={formData?.type}
+            parentEntityId={formData?.id}
             selectedEntity={selectedEntity}
             verbiage={dynamicRowsTemplate.verbiage}
             modalDisclosure={{
               isOpen: deleteEntityModalIsOpen,
               onClose: closeDeleteEntityModal,
             }}
+            tableId={tableId}
+            updatedFields={updatedFields}
           />
         </>
       )}

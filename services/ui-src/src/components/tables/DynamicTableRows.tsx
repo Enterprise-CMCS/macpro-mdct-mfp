@@ -22,7 +22,7 @@ export const DynamicTableRows = ({
   formPercentage,
   hasDynamicModalForm,
   hasStaticRows,
-  openDeleteEntityModal,
+  openDeleteEntityModal = () => {},
   openModal = () => {},
   tableId,
   updatedFieldsCallback = () => [],
@@ -151,7 +151,10 @@ export const DynamicTableRows = ({
                     onClick={() => {
                       entityType === EntityType.INITIATIVE &&
                       openDeleteEntityModal
-                        ? openDeleteEntityModal(dynamicId)
+                        ? openDeleteEntityModal(
+                            dynamicId,
+                            updatedFieldsCallback(dynamicId, localFieldData)
+                          )
                         : removeDynamicRow(
                             dynamicRowsTemplate.id,
                             dynamicId,
