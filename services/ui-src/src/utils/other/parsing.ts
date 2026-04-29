@@ -117,11 +117,12 @@ export const sanitizeAndParseHtml = (html: string) => {
 };
 
 export const labelTextWithOptional = (label: string) => {
-  const endsWithColon = label.endsWith(":");
-  const baseLabel = endsWithColon ? label.slice(0, -1) : label;
-  const suffix = endsWithColon ? ":" : "";
+  const cleanLabel = label.trim();
+  const endsWithColon = cleanLabel.endsWith(":");
+  const parsedLabel = endsWithColon ? cleanLabel.slice(0, -1) : cleanLabel;
+  const colon = endsWithColon ? ":" : "";
 
   return parseCustomHtml(
-    `${baseLabel}<span class='optional-text'> (optional)${suffix}</span>`
+    `${parsedLabel}<span class='optional-text'> (optional)${colon}</span>`
   );
 };
