@@ -121,7 +121,7 @@ export const CreateWorkPlanModal = ({
       },
       fieldData: {
         submissionName,
-        ["targetPopulations"]: DEFAULT_TARGET_POPULATIONS,
+        targetPopulations: DEFAULT_TARGET_POPULATIONS,
       },
     };
 
