@@ -36,7 +36,7 @@ describe("<Header />", () => {
     });
 
     test("Header is visible", () => {
-      const header = screen.getByRole("navigation");
+      const header = screen.getByRole("header");
       expect(header).toBeVisible();
     });
 
