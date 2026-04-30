@@ -1,5 +1,5 @@
 import { getReportFieldData } from "../../storage/reports";
-import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
+// import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 import { getPossibleFieldsFromFormTemplate } from "../formTemplates/formTemplates";
 import { ReportFieldData, ReportJson, ReportType, State } from "../types";
 
@@ -71,14 +71,15 @@ const isExcludedFinancialReportNormalizedField = (
   );
 };
 
-const isExcludedInitiativeField = async (fieldKey: string) => {
-  const wpSarRelease2025 = await isFeatureFlagEnabled("wpSarRelease2025");
-  if (!wpSarRelease2025) return false;
+const isExcludedInitiativeField = async (_fieldKey: string) => {
+  return false;
+  // const wpSarRelease2025 = await isFeatureFlagEnabled("wpSarRelease2025");
+  // if (!wpSarRelease2025) return false;
 
-  return (
-    fieldKey.startsWith("defineInitiative") ||
-    ["evaluationPlan", "fundingSources"].includes(fieldKey)
-  );
+  // return (
+  //   fieldKey.startsWith("defineInitiative") ||
+  //   ["evaluationPlan", "fundingSources"].includes(fieldKey)
+  // );
 };
 
 const shouldExcludeCopiedField = async (
