@@ -22,7 +22,7 @@ export const Header = () => {
   return (
     <Box sx={sx.root} id="header">
       <UsaBanner />
-      <Flex sx={sx.headerBar} role="navigation">
+      <Flex sx={sx.headerBar} role="header">
         <Container sx={sx.headerContainer}>
           <Flex sx={sx.headerFlex}>
             <Link as={RouterLink} to="/" variant="unstyled">
