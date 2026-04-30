@@ -1,5 +1,5 @@
 import { getReportFieldData } from "../../storage/reports";
-// import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
+import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 import { getPossibleFieldsFromFormTemplate } from "../formTemplates/formTemplates";
 import { ReportFieldData, ReportJson, ReportType, State } from "../types";
 
@@ -71,25 +71,27 @@ const isExcludedFinancialReportNormalizedField = (
   );
 };
 
-const isExcludedInitiativeField = async (_fieldKey: string) => {
-  return false;
-  // const wpSarRelease2025 = await isFeatureFlagEnabled("wpSarRelease2025");
-  // if (!wpSarRelease2025) return false;
+const isExcludedInitiativeField = (
+  fieldKey: string,
+  wpSarRelease2025: boolean
+) => {
+  if (!wpSarRelease2025) return false;
 
-  // return (
-  //   fieldKey.startsWith("defineInitiative") ||
-  //   ["evaluationPlan", "fundingSources"].includes(fieldKey)
-  // );
+  return (
+    fieldKey.startsWith("defineInitiative") ||
+    ["evaluationPlan", "fundingSources"].includes(fieldKey)
+  );
 };
 
-const shouldExcludeCopiedField = async (
+const shouldExcludeCopiedField = (
   reportType: ReportType | undefined,
   fieldKey: string,
-  entityType?: string
+  entityType: string | undefined,
+  wpSarRelease2025: boolean
 ) => {
   switch (reportType) {
     case ReportType.WP:
-      return await isExcludedInitiativeField(fieldKey);
+      return isExcludedInitiativeField(fieldKey, wpSarRelease2025);
     case ReportType.FINANCIAL_REPORT: {
       const normalizedFieldName = getFieldKeySuffix(fieldKey);
       const entityExcludedFields = entityType
@@ -110,13 +112,14 @@ const shouldExcludeCopiedField = async (
   }
 };
 
-const shouldExcludeCopiedEntityField = async (
+const shouldExcludeCopiedEntityField = (
   reportType: ReportType | undefined,
-  fieldKey: string
+  fieldKey: string,
+  wpSarRelease2025: boolean
 ) => {
   switch (reportType) {
     case ReportType.WP:
-      return await isExcludedInitiativeField(fieldKey);
+      return isExcludedInitiativeField(fieldKey, wpSarRelease2025);
     case ReportType.FINANCIAL_REPORT: {
       const normalizedFieldName = getFieldKeySuffix(fieldKey);
       return !financialReportEntityIncludedNormalizedFieldNames.includes(
@@ -137,7 +140,8 @@ async function pruneEntityData(
   key: string,
   entityData: ReportFieldData[],
   possibleFields: string[],
-  reportType?: ReportType
+  reportType: ReportType | undefined,
+  wpSarRelease2025: boolean
 ) {
   // adding fields to be copied over from entries
   const concatEntityFields = [...possibleFields, ...additionalFields];
@@ -158,18 +162,28 @@ async function pruneEntityData(
        */
       if (
         Array.isArray(entity[entityKey]) &&
-        !(await isExcludedInitiativeField(entityKey))
+        !isExcludedInitiativeField(entityKey, wpSarRelease2025)
       ) {
-        await pruneEntityData(
+        pruneEntityData(
           sourceFieldData,
           key,
           entity[entityKey] as ReportFieldData[],
           possibleFields,
-          reportType
+          reportType,
+          wpSarRelease2025
         );
       } else if (
-        (await shouldExcludeCopiedField(reportType, entityKey, key)) ||
-        ((await shouldExcludeCopiedEntityField(reportType, entityKey)) &&
+        shouldExcludeCopiedField(
+          reportType,
+          entityKey,
+          key,
+          wpSarRelease2025
+        ) ||
+        (shouldExcludeCopiedEntityField(
+          reportType,
+          entityKey,
+          wpSarRelease2025
+        ) &&
           !isNameField(entityKey) &&
           !isChoiceField(entityKey) &&
           !concatEntityFields.includes(entityKey))
@@ -204,6 +218,8 @@ export async function copyFieldDataFromSource(
   formTemplate: ReportJson,
   validatedFieldData: ReportFieldData
 ) {
+  const wpSarRelease2025 = await isFeatureFlagEnabled("wpSarRelease2025");
+
   const sourceFieldData = await getReportFieldData({
     reportType: formTemplate.type,
     state,
@@ -214,19 +230,27 @@ export async function copyFieldDataFromSource(
     const possibleFields = getPossibleFieldsFromFormTemplate(formTemplate);
 
     for (const key of Object.keys(sourceFieldData)) {
-      if (await shouldExcludeCopiedField(formTemplate.type, key)) {
+      if (
+        shouldExcludeCopiedField(
+          formTemplate.type,
+          key,
+          undefined,
+          wpSarRelease2025
+        )
+      ) {
         delete sourceFieldData[key];
         continue;
       }
 
       // Only iterate through entities, not choice lists
       if (Array.isArray(sourceFieldData[key])) {
-        await pruneEntityData(
+        pruneEntityData(
           sourceFieldData,
           key,
           sourceFieldData[key] as ReportFieldData[],
           possibleFields,
-          formTemplate.type
+          formTemplate.type,
+          wpSarRelease2025
         );
       } else if (!possibleFields.includes(key)) {
         delete sourceFieldData[key];
