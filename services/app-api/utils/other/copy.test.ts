@@ -566,78 +566,8 @@ describe("Field data copy", () => {
       ],
     } as ReportJson;
 
-    const mockInitiativeV1 = {
-      initiative: [
-        {
-          id: "mockInitiativeId",
-          initiative_name: "Mock Initiative",
-          initiative_wp_otherTopic: "",
-          initiative_wpTopic: [
-            {
-              key: "initiative_wpTopic-mockTopicId",
-              value: "Mock topic",
-            },
-          ],
-          type: EntityType.INITIATIVE,
-          defineInitiative_mockField: "Mock description",
-          evaluationPlan: [
-            {
-              id: "mockEvaluationPlanId",
-            },
-          ],
-          fundingSources: [
-            {
-              id: "mockFundingSourceId",
-            },
-          ],
-        },
-      ],
-    };
-
-    const mockInitiativeV2 = {
-      initiative: [
-        {
-          id: "mockInitiativeId",
-          initiative_name: "Mock Initiative",
-          initiative_wp_otherTopic: "",
-          initiative_wpTopic: [
-            {
-              key: "initiative_wpTopic-mockTopicId",
-              value: "Mock topic",
-            },
-          ],
-          type: EntityType.INITIATIVE,
-          defineInitiative_mockField: "Mock description",
-          defineInitiative_mockTable_mocks: [
-            {
-              id: "mockId",
-              mockField: "Mock value",
-              mockChoice: [
-                {
-                  key: "mockChoice-mockChoiceId",
-                  value: "Mock choice",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-
-    test("copy entire initiative v1 with flag off", async () => {
-      (LD.init as jest.Mock).mockReturnValue({
-        variation,
-        waitForInitialization,
-      });
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiativeV1);
-      const copiedData = await copyFieldDataFromSource(
-        "CO",
-        "mock-source-id",
-        formTemplate,
-        {}
-      );
-      expect(consoleSpy.log).toHaveBeenCalled();
-      expect(copiedData).toEqual({
+    describe("initiativeV1", () => {
+      const mockInitiativeV1 = {
         initiative: [
           {
             id: "mockInitiativeId",
@@ -647,7 +577,6 @@ describe("Field data copy", () => {
               {
                 key: "initiative_wpTopic-mockTopicId",
                 value: "Mock topic",
-                isCopied: true,
               },
             ],
             type: EntityType.INITIATIVE,
@@ -655,35 +584,103 @@ describe("Field data copy", () => {
             evaluationPlan: [
               {
                 id: "mockEvaluationPlanId",
-                isCopied: true,
               },
             ],
             fundingSources: [
               {
                 id: "mockFundingSourceId",
-                isCopied: true,
               },
             ],
-            isCopied: true,
           },
         ],
+      };
+
+      test("copy entire initiative v1 with flag off", async () => {
+        (LD.init as jest.Mock).mockReturnValue({
+          variation,
+          waitForInitialization,
+        });
+        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+          mockInitiativeV1
+        );
+        const copiedData = await copyFieldDataFromSource(
+          "CO",
+          "mock-source-id",
+          formTemplate,
+          {}
+        );
+        expect(consoleSpy.log).toHaveBeenCalled();
+        expect(copiedData).toEqual({
+          initiative: [
+            {
+              id: "mockInitiativeId",
+              initiative_name: "Mock Initiative",
+              initiative_wp_otherTopic: "",
+              initiative_wpTopic: [
+                {
+                  key: "initiative_wpTopic-mockTopicId",
+                  value: "Mock topic",
+                  isCopied: true,
+                },
+              ],
+              type: EntityType.INITIATIVE,
+              defineInitiative_mockField: "Mock description",
+              evaluationPlan: [
+                {
+                  id: "mockEvaluationPlanId",
+                  isCopied: true,
+                },
+              ],
+              fundingSources: [
+                {
+                  id: "mockFundingSourceId",
+                  isCopied: true,
+                },
+              ],
+              isCopied: true,
+            },
+          ],
+        });
+      });
+
+      test("copy only initiative v1 name and topic with flag on", async () => {
+        (LD.init as jest.Mock).mockReturnValue({
+          variation: jest.fn().mockResolvedValue(true),
+          waitForInitialization,
+        });
+        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+          mockInitiativeV1
+        );
+        const copiedData = await copyFieldDataFromSource(
+          "CO",
+          "mock-source-id",
+          formTemplate,
+          {}
+        );
+        expect(consoleSpy.log).toHaveBeenCalled();
+        expect(copiedData).toEqual({
+          initiative: [
+            {
+              id: "mockInitiativeId",
+              initiative_name: "Mock Initiative",
+              initiative_wp_otherTopic: "",
+              initiative_wpTopic: [
+                {
+                  key: "initiative_wpTopic-mockTopicId",
+                  value: "Mock topic",
+                  isCopied: true,
+                },
+              ],
+              type: EntityType.INITIATIVE,
+              isCopied: true,
+            },
+          ],
+        });
       });
     });
 
-    test("copy only initiative v1 name and topic with flag on", async () => {
-      (LD.init as jest.Mock).mockReturnValue({
-        variation: jest.fn().mockResolvedValue(true),
-        waitForInitialization,
-      });
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiativeV1);
-      const copiedData = await copyFieldDataFromSource(
-        "CO",
-        "mock-source-id",
-        formTemplate,
-        {}
-      );
-      expect(consoleSpy.log).toHaveBeenCalled();
-      expect(copiedData).toEqual({
+    describe("initiativeV2", () => {
+      const mockInitiativeV2 = {
         initiative: [
           {
             id: "mockInitiativeId",
@@ -693,30 +690,27 @@ describe("Field data copy", () => {
               {
                 key: "initiative_wpTopic-mockTopicId",
                 value: "Mock topic",
-                isCopied: true,
               },
             ],
             type: EntityType.INITIATIVE,
-            isCopied: true,
+            defineInitiative_mockField: "Mock description",
+            defineInitiative_mockTable_mocks: [
+              {
+                id: "mockId",
+                mockField: "Mock value",
+                mockChoice: [
+                  {
+                    key: "mockChoice-mockChoiceId",
+                    value: "Mock choice",
+                  },
+                ],
+              },
+            ],
           },
         ],
-      });
-    });
+      };
 
-    test("copy entire initiative v2 with flag off", async () => {
-      (LD.init as jest.Mock).mockReturnValue({
-        variation,
-        waitForInitialization,
-      });
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiativeV2);
-      const copiedData = await copyFieldDataFromSource(
-        "CO",
-        "mock-source-id",
-        formTemplate,
-        {}
-      );
-      expect(consoleSpy.log).toHaveBeenCalled();
-      expect(copiedData).toEqual({
+      const expectedResult = {
         initiative: [
           {
             id: "mockInitiativeId",
@@ -748,6 +742,42 @@ describe("Field data copy", () => {
             isCopied: true,
           },
         ],
+      };
+
+      test("copy entire initiative v2 with flag on", async () => {
+        (LD.init as jest.Mock).mockReturnValue({
+          variation: jest.fn().mockResolvedValue(true),
+          waitForInitialization,
+        });
+        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+          mockInitiativeV2
+        );
+        const copiedData = await copyFieldDataFromSource(
+          "CO",
+          "mock-source-id",
+          formTemplate,
+          {}
+        );
+        expect(consoleSpy.log).toHaveBeenCalled();
+        expect(copiedData).toEqual(expectedResult);
+      });
+
+      test("copy entire initiative v2 with flag off", async () => {
+        (LD.init as jest.Mock).mockReturnValue({
+          variation,
+          waitForInitialization,
+        });
+        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+          mockInitiativeV2
+        );
+        const copiedData = await copyFieldDataFromSource(
+          "CO",
+          "mock-source-id",
+          formTemplate,
+          {}
+        );
+        expect(consoleSpy.log).toHaveBeenCalled();
+        expect(copiedData).toEqual(expectedResult);
       });
     });
   });

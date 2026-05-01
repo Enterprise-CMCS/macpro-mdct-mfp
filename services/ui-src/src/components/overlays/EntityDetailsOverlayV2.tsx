@@ -19,6 +19,7 @@ import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
 
 export const EntityDetailsOverlayV2 = ({
+  autosaveState = false,
   backButtonText,
   closeEntityDetailsOverlay,
   disabled = false,
@@ -32,6 +33,8 @@ export const EntityDetailsOverlayV2 = ({
   setSelectedEntity,
   validateOnRender = false,
 }: Props) => {
+  const [autosave, setAutosave] = useState<boolean>(true);
+  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [formJson, setFormJson] = useState<FormJson>(form);
 
@@ -56,6 +59,7 @@ export const EntityDetailsOverlayV2 = ({
       const isClosed = isClosedInitiative(entity);
       const fields = getFields(entity);
 
+      setAutosave(!isClosed);
       setShowAlert(isClosed);
       setFormJson(toggleOptional({ ...form, fields }, isClosed));
     },
@@ -79,6 +83,10 @@ export const EntityDetailsOverlayV2 = ({
     };
   }, [selectedEntity]);
 
+  useEffect(() => {
+    setDisableSubmit(autosaveState || submitting);
+  }, [autosaveState, submitting]);
+
   return (
     <Box>
       <Button
@@ -100,7 +108,7 @@ export const EntityDetailsOverlayV2 = ({
       />
       {form.fields && (
         <Form
-          autosave={true}
+          autosave={autosave}
           className="overlay-form"
           disabled={isDisabled}
           dontReset={true}
@@ -128,8 +136,13 @@ export const EntityDetailsOverlayV2 = ({
           >
             Previous
           </Button>
-          <Button sx={sx.saveButton} type="submit" {...submitProps}>
-            {submitting ? <Spinner size="md" /> : getSaveButtonText()}
+          <Button
+            disabled={disableSubmit}
+            sx={sx.saveButton}
+            type="submit"
+            {...submitProps}
+          >
+            {disableSubmit ? <Spinner size="md" /> : getSaveButtonText()}
           </Button>
         </Flex>
       </Box>
@@ -138,6 +151,7 @@ export const EntityDetailsOverlayV2 = ({
 };
 
 interface Props {
+  autosaveState?: boolean;
   backButtonText?: string;
   closeEntityDetailsOverlay: Function;
   disabled?: boolean;

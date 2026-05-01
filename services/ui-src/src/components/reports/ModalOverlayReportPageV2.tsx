@@ -63,6 +63,7 @@ export const ModalOverlayReportPageV2 = ({
   const { full_name, state, userIsAdmin, userIsEndUser, userIsReadOnly } =
     useStore().user ?? {};
   const {
+    autosaveState,
     editable,
     report = {} as ReportShape,
     setSelectedEntity,
@@ -144,7 +145,7 @@ export const ModalOverlayReportPageV2 = ({
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
-    if (userIsEndUser) {
+    if (!autosaveState && userIsEndUser) {
       setSubmitting(true);
       const reportKeys = {
         reportType: report.reportType,
@@ -284,6 +285,7 @@ export const ModalOverlayReportPageV2 = ({
     return (
       <EntityProvider>
         <EntityDetailsOverlayV2
+          autosaveState={autosaveState}
           backButtonText={verbiage.backButtonText}
           closeEntityDetailsOverlay={closeEntityDetailsOverlay}
           disabled={isDisabled}

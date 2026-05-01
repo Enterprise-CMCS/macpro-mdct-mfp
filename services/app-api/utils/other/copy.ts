@@ -80,9 +80,9 @@ const isExcludedFinancialReportNormalizedField = (
 const isExcludedInitiativeV1Field = (
   fieldKey: string,
   sourceFieldData: ReportFieldData | undefined,
-  wpSarRelease2025: boolean
+  options?: { [key: string]: boolean }
 ) => {
-  if (!sourceFieldData?.[EntityType.INITIATIVE] || !wpSarRelease2025) {
+  if (!sourceFieldData?.[EntityType.INITIATIVE] || !options?.wpSarRelease2025) {
     return false;
   }
 
@@ -103,15 +103,11 @@ const shouldExcludeCopiedField = (
   fieldKey: string,
   entityType: string | undefined,
   sourceFieldData: ReportFieldData,
-  wpSarRelease2025: boolean
+  options?: { [key: string]: boolean }
 ) => {
   switch (reportType) {
     case ReportType.WP:
-      return isExcludedInitiativeV1Field(
-        fieldKey,
-        sourceFieldData,
-        wpSarRelease2025
-      );
+      return isExcludedInitiativeV1Field(fieldKey, sourceFieldData, options);
     case ReportType.FINANCIAL_REPORT: {
       const normalizedFieldName = getFieldKeySuffix(fieldKey);
       const entityExcludedFields = entityType
@@ -136,15 +132,11 @@ const shouldExcludeCopiedEntityField = (
   reportType: ReportType | undefined,
   fieldKey: string,
   sourceFieldData: ReportFieldData,
-  wpSarRelease2025: boolean
+  options?: { [key: string]: boolean }
 ) => {
   switch (reportType) {
     case ReportType.WP:
-      return isExcludedInitiativeV1Field(
-        fieldKey,
-        sourceFieldData,
-        wpSarRelease2025
-      );
+      return isExcludedInitiativeV1Field(fieldKey, sourceFieldData, options);
     case ReportType.FINANCIAL_REPORT: {
       const normalizedFieldName = getFieldKeySuffix(fieldKey);
       return !financialReportEntityIncludedNormalizedFieldNames.includes(
@@ -166,7 +158,7 @@ const pruneEntityData = async (
   entityData: ReportFieldData[],
   possibleFields: string[],
   reportType: ReportType | undefined,
-  wpSarRelease2025: boolean
+  options?: { [key: string]: boolean }
 ) => {
   // adding fields to be copied over from entries
   const concatEntityFields = [...possibleFields, ...additionalFields];
@@ -187,11 +179,7 @@ const pruneEntityData = async (
        */
       if (
         Array.isArray(entity[entityKey]) &&
-        !isExcludedInitiativeV1Field(
-          entityKey,
-          sourceFieldData,
-          wpSarRelease2025
-        )
+        !isExcludedInitiativeV1Field(entityKey, sourceFieldData, options)
       ) {
         pruneEntityData(
           sourceFieldData,
@@ -199,7 +187,7 @@ const pruneEntityData = async (
           entity[entityKey] as ReportFieldData[],
           possibleFields,
           reportType,
-          wpSarRelease2025
+          options
         );
       } else if (
         shouldExcludeCopiedField(
@@ -207,13 +195,13 @@ const pruneEntityData = async (
           entityKey,
           key,
           sourceFieldData,
-          wpSarRelease2025
+          options
         ) ||
         (shouldExcludeCopiedEntityField(
           reportType,
           entityKey,
           sourceFieldData,
-          wpSarRelease2025
+          options
         ) &&
           !isNameField(entityKey) &&
           !isChoiceField(entityKey) &&
@@ -250,6 +238,7 @@ export async function copyFieldDataFromSource(
   validatedFieldData: ReportFieldData
 ) {
   const wpSarRelease2025 = await isFeatureFlagEnabled("wpSarRelease2025");
+  const options = { wpSarRelease2025 };
 
   const sourceFieldData = await getReportFieldData({
     reportType: formTemplate.type,
@@ -267,7 +256,7 @@ export async function copyFieldDataFromSource(
           key,
           undefined,
           sourceFieldData,
-          wpSarRelease2025
+          options
         )
       ) {
         delete sourceFieldData[key];
@@ -282,7 +271,7 @@ export async function copyFieldDataFromSource(
           sourceFieldData[key] as ReportFieldData[],
           possibleFields,
           formTemplate.type,
-          wpSarRelease2025
+          options
         );
       } else if (!possibleFields.includes(key)) {
         delete sourceFieldData[key];
