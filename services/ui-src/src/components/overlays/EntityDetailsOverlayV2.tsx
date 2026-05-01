@@ -64,7 +64,11 @@ export const EntityDetailsOverlayV2 = ({
 
   const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {
     const currentValues = hookForm.getValues() as EntityShape;
-    updateCloseoutSection(currentValues);
+    updateCloseoutSection({
+      ...currentValues,
+      // Doesn't exist in form values, needs to be added here manually
+      isCopied: Boolean(selectedEntity?.isCopied),
+    });
   };
 
   useEffect(() => {
