@@ -177,7 +177,7 @@ wp-form-template message key: formTemplates/template-789.json
 
 **Key:**
 
-`AL#wp-123`
+`AL#wp-${ksuid}`
 
 **Value:**
 
@@ -186,11 +186,11 @@ wp-form-template message key: formTemplates/template-789.json
   "NewImage": {
     "reportType": "WP",
     "state": "AL",
-    "id": "wp-123",
+    "id": "${ksuid}",
     "submissionName": "Alabama MFP Work Plan 2026 - Period 1",
     "status": "In progress",
-    "fieldDataId": "field-456",
-    "formTemplateId": "template-789",
+    "fieldDataId": "field-${ksuid}",
+    "formTemplateId": "template-${ksuid}",
     "createdAt": 1735689600000,
     "lastAltered": 1745769600000,
     "versionNumber": 1,
@@ -200,7 +200,7 @@ wp-form-template message key: formTemplates/template-789.json
     "submissionCount": 0,
     "archived": false,
     "locked": false,
-    "associatedSar": "sar-321",
+    "associatedSar": "sar-${ksuid}",
     "previousRevisions": [],
     "completionStatus": {
       "/wp/general-information": true,
@@ -212,11 +212,11 @@ wp-form-template message key: formTemplates/template-789.json
   "OldImage": {
     "reportType": "WP",
     "state": "AL",
-    "id": "wp-123",
+    "id": "wp-${ksuid}",
     "submissionName": "Alabama MFP Work Plan 2026 - Period 1",
     "status": "Not started",
-    "fieldDataId": "field-456",
-    "formTemplateId": "template-789",
+    "fieldDataId": "field-${ksuid}",
+    "formTemplateId": "template-${ksuid}",
     "createdAt": 1735689600000,
     "lastAltered": 1735689600000,
     "versionNumber": 1,
@@ -230,7 +230,7 @@ wp-form-template message key: formTemplates/template-789.json
   },
   "Keys": {
     "state": "AL",
-    "id": "wp-123"
+    "id": "wp-${ksuid}"
   }
 }
 ```
@@ -247,7 +247,7 @@ wp-form-template message key: formTemplates/template-789.json
 
 **Key:**
 
-`fieldData/AL/field-456.json`
+`fieldData/AL/${ksuid}.json`
 
 **Value:**
 
@@ -260,24 +260,24 @@ wp-form-template message key: formTemplates/template-789.json
   "strategy_explanation": "Alabama will continue to expand HCBS access through targeted transition initiatives and housing supports.",
   "instructions_selfDirectedInitiatives": [
     {
-      "key": "instructions_selfDirectedInitiatives-456wxyz",
+      "key": "instructions_selfDirectedInitiatives-${ksuid}",
       "value": "No"
     }
   ],
   "instructions_tribalInitiatives": [
     {
-      "key": "instructions_tribalInitiatives-789abcd",
+      "key": "instructions_tribalInitiatives-${ksuid}",
       "value": "No"
     }
   ],
   "targetPopulations": [
     {
-      "id": "2Vd02CVUtKgBETwqzDXpSIhi",
+      "id": "${ksuid}",
       "isRequired": true,
       "transitionBenchmarks_targetPopulationName": "Older adults",
       "transitionBenchmarks_applicableToMfpDemonstration": [
         {
-          "key": "transitionBenchmarks_applicableToMfpDemonstration-1234qwerty",
+          "key": "transitionBenchmarks_applicableToMfpDemonstration-${ksuid}",
           "value": "Yes"
         }
       ],
@@ -295,25 +295,25 @@ wp-form-template message key: formTemplates/template-789.json
       "quarterlyProjections2028Q4": "32"
     },
     {
-      "id": "123456",
+      "id": "${ksuid}",
       "isRequired": true,
       "transitionBenchmarks_targetPopulationName": "Individuals with physical disabilities (PD)",
       "transitionBenchmarks_targetPopulationName_short": "PD",
       "transitionBenchmarks_applicableToMfpDemonstration": [
         {
-          "key": "transitionBenchmarks_applicableToMfpDemonstration-12abc34",
+          "key": "transitionBenchmarks_applicableToMfpDemonstration-${ksuid}",
           "value": "No"
         }
       ]
     },
     {
-      "id": "67890",
+      "id": "${ksuid}",
       "isRequired": true,
       "transitionBenchmarks_targetPopulationName": "Individuals with intellectual and developmental disabilities (I/DD)",
       "transitionBenchmarks_targetPopulationName_short": "I/DD",
       "transitionBenchmarks_applicableToMfpDemonstration": [
         {
-          "key": "transitionBenchmarks_applicableToMfpDemonstration-56yz78",
+          "key": "transitionBenchmarks_applicableToMfpDemonstration-${ksuid}",
           "value": "Yes"
         }
       ],
@@ -331,13 +331,13 @@ wp-form-template message key: formTemplates/template-789.json
       "quarterlyProjections2028Q4": "16"
     },
     {
-      "id": "01357",
+      "id": "${ksuid}",
       "isRequired": true,
       "transitionBenchmarks_targetPopulationName": "Individuals with mental health and substance use disorders (MH/SUD)",
       "transitionBenchmarks_targetPopulationName_short": "MH/SUD",
       "transitionBenchmarks_applicableToMfpDemonstration": [
         {
-          "key": "transitionBenchmarks_applicableToMfpDemonstration-tuv890",
+          "key": "transitionBenchmarks_applicableToMfpDemonstration-${ksuid}",
           "value": "No"
         }
       ]
@@ -345,13 +345,13 @@ wp-form-template message key: formTemplates/template-789.json
   ],
   "initiative": [
     {
-      "id": "abcxyz",
+      "id": "${ksuid}",
       "type": "initiative",
       "isOtherEntity": true,
       "initiative_name": "Statewide Transition Coordination Expansion",
       "initiative_wpTopic": [
         {
-          "key": "initiative_wpTopic-123",
+          "key": "initiative_wpTopic-${ksuid}",
           "value": "Transitions and transition coordination services*"
         }
       ],
@@ -359,17 +359,17 @@ wp-form-template message key: formTemplates/template-789.json
       "defineInitiative_describeInitiative": "Expand transition coordination capacity across all regions of the state.",
       "defineInitiative_targetPopulations": [
         {
-          "key": "targetPopulations-123abc",
+          "key": "targetPopulations-${ksuid}",
           "value": "Older adults"
         },
         {
-          "key": "targetPopulations-456xyz",
+          "key": "targetPopulations-${ksuid}",
           "value": "Individuals with intellectual and developmental disabilities (I/DD)"
         }
       ],
       "defineInitiative_startDate": [
         {
-          "key": "defineInitiative_startDate-789tuv",
+          "key": "defineInitiative_startDate-${ksuid}",
           "value": "Expected start date"
         }
       ],
@@ -379,13 +379,13 @@ wp-form-template message key: formTemplates/template-789.json
       "defineInitiative_purposeAndGoals": "Increase the number of successful community transitions for older adults and I/DD populations.",
       "defineInitiative_keyActivities": [
         {
-          "id": "123-abc",
+          "id": "123-${ksuid}",
           "name": "Hire and train regional transition coordinators."
         }
       ],
       "defineInitiative_keyMetrics_performanceIndicators": [
         {
-          "id": "456-def",
+          "id": "${ksuid}",
           "defineInitiative_keyMetrics_performanceIndicators-name": "Number of successful community transitions",
           "defineInitiative_keyMetrics_performanceIndicators-dataSource": [
             {
@@ -404,7 +404,7 @@ wp-form-template message key: formTemplates/template-789.json
       "defineInitiative_qualitativeMethods": "Quarterly stakeholder interviews with transition coordinators and participants.",
       "defineInitiative_fundingSources": [
         {
-          "key": "defineInitiative_fundingSources-awTB7dbwBc8x3fRjbWIRlC",
+          "key": "defineInitiative_fundingSources-${ksuid}",
           "value": "MFP administrative cooperative agreement funding"
         }
       ],
