@@ -359,21 +359,21 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     return (
       <Tr
-        key={`${section}-row-${rowIndex}`}
+        key={`${tableId}-${section}-row-${rowIndex}`}
         className={isTotalsRow ? "totals-row" : ""}
       >
         {row.map((cell, cellIndex: number) => (
           <Cell
-            id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
-            key={`${section}-row-${rowIndex}-cell-${cellIndex}`}
+            id={`${tableId}-${section}-row-${rowIndex}-cell-${cellIndex}`}
+            key={`${tableId}-${section}-row-${rowIndex}-cell-${cellIndex}`}
             sx={{ textAlign: thAlign(cell), width: thWidth(cellIndex) }}
           >
             {displayCell({
               cell,
-              columnId: `${section}-row-${rowIndex}-cell-0`,
+              columnId: `${tableId}-${section}-row-${rowIndex}-cell-0`,
               disabled,
               formData,
-              rowId: `${rowId}-row-0-cell-${cellIndex}`,
+              rowId: `${tableId}-${rowId}-row-0-cell-${cellIndex}`,
               rowIndex,
               styleAsOptional: isOptional(cell),
               tableId,
