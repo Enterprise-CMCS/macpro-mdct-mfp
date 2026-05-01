@@ -63,7 +63,11 @@ export const EntityRow = ({
             ? EntityStatuses.NO_STATUS
             : EntityStatuses.DISABLED;
         } else if (stepType) {
-          //the entityType for initiative is being shared for both the parent and the child status to differentiate, check if formEntity is filled
+          /**
+           * the entityType for initiative is being shared for
+           * both the parent and the child status to differentiate,
+           * check if formEntity is filled
+           */
           return getInitiativeDashboardStatus(formEntity, entity);
         }
 
