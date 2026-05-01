@@ -7,6 +7,7 @@ import {
   PageTypes,
   ReportType,
   ValidationType,
+  EntityType,
 } from "../types";
 import * as LD from "@launchdarkly/node-server-sdk";
 
@@ -552,12 +553,12 @@ describe("Field data copy", () => {
       routes: [
         {
           pageType: PageTypes.MODAL_DRAWER,
-          entityType: "mockEntityType",
+          entityType: EntityType.INITIATIVE,
           drawerForm: {
             fields: [
               {
-                id: "mockFieldId",
-                validation: ValidationType.NUMBER,
+                id: "defineInitiative_mockField",
+                validation: ValidationType.TEXT,
               },
             ],
           },
@@ -565,40 +566,70 @@ describe("Field data copy", () => {
       ],
     } as ReportJson;
 
-    const mockInitiative = {
-      mockEntityType: [
+    const mockInitiativeV1 = {
+      initiative: [
         {
-          mockSteps: [
+          id: "mockInitiativeId",
+          initiative_name: "Mock Initiative",
+          initiative_wp_otherTopic: "",
+          initiative_wpTopic: [
             {
-              mockFieldId: "mockStepId",
-              initiative_name: "Mock initiative name",
-              initiative_wpTopic: [
-                {
-                  key: "mockId",
-                  value: "Mock topic",
-                },
-              ],
-              defineInitiative_mock: "Mock description",
+              key: "initiative_wpTopic-mockTopicId",
+              value: "Mock topic",
             },
           ],
+          type: EntityType.INITIATIVE,
+          defineInitiative_mockField: "Mock description",
           evaluationPlan: [
             {
               id: "mockEvaluationPlanId",
-              value: "Mock value",
             },
           ],
           fundingSources: [
             {
               id: "mockFundingSourceId",
-              value: "Mock value",
             },
           ],
         },
       ],
     };
 
-    test("copy entire initiative with flag off", async () => {
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiative);
+    const mockInitiativeV2 = {
+      initiative: [
+        {
+          id: "mockInitiativeId",
+          initiative_name: "Mock Initiative",
+          initiative_wp_otherTopic: "",
+          initiative_wpTopic: [
+            {
+              key: "initiative_wpTopic-mockTopicId",
+              value: "Mock topic",
+            },
+          ],
+          type: EntityType.INITIATIVE,
+          defineInitiative_mockField: "Mock description",
+          defineInitiative_mockTable_mocks: [
+            {
+              id: "mockId",
+              mockField: "Mock value",
+              mockChoice: [
+                {
+                  key: "mockChoice-mockChoiceId",
+                  value: "Mock choice",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    test("copy entire initiative v1 with flag off", async () => {
+      (LD.init as jest.Mock).mockReturnValue({
+        variation,
+        waitForInitialization,
+      });
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiativeV1);
       const copiedData = await copyFieldDataFromSource(
         "CO",
         "mock-source-id",
@@ -607,34 +638,29 @@ describe("Field data copy", () => {
       );
       expect(consoleSpy.log).toHaveBeenCalled();
       expect(copiedData).toEqual({
-        mockEntityType: [
+        initiative: [
           {
-            mockSteps: [
+            id: "mockInitiativeId",
+            initiative_name: "Mock Initiative",
+            initiative_wp_otherTopic: "",
+            initiative_wpTopic: [
               {
-                mockFieldId: "mockStepId",
-                initiative_name: "Mock initiative name",
-                initiative_wpTopic: [
-                  {
-                    key: "mockId",
-                    value: "Mock topic",
-                    isCopied: true,
-                  },
-                ],
-                defineInitiative_mock: "Mock description",
+                key: "initiative_wpTopic-mockTopicId",
+                value: "Mock topic",
                 isCopied: true,
               },
             ],
+            type: EntityType.INITIATIVE,
+            defineInitiative_mockField: "Mock description",
             evaluationPlan: [
               {
                 id: "mockEvaluationPlanId",
-                value: "Mock value",
                 isCopied: true,
               },
             ],
             fundingSources: [
               {
                 id: "mockFundingSourceId",
-                value: "Mock value",
                 isCopied: true,
               },
             ],
@@ -644,12 +670,12 @@ describe("Field data copy", () => {
       });
     });
 
-    test("copy only initiative name and topic with flag on", async () => {
+    test("copy only initiative v1 name and topic with flag on", async () => {
       (LD.init as jest.Mock).mockReturnValue({
         variation: jest.fn().mockResolvedValue(true),
         waitForInitialization,
       });
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiative);
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiativeV1);
       const copiedData = await copyFieldDataFromSource(
         "CO",
         "mock-source-id",
@@ -658,16 +684,61 @@ describe("Field data copy", () => {
       );
       expect(consoleSpy.log).toHaveBeenCalled();
       expect(copiedData).toEqual({
-        mockEntityType: [
+        initiative: [
           {
-            mockSteps: [
+            id: "mockInitiativeId",
+            initiative_name: "Mock Initiative",
+            initiative_wp_otherTopic: "",
+            initiative_wpTopic: [
               {
-                mockFieldId: "mockStepId",
-                initiative_name: "Mock initiative name",
-                initiative_wpTopic: [
+                key: "initiative_wpTopic-mockTopicId",
+                value: "Mock topic",
+                isCopied: true,
+              },
+            ],
+            type: EntityType.INITIATIVE,
+            isCopied: true,
+          },
+        ],
+      });
+    });
+
+    test("copy entire initiative v2 with flag off", async () => {
+      (LD.init as jest.Mock).mockReturnValue({
+        variation,
+        waitForInitialization,
+      });
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(mockInitiativeV2);
+      const copiedData = await copyFieldDataFromSource(
+        "CO",
+        "mock-source-id",
+        formTemplate,
+        {}
+      );
+      expect(consoleSpy.log).toHaveBeenCalled();
+      expect(copiedData).toEqual({
+        initiative: [
+          {
+            id: "mockInitiativeId",
+            initiative_name: "Mock Initiative",
+            initiative_wp_otherTopic: "",
+            initiative_wpTopic: [
+              {
+                key: "initiative_wpTopic-mockTopicId",
+                value: "Mock topic",
+                isCopied: true,
+              },
+            ],
+            type: EntityType.INITIATIVE,
+            defineInitiative_mockField: "Mock description",
+            defineInitiative_mockTable_mocks: [
+              {
+                id: "mockId",
+                mockField: "Mock value",
+                mockChoice: [
                   {
-                    key: "mockId",
-                    value: "Mock topic",
+                    key: "mockChoice-mockChoiceId",
+                    value: "Mock choice",
                     isCopied: true,
                   },
                 ],

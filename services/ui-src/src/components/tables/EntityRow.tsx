@@ -46,7 +46,7 @@ export const EntityRow = ({
   const { isRequired, isCopied, isInitiativeClosed, closedBy } = entity;
   const stepType = formEntity?.stepType;
   const isWP = report?.reportType === ReportType.WP;
-  const isNewAndRequired = !isCopied && !isRequired;
+  const isNewAndOptional = !isCopied && !isRequired;
   const viewOnly = !editable || (isInitiativeClosed && isWP);
 
   const setStatusByType = (entityType: string) => {
@@ -77,7 +77,7 @@ export const EntityRow = ({
 
   const entityStatus = useMemo(() => {
     if (
-      OverlayModalTypes.INITIATIVE &&
+      entityType === OverlayModalTypes.INITIATIVE &&
       formEntity &&
       isInitiativeClosed &&
       isWP
@@ -86,7 +86,7 @@ export const EntityRow = ({
     }
 
     return setStatusByType(entityType!);
-  }, [report, entity]);
+  }, [entityType, formEntity, isInitiativeClosed, isWP]);
 
   let programInfo = [];
   if (entityInfo) {
@@ -167,7 +167,7 @@ export const EntityRow = ({
             justifyContent={isMobile ? "flex-start" : "flex-end"}
             display={"inline-block"}
           >
-            {isNewAndRequired && openAddEditEntityModal && (
+            {isNewAndOptional && openAddEditEntityModal && (
               <Button
                 sx={sx.editNameButton}
                 id={editNameButtonId}
@@ -184,7 +184,7 @@ export const EntityRow = ({
             )}
             <Button
               sx={
-                isNewAndRequired
+                isNewAndOptional
                   ? sx.editOtherEntityButton
                   : sx.editEntityButton
               }
@@ -198,7 +198,7 @@ export const EntityRow = ({
                 ? verbiage.readOnlyEntityDetailsButtonText
                 : verbiage.enterEntityDetailsButtonText}
             </Button>
-            {isNewAndRequired && openDeleteEntityModal && (
+            {isNewAndOptional && openDeleteEntityModal && (
               <Button
                 sx={sx.deleteButton}
                 id={deleteButtonId}

@@ -1,7 +1,13 @@
 import { getReportFieldData } from "../../storage/reports";
 import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 import { getPossibleFieldsFromFormTemplate } from "../formTemplates/formTemplates";
-import { ReportFieldData, ReportJson, ReportType, State } from "../types";
+import {
+  EntityType,
+  ReportFieldData,
+  ReportJson,
+  ReportType,
+  State,
+} from "../types";
 
 /**
  *
@@ -71,11 +77,20 @@ const isExcludedFinancialReportNormalizedField = (
   );
 };
 
-const isExcludedInitiativeField = (
+const isExcludedInitiativeV1Field = (
   fieldKey: string,
+  sourceFieldData: ReportFieldData | undefined,
   wpSarRelease2025: boolean
 ) => {
-  if (!wpSarRelease2025) return false;
+  if (!sourceFieldData?.[EntityType.INITIATIVE] || !wpSarRelease2025) {
+    return false;
+  }
+
+  const hasInitiativeV1 = (
+    sourceFieldData[EntityType.INITIATIVE] as ReportFieldData[]
+  ).some((t) => t.evaluationPlan || t.fundingSources);
+
+  if (!hasInitiativeV1) return false;
 
   return (
     fieldKey.startsWith("defineInitiative") ||
@@ -87,11 +102,16 @@ const shouldExcludeCopiedField = (
   reportType: ReportType | undefined,
   fieldKey: string,
   entityType: string | undefined,
+  sourceFieldData: ReportFieldData,
   wpSarRelease2025: boolean
 ) => {
   switch (reportType) {
     case ReportType.WP:
-      return isExcludedInitiativeField(fieldKey, wpSarRelease2025);
+      return isExcludedInitiativeV1Field(
+        fieldKey,
+        sourceFieldData,
+        wpSarRelease2025
+      );
     case ReportType.FINANCIAL_REPORT: {
       const normalizedFieldName = getFieldKeySuffix(fieldKey);
       const entityExcludedFields = entityType
@@ -115,11 +135,16 @@ const shouldExcludeCopiedField = (
 const shouldExcludeCopiedEntityField = (
   reportType: ReportType | undefined,
   fieldKey: string,
+  sourceFieldData: ReportFieldData,
   wpSarRelease2025: boolean
 ) => {
   switch (reportType) {
     case ReportType.WP:
-      return isExcludedInitiativeField(fieldKey, wpSarRelease2025);
+      return isExcludedInitiativeV1Field(
+        fieldKey,
+        sourceFieldData,
+        wpSarRelease2025
+      );
     case ReportType.FINANCIAL_REPORT: {
       const normalizedFieldName = getFieldKeySuffix(fieldKey);
       return !financialReportEntityIncludedNormalizedFieldNames.includes(
@@ -135,14 +160,14 @@ const isNameField = (entityKey: string) => entityKey.includes("name");
 const isChoiceField = (entityKey: string) =>
   ["key", "value"].includes(entityKey);
 
-async function pruneEntityData(
+const pruneEntityData = async (
   sourceFieldData: ReportFieldData,
   key: string,
   entityData: ReportFieldData[],
   possibleFields: string[],
   reportType: ReportType | undefined,
   wpSarRelease2025: boolean
-) {
+) => {
   // adding fields to be copied over from entries
   const concatEntityFields = [...possibleFields, ...additionalFields];
 
@@ -162,7 +187,11 @@ async function pruneEntityData(
        */
       if (
         Array.isArray(entity[entityKey]) &&
-        !isExcludedInitiativeField(entityKey, wpSarRelease2025)
+        !isExcludedInitiativeV1Field(
+          entityKey,
+          sourceFieldData,
+          wpSarRelease2025
+        )
       ) {
         pruneEntityData(
           sourceFieldData,
@@ -177,11 +206,13 @@ async function pruneEntityData(
           reportType,
           entityKey,
           key,
+          sourceFieldData,
           wpSarRelease2025
         ) ||
         (shouldExcludeCopiedEntityField(
           reportType,
           entityKey,
+          sourceFieldData,
           wpSarRelease2025
         ) &&
           !isNameField(entityKey) &&
@@ -210,7 +241,7 @@ async function pruneEntityData(
   if (entityData.every((e) => e === null)) {
     delete sourceFieldData[key];
   }
-}
+};
 
 export async function copyFieldDataFromSource(
   state: State,
@@ -235,6 +266,7 @@ export async function copyFieldDataFromSource(
           formTemplate.type,
           key,
           undefined,
+          sourceFieldData,
           wpSarRelease2025
         )
       ) {

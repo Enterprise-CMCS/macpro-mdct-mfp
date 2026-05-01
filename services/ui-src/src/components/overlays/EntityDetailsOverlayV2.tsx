@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // components
 import { Alert, Form, ReportPageIntro } from "components";
@@ -6,9 +6,9 @@ import { Alert, Form, ReportPageIntro } from "components";
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import {
   AlertTypes,
-  AnyObject,
   DynamicModalOverlayReportPageShape,
   EntityShape,
+  ErrorVerbiage,
   FormJson,
   ModalOverlayReportPageShape,
 } from "types";
@@ -51,24 +51,25 @@ export const EntityDetailsOverlayV2 = ({
     return fields || [];
   };
 
+  const updateCloseoutSection = useCallback(
+    (entity: EntityShape) => {
+      const isClosed = isClosedInitiative(entity);
+      const fields = getFields(entity);
+
+      setShowAlert(isClosed);
+      setFormJson(toggleOptional({ ...form, fields }, isClosed));
+    },
+    [form]
+  );
+
   const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {
     const currentValues = hookForm.getValues() as EntityShape;
-    const isClosed = isClosedInitiative(currentValues);
-    const fields = getFields(selectedEntity);
-
-    setShowAlert(isClosed);
-    setFormJson(toggleOptional({ ...form, fields }, isClosed));
+    updateCloseoutSection(currentValues);
   };
 
   useEffect(() => {
     setSelectedEntity(selectedEntity);
-
-    const isClosed = isClosedInitiative(selectedEntity);
-    const fields = getFields(selectedEntity);
-
-    setShowAlert(isClosed);
-    setFormJson(toggleOptional({ ...form, fields }, isClosed));
-
+    if (selectedEntity) updateCloseoutSection(selectedEntity);
     return () => {
       setSelectedEntity(undefined);
     };
@@ -137,7 +138,7 @@ interface Props {
   closeEntityDetailsOverlay: Function;
   disabled?: boolean;
   editable?: boolean;
-  errorMessage?: AnyObject;
+  errorMessage?: ErrorVerbiage;
   form?: FormJson;
   onSubmit: Function;
   route: ModalOverlayReportPageShape | DynamicModalOverlayReportPageShape;
