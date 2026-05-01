@@ -36,7 +36,7 @@ describe("<Header />", () => {
     });
 
     test("Header is visible", () => {
-      const header = screen.getByRole("header");
+      const header = screen.getByRole("banner");
       expect(header).toBeVisible();
     });
 
