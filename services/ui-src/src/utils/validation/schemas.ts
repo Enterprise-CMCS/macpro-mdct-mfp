@@ -225,14 +225,7 @@ export const isEndDateAfterStartDate = (
 };
 
 // DROPDOWN
-export const dropdown = () =>
-  mixed()
-    .required(error.REQUIRED_GENERIC)
-    .test({
-      name: "dropdown-required",
-      message: error.REQUIRED_GENERIC,
-      test: (val: any) => val?.value && val.value !== "",
-    });
+export const dropdown = () => object({ label: text(), value: text() });
 export const dropdownOptional = () =>
   object({ label: textOptional(), value: textOptional() }).notRequired();
 

@@ -224,8 +224,7 @@ export const isEndDateAfterStartDate = (
 };
 
 // DROPDOWN
-export const dropdown = () =>
-  object({ label: text(), value: text() }).required(error.REQUIRED_GENERIC);
+export const dropdown = () => object({ label: text(), value: text() });
 
 // CHECKBOX
 export const checkbox = () =>

@@ -21,6 +21,7 @@ const mockUseFormContext = useFormContext as unknown as jest.Mock<
 >;
 jest.mock("react-hook-form", () => ({
   useFormContext: jest.fn(() => mockRhfMethods),
+  useFormState: jest.fn(() => ({ errors: {} })),
 }));
 
 const mockGetValues = (returnValue: any) =>

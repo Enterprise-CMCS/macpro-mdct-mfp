@@ -59,7 +59,7 @@ export const ChoiceListField = ({
   useEffect(() => {
     if (!fieldIsRegistered && !validateOnRender) {
       form.register(name);
-    } else if (validateOnRender) {
+    } else if (validateOnRender || fieldIsRegistered) {
       form.trigger(name);
     }
   }, []);

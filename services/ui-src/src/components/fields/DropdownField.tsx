@@ -27,6 +27,7 @@ export const DropdownField = ({
   sxOverride,
   styleAsOptional,
   disabled,
+  clear = false,
 }: Props) => {
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {
@@ -67,17 +68,24 @@ export const DropdownField = ({
   // set initial display value to form state field value or hydration value
   const hydrationValue = hydrate || defaultValue;
   useEffect(() => {
-    // if form state has value for field, set as display value
-    const fieldValue = form.getValues(name);
-    if (fieldValue) {
-      setDisplayValue(fieldValue);
+    // if clear flag is set, reset to default
+    if (clear) {
+      setDisplayValue(defaultValue);
+      form.setValue(name, defaultValue);
     }
-    // else set hydrationValue or defaultValue as display value
+    // else if form state has value for field, set as display value
     else {
-      setDisplayValue(hydrationValue);
-      form.setValue(name, hydrationValue, { shouldValidate: validateOnRender });
+      const fieldValue = form.getValues(name);
+      if (fieldValue) {
+        setDisplayValue(fieldValue);
+      } else if (hydrationValue) {
+        setDisplayValue(hydrationValue);
+        form.setValue(name, hydrationValue, {
+          shouldValidate: validateOnRender,
+        });
+      }
     }
-  }, [hydrationValue]); // only runs on hydrationValue fetch/update
+  }, [hydrationValue, clear]); // runs on hydrationValue or clear changes
 
   // update form data
   const onChangeHandler = async (event: DropdownChangeObject) => {
@@ -96,7 +104,7 @@ export const DropdownField = ({
   };
 
   // prepare error message, hint, and classes
-  const errorMessage = errors?.[name]?.message as ReactNode;
+  const errorMessage = (errors?.[name] as any)?.value?.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const ariaDescribedBy = parsedHint ? `${name}-hint` : undefined;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
@@ -141,6 +149,7 @@ interface Props {
   hint?: any;
   options: DropdownOptions[] | string;
   nested?: boolean;
+  clear?: boolean;
   autosave?: boolean;
   validateOnRender?: boolean;
   sxOverride?: SystemStyleObject;
