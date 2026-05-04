@@ -68,20 +68,31 @@ export const EntityDetailsOverlayV2 = ({
 
   const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {
     const currentValues = hookForm.getValues() as EntityShape;
-    updateCloseoutSection({
+    const endDate = currentValues.defineInitiative_endDate;
+    const projectedEndDate = currentValues.closeOutInformation_projectedEndDate;
+
+    let updatedEntity = {
+      ...selectedEntity,
       ...currentValues,
-      // Doesn't exist in form values, needs to be added here manually
-      isCopied: Boolean(selectedEntity?.isCopied),
-    });
+    };
+
+    if (endDate !== projectedEndDate) {
+      hookForm.setValue("closeOutInformation_projectedEndDate", endDate);
+
+      updatedEntity = {
+        ...updatedEntity,
+        closeOutInformation_projectedEndDate: endDate,
+      };
+    }
+    setSelectedEntity(updatedEntity);
   };
 
   useEffect(() => {
-    setSelectedEntity(selectedEntity);
     if (selectedEntity) updateCloseoutSection(selectedEntity);
-    return () => {
-      setSelectedEntity(undefined);
-    };
-  }, [selectedEntity]);
+  }, [
+    selectedEntity?.closeOutInformation_actualEndDate,
+    selectedEntity?.isCopied,
+  ]);
 
   useEffect(() => {
     setDisableSubmit(autosaveState || submitting);

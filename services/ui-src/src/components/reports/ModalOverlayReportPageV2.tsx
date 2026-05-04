@@ -52,9 +52,6 @@ export const ModalOverlayReportPageV2 = ({
   const { isMobile, isTablet } = useBreakpoint();
   const { updateReport } = useContext(ReportContext);
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
-  const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
-    undefined
-  );
   const [entering, setEntering] = useState<boolean>(false);
   const [form, setForm] = useState<FormJson>({} as FormJson);
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -67,6 +64,7 @@ export const ModalOverlayReportPageV2 = ({
     editable,
     report = {} as ReportShape,
     setSelectedEntity,
+    selectedEntity,
   } = useStore();
   const isDisabled = Boolean(userIsAdmin || userIsReadOnly);
 
@@ -102,12 +100,12 @@ export const ModalOverlayReportPageV2 = ({
   } = useDisclosure();
 
   const openAddEditEntityModal = (entity?: EntityShape) => {
-    if (entity) setCurrentEntity(entity);
+    if (entity) setSelectedEntity(entity);
     addEditEntityModalOnOpenHandler();
   };
 
   const closeAddEditEntityModal = () => {
-    setCurrentEntity(undefined);
+    setSelectedEntity(undefined);
     resetClearProp(modalForm.fields);
     addEditEntityModalOnCloseHandler();
   };
@@ -120,26 +118,35 @@ export const ModalOverlayReportPageV2 = ({
   } = useDisclosure();
 
   const openDeleteEntityModal = (entity: EntityShape) => {
-    setCurrentEntity(entity);
+    setSelectedEntity(entity);
     deleteEntityModalOnOpenHandler();
   };
 
   const closeDeleteEntityModal = () => {
-    setCurrentEntity(undefined);
+    setSelectedEntity(undefined);
     deleteEntityModalOnCloseHandler();
   };
 
   // Open/Close overlay action methods
   const openEntityDetailsOverlay = (entity: EntityShape) => {
     window.scrollTo(0, 0);
-    setCurrentEntity(entity);
+    // In copied report, set closeOutInformation_projectedEndDate to defineInitiative_endDate
+    const updatedEntity =
+      entity.isCopied && entity.defineInitiative_endDate
+        ? {
+            ...entity,
+            closeOutInformation_projectedEndDate:
+              entity.defineInitiative_endDate,
+          }
+        : entity;
+    setSelectedEntity(updatedEntity);
     setIsEntityDetailsOpen(true);
     setSidebarHidden(true);
   };
 
   const closeEntityDetailsOverlay = () => {
     window.scrollTo(0, 0);
-    setCurrentEntity(undefined);
+    setSelectedEntity(undefined);
     setIsEntityDetailsOpen(false);
     setSidebarHidden(false);
   };
@@ -154,7 +161,7 @@ export const ModalOverlayReportPageV2 = ({
       };
       const currentEntities = [...(report.fieldData[entityType] || [])];
       const selectedEntityIndex = report.fieldData[entityType].findIndex(
-        (entity: EntityShape) => entity.id === currentEntity?.id
+        (entity: EntityShape) => entity.id === selectedEntity?.id
       );
       const nonTableFields = form.fields
         .filter(isFieldElement)
@@ -204,7 +211,6 @@ export const ModalOverlayReportPageV2 = ({
     const fields = report.isCopied
       ? overlayForm.fields
       : overlayForm.fields.filter((f) => !f.forCopyoverOnly);
-
     setForm({
       ...overlayForm,
       fields,
@@ -263,7 +269,7 @@ export const ModalOverlayReportPageV2 = ({
             isOpen: addEditEntityModalIsOpen,
             onClose: closeAddEditEntityModal,
           }}
-          selectedEntity={currentEntity}
+          selectedEntity={selectedEntity}
           setError={() => {}}
           verbiage={verbiage}
         />
@@ -273,7 +279,7 @@ export const ModalOverlayReportPageV2 = ({
             isOpen: deleteEntityModalIsOpen,
             onClose: closeDeleteEntityModal,
           }}
-          selectedEntity={currentEntity}
+          selectedEntity={selectedEntity}
           verbiage={verbiage}
         />
         <ReportPageFooter verbiage={verbiage} />
@@ -294,7 +300,7 @@ export const ModalOverlayReportPageV2 = ({
           form={form}
           onSubmit={onSubmit}
           route={route}
-          selectedEntity={currentEntity}
+          selectedEntity={selectedEntity}
           setSelectedEntity={setSelectedEntity}
           submitting={submitting}
           setEntering={setEntering}

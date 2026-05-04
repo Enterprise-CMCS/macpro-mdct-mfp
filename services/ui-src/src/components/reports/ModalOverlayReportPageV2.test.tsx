@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import { ModalOverlayReportPageV2, ReportContext } from "components";
 // types
 import {
-  EntityShape,
   ReportFormFieldType,
   ReportStatus,
   ReportType,
@@ -269,6 +268,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
       editable: true,
       setAutosaveState: jest.fn(),
       setSelectedEntity: jest.fn(),
+      selectedEntity: mockReportFieldData.entityType[0],
     });
     render(modalOverlayReportPageComponent());
     const enterDetailsButton = screen.getByRole("button", {
@@ -346,7 +346,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
     expect(mockWpReportContext.updateReport).not.toHaveBeenCalled();
   });
 
-  test("shows forCopyoverOnly fields for copied report", async () => {
+  test("shows forCopyoverOnly fields for copied report/entity", async () => {
     const route = {
       ...mockModalOverlayReportPageJson,
       overlayForm: {
@@ -369,12 +369,10 @@ describe("<ModalOverlayReportPageV2 />", () => {
       ...mockUseEntityStore,
       report: {
         ...mockUseEntityStore.report,
-        fieldData: {
-          ...mockUseEntityStore.report?.fieldData,
-          entityType: mockUseEntityStore.report?.fieldData.entityType.map(
-            (t: EntityShape) => ({ ...t, isCopied: true })
-          ),
-        },
+        isCopied: true,
+      },
+      selectedEntity: {
+        ...mockReportFieldData.entityType[0],
         isCopied: true,
       },
     });

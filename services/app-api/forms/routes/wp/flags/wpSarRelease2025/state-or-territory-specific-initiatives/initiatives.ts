@@ -410,9 +410,9 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
       // Close-out
       {
         forCopyoverOnly: true,
-        id: "defineInitiative_endDate",
+        id: "closeOutInformation_projectedEndDate",
         type: ReportFormFieldType.DATE,
-        validation: ValidationType.TEXT_OPTIONAL,
+        validation: ValidationType.DATE_OPTIONAL,
         props: {
           disabled: true,
           hint: "Auto-populates from “I. Define initiative”.",

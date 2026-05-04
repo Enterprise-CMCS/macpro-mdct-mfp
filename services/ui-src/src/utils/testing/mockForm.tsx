@@ -565,11 +565,43 @@ export const mockModalOverlayReportPageVerbiage = {
   addEditModalEditTitle: "Mock Edit Modal Text",
   reportProgressButtonText: "Mock report progress button text",
   backButtonText: "Mock back button text",
+  errorMessage: {
+    description: "Mock error description",
+    title: "Mock error title",
+  },
 };
 
 export const mockModalOverlayForm = {
   id: "mock-modal-overlay-form-id",
-  fields: [mockFormField, mockNumberField, mockOptionalFormField],
+  fields: [
+    mockFormField,
+    mockNumberField,
+    mockOptionalFormField,
+    {
+      id: "defineInitiative_endDate",
+      type: ReportFormFieldType.DATE,
+      validation: ValidationType.DATE_OPTIONAL,
+      props: {
+        label: "mock end date field",
+      },
+    },
+    {
+      id: "closeOutInformation_projectedEndDate",
+      type: ReportFormFieldType.DATE,
+      validation: ValidationType.DATE_OPTIONAL,
+      props: {
+        label: "mock projected end date field",
+      },
+    },
+    {
+      id: "closeOutInformation_actualEndDate",
+      type: ReportFormFieldType.DATE,
+      validation: ValidationType.DATE_OPTIONAL,
+      props: {
+        label: "mock close out actual end date field",
+      },
+    },
+  ],
 };
 
 export const mockOverlayModalPageJson2 = {
