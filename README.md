@@ -199,7 +199,7 @@ MFP pipes updates from fieldData and the report object tables to BigMac for down
 - `deployment/stacks/api.ts`
   - Add table streams to postKafkaData's event triggers listed in the definition for the LambdaDynamoEventSource
   - Declare another lambda to listen to events from the relevant s3 buckets. The same handler file can be used.
-- `services/app-api/handlers/kafka/post/postKafkaData.ts` - Add the bucket and table names into the appropriate arrays. They will be parsed with their event types accordingly.
+- `services/app-api/handlers/kafka/postKafkaData.ts` - App-specific adapter for the cross-repo kafkaLib.ts. Defines which tables and buckets correspond to which Kafka topics.
 - `services/topics/createTopics.js` - Declare the new topic names. Both the stream name for the bucket and table should be added here.
 
 ## Architecture
