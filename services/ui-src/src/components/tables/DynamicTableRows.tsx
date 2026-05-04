@@ -58,6 +58,7 @@ export const DynamicTableRows = ({
     const rows = entityType
       ? entityData?.[dynamicRowsTemplate.id]
       : localFieldData?.[dynamicRowsTemplate.id];
+
     if (rows) {
       setLocalDynamicRows((prev: DynamicFieldShape[]) => {
         const diff = rows.length - prev.length;

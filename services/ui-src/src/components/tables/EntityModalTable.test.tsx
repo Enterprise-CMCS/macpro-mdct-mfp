@@ -4,11 +4,17 @@ import userEvent from "@testing-library/user-event";
 import { useFormContext } from "react-hook-form";
 import { DynamicTableProvider, EntityModalTable } from "components";
 // types
-import { NumberMask, ReportFormFieldType, ValidationType } from "types";
+import {
+  EntityType,
+  NumberMask,
+  ReportFormFieldType,
+  ValidationType,
+} from "types";
 // utils
 import { useStore } from "utils";
 import {
   mockDynamicFieldId,
+  mockDynamicRowsTemplateForKeyMetricsTable,
   mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
   mockStateUserStore,
@@ -273,6 +279,83 @@ describe("<EntityModalTable />", () => {
 
       const updatedRows = tbody?.querySelectorAll("tr");
       expect(updatedRows).toHaveLength(2);
+    });
+
+    test("open the delete confirmation modal and close the delete modal", async () => {
+      const report = {
+        fieldData: {
+          initiative: [
+            {
+              id: "mock-id",
+              name: "mock-name",
+              type: EntityType.INITIATIVE,
+              defineInitiative_keyMetrics_performanceIndicators: [
+                {
+                  id: "mock-id",
+                  type: EntityType.INITIATIVE,
+                  name: "mock-name",
+                  dataSource: [
+                    {
+                      key: "mock-key",
+                      value: "mock-data-source",
+                    },
+                  ],
+                  baselineValue: "123",
+                  baselineStartDate: "01/01/2020",
+                  baselineEndDate: "12/31/2020",
+                  targetBenchmarkValue: "567",
+                  targetBenchmarkProjectedDate: "01/01/2025",
+                },
+              ],
+            },
+          ],
+        },
+      };
+      mockedUseStore.mockReturnValue({ report });
+      const updatedProps = {
+        ...mockProps,
+        formData: {
+          id: "mock-id",
+          type: EntityType.INITIATIVE,
+          defineInitiative_keyMetrics_performanceIndicators: [
+            {
+              id: "mock-id",
+              type: EntityType.INITIATIVE,
+              name: "mock-name",
+              dataSource: [
+                {
+                  key: "mock-key",
+                  value: "mock-data-source",
+                },
+              ],
+              baselineValue: "123",
+              baselineStartDate: "01/01/2020",
+              baselineEndDate: "12/31/2020",
+              targetBenchmarkValue: "567",
+              targetBenchmarkProjectedDate: "01/01/2025",
+            },
+          ],
+        },
+        id: "defineInitiative_keyMetrics",
+        bodyRows: [[]],
+        footRows: [[]],
+        dynamicRowsTemplate: mockDynamicRowsTemplateForKeyMetricsTable,
+      };
+      render(tableComponent(updatedProps));
+      const deleteEntityButton = screen.getAllByTestId("delete-entity-button");
+      expect(deleteEntityButton.length).toEqual(2);
+      await act(async () => {
+        await userEvent.click(deleteEntityButton[0]);
+      });
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
+      expect(screen.getByText("`deleteModalTitle")).toBeVisible();
+      const closeButton = screen.getByText("Cancel");
+      await act(async () => {
+        await userEvent.click(closeButton);
+      });
+      expect(deleteEntityButton.length).toEqual(2);
     });
 
     test("clicking add button opens modal", async () => {

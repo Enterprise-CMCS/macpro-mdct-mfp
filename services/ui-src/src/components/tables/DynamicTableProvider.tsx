@@ -70,7 +70,6 @@ export const DynamicTableProvider = ({ children }: any) => {
   const { fieldData } = report;
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
-
   const [localFieldData, setLocalFieldData] = useState<AnyObject>({});
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | null>(null);
 
