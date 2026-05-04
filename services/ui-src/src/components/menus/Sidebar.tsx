@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useLocation } from "react-router";
 // components
 import { Box, Collapse, Flex, Image, Link, Text } from "@chakra-ui/react";
-import { SkipNav } from "components";
 
 // utils
 import { useBreakpoint, useStore } from "utils";
@@ -35,12 +34,6 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
     <>
       {reportJson && (
         <>
-          <SkipNav
-            id="skip-nav-sidebar"
-            href="#report-content"
-            text="Skip to main content"
-            sxOverride={sx.sideBarSkipNav}
-          />
           <Box
             id="sidebar"
             sx={sx.root}
@@ -196,9 +189,6 @@ const sx = {
       zIndex: "dropdown",
       height: "100%",
     },
-  },
-  sideBarSkipNav: {
-    position: "fixed",
   },
   topBox: {
     borderBottom: "1px solid var(--mdct-colors-gray_lighter)",
