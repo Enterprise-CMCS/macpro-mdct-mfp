@@ -17,6 +17,7 @@ import {
 } from "utils";
 
 export const DateField = ({
+  ariaLabelledby,
   name,
   label,
   hint,
@@ -127,6 +128,10 @@ export const DateField = ({
   const { autoComplete, disabled } = props ?? {};
   const additionalProps = { autoComplete, disabled };
 
+  const ariaProps = {
+    "aria-labelledby": ariaLabelledby,
+  };
+
   return (
     <Box
       sx={{ ...sx, ...sxOverride }}
@@ -141,12 +146,14 @@ export const DateField = ({
         hint={parsedHint}
         errorMessage={errorMessage}
         {...additionalProps}
+        {...ariaProps}
       />
     </Box>
   );
 };
 
 interface Props {
+  ariaLabelledby?: string;
   name: string;
   label?: string;
   hint?: CustomHtmlElement[];

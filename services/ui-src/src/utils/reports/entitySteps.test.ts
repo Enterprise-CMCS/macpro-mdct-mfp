@@ -1,4 +1,4 @@
-import { OverlayModalStepTypes } from "types";
+import { EntityType, OverlayModalStepTypes } from "types";
 import { getFormattedEntityData } from "./entitySteps";
 
 describe("utils/reports/entitySteps", () => {
@@ -6,7 +6,7 @@ describe("utils/reports/entitySteps", () => {
     test("Should return the correct shape for evaluation plans", () => {
       const entity = {
         id: "mock id",
-        type: "targetPopulations" as const,
+        type: EntityType.TARGET_POPULATIONS,
         evaluationPlan_objectiveName: "mock objective",
         evaluationPlan_description: "mock description",
         evaluationPlan_targets: "mock targets",
@@ -41,7 +41,7 @@ describe("utils/reports/entitySteps", () => {
     test("Should return the correct shape for funding sources", () => {
       const entity = {
         id: "mock id",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         fundingSources_wpTopic: [
           {
             value: "mock source",
@@ -73,7 +73,7 @@ describe("utils/reports/entitySteps", () => {
     test("Should find the specified Other work plan topic if specified", () => {
       const entity = {
         id: "mock id",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         fundingSources_wpTopic: [
           {
             value: "Other, specify",
@@ -97,7 +97,7 @@ describe("utils/reports/entitySteps", () => {
     test("Should give up for unknown entity types", () => {
       const entity = {
         id: "mock id",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
       };
 
       const result = getFormattedEntityData("unknown entity type", entity);

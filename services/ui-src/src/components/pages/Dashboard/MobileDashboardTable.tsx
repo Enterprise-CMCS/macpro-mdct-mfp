@@ -96,48 +96,51 @@ export const MobileDashboardTable = ({
             </Text>
           </Box>
         )}
-        <Flex alignContent="flex-start" gap={2}>
-          <Box sx={sxOverride.editReportButtonCell}>
-            <Button
-              variant="outline"
-              onClick={() => enterSelectedReport(report)}
-            >
-              {entering && reportId == report.id ? (
-                <Spinner size="md" />
-              ) : // oxlint-disable-next-line no-nested-ternary
-              isStateLevelUser && !report?.locked ? (
-                "Edit"
-              ) : (
-                "View"
-              )}
-            </Button>
-          </Box>
-          <Box sx={sxOverride.adminActionCell}>
-            {isAdmin && (
-              <>
-                <AdminReleaseButton
-                  report={report}
-                  reportType={reportType}
-                  reportId={reportId}
-                  releaseReport={releaseReport}
-                  releasing={releasing}
-                  sxOverride={sxOverride}
-                />
-                {isArchivable(reportType) && !report?.associatedSar && (
-                  <AdminArchiveButton
+        <Box sx={sx.labelGroup}>
+          <Text sx={sx.label}>Actions</Text>
+          <Flex alignContent="flex-start" gap={2}>
+            <Box sx={sxOverride.editReportButtonCell}>
+              <Button
+                variant="outline"
+                onClick={() => enterSelectedReport(report)}
+              >
+                {entering && reportId == report.id ? (
+                  <Spinner size="md" />
+                ) : // oxlint-disable-next-line no-nested-ternary
+                isStateLevelUser && !report?.locked ? (
+                  "Edit"
+                ) : (
+                  "View"
+                )}
+              </Button>
+            </Box>
+            <Box sx={sxOverride.adminActionCell}>
+              {isAdmin && (
+                <>
+                  <AdminReleaseButton
                     report={report}
                     reportType={reportType}
                     reportId={reportId}
-                    archive={archive}
                     releaseReport={releaseReport}
                     releasing={releasing}
                     sxOverride={sxOverride}
                   />
-                )}
-              </>
-            )}
-          </Box>
-        </Flex>
+                  {isArchivable(reportType) && !report?.associatedSar && (
+                    <AdminArchiveButton
+                      report={report}
+                      reportType={reportType}
+                      reportId={reportId}
+                      archive={archive}
+                      releaseReport={releaseReport}
+                      releasing={releasing}
+                      sxOverride={sxOverride}
+                    />
+                  )}
+                </>
+              )}
+            </Box>
+          </Flex>
+        </Box>
       </Box>
     ))}
   </>
