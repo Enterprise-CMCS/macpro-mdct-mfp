@@ -849,7 +849,7 @@ export const mockDynamicRowsTemplate = {
 };
 
 export const mockDynamicRowsTemplateForKeyMetricsTable = {
-  id: "defineInitiative_keyMetrics_performanceIndicators",
+  id: mockDynamicTemplateId,
   type: ReportFormFieldType.DYNAMIC_OBJECT,
   validation: {
     type: ValidationType.DYNAMIC_OPTIONAL,
@@ -960,7 +960,7 @@ export const mockDynamicRowsTemplateWithModalForm = {
 export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
   ...mockDynamicRowsTemplateForKeyMetricsTable,
   props: {
-    ...mockDynamicRowsTemplate.props,
+    ...mockDynamicRowsTemplateForKeyMetricsTable.props,
     dynamicModalForm: {
       id: "mockDynamicModalFormId",
       heading: {
@@ -1019,5 +1019,7 @@ export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
     buttonText: "Mock dynamic row button",
     emptyTableMessage: "Mock dynamic empty table message",
     hint: "Mock dynamic row hint",
+    deleteModalTitle: "Mock delete modal title",
+    deleteModalConfirmButtonText: "Mock delete confirm text",
   },
 };

@@ -14,7 +14,7 @@ import {
 import { useStore } from "utils";
 import {
   mockDynamicFieldId,
-  mockDynamicRowsTemplateForKeyMetricsTable,
+  mockDynamicRowsTemplateForKeyMetricsTableWithModalForm,
   mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
   mockStateUserStore,
@@ -23,6 +23,7 @@ import {
 import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
+const openDeleteEntityModal = jest.fn();
 const mockRhfMethods = {
   register: jest.fn(),
   setValue: jest.fn(),
@@ -289,7 +290,7 @@ describe("<EntityModalTable />", () => {
               id: "mock-id",
               name: "mock-name",
               type: EntityType.INITIATIVE,
-              defineInitiative_keyMetrics_performanceIndicators: [
+              [mockDynamicTemplateId]: [
                 {
                   id: "mock-id",
                   type: EntityType.INITIATIVE,
@@ -312,8 +313,10 @@ describe("<EntityModalTable />", () => {
         },
       };
       mockedUseStore.mockReturnValue({ report });
+      mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
+        openDeleteEntityModal,
         formData: {
           id: "mock-id",
           type: EntityType.INITIATIVE,
@@ -339,23 +342,24 @@ describe("<EntityModalTable />", () => {
         id: "defineInitiative_keyMetrics",
         bodyRows: [[]],
         footRows: [[]],
-        dynamicRowsTemplate: mockDynamicRowsTemplateForKeyMetricsTable,
+        dynamicRowsTemplate:
+          mockDynamicRowsTemplateForKeyMetricsTableWithModalForm,
       };
       render(tableComponent(updatedProps));
-      const deleteEntityButton = screen.getAllByTestId("delete-entity-button");
-      expect(deleteEntityButton.length).toEqual(2);
+      const deleteButton = screen.getByRole("button", {
+        name: "Delete mock-name",
+      });
       await act(async () => {
-        await userEvent.click(deleteEntityButton[0]);
+        await userEvent.click(deleteButton);
       });
       await waitFor(() => {
         expect(screen.getByRole("dialog")).toBeVisible();
       });
-      expect(screen.getByText("`deleteModalTitle")).toBeVisible();
+      expect(screen.getByText("Mock delete modal title")).toBeVisible();
       const closeButton = screen.getByText("Cancel");
       await act(async () => {
         await userEvent.click(closeButton);
       });
-      expect(deleteEntityButton.length).toEqual(2);
     });
 
     test("clicking add button opens modal", async () => {
