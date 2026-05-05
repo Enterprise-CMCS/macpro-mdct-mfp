@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 // components
 import { Text } from "@chakra-ui/react";
-import { DynamicTableContext, Modal, ReportContext } from "components";
+import { Modal, ReportContext } from "components";
 
 // types
 import {
@@ -13,19 +13,14 @@ import {
 import { parseCustomHtml, useStore } from "utils";
 
 export const DeleteEntityModal = ({
-  dynamicRowsTemplate,
+  deleteCallback,
   entityType,
   entityIdLookup,
   modalDisclosure,
-  parentEntityId,
   selectedEntity,
-  tableId,
   userDisabled,
   verbiage,
-  updatedFields,
 }: Props) => {
-  const { removeDynamicRow } = useContext(DynamicTableContext);
-
   const { report, editable } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
@@ -74,14 +69,8 @@ export const DeleteEntityModal = ({
   const deleteProgramHandler = async () => {
     setDeleting(true);
 
-    if (dynamicRowsTemplate && tableId === "defineInitiative_keyMetrics") {
-      removeDynamicRow(
-        dynamicRowsTemplate.id,
-        selectedEntity,
-        entityType,
-        parentEntityId,
-        updatedFields
-      );
+    if (deleteCallback) {
+      deleteCallback();
     } else {
       const reportKeys = {
         reportType: report?.reportType,
@@ -131,6 +120,7 @@ export const DeleteEntityModal = ({
 };
 
 interface Props {
+  deleteCallback?: Function;
   dynamicRowsTemplate?: DynamicRowsTemplate;
   entityType: string | string[];
   entityIdLookup?: AnyObject;
@@ -143,5 +133,4 @@ interface Props {
   tableId?: string;
   userDisabled?: boolean;
   verbiage: AnyObject;
-  updatedFields?: AnyObject[];
 }

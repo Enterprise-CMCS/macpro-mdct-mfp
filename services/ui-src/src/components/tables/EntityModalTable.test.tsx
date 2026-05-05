@@ -360,6 +360,9 @@ describe("<EntityModalTable />", () => {
       await act(async () => {
         await userEvent.click(closeButton);
       });
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).not.toBeVisible();
+      });
     });
 
     test("clicking add button opens modal", async () => {

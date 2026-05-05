@@ -152,11 +152,15 @@ export const DynamicTableRows = ({
                   {!disabled && (
                     <Button
                       onClick={() => {
-                        entityType === EntityType.INITIATIVE &&
                         openDeleteEntityModal
-                          ? openDeleteEntityModal(
-                              dynamicId,
-                              updatedFieldsCallback(dynamicId, localFieldData)
+                          ? openDeleteEntityModal(dynamicId, () =>
+                              removeDynamicRow(
+                                dynamicRowsTemplate.id,
+                                dynamicId,
+                                entityType,
+                                formData?.id,
+                                updatedFieldsCallback(dynamicId, localFieldData)
+                              )
                             )
                           : removeDynamicRow(
                               dynamicRowsTemplate.id,

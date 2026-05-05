@@ -53,7 +53,7 @@ export const EntityModalTable = ({
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
-  const [updatedFields, setUpdatedFields] = useState<AnyObject[]>();
+  const [deleteCallback, setDeleteCallback] = useState<Function>();
 
   const {
     isOpen: keyMetricsModalIsOpen,
@@ -79,10 +79,10 @@ export const EntityModalTable = ({
 
   const openDeleteEntityModal = (
     entity: EntityShape,
-    updatedFields: AnyObject[]
+    deleteCallback?: Function
   ) => {
     setSelectedEntity(entity);
-    updatedFields && setUpdatedFields(updatedFields);
+    if (deleteCallback) setDeleteCallback(() => deleteCallback);
     deleteEntityModalOnOpenHandler();
   };
 
@@ -218,6 +218,7 @@ export const EntityModalTable = ({
           />
 
           <DeleteEntityModal
+            deleteCallback={deleteCallback}
             dynamicRowsTemplate={dynamicRowsTemplate}
             entityType={formData?.type}
             parentEntityId={formData?.id}
@@ -228,7 +229,6 @@ export const EntityModalTable = ({
               onClose: closeDeleteEntityModal,
             }}
             tableId={tableId}
-            updatedFields={updatedFields}
           />
         </>
       )}
