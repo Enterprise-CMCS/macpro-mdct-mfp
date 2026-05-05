@@ -22,7 +22,7 @@ export const DynamicTableRows = ({
   formPercentage,
   hasDynamicModalForm,
   hasStaticRows,
-  openDeleteEntityModal = () => {},
+  openDeleteEntityModal,
   openModal = () => {},
   showEditColumn = true,
   tableId,
@@ -45,6 +45,8 @@ export const DynamicTableRows = ({
   const [showEmptyRows, setShowEmptyRows] = useState<boolean>(false);
   const emptyRowsColspan =
     (dynamicRowsTemplate.props?.dynamicFields.length || 0) + 1;
+
+  console.log(openDeleteEntityModal);
 
   // Add rows from fieldData
   useEffect(() => {
@@ -152,6 +154,7 @@ export const DynamicTableRows = ({
                   {!disabled && (
                     <Button
                       onClick={() => {
+                        entityType === EntityType.INITIATIVE &&
                         openDeleteEntityModal
                           ? openDeleteEntityModal(dynamicId, () =>
                               removeDynamicRow(
