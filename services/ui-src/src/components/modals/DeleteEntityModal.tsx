@@ -4,12 +4,7 @@ import { Text } from "@chakra-ui/react";
 import { Modal, ReportContext } from "components";
 
 // types
-import {
-  AnyObject,
-  DynamicRowsTemplate,
-  EntityShape,
-  ReportStatus,
-} from "types";
+import { AnyObject, EntityShape, ReportStatus } from "types";
 import { parseCustomHtml, useStore } from "utils";
 
 export const DeleteEntityModal = ({
@@ -121,16 +116,13 @@ export const DeleteEntityModal = ({
 
 interface Props {
   deleteCallback?: Function;
-  dynamicRowsTemplate?: DynamicRowsTemplate;
   entityType: string | string[];
   entityIdLookup?: AnyObject;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
   };
-  parentEntityId?: string;
   selectedEntity?: EntityShape;
-  tableId?: string;
   userDisabled?: boolean;
   verbiage: AnyObject;
 }

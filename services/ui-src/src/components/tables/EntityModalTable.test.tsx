@@ -360,8 +360,10 @@ describe("<EntityModalTable />", () => {
       await act(async () => {
         await userEvent.click(closeButton);
       });
-      await waitFor(() => {
-        expect(screen.getByRole("dialog")).not.toBeVisible();
+      await waitFor(async () => {
+        await act(() => {
+          expect(screen.getByRole("dialog")).not.toBeVisible();
+        });
       });
     });
 

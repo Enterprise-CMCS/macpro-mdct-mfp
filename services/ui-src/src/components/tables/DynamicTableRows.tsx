@@ -46,8 +46,6 @@ export const DynamicTableRows = ({
   const emptyRowsColspan =
     (dynamicRowsTemplate.props?.dynamicFields.length || 0) + 1;
 
-  console.log(openDeleteEntityModal);
-
   // Add rows from fieldData
   useEffect(() => {
     const entityData = entityType

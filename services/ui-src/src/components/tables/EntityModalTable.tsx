@@ -219,16 +219,13 @@ export const EntityModalTable = ({
 
           <DeleteEntityModal
             deleteCallback={deleteCallback}
-            dynamicRowsTemplate={dynamicRowsTemplate}
             entityType={formData?.type}
-            parentEntityId={formData?.id}
             selectedEntity={selectedEntity}
             verbiage={dynamicRowsTemplate.verbiage}
             modalDisclosure={{
               isOpen: deleteEntityModalIsOpen,
               onClose: closeDeleteEntityModal,
             }}
-            tableId={tableId}
           />
         </>
       )}
