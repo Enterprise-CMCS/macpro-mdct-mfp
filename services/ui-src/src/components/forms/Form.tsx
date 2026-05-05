@@ -53,6 +53,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     autosave,
     className,
     children,
+    disabled = false,
     dontReset,
     formData,
     formJson,
@@ -77,7 +78,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   const status = reportStatus || report?.status;
   const submittedReport = status === ReportStatus.SUBMITTED;
   const fieldInputDisabled =
-    !editableByAdmins && (!userIsEndUser || submittedReport);
+    disabled || (!editableByAdmins && (!userIsEndUser || submittedReport));
 
   // For the SAR RE&T sections, display an alert if the MFP WP does not contain any target populations
   const displayRetError =
@@ -251,7 +252,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     const renderedTableIds = new Set<string>();
     let tableIndex = 0;
 
-    const renderedFieldsAndTables = fields.map((field) => {
+    const renderedFieldsAndTables = fields.map((field, index) => {
       const { tableId } = getFieldParts(field.id);
 
       if (field.forTableOnly) {
@@ -275,7 +276,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
           : title;
 
       return (
-        <Fragment key={field.id}>
+        <Fragment key={`${field.id}-${index}`}>
           {titleText && (
             <Heading as="h3" className="verbiage-title">
               {titleText}
@@ -346,6 +347,7 @@ interface Props {
   autosave?: boolean;
   children?: ReactNode;
   className?: string;
+  disabled?: boolean;
   dontReset: boolean;
   formData?: AnyObject;
   formJson: FormJson;

@@ -3,6 +3,7 @@ import {
   Choice,
   CustomHtmlElement,
   EntityShape,
+  ErrorVerbiage,
   FormJson,
 } from "types";
 
@@ -231,6 +232,7 @@ export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   emptyDashboardText?: string;
   accordion?: AnyObject;
   backButtonText?: string;
+  errorMessage?: ErrorVerbiage;
 }
 
 export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {

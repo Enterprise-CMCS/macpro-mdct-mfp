@@ -144,8 +144,11 @@ export function isFieldElement(
    * This function is duplicated in app-api/utils/formTemplates/formTemplates.ts
    * If you change it here, change it there!
    */
-  const formLayoutElementTypes = ["sectionHeader", "sectionContent"];
-  return !formLayoutElementTypes.includes(field.type);
+  const formLayoutElementTypes = [
+    ReportFormFieldType.SECTION_HEADER,
+    ReportFormFieldType.SECTION_CONTENT,
+  ];
+  return !formLayoutElementTypes.includes(field.type as ReportFormFieldType);
 }
 
 export interface FormLayoutElement {
@@ -199,6 +202,7 @@ export enum ReportFormFieldType {
   NO_TYPE = "",
   NUMBER = "number",
   RADIO = "radio",
+  SECTION_CONTENT = "sectionContent",
   SECTION_HEADER = "sectionHeader",
   TEXT = "text",
   TEXTAREA = "textarea",

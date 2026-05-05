@@ -412,15 +412,17 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
       // Close-out
       {
         forCopyoverOnly: true,
-        id: "defineInitiative_projectedEndDate_value",
+        id: "closeOutInformation_projectedEndDate",
         type: ReportFormFieldType.DATE,
-        validation: ValidationType.TEXT_OPTIONAL,
+        validation: ValidationType.DATE_OPTIONAL,
         props: {
           disabled: true,
           hint: "Auto-populates from “I. Define initiative”.",
           label: "Projected end date",
           styleAsOptional: true,
           styleTitleAsOptional: true,
+          subtitle:
+            "Complete for initiatives that end during the upcoming semi-annual reporting period.",
           title: "Close-out {{initiativeName}}",
         },
       },
@@ -636,6 +638,20 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
 
     // Overlay
     backButtonText: "Return to all initiatives",
+    errorMessage: {
+      description: [
+        {
+          type: "p",
+          content:
+            "This initiative will be closed out and will no longer be editable. You will be able to continue to view this response. If you are not ready to close out an initiative, remove the data in this section.",
+        },
+        {
+          type: "p",
+          content: "This action cannot be undone.",
+        },
+      ],
+      title: "Warning",
+    },
 
     // Table
     editEntityButtonText: "Edit name/topic",

@@ -46,13 +46,14 @@ export const removeNotApplicablePopsFromInitiatives = (
    * to the MFP demonstration, we need to look through the initiatives
    * and remove it from the data
    */
-  for (let initiative of initiatives) {
-    initiative.defineInitiative_targetPopulations =
-      initiative.defineInitiative_targetPopulations?.filter(
-        (initiativePopulation: AnyObject) =>
-          !notApplicablePopulationNames.includes(initiativePopulation.value) ||
-          DEFAULT_TARGET_POPULATION_NAMES.includes(initiativePopulation.value)
-      );
+  for (const initiative of initiatives) {
+    initiative.defineInitiative_targetPopulations = (
+      initiative.defineInitiative_targetPopulations || []
+    ).filter(
+      (initiativePopulation: AnyObject) =>
+        !notApplicablePopulationNames.includes(initiativePopulation.value) ||
+        DEFAULT_TARGET_POPULATION_NAMES.includes(initiativePopulation.value)
+    );
   }
 
   // Now set and return the cleaned up data!

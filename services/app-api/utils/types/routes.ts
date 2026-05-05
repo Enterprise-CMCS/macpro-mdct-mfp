@@ -44,6 +44,7 @@ export enum ReportFormFieldType {
   NO_TYPE = "",
   NUMBER = "number",
   RADIO = "radio",
+  SECTION_CONTENT = "sectionContent",
   SECTION_HEADER = "sectionHeader",
   TEXT = "text",
   TEXTAREA = "textarea",

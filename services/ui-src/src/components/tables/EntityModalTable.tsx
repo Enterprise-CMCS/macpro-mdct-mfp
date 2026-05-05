@@ -205,6 +205,7 @@ export const EntityModalTable = ({
           {/* Modals */}
           <AddEditKeyMetricsModal
             currentEntityId={currentEntityId}
+            disabled={disabled}
             dynamicTemplateId={dynamicRowsTemplate.id}
             entityType={formData?.type}
             form={dynamicRowsTemplate.props?.dynamicModalForm}
