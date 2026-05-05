@@ -90,7 +90,7 @@ export const EntityRow = ({
     }
 
     return setStatusByType(entityType!);
-  }, [entityType, formEntity, isInitiativeClosed, isWP]);
+  }, [report, entity]);
 
   let programInfo = [];
   if (entityInfo) {
