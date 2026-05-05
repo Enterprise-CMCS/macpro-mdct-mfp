@@ -22,6 +22,7 @@ export const DynamicTableRows = ({
   formPercentage,
   hasDynamicModalForm,
   hasStaticRows,
+  openDeleteEntityModal,
   openModal = () => {},
   showEditColumn = true,
   tableId,
@@ -57,6 +58,7 @@ export const DynamicTableRows = ({
     const rows = entityType
       ? entityData?.[dynamicRowsTemplate.id]
       : localFieldData?.[dynamicRowsTemplate.id];
+
     if (rows) {
       setLocalDynamicRows((prev: DynamicFieldShape[]) => {
         const diff = rows.length - prev.length;
@@ -149,15 +151,26 @@ export const DynamicTableRows = ({
                   )}
                   {!disabled && (
                     <Button
-                      onClick={() =>
-                        removeDynamicRow(
-                          dynamicRowsTemplate.id,
-                          dynamicId,
-                          entityType,
-                          formData?.id,
-                          updatedFieldsCallback(dynamicId, localFieldData)
-                        )
-                      }
+                      onClick={() => {
+                        entityType === EntityType.INITIATIVE &&
+                        openDeleteEntityModal
+                          ? openDeleteEntityModal(dynamicId, () =>
+                              removeDynamicRow(
+                                dynamicRowsTemplate.id,
+                                dynamicId,
+                                entityType,
+                                formData?.id,
+                                updatedFieldsCallback(dynamicId, localFieldData)
+                              )
+                            )
+                          : removeDynamicRow(
+                              dynamicRowsTemplate.id,
+                              dynamicId,
+                              entityType,
+                              formData?.id,
+                              updatedFieldsCallback(dynamicId, localFieldData)
+                            );
+                      }}
                       sx={sx.removeButton}
                       type="button"
                       variant={"unstyled"}
@@ -184,6 +197,7 @@ interface Props {
   formPercentage: number;
   hasDynamicModalForm: boolean;
   hasStaticRows: boolean;
+  openDeleteEntityModal?: Function;
   openModal?: Function;
   label?: string;
   showEditColumn?: boolean;

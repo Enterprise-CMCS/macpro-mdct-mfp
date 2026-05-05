@@ -16,13 +16,20 @@ import {
 } from "@chakra-ui/react";
 import {
   AddEditKeyMetricsModal,
+  DeleteEntityModal,
   DynamicTableContext,
   DynamicTableRows,
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 // types
-import { AnyObject, FormTable, ReportFormFieldType, ReportShape } from "types";
+import {
+  AnyObject,
+  EntityShape,
+  FormTable,
+  ReportFormFieldType,
+  ReportShape,
+} from "types";
 // utils
 import { parseCustomHtml } from "utils";
 
@@ -43,6 +50,10 @@ export const EntityModalTable = ({
   const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
     undefined
   );
+  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
+    undefined
+  );
+  const [deleteCallback, setDeleteCallback] = useState<Function>();
 
   const {
     isOpen: keyMetricsModalIsOpen,
@@ -57,6 +68,27 @@ export const EntityModalTable = ({
   const closeModal = () => {
     setCurrentEntityId(undefined);
     keyMetricsModalOnCloseHandler();
+  };
+
+  // Delete entity modal disclosure and methods
+  const {
+    isOpen: deleteEntityModalIsOpen,
+    onOpen: deleteEntityModalOnOpenHandler,
+    onClose: deleteEntityModalOnCloseHandler,
+  } = useDisclosure();
+
+  const openDeleteEntityModal = (
+    entity: EntityShape,
+    deleteCallback?: Function
+  ) => {
+    setSelectedEntity(entity);
+    if (deleteCallback) setDeleteCallback(() => deleteCallback);
+    deleteEntityModalOnOpenHandler();
+  };
+
+  const closeDeleteEntityModal = () => {
+    setSelectedEntity(undefined);
+    deleteEntityModalOnCloseHandler();
   };
 
   // Dynamic rows
@@ -85,6 +117,7 @@ export const EntityModalTable = ({
       },
     ];
   };
+
   return (
     <Box sx={sx.box}>
       {verbiage?.sectionTitle && (
@@ -133,6 +166,7 @@ export const EntityModalTable = ({
               formPercentage={0}
               hasDynamicModalForm={hasDynamicModalForm}
               hasStaticRows={bodyRows.length > 0}
+              openDeleteEntityModal={openDeleteEntityModal}
               openModal={openModal}
               showEditColumn={hasDynamicModalForm}
               tableId={tableId}
@@ -168,6 +202,7 @@ export const EntityModalTable = ({
             {dynamicRowsTemplate.verbiage.buttonText}
           </Button>
 
+          {/* Modals */}
           <AddEditKeyMetricsModal
             currentEntityId={currentEntityId}
             dynamicTemplateId={dynamicRowsTemplate.id}
@@ -181,9 +216,19 @@ export const EntityModalTable = ({
             report={report}
             userIsAdmin={false}
           />
+
+          <DeleteEntityModal
+            deleteCallback={deleteCallback}
+            entityType={formData?.type}
+            selectedEntity={selectedEntity}
+            verbiage={dynamicRowsTemplate.verbiage}
+            modalDisclosure={{
+              isOpen: deleteEntityModalIsOpen,
+              onClose: closeDeleteEntityModal,
+            }}
+          />
         </>
       )}
-      {/* TODO: popup to confirm deletion of Key Metric */}
     </Box>
   );
 };

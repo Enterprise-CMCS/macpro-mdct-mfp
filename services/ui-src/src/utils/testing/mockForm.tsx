@@ -911,6 +911,8 @@ export const mockDynamicRowsTemplateForKeyMetricsTable = {
   verbiage: {
     buttonText: "Mock dynamic row button",
     hint: "Mock dynamic row hint",
+    deleteModalTitle: "Mock delete modal title",
+    deleteModalConfirmButtonText: "Mock delete confirmation text",
   },
 };
 
@@ -958,7 +960,7 @@ export const mockDynamicRowsTemplateWithModalForm = {
 export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
   ...mockDynamicRowsTemplateForKeyMetricsTable,
   props: {
-    ...mockDynamicRowsTemplate.props,
+    ...mockDynamicRowsTemplateForKeyMetricsTable.props,
     dynamicModalForm: {
       id: "mockDynamicModalFormId",
       heading: {
@@ -1017,5 +1019,7 @@ export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
     buttonText: "Mock dynamic row button",
     emptyTableMessage: "Mock dynamic empty table message",
     hint: "Mock dynamic row hint",
+    deleteModalTitle: "Mock delete modal title",
+    deleteModalConfirmButtonText: "Mock delete confirm text",
   },
 };
