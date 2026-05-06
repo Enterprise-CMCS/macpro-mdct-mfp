@@ -115,7 +115,7 @@ export const getInitiativeStatus = (
       // Direct pull of the initiative formTemplate json chunk
       reportRoute = report.formTemplate
         .routes[3] as ModalOverlayReportPageShape;
-      //get the intiative report child
+      //get the initiative report child
       reportChild = (
         reportRoute?.children! as EntityDetailsOverlayShape[]
       )?.find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
@@ -133,7 +133,7 @@ export const getInitiativeStatus = (
       // Direct pull of the initiative formTemplate json chunk
       reportRoute = report.formTemplate
         .routes[2] as DynamicModalOverlayReportPageShape;
-      //get the intiative report child by the entity's initiative_name
+      //get the initiative report child by the entity's initiative_name
       reportChild = (reportRoute as DynamicModalOverlayReportPageShape)[
         "initiatives"
       ]?.find((child) => child.name === entity.initiative_name);

@@ -582,7 +582,7 @@ export const mockSARReportWithOverlays = {
         path: "/mock/mock-dynamic-route",
         initiatives: [
           {
-            initiatiaveId: "mock-init-id",
+            initiativeId: "mock-init-id",
             name: "mock init name",
             entitySteps: [
               {

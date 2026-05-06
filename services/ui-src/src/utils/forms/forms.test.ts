@@ -13,6 +13,8 @@ import {
   getApplicablePopulations,
   addDynamicTableRowsValidation,
   filterResubmissionData,
+  isFieldElement,
+  isLayoutElement,
 } from "./forms";
 // types
 import {
@@ -631,6 +633,39 @@ describe("utils/forms", () => {
         id: mockFormId,
         fields: [...form.fields],
       });
+    });
+  });
+
+  describe("isFieldElement()", () => {
+    test("returns true", () => {
+      const field = {
+        type: ReportFormFieldType.TEXT,
+      } as FormField;
+      expect(isFieldElement(field)).toBe(true);
+    });
+
+    test("returns false", () => {
+      const field = {
+        type: ReportFormFieldType.SECTION_HEADER,
+      } as FormField;
+      expect(isFieldElement(field)).toBe(false);
+    });
+  });
+
+  describe("isLayoutElement()", () => {
+    test("returns true", () => {
+      const field = {
+        type: ReportFormFieldType.SECTION_HEADER,
+      } as FormField;
+      expect(isLayoutElement(field)).toBe(true);
+    });
+
+    test("returns false", () => {
+      const field = {
+        type: ReportFormFieldType.TEXT,
+        validation: ValidationType.TEXT,
+      } as FormField;
+      expect(isLayoutElement(field)).toBe(false);
     });
   });
 });

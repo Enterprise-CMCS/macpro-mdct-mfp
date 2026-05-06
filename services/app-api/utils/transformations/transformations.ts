@@ -618,7 +618,7 @@ export const extractWorkPlanData = (
           evaluationPlan["evaluationPlan_additionalDetails"],
       };
 
-      //Transfering Evaluation Plan Quarters Data
+      //Transferring Evaluation Plan Quarters Data
       for (const quarter of quarters) {
         const wpFieldId = `quarterlyProjections${reportYear}Q${quarter}`;
         const sarFieldId = `objectiveTargets_projections_${reportYear}Q${quarter}`;

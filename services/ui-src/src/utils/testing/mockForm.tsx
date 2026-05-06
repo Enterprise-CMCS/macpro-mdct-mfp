@@ -323,7 +323,7 @@ export const mockModalDrawerReportPageVerbiage = {
   deleteModalTitle: "Mock delete modal title",
   deleteModalConfirmButtonText: "Mock delete modal confirm button text",
   deleteModalWarning: "Mock delete modal warning",
-  entityUnfinishedMessage: "Mock entity unfinished messsage",
+  entityUnfinishedMessage: "Mock entity unfinished message",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
   readOnlyEntityDetailsButtonText: "Mock read-only entity details button text",
   drawerTitle: "Mock drawer title",
@@ -446,7 +446,7 @@ export const mockEntityDetailsDashboardOverlayJson = {
   entitySteps: [
     {
       name: "mock-route-entity-dashboard-overlay",
-      path: "/mock/mock-route-entity-dasboard-overlay",
+      path: "/mock/mock-route-entity-dashboard-overlay",
       pageType: PageTypes.ENTITY_OVERLAY,
       entityType: "mock entity type",
       stepType: "mock step type",
