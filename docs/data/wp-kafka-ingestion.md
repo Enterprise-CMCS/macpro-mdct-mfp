@@ -347,7 +347,6 @@ wp-form-template message key: formTemplates/template-789.json
     {
       "id": "${ksuid}",
       "type": "initiative",
-      "isOtherEntity": true,
       "initiative_name": "Statewide Transition Coordination Expansion",
       "initiative_wpTopic": [
         {
