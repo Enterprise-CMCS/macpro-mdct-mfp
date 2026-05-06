@@ -67,48 +67,54 @@ Contains the report submission metadata, such as submission date, completion sta
 
 The user-entered data for a report submission. This is unique to each state and each report.
 
-| Property / Field ID                                                              | Type          | Validation         | Required? | Nested? | parentFieldName                                                |
-| -------------------------------------------------------------------------------- | ------------- | ------------------ | --------- | ------- | -------------------------------------------------------------- |
-| `stateName`                                                                      | text          | text               | true      |         |                                                                |
-| `stateOrTerritory`                                                               | text          | text               | true      |         |                                                                |
-| `submissionCount`                                                                | number        | number             | true      |         |                                                                |
-| `submissionName`                                                                 | text          | text               | true      |         |                                                                |
-| `targetPopulations`                                                              | object array  | objectArray        | true      |         |                                                                |
-| `initiative`                                                                     | object array  | objectArray        |           |         |                                                                |
-| `transitionBenchmarks_targetPopulationName`                                      | text          | text               | true      |         |                                                                |
-| `transitionBenchmarks_applicableToMfpDemonstration`                              | radio         | radio              | true      |         |                                                                |
-| `quarterlyProjections{YYYY}Q{1-4}`                                               | number        | validInteger       | true      | true    | `transitionBenchmarks_applicableToMfpDemonstration`            |
-| `strategy_explanation`                                                           | textarea      | text               | true      |         |                                                                |
-| `generalInformation_resubmissionInformation`                                     | textarea      | text               |           |         |                                                                |
-| `instructions_selfDirectedInitiatives`                                           | radio         | radio              | true      |         |                                                                |
-| `instructions_tribalInitiatives`                                                 | radio         | radio              | true      |         |                                                                |
-| `initiative_name`                                                                | textarea      | text               | true      |         |                                                                |
-| `initiative_wpTopic`                                                             | radio         | radio              | true      |         |                                                                |
-| `initiative_wp_otherTopic`                                                       | text          | text               | true      | true    | `initiative_wpTopic`                                           |
-| `defineInitiative_describeInitiative`                                            | textarea      | textCustom         | true      |         |                                                                |
-| `defineInitiative_keyActivities`                                                 | dynamic       | dynamic            | true      |         |                                                                |
-| `defineInitiative_targetPopulations`                                             | checkbox      | checkbox           | true      |         |                                                                |
-| `defineInitiative_startDate`                                                     | radio         | radio              | true      |         |                                                                |
-| `defineInitiative_expectedStartDate_value`                                       | date          | date               | true      | true    | `defineInitiative_startDate`                                   |
-| `defineInitiative_actualStartDate_value`                                         | date          | date               | true      | true    | `defineInitiative_projectedStartDate`                          |
-| `defineInitiative_endDate`                                                       | date          | endDate            | true      |         |                                                                |
-| `defineInitiative_purposeAndGoals`                                               | textarea      | text               | true      |         |                                                                |
-| `defineInitiative_keyMetrics_performanceIndicators`                              | dynamicObject | dynamicOptional    |           |         |                                                                |
-| `defineInitiative_keyMetrics_performanceIndicators-name`                         | text          | text               | true      |         |                                                                |
-| `defineInitiative_keyMetrics_performanceIndicators-dataSource`                   | radio         | radio              | true      |         |                                                                |
-| `defineInitiative_keyMetrics_performanceIndicators-otherText`                    | text          | text               | true      | true    | `defineInitiative_keyMetrics_performanceIndicators-dataSource` |
-| `defineInitiative_keyMetrics_performanceIndicators-baselineValue`                | text          | text               | true      |         |                                                                |
-| `defineInitiative_keyMetrics_performanceIndicators-baselineStartDate`            | date          | date               | true      |         |                                                                |
-| `defineInitiative_keyMetrics_performanceIndicators-baselineEndDate`              | date          | endDate            | true      |         |                                                                |
-| `defineInitiative_keyMetrics_performanceIndicators-targetBenchmarkValue`         | text          | text               | true      |         |                                                                |
-| `defineInitiative_keyMetrics_performanceIndicators-targetBenchmarkProjectedDate` | date          | date               | true      |         |                                                                |
-| `defineInitiative_qualitativeMethods`                                            | textarea      | textCustomOptional |           |         |                                                                |
-| `defineInitiative_fundingSources`                                                | checkbox      | checkbox           | true      |         |                                                                |
-| `defineInitiative_projectedEndDate_value`                                        | date          | textOptional       |           |         |                                                                |
-| `closeOutInformation_actualEndDate`                                              | date          | dateOptional       |           |         |                                                                |
-| `closeOutInformation_initiativeStatus`                                           | checkbox      | checkboxOptional   |           |         |                                                                |
-| `closeOutInformation_initiativeStatus-terminationReason`                         | textarea      | text               | true      | true    | `closeOutInformation_initiativeStatus`                         |
-| `closeOutInformation_initiativeStatus-alternateFunding`                          | textarea      | text               | true      | true    | `closeOutInformation_initiativeStatus`                         |
+| Property / Field ID                                                                | Type          | Validation         | Required? | Nested? | parentFieldName                                                |
+| ---------------------------------------------------------------------------------- | ------------- | ------------------ | --------- | ------- | -------------------------------------------------------------- |
+| `stateName`                                                                        | text          | text               | true      |         |                                                                |
+| `stateOrTerritory`                                                                 | text          | text               | true      |         |                                                                |
+| `submissionCount`                                                                  | number        | number             | true      |         |                                                                |
+| `submissionName`                                                                   | text          | text               | true      |         |                                                                |
+| `targetPopulations`                                                                | object array  | objectArray        | true      |         |                                                                |
+| `initiative`                                                                       | object array  | objectArray        |           |         |                                                                |
+| `transitionBenchmarks_targetPopulationName`                                        | text          | text               | true      |         |                                                                |
+| `transitionBenchmarks_applicableToMfpDemonstration`                                | radio         | radio              | true      |         |                                                                |
+| `quarterlyProjections{YYYY}Q{1-4}`                                                 | number        | validInteger       | true      | true    | `transitionBenchmarks_applicableToMfpDemonstration`            |
+| `strategy_explanation`                                                             | textarea      | text               | true      |         |                                                                |
+| `generalInformation_resubmissionInformation`                                       | textarea      | text               |           |         |                                                                |
+| `instructions_selfDirectedInitiatives`                                             | radio         | radio              | true      |         |                                                                |
+| `instructions_tribalInitiatives`                                                   | radio         | radio              | true      |         |                                                                |
+| `initiative_name`                                                                  | textarea      | text               | true      |         |                                                                |
+| `initiative_wpTopic`                                                               | radio         | radio              | true      |         |                                                                |
+| `initiative_wp_otherTopic`                                                         | text          | text               | true      | true    | `initiative_wpTopic`                                           |
+| `defineInitiative_describeInitiative`                                              | textarea      | textCustom         | true      |         |                                                                |
+| `defineInitiative_keyActivities`                                                   | dynamic       | dynamic            | true      |         |                                                                |
+| `defineInitiative_targetPopulations`                                               | checkbox      | checkbox           | true      |         |                                                                |
+| `defineInitiative_startDate`                                                       | radio         | radio              | true      |         |                                                                |
+| `defineInitiative_expectedStartDate_value`                                         | date          | date               | true      | true    | `defineInitiative_startDate`                                   |
+| `defineInitiative_actualStartDate_value`                                           | date          | date               | true      | true    | `defineInitiative_startDate`                                   |
+| `defineInitiative_endDate`                                                         | date          | endDate            | true      |         |                                                                |
+| `defineInitiative_purposeAndGoals`                                                 | textarea      | text               | true      |         |                                                                |
+| `defineInitiative_keyMetrics_performanceIndicators`                                | dynamicObject | dynamicOptional    |           |         |                                                                |
+| `defineInitiative_keyMetrics_performanceIndicators[].name`                         | text          | text               | true      |         |                                                                |
+| `defineInitiative_keyMetrics_performanceIndicators[].dataSource`                   | radio         | radio              | true      |         |                                                                |
+| `defineInitiative_keyMetrics_performanceIndicators[].otherText`                    | text          | text               | true      | true    | `defineInitiative_keyMetrics_performanceIndicators-dataSource` |
+| `defineInitiative_keyMetrics_performanceIndicators[].baselineValue`                | text          | text               | true      |         |                                                                |
+| `defineInitiative_keyMetrics_performanceIndicators[].baselineStartDate`            | date          | date               | true      |         |                                                                |
+| `defineInitiative_keyMetrics_performanceIndicators[].baselineEndDate`              | date          | endDate            | true      |         |                                                                |
+| `defineInitiative_keyMetrics_performanceIndicators[].targetBenchmarkValue`         | text          | text               | true      |         |                                                                |
+| `defineInitiative_keyMetrics_performanceIndicators[].targetBenchmarkProjectedDate` | date          | date               | true      |         |                                                                |
+| `defineInitiative_qualitativeMethods`                                              | textarea      | textCustomOptional |           |         |                                                                |
+| `defineInitiative_fundingSources`                                                  | checkbox      | checkbox           | true      |         |                                                                |
+| `closeOutInformation_projectedEndDate`                                             | date          | dateOptional       |           |         |                                                                |
+| `closeOutInformation_actualEndDate`                                                | date          | dateOptional       |           |         |                                                                |
+| `closeOutInformation_initiativeStatus`                                             | checkbox      | checkboxOptional   |           |         |                                                                |
+| `closeOutInformation_initiativeStatus-terminationReason`                           | textarea      | text               | true      | true    | `closeOutInformation_initiativeStatus`                         |
+| `closeOutInformation_initiativeStatus-alternateFunding`                            | textarea      | text               | true      | true    | `closeOutInformation_initiativeStatus`                         |
+| `submitterName`                                                                    | text          | —                  |           |         | Set on submit                                                  |
+| `submitterEmailAddress`                                                            | text          | —                  |           |         | Set on submit                                                  |
+| `reportSubmissionDate`                                                             | text          | —                  |           |         | Set on submit (ET date string)                                 |
+| `isCopied`                                                                         | boolean       | —                  |           |         | Marker added by copyover                                       |
+| `isInitiativeClosed`                                                               | boolean       | —                  |           |         | Set on initiative close-out                                    |
+| `closedBy`                                                                         | text          | —                  |           |         | Full name of user who closed the initiative                    |
 
 #### Notes:
 
@@ -116,6 +122,10 @@ The user-entered data for a report submission. This is unique to each state and 
 - `quarterlyProjections{YYYY}Q{1-4}` is dynamically generated based on the Work Plan's `reportYear` and `reportPeriod`. For report year 2026, this expands to `2026Q1` - `2028Q4`.
 - Target populations marked `applicableToMfpDemonstration = "No"` will not have quarterly projection fields.
 - `generalInformation_resubmissionInformation` is only present when the Work Plan is a resubmission.
+- Performance indicator entries inside `defineInitiative_keyMetrics_performanceIndicators` are stored with **unprefixed** keys (`name`, `dataSource`, `baselineValue`, etc.). The prefixed `defineInitiative_keyMetrics_performanceIndicators-*` IDs only exist in the form template definition.
+- `closeOutInformation_*` fields are marked `forCopyoverOnly` in the form template (so values copy from a WP into the next WP/SAR). On a WP they appear only when an initiative has been closed out by the user; in that case the initiative will also have `isInitiativeClosed: true` and `closedBy` information.
+- `submitterName`, `submitterEmailAddress`, and `reportSubmissionDate` are added on form submission.
+- When a WP is created by copying a previous WP, the copied entities, child option values, key activities, and performance indicators are tagged with `isCopied: true`.
 
 ### 3. `wp-form-template`
 
@@ -385,19 +395,19 @@ wp-form-template message key: formTemplates/template-789.json
       "defineInitiative_keyMetrics_performanceIndicators": [
         {
           "id": "${ksuid}",
-          "defineInitiative_keyMetrics_performanceIndicators-name": "Number of successful community transitions",
-          "defineInitiative_keyMetrics_performanceIndicators-dataSource": [
+          "name": "Number of successful community transitions",
+          "dataSource": [
             {
               "key": "defineInitiative_keyMetrics_performanceIndicators-dataSource-otherKey",
               "value": "Other, specify"
             }
           ],
-          "defineInitiative_keyMetrics_performanceIndicators-otherText": "State MMIS transition tracking report",
-          "defineInitiative_keyMetrics_performanceIndicators-baselineValue": "120",
-          "defineInitiative_keyMetrics_performanceIndicators-baselineStartDate": "01/01/2025",
-          "defineInitiative_keyMetrics_performanceIndicators-baselineEndDate": "12/31/2025",
-          "defineInitiative_keyMetrics_performanceIndicators-targetBenchmarkValue": "200",
-          "defineInitiative_keyMetrics_performanceIndicators-targetBenchmarkProjectedDate": "12/31/2028"
+          "otherText": "State MMIS transition tracking report",
+          "baselineValue": "120",
+          "baselineStartDate": "01/01/2025",
+          "baselineEndDate": "12/31/2025",
+          "targetBenchmarkValue": "200",
+          "targetBenchmarkProjectedDate": "12/31/2028"
         }
       ],
       "defineInitiative_qualitativeMethods": "Quarterly stakeholder interviews with transition coordinators and participants.",
