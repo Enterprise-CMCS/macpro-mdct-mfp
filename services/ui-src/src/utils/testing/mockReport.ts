@@ -1,4 +1,9 @@
-import { OverlayModalTypes, ReportRoute, ReportStatus } from "types";
+import {
+  EntityType,
+  OverlayModalTypes,
+  ReportRoute,
+  ReportStatus,
+} from "types";
 import { genericErrorContent } from "verbiage/errors";
 import {
   mockStandardReportPageJson,
@@ -145,13 +150,14 @@ export const mockReportFieldData = {
       name: "entity-name",
       entityType_one: "hello",
       transitionBenchmarks_targetPopulationName: "mock benchmark name",
-      type: "mock-type",
+      type: "entityType",
     },
   ],
   initiative: [
     {
       id: "mock-initiative-id",
       name: "mock-name",
+      type: EntityType.INITIATIVE,
       mockObjectiveProgress: [
         {
           id: "mock-objective-1",
@@ -190,12 +196,14 @@ export const mockSARReportFieldData = {
       name: "entity-name",
       entityType_one: "hello",
       transitionBenchmarks_targetPopulationName: "mock benchmark name",
+      type: "entityType",
     },
   ],
   initiative: [
     {
       id: "mock-initiative-id",
       name: "mock-name",
+      type: EntityType.INITIATIVE,
       mockObjectiveProgress: [
         {
           id: "mock-objective-1",

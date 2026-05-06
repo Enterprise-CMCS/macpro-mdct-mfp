@@ -216,15 +216,28 @@ describe("utils/parsing", () => {
   });
 
   describe("labelTextWithOptional()", () => {
-    // labelTextWithOptional test
-    describe("Test labelTextWithOptional", () => {
-      test("if a string gets passed into labelTextWithOptional, the 'optional' text will appear", () => {
-        const label = "field title";
-        const testComponent = <div>{labelTextWithOptional(label)}</div>;
-        render(testComponent);
-        const optionalText = screen.getByText("(optional)");
-        expect(optionalText).toBeVisible();
-      });
+    test("if a string gets passed into labelTextWithOptional, the 'optional' text will appear", () => {
+      const label = "field title";
+      const testComponent = <>{labelTextWithOptional(label)}</>;
+      render(testComponent);
+
+      const fieldText = screen.getByText("field title");
+      expect(fieldText).toBeVisible();
+
+      const optionalText = screen.getByText("(optional)");
+      expect(optionalText).toBeVisible();
+    });
+
+    test("string with colon puts colon after optional text", () => {
+      const label = "field title:";
+      const testComponent = <>{labelTextWithOptional(label)}</>;
+      render(testComponent);
+
+      const fieldText = screen.getByText("field title");
+      expect(fieldText).toBeVisible();
+
+      const optionalText = screen.getByText("(optional):");
+      expect(optionalText).toBeVisible();
     });
   });
 });

@@ -16,6 +16,7 @@ import { getFieldParts } from "utils";
 
 export const AddEditKeyMetricsModal = ({
   currentEntityId,
+  disabled = false,
   dynamicTemplateId,
   entityType,
   form,
@@ -36,7 +37,7 @@ export const AddEditKeyMetricsModal = ({
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const isReportSubmitted = report?.status === ReportStatus.SUBMITTED;
-  const viewOnly = userIsAdmin || isReportSubmitted;
+  const viewOnly = disabled || userIsAdmin || isReportSubmitted;
 
   const parentEntityFieldData = report?.fieldData?.[entityType] || [];
   const parentEntityIndex = parentEntityFieldData.findIndex(
@@ -173,6 +174,7 @@ export const AddEditKeyMetricsModal = ({
 
 interface Props {
   currentEntityId?: string;
+  disabled?: boolean;
   dynamicTemplateId: string;
   entityType: string;
   form: FormJson;

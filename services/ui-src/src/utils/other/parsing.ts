@@ -116,5 +116,13 @@ export const sanitizeAndParseHtml = (html: string) => {
   return parsedHtml;
 };
 
-export const labelTextWithOptional = (label: string) =>
-  parseCustomHtml(label + "<span class='optional-text'> (optional)</span>");
+export const labelTextWithOptional = (label: string) => {
+  const cleanLabel = label.trim();
+  const endsWithColon = cleanLabel.endsWith(":");
+  const parsedLabel = endsWithColon ? cleanLabel.slice(0, -1) : cleanLabel;
+  const colon = endsWithColon ? ":" : "";
+
+  return parseCustomHtml(
+    `${parsedLabel}<span class='optional-text'> (optional)${colon}</span>`
+  );
+};

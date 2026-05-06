@@ -565,11 +565,43 @@ export const mockModalOverlayReportPageVerbiage = {
   addEditModalEditTitle: "Mock Edit Modal Text",
   reportProgressButtonText: "Mock report progress button text",
   backButtonText: "Mock back button text",
+  errorMessage: {
+    description: "Mock error description",
+    title: "Mock error title",
+  },
 };
 
 export const mockModalOverlayForm = {
   id: "mock-modal-overlay-form-id",
-  fields: [mockFormField, mockNumberField, mockOptionalFormField],
+  fields: [
+    mockFormField,
+    mockNumberField,
+    mockOptionalFormField,
+    {
+      id: "defineInitiative_endDate",
+      type: ReportFormFieldType.DATE,
+      validation: ValidationType.DATE_OPTIONAL,
+      props: {
+        label: "mock end date field",
+      },
+    },
+    {
+      id: "closeOutInformation_projectedEndDate",
+      type: ReportFormFieldType.DATE,
+      validation: ValidationType.DATE_OPTIONAL,
+      props: {
+        label: "mock projected end date field",
+      },
+    },
+    {
+      id: "closeOutInformation_actualEndDate",
+      type: ReportFormFieldType.DATE,
+      validation: ValidationType.DATE_OPTIONAL,
+      props: {
+        label: "mock close out actual end date field",
+      },
+    },
+  ],
 };
 
 export const mockOverlayModalPageJson2 = {
@@ -911,6 +943,8 @@ export const mockDynamicRowsTemplateForKeyMetricsTable = {
   verbiage: {
     buttonText: "Mock dynamic row button",
     hint: "Mock dynamic row hint",
+    deleteModalTitle: "Mock delete modal title",
+    deleteModalConfirmButtonText: "Mock delete confirmation text",
   },
 };
 
@@ -958,7 +992,7 @@ export const mockDynamicRowsTemplateWithModalForm = {
 export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
   ...mockDynamicRowsTemplateForKeyMetricsTable,
   props: {
-    ...mockDynamicRowsTemplate.props,
+    ...mockDynamicRowsTemplateForKeyMetricsTable.props,
     dynamicModalForm: {
       id: "mockDynamicModalFormId",
       heading: {
@@ -1017,5 +1051,7 @@ export const mockDynamicRowsTemplateForKeyMetricsTableWithModalForm = {
     buttonText: "Mock dynamic row button",
     emptyTableMessage: "Mock dynamic empty table message",
     hint: "Mock dynamic row hint",
+    deleteModalTitle: "Mock delete modal title",
+    deleteModalConfirmButtonText: "Mock delete confirm text",
   },
 };

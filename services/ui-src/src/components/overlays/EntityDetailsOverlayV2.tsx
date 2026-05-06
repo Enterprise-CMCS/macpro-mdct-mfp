@@ -1,43 +1,102 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // components
-import { Form, ReportPageIntro } from "components";
+import { Alert, Form, ReportPageIntro } from "components";
 // types
+import { FieldValues, UseFormReturn } from "react-hook-form";
 import {
+  AlertTypes,
   DynamicModalOverlayReportPageShape,
   EntityShape,
+  ErrorVerbiage,
   FormJson,
   ModalOverlayReportPageShape,
 } from "types";
+// utils
+import { isClosedInitiative, toggleOptional } from "utils";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
 
 export const EntityDetailsOverlayV2 = ({
+  autosaveState = false,
   backButtonText,
   closeEntityDetailsOverlay,
   disabled = false,
   editable = true,
+  errorMessage,
   form = {} as FormJson,
   onSubmit,
   route,
   selectedEntity,
   submitting = false,
   setSelectedEntity,
-  validateOnRender,
+  validateOnRender = false,
 }: Props) => {
+  const [autosave, setAutosave] = useState<boolean>(true);
+  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [formJson, setFormJson] = useState<FormJson>(form);
+
+  const isDisabled = disabled || Boolean(selectedEntity?.isInitiativeClosed);
+  const viewOnly = !editable || isDisabled;
   const getSaveButtonText = () => {
-    return editable && !disabled && !selectedEntity?.isInitiativeClosed
-      ? "Save & return"
-      : "Return";
+    return viewOnly ? "Return" : "Save & return";
+  };
+  const submitProps = viewOnly
+    ? { onClick: () => closeEntityDetailsOverlay() }
+    : { form: form.id };
+
+  const getFields = (entity?: EntityShape) => {
+    const fields = entity?.isCopied
+      ? form.fields
+      : form.fields?.filter((f) => !f.forCopyoverOnly);
+    return fields || [];
+  };
+
+  const updateCloseoutSection = useCallback(
+    (entity: EntityShape) => {
+      const isClosed = isClosedInitiative(entity);
+      const fields = getFields(entity);
+
+      setAutosave(!isClosed);
+      setShowAlert(isClosed);
+      setFormJson(toggleOptional({ ...form, fields }, isClosed));
+    },
+    [form]
+  );
+
+  const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {
+    const currentValues = hookForm.getValues() as EntityShape;
+    const endDate = currentValues.defineInitiative_endDate;
+    const projectedEndDate = currentValues.closeOutInformation_projectedEndDate;
+
+    let updatedEntity = {
+      ...selectedEntity,
+      ...currentValues,
+    };
+
+    if (endDate !== projectedEndDate) {
+      hookForm.setValue("closeOutInformation_projectedEndDate", endDate);
+
+      updatedEntity = {
+        ...updatedEntity,
+        closeOutInformation_projectedEndDate: endDate,
+      };
+    }
+    setSelectedEntity(updatedEntity);
   };
 
   useEffect(() => {
-    setSelectedEntity(selectedEntity);
-    return () => {
-      setSelectedEntity(undefined);
-    };
-  }, [selectedEntity]);
+    if (selectedEntity) updateCloseoutSection(selectedEntity);
+  }, [
+    selectedEntity?.closeOutInformation_actualEndDate,
+    selectedEntity?.isCopied,
+  ]);
+
+  useEffect(() => {
+    setDisableSubmit(autosaveState || submitting);
+  }, [autosaveState, submitting]);
 
   return (
     <Box>
@@ -60,15 +119,23 @@ export const EntityDetailsOverlayV2 = ({
       />
       {form.fields && (
         <Form
-          autosave={true}
+          autosave={autosave}
           className="overlay-form"
-          disabled={disabled}
+          disabled={isDisabled}
           dontReset={true}
           formData={selectedEntity}
-          formJson={form}
+          formJson={formJson}
           id={form.id}
+          onFormChange={onFormChange}
           onSubmit={onSubmit}
-          validateOnRender={validateOnRender || false}
+          validateOnRender={validateOnRender}
+        />
+      )}
+      {showAlert && errorMessage && (
+        <Alert
+          description={errorMessage.description}
+          status={AlertTypes.WARNING}
+          title={errorMessage.title}
         />
       )}
       <Box sx={sx.footerBox}>
@@ -80,8 +147,13 @@ export const EntityDetailsOverlayV2 = ({
           >
             Previous
           </Button>
-          <Button type="submit" form={form.id} sx={sx.saveButton}>
-            {submitting ? <Spinner size="md" /> : getSaveButtonText()}
+          <Button
+            disabled={disableSubmit}
+            sx={sx.saveButton}
+            type="submit"
+            {...submitProps}
+          >
+            {disableSubmit ? <Spinner size="md" /> : getSaveButtonText()}
           </Button>
         </Flex>
       </Box>
@@ -90,10 +162,12 @@ export const EntityDetailsOverlayV2 = ({
 };
 
 interface Props {
+  autosaveState?: boolean;
   backButtonText?: string;
   closeEntityDetailsOverlay: Function;
   disabled?: boolean;
   editable?: boolean;
+  errorMessage?: ErrorVerbiage;
   form?: FormJson;
   onSubmit: Function;
   route: ModalOverlayReportPageShape | DynamicModalOverlayReportPageShape;

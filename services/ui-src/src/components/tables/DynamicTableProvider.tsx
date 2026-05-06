@@ -70,7 +70,6 @@ export const DynamicTableProvider = ({ children }: any) => {
   const { fieldData } = report;
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
-
   const [localFieldData, setLocalFieldData] = useState<AnyObject>({});
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | null>(null);
 
@@ -308,6 +307,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     row,
     rowIndex,
     section,
+    showEditColumn = true,
     styleAsOptionalHeadRows = [],
     tableId,
   }: GenerateRows) => {
@@ -358,21 +358,21 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     return (
       <Tr
-        key={`${section}-row-${rowIndex}`}
+        key={`${tableId}-${section}-row-${rowIndex}`}
         className={isTotalsRow ? "totals-row" : ""}
       >
         {row.map((cell, cellIndex: number) => (
           <Cell
-            id={`${section}-row-${rowIndex}-cell-${cellIndex}`}
-            key={`${section}-row-${rowIndex}-cell-${cellIndex}`}
+            id={`${tableId}-${section}-row-${rowIndex}-cell-${cellIndex}`}
+            key={`${tableId}-${section}-row-${rowIndex}-cell-${cellIndex}`}
             sx={{ textAlign: thAlign(cell), width: thWidth(cellIndex) }}
           >
             {displayCell({
               cell,
-              columnId: `${section}-row-${rowIndex}-cell-0`,
+              columnId: `${tableId}-${section}-row-${rowIndex}-cell-0`,
               disabled,
               formData,
-              rowId: `${rowId}-row-0-cell-${cellIndex}`,
+              rowId: `${tableId}-${rowId}-row-0-cell-${cellIndex}`,
               rowIndex,
               styleAsOptional: isOptional(cell),
               tableId,
@@ -380,7 +380,7 @@ export const DynamicTableProvider = ({ children }: any) => {
             })}
           </Cell>
         ))}
-        {dynamicRowsTemplate && (
+        {dynamicRowsTemplate && showEditColumn && (
           <Cell sx={{ width: `${optionsWidth}%` }}>{content}</Cell>
         )}
       </Tr>
@@ -601,6 +601,7 @@ interface GenerateRows {
   row: FormTableRow;
   rowIndex: number;
   section: string;
+  showEditColumn?: boolean;
   styleAsOptionalHeadRows?: string[];
   tableId?: string;
 }

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   RouterWrappedComponent,
@@ -13,7 +13,14 @@ import { useStore } from "utils";
 // constants
 import { EntityRow } from "./EntityRow";
 import { Table } from "components";
-import { ModalDrawerEntityTypes } from "types";
+import {
+  EntityDetailsOverlayShape,
+  EntityDetailsOverlayTypes,
+  EntityShape,
+  ModalDrawerEntityTypes,
+  OverlayModalStepTypes,
+  OverlayModalTypes,
+} from "types";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
@@ -51,7 +58,12 @@ const tableContent = {
 };
 
 const mockEntityInfo = ["transitionBenchmarks_targetPopulationName"];
-const mockEntityClosed = { ...mockGenericEntity, isInitiativeClosed: true };
+const mockEntityClosed = {
+  ...mockGenericEntity,
+  isInitiativeClosed: true,
+  closeOutInformation_actualEndDate: "01/01/2026",
+  closedBy: "Mock User",
+};
 
 const entityRowWithEntities = (
   <RouterWrappedComponent>
@@ -97,6 +109,26 @@ const entityRowWithCloseoutDetails = (
         openAddEditEntityModal={mockOpenAddEditEntityModal}
         openDeleteEntityModal={mockOpenDeleteEntityModal}
         openOverlayOrDrawer={mockOpenDrawer}
+      />
+    </Table>
+  </RouterWrappedComponent>
+);
+
+const entityRowInitiative = (
+  entity: EntityShape,
+  formEntity?: EntityDetailsOverlayShape
+) => (
+  <RouterWrappedComponent>
+    <Table content={tableContent}>
+      <EntityRow
+        entity={entity}
+        entityInfo={["initiative_name", "initiative_wpTopic"]}
+        entityType={OverlayModalTypes.INITIATIVE}
+        formEntity={formEntity}
+        openAddEditEntityModal={mockOpenAddEditEntityModal}
+        openDeleteEntityModal={mockOpenDeleteEntityModal}
+        openOverlayOrDrawer={mockOpenDrawer}
+        verbiage={verbiage}
       />
     </Table>
   </RouterWrappedComponent>
@@ -171,7 +203,148 @@ describe("<EntityRow />", () => {
     test("should show closeout details if specified", () => {
       mockedUseStore.mockReturnValue(mockReportStore);
       render(entityRowWithCloseoutDetails);
-      expect(screen.getByText("Closed by")).toBeVisible();
+      expect(
+        screen.getByRole("columnheader", { name: "Actual end date" })
+      ).toBeVisible();
+      expect(
+        screen.getByRole("columnheader", { name: "Closed by" })
+      ).toBeVisible();
+      expect(screen.getByRole("cell", { name: "01/01/2026" })).toBeVisible();
+      expect(screen.getByRole("cell", { name: "Mock User" })).toBeVisible();
+    });
+  });
+
+  describe("EntityRow with initiative", () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test("show initiative with close-out step", () => {
+      const entity = {
+        ...mockGenericEntity,
+        initiative_name: "Mock initiative name",
+        initiative_wpTopic: [
+          {
+            key: "mockId",
+            value: "Mock topic",
+          },
+        ],
+      };
+
+      const formEntity = {
+        stepType: EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
+      } as EntityDetailsOverlayShape;
+
+      mockedUseStore.mockReturnValue(mockReportStore);
+      render(entityRowInitiative(entity, formEntity));
+
+      const cells = screen.getAllByRole("cell");
+      const firstCell = cells[0];
+      const statusIcon = within(firstCell).queryByRole("img");
+      expect(statusIcon).not.toBeInTheDocument();
+      expect(screen.getByText("Mock initiative name")).toBeVisible();
+      expect(screen.getByText("Mock topic")).toBeVisible();
+    });
+
+    test("show initiative with other step", () => {
+      const entity = {
+        ...mockGenericEntity,
+        initiative_name: "Mock initiative name",
+        initiative_wpTopic: [
+          {
+            key: "mockId",
+            value: "Mock topic",
+          },
+        ],
+      };
+
+      const formEntity = {
+        stepType: OverlayModalStepTypes.EVALUATION_PLAN,
+      } as EntityDetailsOverlayShape;
+
+      mockedUseStore.mockReturnValue(mockReportStore);
+      render(entityRowInitiative(entity, formEntity));
+
+      const cells = screen.getAllByRole("cell");
+      const firstCell = cells[0];
+      const statusIcon = within(firstCell).getByRole("img", {
+        name: "warning icon",
+      });
+      expect(statusIcon).toBeVisible();
+      expect(screen.getByText("Mock initiative name")).toBeVisible();
+      expect(screen.getByText("Mock topic")).toBeVisible();
+      expect(screen.getByText('Select "Edit" to report data.')).toBeVisible();
+    });
+
+    test("show closed initiative with close-out step", () => {
+      const entity = {
+        ...mockEntityClosed,
+        initiative_name: "Mock initiative name",
+        initiative_wpTopic: [
+          {
+            key: "mockId",
+            value: "Mock topic",
+          },
+        ],
+      };
+
+      const formEntity = {
+        stepType: EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
+      } as EntityDetailsOverlayShape;
+
+      mockedUseStore.mockReturnValue(mockReportStore);
+      render(entityRowInitiative(entity, formEntity));
+
+      const cells = screen.getAllByRole("cell");
+      const firstCell = cells[0];
+      const statusIcon = within(firstCell).getByRole("img", {
+        name: "close icon",
+      });
+      expect(statusIcon).toBeVisible();
+      expect(screen.getByText("Mock initiative name")).toBeVisible();
+      expect(screen.getByText("Mock topic")).toBeVisible();
+    });
+
+    test("show closed initiative details", () => {
+      const entity = {
+        ...mockEntityClosed,
+        initiative_name: "Mock initiative name",
+        initiative_wpTopic: [
+          {
+            key: "mockId",
+            value: "Mock topic",
+          },
+        ],
+      };
+
+      mockedUseStore.mockReturnValue(mockReportStore);
+      render(entityRowInitiative(entity));
+
+      const cells = screen.getAllByRole("cell");
+      const firstCell = cells[0];
+      const statusIcon = within(firstCell).getByRole("img", {
+        name: "close icon",
+      });
+      expect(statusIcon).toBeVisible();
+      expect(screen.getByText("[Closed] Mock initiative name")).toBeVisible();
+      expect(screen.getByText("Mock topic")).toBeVisible();
+    });
+
+    test("show closed initiative details with other topic", () => {
+      const entity = {
+        ...mockEntityClosed,
+        initiative_wpTopic: [
+          {
+            key: "mockId",
+            value: "Other, specify",
+          },
+        ],
+        initiative_wp_otherTopic: "Mock other topic",
+      };
+
+      mockedUseStore.mockReturnValue(mockReportStore);
+      render(entityRowInitiative(entity));
+      expect(screen.getByText("Mock other topic")).toBeVisible();
     });
   });
 

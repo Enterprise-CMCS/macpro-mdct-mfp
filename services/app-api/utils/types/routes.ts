@@ -44,6 +44,7 @@ export enum ReportFormFieldType {
   NO_TYPE = "",
   NUMBER = "number",
   RADIO = "radio",
+  SECTION_CONTENT = "sectionContent",
   SECTION_HEADER = "sectionHeader",
   TEXT = "text",
   TEXTAREA = "textarea",
@@ -90,6 +91,7 @@ export interface ReportFormFieldProps {
   label?: string;
   mask?: NumberMask | null;
   maxLength?: number;
+  sectionTitle?: string;
   styleAsOptional?: boolean;
   styleTitleAsOptional?: boolean;
   subType?: ReportFormFieldType;
@@ -115,6 +117,8 @@ export type FormTableRows = FormTableRow[];
 export interface DynamicRowsTemplateVerbiage {
   buttonText: string;
   hint: string;
+  deleteModalTitle?: string;
+  deleteModalConfirmButtonText?: string;
 }
 
 export interface DynamicRowsTemplate extends ReportFormField {
@@ -244,7 +248,6 @@ export interface SARStateOrTerritorySpecificInitiativesRoute extends BaseRoute {
 export interface SARStateOrTerritorySpecificInitiativesV2Route extends BaseRoute {
   entityInfo: string[];
   entityType: StepEntityType;
-  initiatives: AnyObject[];
   overlayForm: ReportFormWithTables;
   pageType: string;
 }

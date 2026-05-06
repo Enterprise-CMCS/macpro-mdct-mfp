@@ -5,6 +5,7 @@ import {
   EntityType,
   FormField,
   OverlayModalPageShape,
+  OverlayModalStepTypes,
   OverlayModalTypes,
   PageTypes,
   ReportShape,
@@ -456,7 +457,7 @@ describe("tables/getEntityStatus", () => {
                 entityType: OverlayModalTypes.INITIATIVE,
                 entitySteps: [
                   {
-                    stepType: "fundingSources",
+                    stepType: OverlayModalStepTypes.FUNDING_SOURCES,
                     form: {
                       fields: [
                         {

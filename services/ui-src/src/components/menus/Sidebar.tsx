@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useLocation } from "react-router";
 // components
 import { Box, Collapse, Flex, Image, Link, Text } from "@chakra-ui/react";
-import { SkipNav } from "components";
 
 // utils
 import { useBreakpoint, useStore } from "utils";
@@ -31,49 +30,39 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
     toggleSidebar(isDesktop);
   }, [isDesktop]);
 
+  if (!reportJson) return null;
+
   return (
-    <>
-      {reportJson && (
-        <>
-          <SkipNav
-            id="skip-nav-sidebar"
-            href="#report-content"
-            text="Skip to main content"
-            sxOverride={sx.sideBarSkipNav}
-          />
-          <Box
-            id="sidebar"
-            sx={sx.root}
-            display={isHidden ? "none" : "block"}
-            className={isOpen ? "open" : "closed"}
-            role="navigation"
-            aria-label="Sidebar menu"
-          >
-            <Box
-              as="button"
-              sx={sx.closeButton}
-              onClick={() => toggleSidebar(!isOpen)}
-              aria-label="Open/Close sidebar menu"
-            >
-              <Image
-                src={arrowDownIcon}
-                alt={isOpen ? "Arrow left" : "Arrow right"}
-                sx={sx.sidebarIcon}
-                className={isOpen ? "left" : "right"}
-              />
-            </Box>
-            <Box id="sidebar-title-box" sx={sx.topBox}>
-              <Text sx={sx.title}>{reportJson?.name}</Text>
-            </Box>
-            <Box sx={sx.navSectionsBox} className="nav-sections-box">
-              {reportJson.routes.map((section) => (
-                <NavSection key={section.name} section={section} level={1} />
-              ))}
-            </Box>
-          </Box>
-        </>
-      )}
-    </>
+    <Box
+      id="sidebar"
+      sx={sx.root}
+      display={isHidden ? "none" : "block"}
+      className={isOpen ? "open" : "closed"}
+      role="navigation"
+      aria-label="Sidebar menu"
+    >
+      <Box
+        as="button"
+        sx={sx.closeButton}
+        onClick={() => toggleSidebar(!isOpen)}
+        aria-label="Open/Close sidebar menu"
+      >
+        <Image
+          src={arrowDownIcon}
+          alt={isOpen ? "Arrow left" : "Arrow right"}
+          sx={sx.sidebarIcon}
+          className={isOpen ? "left" : "right"}
+        />
+      </Box>
+      <Box id="sidebar-title-box" sx={sx.topBox}>
+        <Text sx={sx.title}>{reportJson?.name}</Text>
+      </Box>
+      <Box sx={sx.navSectionsBox} className="nav-sections-box">
+        {reportJson.routes.map((section) => (
+          <NavSection key={section.name} section={section} level={1} />
+        ))}
+      </Box>
+    </Box>
   );
 };
 
@@ -196,9 +185,6 @@ const sx = {
       zIndex: "dropdown",
       height: "100%",
     },
-  },
-  sideBarSkipNav: {
-    position: "fixed",
   },
   topBox: {
     borderBottom: "1px solid var(--mdct-colors-gray_lighter)",

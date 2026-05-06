@@ -1,4 +1,5 @@
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
 import { Table, Tbody } from "@chakra-ui/react";
@@ -17,7 +18,6 @@ import {
   mockDynamicRowsTemplateWithModalForm,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
-import userEvent from "@testing-library/user-event";
 
 const mockTrigger = jest.fn();
 const mockRhfMethods = {

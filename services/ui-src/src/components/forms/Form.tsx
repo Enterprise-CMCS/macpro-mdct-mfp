@@ -53,6 +53,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     autosave,
     className,
     children,
+    disabled = false,
     dontReset,
     formData,
     formJson,
@@ -77,7 +78,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   const status = reportStatus || report?.status;
   const submittedReport = status === ReportStatus.SUBMITTED;
   const fieldInputDisabled =
-    !editableByAdmins && (!userIsEndUser || submittedReport);
+    disabled || (!editableByAdmins && (!userIsEndUser || submittedReport));
 
   // For the SAR RE&T sections, display an alert if the MFP WP does not contain any target populations
   const displayRetError =
@@ -106,9 +107,16 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     // sort errors in order of registration/page display
     const sortedErrors: string[] = sortFormErrors(formValidationSchema, errors);
     // focus the first error on the page and scroll to it
-    const fieldToFocus = document.querySelector(
-      `[name='${sortedErrors[0]}']`
-    )! as HTMLElement;
+    const firstError = sortedErrors[0];
+
+    // Get input with aria-invalid; choice lists don't use aria-invalid
+    const fieldToFocus = (document.querySelector(
+      `[name^='${firstError}'][aria-invalid="true"]`
+    ) ||
+      document.querySelector(
+        `[name^='${firstError}']`
+      )) as HTMLInputElement | null;
+
     fieldToFocus?.scrollIntoView({ behavior: "smooth", block: "center" });
     fieldToFocus?.focus({ preventScroll: true });
   };
@@ -244,7 +252,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     const renderedTableIds = new Set<string>();
     let tableIndex = 0;
 
-    const renderedFieldsAndTables = fields.map((field) => {
+    const renderedFieldsAndTables = fields.map((field, index) => {
       const { tableId } = getFieldParts(field.id);
 
       if (field.forTableOnly) {
@@ -268,10 +276,20 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
           : title;
 
       return (
-        <Fragment key={field.id}>
+        <Fragment key={`${field.id}-${index}`}>
           {titleText && (
             <Heading as="h3" className="verbiage-title">
               {titleText}
+            </Heading>
+          )}
+          {field.props?.sectionTitle && (
+            <Heading as="h3" className="section-title">
+              {field.props.sectionTitle}
+            </Heading>
+          )}
+          {field.props?.subsectionTitle && (
+            <Heading as="h4" className="subsection-title">
+              {field.props.subsectionTitle}
             </Heading>
           )}
           {field.props?.subtitle && (
@@ -329,6 +347,7 @@ interface Props {
   autosave?: boolean;
   children?: ReactNode;
   className?: string;
+  disabled?: boolean;
   dontReset: boolean;
   formData?: AnyObject;
   formJson: FormJson;
@@ -427,12 +446,19 @@ const sx = {
     paddingBottom: 0,
   },
   ".overlay-form .verbiage-title": {
-    fontSize: "1.5rem",
+    fontSize: "2xl",
     marginTop: "spacer4",
     paddingTop: "spacer3",
-    b: {
-      fontWeight: "normal",
-    },
+  },
+  ".overlay-form .section-title": {
+    fontSize: "2xl",
+    marginTop: "spacer4",
+    paddingBottom: 0,
+  },
+  ".overlay-form .subsection-title": {
+    fontSize: "xl",
+    marginTop: "spacer4",
+    paddingBottom: 0,
   },
   ".overlay-form div + .verbiage-title": {
     borderTop: "1px solid",
