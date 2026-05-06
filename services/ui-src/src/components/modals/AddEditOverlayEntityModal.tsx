@@ -4,19 +4,20 @@ import uuid from "react-uuid";
 // components
 import { Form, Modal, ReportContext } from "components";
 import { Text, Spinner } from "@chakra-ui/react";
-// utils
+// types
 import {
   AnyObject,
   EntityShape,
   FormJson,
-  isFieldElement,
   ReportStatus,
   ReportType,
 } from "types";
+// utils
 import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  isFieldElement,
   setClearedEntriesToDefaultValue,
   useStore,
 } from "utils";

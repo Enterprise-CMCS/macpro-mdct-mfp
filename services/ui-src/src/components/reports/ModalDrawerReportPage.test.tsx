@@ -18,11 +18,11 @@ import {
 } from "../../constants";
 // types
 import {
+  AnyObject,
   ModalDrawerReportPageShape,
   ReportContextShape,
   ReportShape,
 } from "types";
-import { AnyObject } from "yup/lib/types";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();

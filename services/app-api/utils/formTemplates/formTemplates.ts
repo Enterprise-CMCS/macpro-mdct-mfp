@@ -260,7 +260,7 @@ export function isFieldElement(
   field: FormField | FormLayoutElement
 ): field is FormField {
   /*
-   * This function is duplicated in ui-src/src/types/formFields.ts
+   * This function is duplicated in ui-src/src/utils/forms/forms.ts
    * If you change it here, change it there!
    */
   const formLayoutElementTypes = [
@@ -274,7 +274,7 @@ export function isLayoutElement(
   field: FormField | FormLayoutElement
 ): field is FormLayoutElement {
   /*
-   * This function is duplicated in ui-src/src/types/formFields.ts
+   * This function is duplicated in ui-src/src/utils/forms/forms.ts
    * If you change it here, change it there!
    */
   return (field as FormField).validation === undefined;

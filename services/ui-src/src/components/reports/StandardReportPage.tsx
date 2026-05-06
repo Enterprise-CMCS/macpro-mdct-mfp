@@ -13,7 +13,6 @@ import {
 import {
   AnyObject,
   FormJson,
-  isFieldElement,
   ReportShape,
   ReportStatus,
   StandardReportPageShape,
@@ -23,6 +22,7 @@ import {
   addDynamicTableRowsValidation,
   filterFormData,
   filterResubmissionData,
+  isFieldElement,
   parseCustomHtml,
   useFindRoute,
   useStore,

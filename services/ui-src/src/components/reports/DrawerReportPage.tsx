@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+// components
 import {
   Box,
   Button,
@@ -7,24 +8,24 @@ import {
   Image,
   useDisclosure,
 } from "@chakra-ui/react";
-// utils
-import {
-  entityWasUpdated,
-  filterFormData,
-  getEntriesToClear,
-  setClearedEntriesToDefaultValue,
-  parseCustomHtml,
-  useStore,
-} from "utils";
-//types
+// types
 import {
   AnyObject,
   DrawerReportPageShape,
   EntityShape,
   ReportStatus,
   FormField,
-  isFieldElement,
 } from "types";
+// utils
+import {
+  entityWasUpdated,
+  filterFormData,
+  getEntriesToClear,
+  isFieldElement,
+  setClearedEntriesToDefaultValue,
+  parseCustomHtml,
+  useStore,
+} from "utils";
 
 import { ReportContext, ReportDrawer } from "components";
 import { ReportPageIntro } from "./ReportPageIntro";

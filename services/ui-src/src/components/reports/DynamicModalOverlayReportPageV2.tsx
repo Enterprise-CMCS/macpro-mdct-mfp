@@ -16,7 +16,6 @@ import {
   DynamicModalOverlayReportPageShape,
   EntityShape,
   FormJson,
-  isFieldElement,
   ReportShape,
   ReportStatus,
 } from "types";
@@ -25,6 +24,7 @@ import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  isFieldElement,
   parseCustomHtml,
   setClearedEntriesToDefaultValue,
   useBreakpoint,
