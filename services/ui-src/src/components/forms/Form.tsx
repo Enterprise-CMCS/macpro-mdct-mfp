@@ -22,12 +22,23 @@ import {
   EntityModalTable,
   SummationTable,
 } from "components";
+// types
+import {
+  AnyObject,
+  FormJson,
+  FormField,
+  FormTable,
+  FormTableType,
+  FormLayoutElement,
+  ReportStatus,
+} from "types";
 // utils
 import {
   compileValidationJsonFromFields,
   formFieldFactory,
   getFieldParts,
   hydrateFormFields,
+  isFieldElement,
   labelTextWithOptional,
   mapValidationTypesToSchema,
   parseCustomHtml,
@@ -37,16 +48,6 @@ import {
   updateRenderFields,
   useStore,
 } from "utils";
-import {
-  AnyObject,
-  FormJson,
-  FormField,
-  FormTable,
-  FormTableType,
-  isFieldElement,
-  FormLayoutElement,
-  ReportStatus,
-} from "types";
 
 export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   {

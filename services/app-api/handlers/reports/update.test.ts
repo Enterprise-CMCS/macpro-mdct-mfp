@@ -168,7 +168,7 @@ describe("Test updateReport API method", () => {
   test("Test attempted report update with disallowed fieldData properties returns 400", async () => {
     const eventWritingToReadonlyFieldDataFields = {
       ...submissionEvent,
-      body: `{"fieldData":{"submitterName":"Abaraham Lincoln"}}`,
+      body: `{"fieldData":{"submitterName":"Abraham Lincoln"}}`,
     };
     const res = await updateReport(eventWritingToReadonlyFieldDataFields, null);
     expect(res.statusCode).toBe(StatusCodes.BadRequest);

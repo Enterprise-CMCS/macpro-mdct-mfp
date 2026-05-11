@@ -478,7 +478,7 @@ describe("<ChoiceListField />", () => {
   });
 
   /*
-   * While the onChangeHandler will be called in every other test and therefor doesn't necessarily bear repeating,
+   * While the onChangeHandler will be called in every other test and therefore doesn't necessarily bear repeating,
    * this test focuses specifically on interaction between whats been checked in the state and whats now been unchecked.
    * This is especially useful for the current interaction in how onChangeHandler sets the value for Checkboxes
    */

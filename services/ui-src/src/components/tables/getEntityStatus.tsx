@@ -1,4 +1,6 @@
+// types
 import {
+  AnyObject,
   EntityDetailsOverlayShape,
   EntityShape,
   EntityStatuses,
@@ -7,11 +9,11 @@ import {
   OverlayModalPageShape,
   ReportShape,
   OverlayModalTypes,
-  isFieldElement,
   DynamicModalOverlayReportPageShape,
   ReportType,
 } from "types";
-import { AnyObject } from "yup/lib/types";
+// utils
+import { isFieldElement } from "utils";
 
 export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
   //we want to have an array that checks for ids that needs to have data
@@ -113,7 +115,7 @@ export const getInitiativeStatus = (
       // Direct pull of the initiative formTemplate json chunk
       reportRoute = report.formTemplate
         .routes[3] as ModalOverlayReportPageShape;
-      //get the intiative report child
+      //get the initiative report child
       reportChild = (
         reportRoute?.children! as EntityDetailsOverlayShape[]
       )?.find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
@@ -131,7 +133,7 @@ export const getInitiativeStatus = (
       // Direct pull of the initiative formTemplate json chunk
       reportRoute = report.formTemplate
         .routes[2] as DynamicModalOverlayReportPageShape;
-      //get the intiative report child by the entity's initiative_name
+      //get the initiative report child by the entity's initiative_name
       reportChild = (reportRoute as DynamicModalOverlayReportPageShape)[
         "initiatives"
       ]?.find((child) => child.name === entity.initiative_name);
@@ -215,12 +217,12 @@ export const getInitiativeDashboardStatus = (
       );
 
       //filter down to the data for the current status topic
-      const filterdFieldData = fieldKeyInReport.map((item: string) => {
+      const filteredFieldData = fieldKeyInReport.map((item: string) => {
         return child[item];
       });
 
       //if any of the field data is empty, that means we're missing data and the status is automatically false
-      isFilled = !filterdFieldData.every(
+      isFilled = !filteredFieldData.every(
         (field: AnyObject) => field?.length > 0
       )
         ? false

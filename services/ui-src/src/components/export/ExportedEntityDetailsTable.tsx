@@ -9,10 +9,9 @@ import {
   FormField,
   ReportShape,
   FormLayoutElement,
-  isFieldElement,
 } from "types";
 // utils
-import { getReportVerbiage, useStore } from "utils";
+import { getReportVerbiage, isFieldElement, useStore } from "utils";
 // assets
 import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
 
