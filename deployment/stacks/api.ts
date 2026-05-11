@@ -235,7 +235,10 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       topicNamespace: isDev ? `--${project}--${stage}--` : "",
     },
     tables: tables.filter(
-      (table) => table.node.id === "SarReports" || table.node.id === "WpReports"
+      (table) =>
+        table.node.id === "SarReports" ||
+        table.node.id === "WpReports" ||
+        table.node.id === "FinancialReports"
     ),
   });
 
