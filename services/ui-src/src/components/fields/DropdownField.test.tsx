@@ -1,6 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useFormContext, useFormState } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 //components
 import { DropdownField } from "components";
 // utils
@@ -16,14 +16,12 @@ const mockRegister = jest.fn();
 const mockTrigger = jest.fn();
 const mockSetValue = jest.fn();
 const mockGetValuesBase = jest.fn().mockReturnValue(undefined);
-const mockControl = {};
 
 const mockRhfMethods = {
   getValues: mockGetValuesBase,
   register: mockRegister,
   setValue: mockSetValue,
   trigger: mockTrigger,
-  control: mockControl,
   formState: {
     errors: {},
   },
@@ -32,13 +30,9 @@ const mockRhfMethods = {
 const mockUseFormContext = useFormContext as unknown as jest.Mock<
   typeof useFormContext
 >;
-const mockUseFormState = useFormState as unknown as jest.Mock<
-  typeof useFormState
->;
 
 jest.mock("react-hook-form", () => ({
   useFormContext: jest.fn(),
-  useFormState: jest.fn(),
 }));
 
 const mockGetValues = (returnValue: any) => {
@@ -50,11 +44,14 @@ const mockGetValues = (returnValue: any) => {
 };
 
 const mockErrors = (name: string, message: string) => {
-  (mockUseFormState as any).mockReturnValue({
-    errors: {
-      [name]: {
-        value: {
-          message,
+  (mockUseFormContext as any).mockReturnValue({
+    ...mockRhfMethods,
+    formState: {
+      errors: {
+        [name]: {
+          value: {
+            message,
+          },
         },
       },
     },
@@ -90,7 +87,6 @@ describe("<DropdownField />", () => {
       jest.clearAllMocks();
       mockedUseStore.mockReturnValue(mockStateUserStore);
       (mockUseFormContext as any).mockReturnValue(mockRhfMethods);
-      (mockUseFormState as any).mockReturnValue({ errors: {} });
       mockGetValuesBase.mockReturnValue(undefined);
     });
 
@@ -166,7 +162,6 @@ describe("<DropdownField />", () => {
       jest.clearAllMocks();
       mockedUseStore.mockReturnValue(mockStateUserStore);
       (mockUseFormContext as any).mockReturnValue(mockRhfMethods);
-      (mockUseFormState as any).mockReturnValue({ errors: {} });
       mockGetValuesBase.mockReturnValue(undefined);
     });
 
@@ -207,7 +202,6 @@ describe("<DropdownField />", () => {
     jest.clearAllMocks();
     mockedUseStore.mockReturnValue(mockStateUserStore);
     (mockUseFormContext as any).mockReturnValue(mockRhfMethods);
-    (mockUseFormState as any).mockReturnValue({ errors: {} });
     mockGetValuesBase.mockReturnValue(undefined);
   });
 });
