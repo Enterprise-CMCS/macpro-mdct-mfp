@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { useFormContext, useFormState } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import {
   DropdownChangeObject,
   Hint,
@@ -11,7 +11,7 @@ import uuid from "react-uuid";
 // utils
 import { labelTextWithOptional, parseCustomHtml, shimComponent } from "utils";
 // types
-import { DropdownChoice, DropdownOptions } from "types";
+import { AnyObject, DropdownChoice, DropdownOptions } from "types";
 // constants
 import { dropdownDefaultOptionText } from "../../constants";
 
@@ -57,7 +57,6 @@ export const DropdownField = ({
 
   // get form context
   const form = useFormContext();
-  const { errors } = useFormState({ control: form.control });
 
   useEffect(() => {
     if (validateOnRender) {
@@ -104,7 +103,8 @@ export const DropdownField = ({
   };
 
   // prepare error message, hint, and classes
-  const errorMessage = (errors?.[name] as any)?.value?.message as ReactNode;
+  const formErrorState: AnyObject = form?.formState?.errors;
+  const errorMessage = formErrorState?.[name]?.value?.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const ariaDescribedBy = parsedHint ? `${name}-hint` : undefined;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
