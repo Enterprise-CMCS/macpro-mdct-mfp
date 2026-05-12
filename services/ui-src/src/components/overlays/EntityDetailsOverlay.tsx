@@ -84,7 +84,7 @@ export const EntityDetailsOverlay = ({
   if (disableCloseOut === undefined) {
     const closedOut =
       selectedEntity?.isInitiativeClosed ??
-      !getCloseoutStatus(form, selectedEntity!);
+      !getCloseoutStatus(form, selectedEntity);
     setDisableCloseOut(closedOut);
   }
 

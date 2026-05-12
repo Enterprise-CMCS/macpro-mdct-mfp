@@ -19,7 +19,6 @@ import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
 
 export const EntityDetailsOverlayV2 = ({
-  autosaveState = false,
   backButtonText,
   closeEntityDetailsOverlay,
   disabled = false,
@@ -30,15 +29,17 @@ export const EntityDetailsOverlayV2 = ({
   route,
   selectedEntity,
   submitting = false,
-  setSelectedEntity,
   validateOnRender = false,
 }: Props) => {
   const [autosave, setAutosave] = useState<boolean>(true);
-  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [formJson, setFormJson] = useState<FormJson>(form);
+  // Use separate entity from selectedEntity for form change
+  const [currentEntity, setCurrentEntity] = useState<EntityShape>(
+    selectedEntity as EntityShape
+  );
 
-  const isDisabled = disabled || Boolean(selectedEntity?.isInitiativeClosed);
+  const isDisabled = disabled || Boolean(currentEntity?.isInitiativeClosed);
   const viewOnly = !editable || isDisabled;
   const getSaveButtonText = () => {
     return viewOnly ? "Return" : "Save & return";
@@ -68,35 +69,30 @@ export const EntityDetailsOverlayV2 = ({
 
   const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {
     const currentValues = hookForm.getValues() as EntityShape;
-    const endDate = currentValues.defineInitiative_endDate;
-    const projectedEndDate = currentValues.closeOutInformation_projectedEndDate;
 
-    let updatedEntity = {
-      ...selectedEntity,
-      ...currentValues,
-    };
+    // Update only if close-out section is in form
+    if ("closeOutInformation_projectedEndDate" in currentValues) {
+      const endDate = currentValues.defineInitiative_endDate;
+      const projectedEndDate =
+        currentValues.closeOutInformation_projectedEndDate;
+      if (endDate === projectedEndDate) return;
 
-    if (endDate !== projectedEndDate) {
-      hookForm.setValue("closeOutInformation_projectedEndDate", endDate);
-
-      updatedEntity = {
-        ...updatedEntity,
+      const updatedEntity = {
+        ...currentEntity,
+        ...currentValues,
         closeOutInformation_projectedEndDate: endDate,
       };
+      hookForm.setValue("closeOutInformation_projectedEndDate", endDate);
+      setCurrentEntity(updatedEntity);
     }
-    setSelectedEntity(updatedEntity);
   };
 
   useEffect(() => {
-    if (selectedEntity) updateCloseoutSection(selectedEntity);
+    if (currentEntity) updateCloseoutSection(currentEntity);
   }, [
-    selectedEntity?.closeOutInformation_actualEndDate,
-    selectedEntity?.isCopied,
+    currentEntity?.closeOutInformation_actualEndDate,
+    currentEntity?.isCopied,
   ]);
-
-  useEffect(() => {
-    setDisableSubmit(autosaveState || submitting);
-  }, [autosaveState, submitting]);
 
   return (
     <Box>
@@ -111,7 +107,7 @@ export const EntityDetailsOverlayV2 = ({
       </Button>
       <ReportPageIntro
         accordion={form.verbiage?.accordion}
-        initiativeName={selectedEntity?.initiative_name}
+        initiativeName={currentEntity?.initiative_name}
         text={{
           ...form.verbiage?.intro,
           section: route.name,
@@ -123,7 +119,7 @@ export const EntityDetailsOverlayV2 = ({
           className="overlay-form"
           disabled={isDisabled}
           dontReset={true}
-          formData={selectedEntity}
+          formData={currentEntity}
           formJson={formJson}
           id={form.id}
           onFormChange={onFormChange}
@@ -148,12 +144,12 @@ export const EntityDetailsOverlayV2 = ({
             Previous
           </Button>
           <Button
-            disabled={disableSubmit}
+            disabled={submitting}
             sx={sx.saveButton}
             type="submit"
             {...submitProps}
           >
-            {disableSubmit ? <Spinner size="md" /> : getSaveButtonText()}
+            {submitting ? <Spinner size="md" /> : getSaveButtonText()}
           </Button>
         </Flex>
       </Box>
@@ -162,7 +158,6 @@ export const EntityDetailsOverlayV2 = ({
 };
 
 interface Props {
-  autosaveState?: boolean;
   backButtonText?: string;
   closeEntityDetailsOverlay: Function;
   disabled?: boolean;
@@ -173,7 +168,6 @@ interface Props {
   route: ModalOverlayReportPageShape | DynamicModalOverlayReportPageShape;
   selectedEntity?: EntityShape;
   setEntering: Function;
-  setSelectedEntity: Function;
   submitting?: boolean;
   validateOnRender?: boolean;
 }

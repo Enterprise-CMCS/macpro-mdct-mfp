@@ -11,7 +11,12 @@ import {
   FormLayoutElement,
 } from "types";
 // utils
-import { getReportVerbiage, isFieldElement, useStore } from "utils";
+import {
+  getReportVerbiage,
+  isFieldElement,
+  isFieldValidationOptional,
+  useStore,
+} from "utils";
 // assets
 import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
 
@@ -62,17 +67,7 @@ export const renderFieldTableBody = (
   const tableRows: ReactElement[] = [];
   // recursively renders field rows
   const renderFieldRow = (formField: FormField | FormLayoutElement) => {
-    const validationType = isFieldElement(formField)
-      ? // oxlint-disable-next-line no-nested-ternary
-        typeof formField.validation === "object"
-        ? formField.validation.type
-        : formField.validation
-      : "";
-
-    const optional =
-      validationType && validationType !== ""
-        ? validationType.includes("Optional")
-        : false;
+    const optional = isFieldValidationOptional(formField);
 
     tableRows.push(
       <ExportedEntityDetailsTableRow

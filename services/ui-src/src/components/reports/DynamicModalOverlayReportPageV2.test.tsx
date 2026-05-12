@@ -107,6 +107,7 @@ describe("<DynamicModalOverlayReportPage />", () => {
       editable: true,
       setAutosaveState: jest.fn(),
       setSelectedEntity: jest.fn(),
+      selectedEntity: mockReportFieldData.entityType[0],
     });
     render(dynamicModalOverlayReportPageComponent());
     const enterDetailsButton = screen.getByRole("button", {
