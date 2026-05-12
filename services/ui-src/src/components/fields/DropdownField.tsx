@@ -11,7 +11,7 @@ import uuid from "react-uuid";
 // utils
 import { labelTextWithOptional, parseCustomHtml, shimComponent } from "utils";
 // types
-import { DropdownChoice, DropdownOptions, SelectedOption } from "types";
+import { AnyObject, DropdownChoice, DropdownOptions } from "types";
 // constants
 import { dropdownDefaultOptionText } from "../../constants";
 
@@ -27,6 +27,7 @@ export const DropdownField = ({
   sxOverride,
   styleAsOptional,
   disabled,
+  clear = false,
 }: Props) => {
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {
@@ -54,14 +55,11 @@ export const DropdownField = ({
   const [displayValue, setDisplayValue] =
     useState<DropdownChoice>(defaultValue);
 
-  // get form context and register field
+  // get form context
   const form = useFormContext();
-  const fieldIsRegistered = name in form.getValues();
 
   useEffect(() => {
-    if (!fieldIsRegistered && !validateOnRender) {
-      form.register(name);
-    } else if (validateOnRender) {
+    if (validateOnRender) {
       form.trigger(name);
     }
   }, []);
@@ -69,24 +67,31 @@ export const DropdownField = ({
   // set initial display value to form state field value or hydration value
   const hydrationValue = hydrate || defaultValue;
   useEffect(() => {
-    // if form state has value for field, set as display value
-    const fieldValue = form.getValues(name);
-    if (fieldValue) {
-      setDisplayValue(fieldValue);
+    // if clear flag is set, reset to default
+    if (clear) {
+      setDisplayValue(defaultValue);
+      form.setValue(name, defaultValue);
     }
-    // else set hydrationValue or defaultValue as display value
-    else if (hydrationValue) {
-      setDisplayValue(hydrationValue);
-      form.setValue(name, hydrationValue);
+    // else if form state has value for field, set as display value
+    else {
+      const fieldValue = form.getValues(name);
+      if (fieldValue) {
+        setDisplayValue(fieldValue);
+      } else if (hydrationValue) {
+        setDisplayValue(hydrationValue);
+        form.setValue(name, hydrationValue, {
+          shouldValidate: validateOnRender,
+        });
+      }
     }
-  }, [hydrationValue]); // only runs on hydrationValue fetch/update
+  }, [hydrationValue, clear]); // runs on hydrationValue or clear changes
 
   // update form data
   const onChangeHandler = async (event: DropdownChangeObject) => {
-    const selectedOption: SelectedOption = {
-      label: event.target.name,
-      value: event.target.value,
-    };
+    const selectedValue = event.target.value;
+    const selectedOption =
+      formattedOptions.find((option) => option.value === selectedValue) ||
+      defaultValue;
     setDisplayValue(selectedOption);
     form.setValue(name, selectedOption, { shouldValidate: true });
   };
@@ -98,8 +103,8 @@ export const DropdownField = ({
   };
 
   // prepare error message, hint, and classes
-  const formErrorState = form?.formState?.errors;
-  const errorMessage = formErrorState?.[name]?.message as ReactNode;
+  const formErrorState: AnyObject = form?.formState?.errors;
+  const errorMessage = formErrorState?.[name]?.value?.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const ariaDescribedBy = parsedHint ? `${name}-hint` : undefined;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
@@ -144,6 +149,7 @@ interface Props {
   hint?: any;
   options: DropdownOptions[] | string;
   nested?: boolean;
+  clear?: boolean;
   autosave?: boolean;
   validateOnRender?: boolean;
   sxOverride?: SystemStyleObject;

@@ -69,22 +69,22 @@ export const TextField = ({
   const hydrationValue = hydrate || defaultValue;
 
   useEffect(() => {
-    // if form state has value for field, set as display value
-    const fieldValue = form.getValues(name);
-    if (fieldValue) {
-      setDisplayValue(fieldValue);
+    // if clear flag is set, reset to default
+    if (clear) {
+      setDisplayValue(defaultValue);
+      form.setValue(name, defaultValue);
     }
-    // else set hydrationValue or defaultValue as display value
-    else if (hydrationValue) {
-      if (clear) {
-        setDisplayValue(defaultValue);
-        form.setValue(name, defaultValue);
-      } else {
+    // else if form state has value for field, set as display value
+    else {
+      const fieldValue = form.getValues(name);
+      if (fieldValue) {
+        setDisplayValue(fieldValue);
+      } else if (hydrationValue) {
         setDisplayValue(hydrationValue);
         form.setValue(name, hydrationValue, { shouldValidate: true });
       }
     }
-  }, [hydrationValue]); // only runs on hydrationValue fetch/update
+  }, [hydrationValue, clear]); // runs on hydrationValue or clear changes
 
   // update display value and form field data on change
   const onChangeHandler = async (event: InputChangeEvent) => {

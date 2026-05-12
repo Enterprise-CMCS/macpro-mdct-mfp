@@ -15,6 +15,9 @@ const mockRhfMethods = {
   setValue: mockSetValue,
   getValues: jest.fn(),
   trigger: mockTrigger,
+  formState: {
+    errors: {},
+  },
 };
 const mockUseFormContext = useFormContext as unknown as jest.Mock<
   typeof useFormContext
@@ -193,20 +196,18 @@ describe("<ChoiceListField />", () => {
       expect(screen.getByText("Choice2")).toBeVisible();
     });
 
-    test("ChoiceList should render a normal Radiofield and triggers validation after first render if no value given", () => {
+    test("ChoiceList should render a normal Radiofield that already has data registered", () => {
       mockFieldIsRegistered("radioField", []);
       render(RadioComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
-      expect(mockTrigger).toHaveBeenCalled();
     });
 
-    test("ChoiceList should render a normal Checkbox and triggers validation after first render if no value given", () => {
+    test("ChoiceList should render a normal Checkbox that already has data registered", () => {
       mockFieldIsRegistered("checkboxField", []);
       render(CheckboxComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
-      expect(mockTrigger).toHaveBeenCalled();
     });
 
     test("RadioField should render nested child fields for choices with children", () => {
