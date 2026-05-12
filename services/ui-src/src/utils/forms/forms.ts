@@ -549,3 +549,15 @@ export function isLayoutElement(
    */
   return (field as FormField).validation === undefined;
 }
+export const isFieldValidationOptional = (
+  formField: FormField | FormLayoutElement
+) => {
+  if (!isFieldElement(formField)) return false;
+
+  const validationType =
+    typeof formField.validation === "object"
+      ? formField.validation.type
+      : formField.validation;
+
+  return validationType.toLowerCase().includes("optional");
+};

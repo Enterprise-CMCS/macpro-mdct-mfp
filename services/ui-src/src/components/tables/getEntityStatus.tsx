@@ -1,19 +1,20 @@
 // types
 import {
   AnyObject,
+  DynamicModalOverlayReportPageShape,
   EntityDetailsOverlayShape,
+  EntityDetailsOverlayTypes,
+  EntityDetailsStepTypes,
   EntityShape,
   EntityStatuses,
   FormJson,
-  ModalOverlayReportPageShape,
   OverlayModalPageShape,
-  ReportShape,
   OverlayModalTypes,
-  DynamicModalOverlayReportPageShape,
+  ReportShape,
   ReportType,
 } from "types";
 // utils
-import { isFieldElement } from "utils";
+import { isFieldElement, isFieldValidationOptional, routeChecker } from "utils";
 
 export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
   //we want to have an array that checks for ids that needs to have data
@@ -59,118 +60,145 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
   return validationIdList;
 };
 
-//does not work with substeps
 export const getEntityStatus = (
   report: ReportShape,
   entity: EntityShape,
   entityType: string
 ) => {
-  const routes = report?.formTemplate?.flatRoutes;
-  const pageTypes = ["form", "drawerForm", "modalForm"];
+  const flatRoutes = (report?.formTemplate?.flatRoutes || []) as AnyObject[];
+  const formTypes = ["form", "drawerForm", "modalForm", "overlayForm"];
 
-  if (routes) {
-    //find the correct route information for this entityType
-    const route = routes.find(
-      (route) => (route as AnyObject).entityType === entityType
+  //find the correct route information for this entityType
+  const routes = flatRoutes.filter((r) => r.entityType === entityType);
+
+  if (routes.length === 0) return EntityStatuses.INCOMPLETE;
+
+  const nonOptionalFields = routes.flatMap((route) =>
+    formTypes
+      .flatMap((formType) => route[formType]?.fields || [])
+      .filter((field) => !isFieldValidationOptional(field))
+  );
+
+  const validationIdList = getValidationList(nonOptionalFields, entity);
+
+  //check to see if each validation id was matched to user selected values
+  const allFieldsFilled = validationIdList.every((id: string) => {
+    const fieldValue = entity[id];
+    return fieldValue?.length > 0;
+  });
+
+  return allFieldsFilled ? EntityStatuses.COMPLETE : EntityStatuses.INCOMPLETE;
+};
+
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
+const getEntityStepsStatus = (
+  entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[],
+  entity: EntityShape,
+  reportType: ReportType,
+  isPdf: boolean,
+  ignoredSteps: EntityDetailsOverlayTypes[]
+) => {
+  let filteredEntitySteps = entitySteps.filter(
+    (step) => !ignoredSteps.some((item) => step.stepType === item)
+  );
+
+  /**
+   * Currently, on exporting a PDF of the Work Plan does not take into consideration the Close-out initiatives entity step,
+   * but the status is always returning "incomplete" because that step is used to calculate the initiative status.
+   * This removes the Close-out initiative step status from the PDF statusing calculation if it has not been closed out.
+   */
+  if (isPdf && !entity.isInitiativeClosed && reportType === ReportType.WP) {
+    filteredEntitySteps = filteredEntitySteps.filter(
+      (step) => step.stepType !== EntityDetailsStepTypes.CLOSE_OUT_INFORMATION
     );
-
-    let fields: AnyObject[] = [];
-    //store the fields data into an array to be looked through
-    pageTypes.forEach((type) => {
-      if (route && (route as AnyObject)[type])
-        fields.push((route as AnyObject)[type].fields);
-    });
-    const validationIdList = getValidationList(fields.flat(), entity);
-
-    const isFilled = validationIdList.map((id: string) => {
-      return entity[id];
-    });
-
-    //check to see if each validation id was matched to user selected values
-    if (
-      isFilled?.every((field: AnyObject) => {
-        return field?.length > 0;
-      })
-    ) {
-      return EntityStatuses.COMPLETE;
-    }
   }
 
-  return EntityStatuses.INCOMPLETE;
+  const stepStatuses = filteredEntitySteps.map((step) => {
+    return getInitiativeDashboardStatus(step, entity);
+  });
+
+  const allStepStatues =
+    stepStatuses.length > 0 &&
+    stepStatuses.every(
+      (field: EntityStatuses) => field === EntityStatuses.COMPLETE
+    );
+
+  return allStepStatues ? EntityStatuses.COMPLETE : EntityStatuses.INCOMPLETE;
 };
 
 export const getInitiativeStatus = (
   report: ReportShape,
   entity: EntityShape,
-  isPdf?: boolean,
-  ignore?: string[]
+  isPdf: boolean = false,
+  ignoredSteps: EntityDetailsOverlayTypes[] = []
 ) => {
-  let reportRoute:
-    | ModalOverlayReportPageShape
-    | DynamicModalOverlayReportPageShape;
+  const {
+    formTemplate: { routes },
+    reportType,
+  } = report;
+  const { initiative_name, isInitiativeClosed } = entity;
 
-  let reportChild;
-  switch (report.reportType) {
+  switch (reportType) {
     case ReportType.WP:
-      // Direct pull of the initiative formTemplate json chunk
-      reportRoute = report.formTemplate
-        .routes[3] as ModalOverlayReportPageShape;
-      //get the initiative report child
-      reportChild = (
-        reportRoute?.children! as EntityDetailsOverlayShape[]
-      )?.find((child) => child.entityType === OverlayModalTypes.INITIATIVE)!;
-
       // Only show the close icon if inside the WP; SAR can still edit entity
-      if (entity?.isInitiativeClosed) {
-        return EntityStatuses.CLOSE;
-      }
-      break;
-
-    // TODO: Update for v2
-    case ReportType.SAR:
-      // deprecated: route.initiatives removed as of Report Year 2026, Period 2
+      if (isInitiativeClosed) return EntityStatuses.CLOSE;
 
       // Direct pull of the initiative formTemplate json chunk
-      reportRoute = report.formTemplate
-        .routes[2] as DynamicModalOverlayReportPageShape;
-      //get the initiative report child by the entity's initiative_name
-      reportChild = (reportRoute as DynamicModalOverlayReportPageShape)[
-        "initiatives"
-      ]?.find((child) => child.name === entity.initiative_name);
-      break;
+      const wpPage = routes.find((r) =>
+        routeChecker.isWorkPlanInitiativesPage(r)
+      );
+      if (!wpPage?.children) return EntityStatuses.INCOMPLETE;
+
+      // get the initiative report child
+      const routeChildren = wpPage.children as EntityDetailsOverlayShape[];
+      const wpInitiativePage = routeChildren.find(
+        (child) => child.entityType === OverlayModalTypes.INITIATIVE
+      );
+      if (!wpInitiativePage) return EntityStatuses.INCOMPLETE;
+
+      // deprecated: route.entitySteps removed as of Report Year 2026, Period 2
+      if (wpInitiativePage.entitySteps) {
+        return getEntityStepsStatus(
+          wpInitiativePage.entitySteps,
+          entity,
+          reportType,
+          isPdf,
+          ignoredSteps
+        );
+      }
+
+      return getEntityStatus(report, entity, wpInitiativePage.entityType);
+
+    case ReportType.SAR:
+      // Direct pull of the initiative formTemplate json chunk
+      const sarPage = routes.find((r) =>
+        routeChecker.isSarInitiativesPage(r)
+      ) as DynamicModalOverlayReportPageShape;
+      if (!sarPage) return EntityStatuses.INCOMPLETE;
+
+      // deprecated: route.initiatives removed as of Report Year 2026, Period 2
+      if (sarPage.initiatives) {
+        //get the initiative report child by the entity's initiative_name
+        const sarInitiativePage = sarPage.initiatives.find(
+          (child) => child.name === initiative_name
+        );
+
+        return getEntityStepsStatus(
+          sarInitiativePage?.entitySteps || [],
+          entity,
+          reportType,
+          isPdf,
+          ignoredSteps
+        );
+      }
+
+      return getEntityStatus(report, entity, sarPage.entityType);
+
+    default:
+      return EntityStatuses.INCOMPLETE;
   }
-
-  // deprecated: route.entitySteps removed as of Report Year 2026, Period 2
-  if (reportChild?.entitySteps) {
-    const entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[] =
-      reportChild.entitySteps;
-
-    const filteredEntitySteps = entitySteps.filter(
-      (step) => !ignore?.find((item) => step.stepType === item)
-    );
-    const stepStatuses = filteredEntitySteps.map((step) => {
-      return getInitiativeDashboardStatus(step, entity);
-    });
-
-    /**
-     * Currently, on exporting a PDF of the Work Plan does not take into consideration the Close-out initiatives entity step,
-     * but the status is always returning "incomplete" because that step is used to calculate the initiative status.
-     * This removes the Close-out initiative step status from the PDF statusing calculation if it has not been closed out.
-     */
-    if (isPdf && !entity.isInitiativeClosed && report.reportType === "WP") {
-      stepStatuses.splice(-1);
-    }
-
-    if (
-      stepStatuses.every(
-        (field: EntityStatuses) => field === EntityStatuses.COMPLETE
-      )
-    ) {
-      return EntityStatuses.COMPLETE;
-    }
-  }
-
-  return EntityStatuses.INCOMPLETE;
 };
 
 /**
@@ -237,18 +265,14 @@ export const getInitiativeDashboardStatus = (
   return EntityStatuses.INCOMPLETE;
 };
 
-export const getCloseoutStatus = (form: FormJson, entity: EntityShape) => {
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
+export const getCloseoutStatus = (form: FormJson, entity?: EntityShape) => {
   if (entity) {
     const fieldIds = form.fields
       .filter(isFieldElement)
-      .map((field) => {
-        // Some fields have validation: "foo", and some have validation: { type: "foo" }
-        let validationType = (field as AnyObject)?.validation ?? "";
-        if (typeof validationType === "object") {
-          validationType = validationType.type ?? "";
-        }
-        return !validationType.includes("Optional") ? field.id : "";
-      })
+      .map((field) => (isFieldValidationOptional(field) ? "" : field.id))
       .filter(Boolean);
     const isFilled = fieldIds.map((id) => {
       return entity[id];

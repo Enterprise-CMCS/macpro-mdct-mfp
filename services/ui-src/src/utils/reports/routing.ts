@@ -61,9 +61,13 @@ export const routeChecker: RouteChecker = {
   // Work Plan
   isWorkPlanGeneralInformationPage: isPath("/wp/general-information"),
   isWorkPlanInitiativesPage: isPath(
+    "/wp/state-or-territory-specific-initiatives"
+  ),
+  isWorkPlanInitiativesDashboardPage: isPath(
     "/wp/state-or-territory-specific-initiatives/initiatives"
   ),
   // SAR
+  isSarInitiativesPage: isPath("/sar/state-or-territory-specific-initiatives"),
   isSarRetParticipantsPage: isPath(
     "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community"
   ),

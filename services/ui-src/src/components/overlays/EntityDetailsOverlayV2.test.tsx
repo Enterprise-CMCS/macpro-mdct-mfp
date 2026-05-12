@@ -17,7 +17,6 @@ import { ReportContext } from "components";
 import { EntityShape } from "types";
 
 const mockCloseEntityDetailsOverlay = jest.fn();
-const mockSelectedEntity = jest.fn();
 const mockOnSubmit = jest.fn();
 
 jest.mock("utils/state/useStore");
@@ -58,7 +57,6 @@ const entityDetailsOverlayComponent = (
         selectedEntity={selectedEntity}
         submitting={false}
         setEntering={jest.fn()}
-        setSelectedEntity={mockSelectedEntity}
         validateOnRender={false}
       />
     </ReportContext.Provider>
@@ -110,17 +108,18 @@ describe("<EntityDetailsOverlayV2 />", () => {
     const endDate = screen.getByRole("textbox", {
       name: "mock end date field",
     });
+    expect(endDate).toHaveValue("");
+
+    const projectEndDate = screen.getByRole("textbox", {
+      name: "mock projected end date field",
+    });
+    expect(projectEndDate).toHaveValue("");
 
     await act(async () => {
       await userEvent.type(endDate, "01/01/2026");
       await userEvent.tab();
     });
-
-    expect(mockSelectedEntity).toHaveBeenCalledWith({
-      ...mockEntityStore.selectedEntity,
-      defineInitiative_endDate: "01/01/2026",
-      closeOutInformation_projectedEndDate: "01/01/2026",
-    });
+    expect(projectEndDate).toHaveValue("01/01/2026");
   });
 
   test("does not show alert for open initiative", async () => {

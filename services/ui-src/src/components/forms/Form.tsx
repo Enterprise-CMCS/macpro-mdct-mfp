@@ -88,7 +88,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
 
   // create validation schema
   const formValidationJson = compileValidationJsonFromFields(
-    fields.filter(isFieldElement)
+    fields.filter(isFieldElement).filter((f: FormField) => !f.forTableOnly)
   );
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
   const formResolverSchema = yupSchema(formValidationSchema || {});

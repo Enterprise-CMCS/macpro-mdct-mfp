@@ -48,6 +48,8 @@ const sarKeyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   },
   dynamicRowId: keyMetricsDynamicRowId,
   label: "Key Metrics",
+  // TODO: Change to true when table statusing is figured out
+  required: false,
   verbiage: {
     buttonText: "",
     hint: "",
