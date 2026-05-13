@@ -1,10 +1,10 @@
 // types
 import {
+  EntityType,
   FormTableType,
   PageTypes,
   ReportFormFieldType,
   SARStateOrTerritorySpecificInitiativesV2Route,
-  StepEntityType,
   ValidationType,
 } from "../../../../../utils/types";
 // utils
@@ -61,7 +61,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
     name: "State or Territory-Specific Initiatives",
     path: "/sar/state-or-territory-specific-initiatives",
     pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
-    entityType: StepEntityType.INITIATIVE,
+    entityType: EntityType.INITIATIVE,
     entityInfo: ["initiative_name", "initiative_wpTopic"],
     overlayForm: {
       id: "sar-state-or-territory-specific-initiatives",
