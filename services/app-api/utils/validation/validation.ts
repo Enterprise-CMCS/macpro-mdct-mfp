@@ -1,7 +1,7 @@
 import { object } from "yup";
 import { error } from "../constants/constants";
 // types
-import { AnyObject } from "../types";
+import { AnyObject, ValidationType } from "../types";
 // utils
 import { nested, endDate, schemaMap } from "./schemaMap";
 
@@ -66,7 +66,7 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
       else if (fieldValidation.nested) {
         validationSchema[key] = makeNestedFieldSchema(fieldValidation);
         // else if not nested, make and set other dependent field types
-      } else if (fieldValidation.type === "endDate") {
+      } else if (fieldValidation.type === ValidationType.END_DATE) {
         validationSchema[key] = makeEndDateFieldSchema(fieldValidation);
       }
     }
@@ -82,15 +82,21 @@ export const makeEndDateFieldSchema = (fieldValidationObject: AnyObject) => {
 
 // return created nested field schema
 export const makeNestedFieldSchema = (fieldValidationObject: AnyObject) => {
-  const { type, parentFieldName, parentOptionId } = fieldValidationObject;
-  if (fieldValidationObject.type === "endDate") {
+  const { options, parentFieldName, parentOptionId, type } =
+    fieldValidationObject;
+
+  if (fieldValidationObject.type === ValidationType.END_DATE) {
     return nested(
       () => makeEndDateFieldSchema(fieldValidationObject),
       parentFieldName,
       parentOptionId
     );
   } else {
-    const fieldValidationSchema = schemaMap[type];
+    const correspondingSchema = schemaMap[type];
+    const fieldValidationSchema = options
+      ? correspondingSchema(options)
+      : correspondingSchema;
+
     return nested(() => fieldValidationSchema, parentFieldName, parentOptionId);
   }
 };

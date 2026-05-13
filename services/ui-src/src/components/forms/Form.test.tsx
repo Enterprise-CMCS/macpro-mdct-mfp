@@ -118,7 +118,7 @@ describe("<Form />", () => {
     );
 
     const entityModalTableHeading = screen.getByRole("heading", {
-      level: 2,
+      level: 4,
       name: "Mock entityModal table title",
     });
     expect(entityModalTableHeading).toBeVisible();

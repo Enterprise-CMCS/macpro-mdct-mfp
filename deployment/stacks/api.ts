@@ -221,7 +221,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   });
 
   new LambdaDynamoEventSource(scope, "postKafkaData", {
-    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
+    entry: "services/app-api/handlers/kafka/postKafkaData.ts",
     handler: "handler",
     timeout: Duration.seconds(120),
     memorySize: 2048,
@@ -253,7 +253,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   };
 
   const postWpBucketData = new Lambda(scope, "postWpBucketData", {
-    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
+    entry: "services/app-api/handlers/kafka/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
   });
@@ -275,7 +275,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   );
 
   const postSarBucketData = new Lambda(scope, "postSarBucketData", {
-    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
+    entry: "services/app-api/handlers/kafka/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
   });
@@ -297,7 +297,7 @@ export function createApiComponents(props: CreateApiComponentsProps) {
   );
 
   const postFinancialBucketData = new Lambda(scope, "postFinancialBucketData", {
-    entry: "services/app-api/handlers/kafka/post/postKafkaData.ts",
+    entry: "services/app-api/handlers/kafka/postKafkaData.ts",
     handler: "handler",
     ...bucketLambdaProps,
   });

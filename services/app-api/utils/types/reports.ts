@@ -1,5 +1,5 @@
 import { FormJson } from "./formFields";
-import { AnyObject, CustomHtmlElement } from "./other";
+import { AnyObject, CustomHtmlElement, ErrorVerbiage } from "./other";
 
 // REPORT STRUCTURE
 
@@ -218,6 +218,7 @@ export interface ModalOverlayReportPageVerbiage extends EntityOverlayPageVerbiag
   emptyDashboardText?: string;
   accordion?: AnyObject;
   backButtonText?: string;
+  errorMessage?: ErrorVerbiage;
 }
 
 export interface EntityOverlayPageVerbiage extends ReportPageVerbiage {

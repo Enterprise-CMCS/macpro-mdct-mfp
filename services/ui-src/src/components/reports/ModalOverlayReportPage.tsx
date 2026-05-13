@@ -47,10 +47,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   // Display Variables
   let reportFieldDataEntities = report?.fieldData[entityType] || [];
 
-  (reportFieldDataEntities as any[]).map(
-    (entity) => (entity["isOtherEntity"] = true)
-  );
-
   if (report?.reportType === ReportType.SAR) {
     (reportFieldDataEntities as any[]).map(
       (entity) => (entity["isCopied"] = true)

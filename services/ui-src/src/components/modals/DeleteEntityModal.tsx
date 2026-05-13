@@ -8,12 +8,13 @@ import { AnyObject, EntityShape, ReportStatus } from "types";
 import { parseCustomHtml, useStore } from "utils";
 
 export const DeleteEntityModal = ({
+  deleteCallback,
   entityType,
   entityIdLookup,
-  selectedEntity,
-  verbiage,
   modalDisclosure,
+  selectedEntity,
   userDisabled,
+  verbiage,
 }: Props) => {
   const { report, editable } = useStore();
   const { updateReport } = useContext(ReportContext);
@@ -62,29 +63,36 @@ export const DeleteEntityModal = ({
 
   const deleteProgramHandler = async () => {
     setDeleting(true);
-    const reportKeys = {
-      reportType: report?.reportType,
-      state: report?.state,
-      id: report?.id,
-    };
 
-    const entityTypes: string[] =
-      typeof entityType === "string" ? [entityType] : (entityType as string[]);
+    if (deleteCallback) {
+      deleteCallback();
+    } else {
+      const reportKeys = {
+        reportType: report?.reportType,
+        state: report?.state,
+        id: report?.id,
+      };
 
-    const entityName = entityTypes[0];
-    const updatedEntities = removeSelectedEntity(
-      structuredClone(report?.fieldData),
-      entityTypes.at(-1),
-      selectedEntity?.id
-    );
+      const entityTypes: string[] =
+        typeof entityType === "string"
+          ? [entityType]
+          : (entityType as string[]);
 
-    await updateReport(reportKeys, {
-      metadata: {
-        lastAlteredBy: full_name,
-        status: ReportStatus.IN_PROGRESS,
-      },
-      fieldData: { [entityName]: updatedEntities[entityName] },
-    });
+      const entityName = entityTypes[0];
+      const updatedEntities = removeSelectedEntity(
+        structuredClone(report?.fieldData),
+        entityTypes.at(-1),
+        selectedEntity?.id
+      );
+
+      await updateReport(reportKeys, {
+        metadata: {
+          lastAlteredBy: full_name,
+          status: ReportStatus.IN_PROGRESS,
+        },
+        fieldData: { [entityName]: updatedEntities[entityName] },
+      });
+    }
     setDeleting(false);
     modalDisclosure.onClose();
   };
@@ -107,13 +115,14 @@ export const DeleteEntityModal = ({
 };
 
 interface Props {
+  deleteCallback?: Function;
   entityType: string | string[];
   entityIdLookup?: AnyObject;
-  selectedEntity?: EntityShape;
-  verbiage: AnyObject;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
   };
+  selectedEntity?: EntityShape;
   userDisabled?: boolean;
+  verbiage: AnyObject;
 }

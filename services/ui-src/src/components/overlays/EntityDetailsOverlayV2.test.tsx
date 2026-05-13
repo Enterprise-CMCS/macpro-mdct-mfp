@@ -7,14 +7,17 @@ import {
   mockEntityStore,
   mockModalOverlayForm,
   mockModalOverlayReportPageJson,
+  mockModalOverlayReportPageVerbiage,
   mockStateUserStore,
   mockWpReportContext,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import { ReportContext } from "components";
+import { EntityShape } from "types";
 
 const mockCloseEntityDetailsOverlay = jest.fn();
+const mockSelectedEntity = jest.fn();
 const mockOnSubmit = jest.fn();
 
 jest.mock("utils/state/useStore");
@@ -37,7 +40,10 @@ jest.mock("utils/autosave/autosave", () => ({
   autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
 }));
 
-const entityDetailsOverlayComponent = (editable?: boolean) => (
+const entityDetailsOverlayComponent = (
+  editable: boolean = true,
+  selectedEntity: EntityShape = mockEntityStore.selectedEntity as EntityShape
+) => (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockWpReportContext}>
       <EntityDetailsOverlayV2
@@ -45,13 +51,14 @@ const entityDetailsOverlayComponent = (editable?: boolean) => (
         closeEntityDetailsOverlay={mockCloseEntityDetailsOverlay}
         disabled={false}
         editable={editable}
+        errorMessage={mockModalOverlayReportPageVerbiage.errorMessage}
         form={mockModalOverlayForm}
         onSubmit={mockOnSubmit}
         route={mockModalOverlayReportPageJson}
-        selectedEntity={mockEntityStore.selectedEntity}
+        selectedEntity={selectedEntity}
         submitting={false}
         setEntering={jest.fn()}
-        setSelectedEntity={jest.fn()}
+        setSelectedEntity={mockSelectedEntity}
         validateOnRender={false}
       />
     </ReportContext.Provider>
@@ -95,6 +102,52 @@ describe("<EntityDetailsOverlayV2 />", () => {
         name: "mock optional field (optional)",
       })
     ).toBeVisible();
+  });
+
+  test("updates initiative endDates", async () => {
+    render(entityDetailsOverlayComponent());
+
+    const endDate = screen.getByRole("textbox", {
+      name: "mock end date field",
+    });
+
+    await act(async () => {
+      await userEvent.type(endDate, "01/01/2026");
+      await userEvent.tab();
+    });
+
+    expect(mockSelectedEntity).toHaveBeenCalledWith({
+      ...mockEntityStore.selectedEntity,
+      defineInitiative_endDate: "01/01/2026",
+      closeOutInformation_projectedEndDate: "01/01/2026",
+    });
+  });
+
+  test("does not show alert for open initiative", async () => {
+    render(entityDetailsOverlayComponent());
+
+    expect(
+      screen.queryByRole("alert", { name: "Warning: Mock error title" })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Mock error description")
+    ).not.toBeInTheDocument();
+  });
+
+  test("shows alert for initiative close-out", async () => {
+    const closedOutEntity = {
+      ...mockEntityStore.selectedEntity,
+      closeOutInformation_actualEndDate: "01/01/2026",
+    } as EntityShape;
+
+    await act(async () => {
+      await render(entityDetailsOverlayComponent(true, closedOutEntity));
+    });
+
+    expect(
+      screen.getByRole("alert", { name: "Warning: Mock error title" })
+    ).toBeVisible();
+    expect(screen.getByText("Mock error description")).toBeVisible();
   });
 
   test("calls onSubmit function when clicking Save & return button", async () => {

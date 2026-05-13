@@ -4,12 +4,17 @@ import userEvent from "@testing-library/user-event";
 import { useFormContext } from "react-hook-form";
 import { DynamicTableProvider, EntityModalTable } from "components";
 // types
-import { NumberMask, ReportFormFieldType, ValidationType } from "types";
+import {
+  EntityType,
+  NumberMask,
+  ReportFormFieldType,
+  ValidationType,
+} from "types";
 // utils
 import { useStore } from "utils";
 import {
   mockDynamicFieldId,
-  mockDynamicRowsTemplate,
+  mockDynamicRowsTemplateForKeyMetricsTableWithModalForm,
   mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
   mockStateUserStore,
@@ -18,6 +23,7 @@ import {
 import { testA11yAct } from "utils/testing/commonTests";
 
 const mockTrigger = jest.fn();
+const openDeleteEntityModal = jest.fn();
 const mockRhfMethods = {
   register: jest.fn(),
   setValue: jest.fn(),
@@ -229,7 +235,7 @@ describe("<EntityModalTable />", () => {
     expect(table).toHaveAttribute("id", "mockTable_mockServices");
 
     const tableHeading = screen.getByRole("heading", {
-      level: 2,
+      level: 4,
       name: "Mock table title",
     });
     expect(tableHeading).toBeVisible();
@@ -256,7 +262,7 @@ describe("<EntityModalTable />", () => {
       const updatedProps = {
         ...mockProps,
         report,
-        dynamicRowsTemplate: mockDynamicRowsTemplate,
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
       };
 
       const { container } = render(tableComponent(updatedProps));
@@ -274,6 +280,91 @@ describe("<EntityModalTable />", () => {
 
       const updatedRows = tbody?.querySelectorAll("tr");
       expect(updatedRows).toHaveLength(2);
+    });
+
+    test("open the delete confirmation modal and close the delete modal", async () => {
+      const report = {
+        fieldData: {
+          initiative: [
+            {
+              id: "mock-id",
+              name: "mock-name",
+              type: EntityType.INITIATIVE,
+              [mockDynamicTemplateId]: [
+                {
+                  id: "mock-id",
+                  type: EntityType.INITIATIVE,
+                  name: "mock-name",
+                  dataSource: [
+                    {
+                      key: "mock-key",
+                      value: "mock-data-source",
+                    },
+                  ],
+                  baselineValue: "123",
+                  baselineStartDate: "01/01/2020",
+                  baselineEndDate: "12/31/2020",
+                  targetBenchmarkValue: "567",
+                  targetBenchmarkProjectedDate: "01/01/2025",
+                },
+              ],
+            },
+          ],
+        },
+      };
+      mockedUseStore.mockReturnValue({ report });
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        openDeleteEntityModal,
+        formData: {
+          id: "mock-id",
+          type: EntityType.INITIATIVE,
+          defineInitiative_keyMetrics_performanceIndicators: [
+            {
+              id: "mock-id",
+              type: EntityType.INITIATIVE,
+              name: "mock-name",
+              dataSource: [
+                {
+                  key: "mock-key",
+                  value: "mock-data-source",
+                },
+              ],
+              baselineValue: "123",
+              baselineStartDate: "01/01/2020",
+              baselineEndDate: "12/31/2020",
+              targetBenchmarkValue: "567",
+              targetBenchmarkProjectedDate: "01/01/2025",
+            },
+          ],
+        },
+        id: "defineInitiative_keyMetrics",
+        bodyRows: [[]],
+        footRows: [[]],
+        dynamicRowsTemplate:
+          mockDynamicRowsTemplateForKeyMetricsTableWithModalForm,
+      };
+      render(tableComponent(updatedProps));
+      const deleteButton = screen.getByRole("button", {
+        name: "Delete mock-name",
+      });
+      await act(async () => {
+        await userEvent.click(deleteButton);
+      });
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeVisible();
+      });
+      expect(screen.getByText("Mock delete modal title")).toBeVisible();
+      const closeButton = screen.getByText("Cancel");
+      await act(async () => {
+        await userEvent.click(closeButton);
+      });
+      await waitFor(async () => {
+        await act(() => {
+          expect(screen.getByRole("dialog")).not.toBeVisible();
+        });
+      });
     });
 
     test("clicking add button opens modal", async () => {

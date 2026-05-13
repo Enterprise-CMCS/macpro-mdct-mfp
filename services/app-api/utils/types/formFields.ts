@@ -76,9 +76,12 @@ export interface FormField {
 
 export enum TransformationRule {
   FIRST_QUARTER_OF_THE_PERIOD = "firstQuarterOfThePeriod",
+  /** @deprecated No longer used as of Report Year 2026, Period 2 */
   FUNDING_SOURCES = "fundingSources",
   NEXT_TWELVE_QUARTERS = "nextTwelveQuarters",
+  /** @deprecated No longer used as of Report Year 2026, Period 2 */
   OBJECTIVES = "objectives",
+  /** @deprecated No longer used as of Report Year 2026, Period 2 */
   QUANTITATIVE_QUARTERS = "quantitativeQuarters",
   SECOND_QUARTER_OF_THE_PERIOD = "secondQuarterOfThePeriod",
   TARGET_POPULATIONS = "targetPopulations",

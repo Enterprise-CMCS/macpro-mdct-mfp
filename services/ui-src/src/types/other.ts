@@ -31,6 +31,9 @@ export enum OverlayModalTypes {
   INITIATIVE = "initiative",
 }
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export enum EntityDetailsStepTypes {
   DEFINE_INITIATIVE = "defineInitiative",
   CLOSE_OUT_INFORMATION = "closeOutInformation",
@@ -38,6 +41,9 @@ export enum EntityDetailsStepTypes {
   EXPENDITURES = "expenditures",
 }
 
+/**
+ * @deprecated No longer used as of Report Year 2026, Period 2
+ */
 export enum OverlayModalStepTypes {
   EVALUATION_PLAN = "evaluationPlan",
   FUNDING_SOURCES = "fundingSources",
