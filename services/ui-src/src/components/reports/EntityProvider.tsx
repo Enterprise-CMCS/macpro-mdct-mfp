@@ -34,6 +34,7 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
    */
   const prepareEntityPayload = (updateData: AnyObject) => {
     const entityType = selectedEntity!.type;
+
     const currentEntities = report?.fieldData?.[entityType];
     const selectedEntityIndex = currentEntities?.findIndex(
       (x: EntityShape) => x.id === selectedEntity?.id
@@ -52,7 +53,7 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
     () => ({
       prepareEntityPayload,
     }),
-    [selectedEntity]
+    [selectedEntity, report]
   );
 
   return (
