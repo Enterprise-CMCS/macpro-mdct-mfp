@@ -6,8 +6,8 @@ export const addEditFinancialReport: FormJson = {
     mode: "onChange",
   },
   heading: {
-    edit: "Edit MFP Financial Reporting Form submission",
-    add: "Add new MFP Financial Reporting Form submission",
+    edit: "Edit MFP Financial Report",
+    add: "Start MFP Financial Report",
     subheading:
       "Add a new report to start a blank report, or to copy an existing one.",
     subheadingEdit: "[hint text]",

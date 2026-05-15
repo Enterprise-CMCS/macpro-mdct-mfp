@@ -118,9 +118,7 @@ describe("<CreateFinancialReportingModal />", () => {
     test("Adding a new report", async () => {
       render(modalComponent);
       const header = screen.getByRole("heading", { level: 1 });
-      expect(header.textContent).toEqual(
-        "Add new MFP Financial Reporting Form submission"
-      );
+      expect(header.textContent).toEqual("Start MFP Financial Report");
       await fillForm("2025", "1", "Save");
       await act(async () => {
         expect(mockCreateReport).toHaveBeenCalledTimes(1);

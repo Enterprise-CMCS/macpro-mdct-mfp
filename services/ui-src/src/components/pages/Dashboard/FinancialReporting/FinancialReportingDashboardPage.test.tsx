@@ -128,7 +128,7 @@ describe("Test FinancialReportingDashboardPage modal functionality", () => {
     await waitFor(() => {
       expect(
         screen.getByRole("heading", {
-          name: /Add new MFP Financial Reporting Form submission/i,
+          name: /Start MFP Financial Report/i,
         })
       ).toBeInTheDocument();
     });
