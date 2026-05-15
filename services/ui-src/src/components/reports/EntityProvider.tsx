@@ -52,7 +52,7 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
     () => ({
       prepareEntityPayload,
     }),
-    [selectedEntity]
+    [selectedEntity, report]
   );
 
   return (
