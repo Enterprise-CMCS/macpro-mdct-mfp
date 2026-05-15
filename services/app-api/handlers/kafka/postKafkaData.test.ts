@@ -204,7 +204,7 @@ describe("Kafka message sending", () => {
   });
 
   it("should recognize all dynamo-related topics", async () => {
-    const tables = ["wp-reports", "sar-reports"];
+    const tables = ["wp-reports", "sar-reports", "financial-reports"];
     const event = {
       Records: tables.map(
         (table) =>
@@ -301,6 +301,16 @@ describe("Kafka message sending", () => {
         bucket: "database-local-sar",
         folder: "formTemplates",
         topic: "sar-form-template",
+      },
+      {
+        bucket: "database-local-financial",
+        folder: "fieldData",
+        topic: "financial-form",
+      },
+      {
+        bucket: "database-local-financial",
+        folder: "formTemplates",
+        topic: "financial-form-template",
       },
     ];
 

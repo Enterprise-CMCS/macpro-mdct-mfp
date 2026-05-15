@@ -38,7 +38,7 @@ const getConfig: GetKafkaConfig = () => {
 
 const getDynamoTopic: GetDynamoTopic = (record) => {
   const namespace = process.env.topicNamespace ?? "";
-  const tables = ["wp-reports", "sar-reports"];
+  const tables = ["wp-reports", "sar-reports", "financial-reports"];
 
   const table = tables.find((t) =>
     record.eventSourceARN.includes(`/${process.env.STAGE}-${t}/`)
@@ -73,6 +73,16 @@ const getS3Topic: GetS3Topic = (record) => {
       bucket: reportBuckets.SAR,
       folder: "formTemplates/",
       topic: "sar-form-template",
+    },
+    {
+      bucket: reportBuckets.FINANCIAL_REPORT,
+      folder: "fieldData/",
+      topic: "financial-form",
+    },
+    {
+      bucket: reportBuckets.FINANCIAL_REPORT,
+      folder: "formTemplates/",
+      topic: "financial-form-template",
     },
   ];
 
