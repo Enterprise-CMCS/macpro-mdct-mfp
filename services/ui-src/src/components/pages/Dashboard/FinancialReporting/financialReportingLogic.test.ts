@@ -34,13 +34,14 @@ describe("financialReportingLogic", () => {
       jest.useRealTimers();
     });
 
-    it("should generate options for between launch year (2025) and current year + 1", () => {
-      jest.setSystemTime(new Date("2025-06-15"));
+    it("should generate options for between launch year (2026) and current year + 1", () => {
+      jest.setSystemTime(new Date("2026-06-15"));
       const options = generateReportYearOptions();
 
-      expect(options).toHaveLength(2);
-      expect(options[0].value).toBe("2026");
-      expect(options[1].value).toBe("2025");
+      expect(options).toHaveLength(3);
+      expect(options[0].value).toBe("2028");
+      expect(options[1].value).toBe("2027");
+      expect(options[2].value).toBe("2026");
     });
 
     it("should generate correct option structure", () => {
@@ -48,10 +49,10 @@ describe("financialReportingLogic", () => {
       const options = generateReportYearOptions();
 
       expect(options[0]).toEqual({
-        id: "reportYear-2027",
-        label: "2027",
-        name: "2027",
-        value: "2027",
+        id: "reportYear-2028",
+        label: "2028",
+        name: "2028",
+        value: "2028",
       });
     });
 

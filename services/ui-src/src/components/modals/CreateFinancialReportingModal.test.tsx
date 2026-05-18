@@ -119,7 +119,7 @@ describe("<CreateFinancialReportingModal />", () => {
       render(modalComponent);
       const header = screen.getByRole("heading", { level: 1 });
       expect(header.textContent).toEqual("Start MFP Financial Report");
-      await fillForm("2025", "1", "Save");
+      await fillForm("2026", "1", "Save");
       await act(async () => {
         expect(mockCreateReport).toHaveBeenCalledTimes(1);
         expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
@@ -130,9 +130,9 @@ describe("<CreateFinancialReportingModal />", () => {
     test("The metadata reportYear and reportPeriod should reflect the choices in the modal", async () => {
       render(modalComponent);
 
-      await fillForm("2026", "2", "Save");
+      await fillForm("2027", "2", "Save");
 
-      const newData = { reportYear: 2026, reportPeriod: 2 };
+      const newData = { reportYear: 2027, reportPeriod: 2 };
 
       expect(mockCreateReport).toHaveBeenCalledWith(
         "FINANCIAL_REPORT",
@@ -144,7 +144,7 @@ describe("<CreateFinancialReportingModal />", () => {
     test("Submit button is disabled while submitting", async () => {
       render(modalComponent);
 
-      await fillForm("2025", "1", "Save");
+      await fillForm("2026", "1", "Save");
       const submitButton = screen.getByRole("button", {
         name: "Save",
       });
@@ -170,7 +170,7 @@ describe("<CreateFinancialReportingModal />", () => {
         });
 
         await act(async () => {
-          await userEvent.selectOptions(yearDropdown, "2025");
+          await userEvent.selectOptions(yearDropdown, "2026");
           await userEvent.selectOptions(periodDropdown, "2");
         });
 
@@ -186,7 +186,7 @@ describe("<CreateFinancialReportingModal />", () => {
       test("writeReport calls updateReport when selectedReport.id exists", async () => {
         render(modalWithExistingReport);
 
-        await fillForm("2025", "2", "Update submission");
+        await fillForm("2026", "2", "Update submission");
 
         expect(mockUpdateReport).toHaveBeenCalledWith(
           {
@@ -196,7 +196,7 @@ describe("<CreateFinancialReportingModal />", () => {
           },
           expect.objectContaining({
             metadata: expect.objectContaining({
-              reportYear: 2025,
+              reportYear: 2026,
               reportPeriod: 2,
             }),
             fieldData: { existingField: "value" },
@@ -309,7 +309,7 @@ describe("<CreateFinancialReportingModal />", () => {
 
         await act(async () => {
           await userEvent.selectOptions(copyReportDropdown, "report-to-copy");
-          await userEvent.selectOptions(yearDropdown, "2025");
+          await userEvent.selectOptions(yearDropdown, "2026");
           await userEvent.selectOptions(periodDropdown, "2");
           await userEvent.click(submitButton);
         });
@@ -410,9 +410,9 @@ describe("<CreateFinancialReportingModal />", () => {
       jest.clearAllMocks();
     });
 
-    const existingReport2025Period1 = {
+    const existingReport2026Period1 = {
       id: "existing-report-1",
-      reportYear: 2025,
+      reportYear: 2026,
       reportPeriod: 1,
       archived: false,
     };
@@ -421,10 +421,10 @@ describe("<CreateFinancialReportingModal />", () => {
       const mockStoreWithReports = {
         ...mockUseStore,
         reportsByState: [
-          existingReport2025Period1,
+          existingReport2026Period1,
           {
             id: "existing-report-2",
-            reportYear: 2024,
+            reportYear: 2025,
             reportPeriod: 2,
             archived: false,
           },
@@ -443,7 +443,7 @@ describe("<CreateFinancialReportingModal />", () => {
       ) as HTMLInputElement;
 
       await act(async () => {
-        await userEvent.selectOptions(yearDropdown, "2025");
+        await userEvent.selectOptions(yearDropdown, "2026");
         await userEvent.selectOptions(periodDropdown, "1");
       });
 
@@ -465,7 +465,7 @@ describe("<CreateFinancialReportingModal />", () => {
         reportsByState: [
           {
             id: "archived-report",
-            reportYear: 2025,
+            reportYear: 2026,
             reportPeriod: 1,
             archived: true,
           },
@@ -484,7 +484,7 @@ describe("<CreateFinancialReportingModal />", () => {
       ) as HTMLInputElement;
 
       await act(async () => {
-        await userEvent.selectOptions(yearDropdown, "2025");
+        await userEvent.selectOptions(yearDropdown, "2026");
         await userEvent.selectOptions(periodDropdown, "1");
       });
 
@@ -498,7 +498,7 @@ describe("<CreateFinancialReportingModal />", () => {
     test("Alert does not show when selecting a unique year and period combination", async () => {
       const mockStoreWithReports = {
         ...mockUseStore,
-        reportsByState: [existingReport2025Period1],
+        reportsByState: [existingReport2026Period1],
       };
 
       mockedUseStore.mockReturnValue(mockStoreWithReports);
@@ -513,7 +513,7 @@ describe("<CreateFinancialReportingModal />", () => {
       ) as HTMLInputElement;
 
       await act(async () => {
-        await userEvent.selectOptions(yearDropdown, "2026");
+        await userEvent.selectOptions(yearDropdown, "2027");
         await userEvent.selectOptions(periodDropdown, "2");
       });
 
@@ -527,7 +527,7 @@ describe("<CreateFinancialReportingModal />", () => {
     test("Submit button is disabled when alert is shown", async () => {
       const mockStoreWithReports = {
         ...mockUseStore,
-        reportsByState: [existingReport2025Period1],
+        reportsByState: [existingReport2026Period1],
       };
 
       mockedUseStore.mockReturnValue(mockStoreWithReports);
@@ -545,7 +545,7 @@ describe("<CreateFinancialReportingModal />", () => {
       });
 
       await act(async () => {
-        await userEvent.selectOptions(yearDropdown, "2025");
+        await userEvent.selectOptions(yearDropdown, "2026");
         await userEvent.selectOptions(periodDropdown, "1");
       });
 
@@ -555,7 +555,7 @@ describe("<CreateFinancialReportingModal />", () => {
     test("Alert is hidden when user changes form values after seeing duplicate alert", async () => {
       const mockStoreWithReports = {
         ...mockUseStore,
-        reportsByState: [existingReport2025Period1],
+        reportsByState: [existingReport2026Period1],
       };
 
       mockedUseStore.mockReturnValue(mockStoreWithReports);
@@ -571,7 +571,7 @@ describe("<CreateFinancialReportingModal />", () => {
 
       // First select values that trigger the alert
       await act(async () => {
-        await userEvent.selectOptions(yearDropdown, "2025");
+        await userEvent.selectOptions(yearDropdown, "2026");
         await userEvent.selectOptions(periodDropdown, "1");
       });
 
