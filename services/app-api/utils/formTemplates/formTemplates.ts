@@ -155,6 +155,16 @@ export async function getOrCreateFormTemplate(
   }
 }
 
+export const isLegacySAR = (template: ReportJson): boolean => {
+  // If you duplicate this function in ui-src, update it there too!
+  const initiativesRoute = template.routes.find(
+    (route) => route.path === "/sar/state-or-territory-specific-initiatives"
+  );
+
+  // Pre-2026 SAR templates will include an initiatives array in the SAR State or Territory Specific Initiatives route, while 2026+ templates will not
+  return initiativesRoute ? "initiatives" in initiativesRoute : false;
+};
+
 // returns flattened array of valid routes for given reportJson
 export const flattenReportRoutesArray = (
   reportJson: ReportRoute[]

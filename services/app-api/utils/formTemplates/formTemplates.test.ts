@@ -12,6 +12,7 @@ import {
   getOrCreateFormTemplate,
   isFieldElement,
   isLayoutElement,
+  isLegacySAR,
 } from "./formTemplates";
 // forms
 import { wpReportJson as wp, sarReportJson as sar } from "../../forms";
@@ -328,19 +329,13 @@ describe("Test formTemplateForReportType legacy WP & SAR", () => {
     jest.clearAllMocks();
   });
 
-  const getInitiativesRoute = (formTemplate: ReportJson) =>
-    formTemplate.routes.find(
-      (route) => route.path === "/sar/state-or-territory-specific-initiatives"
-    ) as DynamicModalOverlayReportPageShape | undefined;
-
   it("returns legacy SAR template (with initiatives) when workPlanFieldData is from a legacy WP", async () => {
     const legacyFieldData = { strategy_additionalDetails: "some value" };
     const template = await formTemplateForReportType(
       ReportType.SAR,
       legacyFieldData
     );
-    const initiativesRoute = getInitiativesRoute(template);
-    expect("initiatives" in (initiativesRoute ?? {})).toBe(true);
+    expect(isLegacySAR(template)).toBe(true);
   });
 
   it("returns new SAR template when workPlanFieldData lacks 'strategy_additionalDetails'", async () => {
@@ -350,8 +345,7 @@ describe("Test formTemplateForReportType legacy WP & SAR", () => {
       ReportType.SAR,
       modernFieldData
     );
-    const initiativesRoute = getInitiativesRoute(template);
-    expect("initiatives" in (initiativesRoute ?? {})).toBeFalsy();
+    expect(isLegacySAR(template)).toBeFalsy();
   });
 
   it("does not short-circuit feature flagged templates when workPlanFieldData is absent", async () => {
