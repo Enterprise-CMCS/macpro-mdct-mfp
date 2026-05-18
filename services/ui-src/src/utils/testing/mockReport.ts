@@ -1,8 +1,11 @@
 import {
+  EntityDetailsStepTypes,
   EntityType,
   OverlayModalTypes,
+  ReportFormFieldType,
   ReportRoute,
   ReportStatus,
+  ValidationType,
 } from "types";
 import { genericErrorContent } from "verbiage/errors";
 import {
@@ -529,17 +532,51 @@ export const mockWPReportWithOverlays = {
   formTemplate: {
     ...mockWPFullReport.formTemplate,
     routes: [
-      /*
-       * We need the 3th route to have a child with entityType initiative,
-       * to avoid a null reference in getInitiativeStatus()
-       */
-      ...mockWPFullReport.formTemplate.routes.slice(0, 3),
       {
-        name: "mock-route-4",
-        path: "/mock/mock-route-4",
+        name: "mock-initiatives-route",
+        path: "/wp/state-or-territory-specific-initiatives",
         children: [
           {
+            path: "/wp/state-or-territory-specific-initiatives/initiatives",
             entityType: OverlayModalTypes.INITIATIVE,
+            entitySteps: [
+              {
+                stepType: "mock step type",
+                form: {
+                  fields: [
+                    {
+                      id: "mockStepId1",
+                      type: ReportFormFieldType.TEXT,
+                      validation: ValidationType.TEXT,
+                    },
+                  ],
+                },
+              },
+              {
+                stepType: "other step type",
+                form: {
+                  fields: [
+                    {
+                      id: "mockStepId2",
+                      type: ReportFormFieldType.TEXT,
+                      validation: ValidationType.TEXT,
+                    },
+                  ],
+                },
+              },
+              {
+                stepType: EntityDetailsStepTypes.CLOSE_OUT_INFORMATION,
+                form: {
+                  fields: [
+                    {
+                      id: "mockCloseOutStepId",
+                      type: ReportFormFieldType.TEXT,
+                      validation: ValidationType.TEXT,
+                    },
+                  ],
+                },
+              },
+            ],
           },
         ],
       } as ReportRoute,
@@ -572,17 +609,12 @@ export const mockSARReportWithOverlays = {
   formTemplate: {
     ...mockSARFullReport.formTemplate,
     routes: [
-      /*
-       * We need the 2th route to have a child with entityType initiative,
-       * to avoid a null reference in getInitiativeStatus()
-       */
-      ...mockSARFullReport.formTemplate.routes.slice(0, 2),
       {
         name: "mock-dynamic-route",
-        path: "/mock/mock-dynamic-route",
+        path: "/sar/state-or-territory-specific-initiatives",
         initiatives: [
           {
-            initiatiaveId: "mock-init-id",
+            initiativeId: "mock-init-id",
             name: "mock init name",
             entitySteps: [
               {

@@ -137,20 +137,6 @@ export interface Transformation {
   rule: string;
 }
 
-export function isFieldElement(
-  field: FormField | FormLayoutElement
-): field is FormField {
-  /*
-   * This function is duplicated in app-api/utils/formTemplates/formTemplates.ts
-   * If you change it here, change it there!
-   */
-  const formLayoutElementTypes = [
-    ReportFormFieldType.SECTION_HEADER,
-    ReportFormFieldType.SECTION_CONTENT,
-  ];
-  return !formLayoutElementTypes.includes(field.type as ReportFormFieldType);
-}
-
 export interface FormLayoutElement {
   id: string;
   type: string;

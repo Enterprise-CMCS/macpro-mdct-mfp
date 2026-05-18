@@ -204,16 +204,16 @@ export const formatFooterForRET = (
         ]);
       });
       //extra row added to sum the transition targets, only unique to ret-mtrp section
-      const totalTranstionTargets = [
+      const totalTransitionTargets = [
         "Total transition targets",
         ...sumOfTwoRows(rows.at(-2) as string[], rows.at(-1) as string[]),
       ];
       //extra row added to get the percentage of targets, only unique to ret-mtrp section
       const perTargetsAchieved = [
         "% targets achieved",
-        ...perOfTwoRows(rows[0], totalTranstionTargets),
+        ...perOfTwoRows(rows[0], totalTransitionTargets),
       ];
-      rows.push(totalTranstionTargets, perTargetsAchieved);
+      rows.push(totalTransitionTargets, perTargetsAchieved);
       break;
     }
     //Number of MFP participants disenrolled from the program during the reporting period

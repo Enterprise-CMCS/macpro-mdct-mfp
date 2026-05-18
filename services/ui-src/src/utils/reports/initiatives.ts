@@ -1,5 +1,7 @@
 // types
-import { AnyObject, FormJson, isFieldElement } from "types";
+import { AnyObject, FormJson } from "types";
+// utils
+import { isFieldElement } from "utils";
 
 export const isClosedInitiative = (data?: AnyObject) => {
   return Boolean(

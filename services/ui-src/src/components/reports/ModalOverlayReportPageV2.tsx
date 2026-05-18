@@ -20,7 +20,6 @@ import {
   EntityShape,
   ErrorVerbiage,
   FormJson,
-  isFieldElement,
   ModalOverlayReportPageShape,
   ReportShape,
   ReportStatus,
@@ -32,9 +31,10 @@ import {
   filterFormData,
   getEntriesToClear,
   getReportVerbiage,
+  isClosedInitiative,
+  isFieldElement,
   resetClearProp,
   setClearedEntriesToDefaultValue,
-  isClosedInitiative,
   useBreakpoint,
   useStore,
 } from "utils";
@@ -60,11 +60,10 @@ export const ModalOverlayReportPageV2 = ({
   const { full_name, state, userIsAdmin, userIsEndUser, userIsReadOnly } =
     useStore().user ?? {};
   const {
-    autosaveState,
     editable,
     report = {} as ReportShape,
-    setSelectedEntity,
     selectedEntity,
+    setSelectedEntity,
   } = useStore();
   const isDisabled = Boolean(userIsAdmin || userIsReadOnly);
 
@@ -152,7 +151,7 @@ export const ModalOverlayReportPageV2 = ({
   };
 
   const onSubmit = async (enteredData: AnyObject) => {
-    if (!autosaveState && userIsEndUser) {
+    if (userIsEndUser) {
       setSubmitting(true);
       const reportKeys = {
         reportType: report.reportType,
@@ -291,7 +290,6 @@ export const ModalOverlayReportPageV2 = ({
     return (
       <EntityProvider>
         <EntityDetailsOverlayV2
-          autosaveState={autosaveState}
           backButtonText={verbiage.backButtonText}
           closeEntityDetailsOverlay={closeEntityDetailsOverlay}
           disabled={isDisabled}
@@ -301,7 +299,6 @@ export const ModalOverlayReportPageV2 = ({
           onSubmit={onSubmit}
           route={route}
           selectedEntity={selectedEntity}
-          setSelectedEntity={setSelectedEntity}
           submitting={submitting}
           setEntering={setEntering}
           validateOnRender={false}

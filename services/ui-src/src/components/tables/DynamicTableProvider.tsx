@@ -229,9 +229,9 @@ export const DynamicTableProvider = ({ children }: any) => {
       if (entityType === EntityType.INITIATIVE) {
         switch (fieldType) {
           case "dataSource":
-            currentField?.dataSource[0]?.value === "Other, specify"
+            currentField?.dataSource?.[0]?.value === "Other, specify"
               ? (hydrateValue = currentField?.otherText)
-              : (hydrateValue = currentField?.dataSource[0].value);
+              : (hydrateValue = currentField?.dataSource?.[0].value);
             break;
           case "baselineStartDate":
             hydrateValue = `${hydrateValue} - ${currentField?.baselineEndDate}`;

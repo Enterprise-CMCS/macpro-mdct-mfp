@@ -1,14 +1,18 @@
 // types
 import {
   AnyObject,
+  EntityDetailsOverlayTypes,
+  EntityStatuses,
+  EntityType,
   PageTypes,
   ReportPageProgress,
   ReportRoute,
   ReportShape,
 } from "types";
 // utils
+import { hasEntitySteps, routeChecker } from "utils";
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
-import { routeChecker } from "utils";
+import { getInitiativeStatus } from "components/tables/getEntityStatus";
 
 /**
  * This function takes a report and returns an array of objects that represent the
@@ -19,6 +23,7 @@ import { routeChecker } from "utils";
 export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
   const {
     formTemplate: { routes },
+    fieldData,
   } = report;
   // Filter out the reviewSubmit pageType
   const validRoutes = routes.filter(
@@ -51,9 +56,25 @@ export const getRouteStatus = (report: ReportShape): ReportPageProgress[] => {
     route: ReportPageProgress,
     status: boolean
   ) => {
-    if (routeChecker.isWorkPlanInitiativesPage(route)) {
-      //if the alert is false (meaning no alert), default to the validation status check, else the task is not completed
-      return !getWPAlertStatus(report, "initiative") ? status : false;
+    if (
+      routeChecker.isWorkPlanInitiativesDashboardPage(route) ||
+      routeChecker.isSarInitiativesPage(route)
+    ) {
+      if (getWPAlertStatus(report, EntityType.INITIATIVE)) return false;
+      /**
+       * initiativeV1: if the alert is false (meaning no alert), default
+       * to the validation status check, else the task is not completed
+       */
+      if (hasEntitySteps(route)) return status;
+
+      // initiativeV2: use same status check as EntityRow
+      for (const entity of fieldData[EntityType.INITIATIVE] || []) {
+        const status = getInitiativeStatus(report, entity, false, [
+          EntityDetailsOverlayTypes.CLOSEOUT_INFORMATION,
+        ]);
+        if (status === EntityStatuses.INCOMPLETE) return false;
+      }
+      return true;
     }
     // this section is optional and should not have a status
     if (routeChecker.isSarRetParticipantsPage(route)) {

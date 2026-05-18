@@ -1,7 +1,9 @@
 import { mapValidationTypesToSchema } from "./validation";
+// types
+import { FormJson, ValidationType } from "types";
+// utils
+import { compileValidationJsonFromFields, isFieldElement } from "utils";
 import * as schema from "./schemas";
-import { FormJson, isFieldElement, ValidationType } from "types";
-import { compileValidationJsonFromFields } from "utils/reports/reports";
 import * as yup from "yup";
 
 const mockStandardValidationType = {

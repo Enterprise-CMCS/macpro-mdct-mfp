@@ -74,7 +74,7 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
 };
 
 /**
- * Recurisvely create React elements from CustomHtmlElement JSON.
+ * Recursively create React elements from CustomHtmlElement JSON.
  *
  * @param element CustomHtmlElement-conforming JSON
  * @returns ReactElement
@@ -96,17 +96,17 @@ export function createElementWithChildren(
       element.children.map((x) => createElementWithChildren(x))
     );
   }
-  const santizedContent = sanitizeAndParseHtml(content);
+  const sanitizedContent = sanitizeAndParseHtml(content);
 
   if (elementType === undefined) {
     return React.createElement(
       customElementMap["text"],
       elementProps,
-      santizedContent
+      sanitizedContent
     );
   }
 
-  return React.createElement(elementType, elementProps, santizedContent);
+  return React.createElement(elementType, elementProps, sanitizedContent);
 }
 
 // sanitize and parse html to react elements

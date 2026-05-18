@@ -214,7 +214,7 @@ describe("<ReviewSubmitPage />", () => {
     });
   });
 
-  describe("When loading a sucessfully submitted report (Success Message Generator)", () => {
+  describe("When loading a successfully submitted report (Success Message Generator)", () => {
     test("should give the full success date if given all params", () => {
       const submissionName = "test-program";
       const reportType = ReportType.WP;

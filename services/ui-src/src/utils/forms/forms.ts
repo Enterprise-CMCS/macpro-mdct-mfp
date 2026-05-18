@@ -23,7 +23,6 @@ import {
   FormField,
   FormJson,
   FormLayoutElement,
-  isFieldElement,
   ReportFormFieldType,
   ReportShape,
   ReportStatus,
@@ -525,4 +524,40 @@ export const addDynamicTableRowsValidation = (
   return newFields.length > 0
     ? { ...form, fields: [...form.fields, ...newFields] }
     : form;
+};
+
+export function isFieldElement(
+  field: FormField | FormLayoutElement
+): field is FormField {
+  /*
+   * This function is duplicated in app-api/utils/formTemplates/formTemplates.ts
+   * If you change it here, change it there!
+   */
+  const formLayoutElementTypes = [
+    ReportFormFieldType.SECTION_HEADER,
+    ReportFormFieldType.SECTION_CONTENT,
+  ];
+  return !formLayoutElementTypes.includes(field.type as ReportFormFieldType);
+}
+
+export function isLayoutElement(
+  field: FormField | FormLayoutElement
+): field is FormLayoutElement {
+  /*
+   * This function is duplicated in app-api/utils/formTemplates/formTemplates.ts
+   * If you change it here, change it there!
+   */
+  return (field as FormField).validation === undefined;
+}
+export const isFieldValidationOptional = (
+  formField: FormField | FormLayoutElement
+) => {
+  if (!isFieldElement(formField)) return false;
+
+  const validationType =
+    typeof formField.validation === "object"
+      ? formField.validation.type
+      : formField.validation;
+
+  return validationType.toLowerCase().includes("optional");
 };

@@ -16,7 +16,6 @@ import {
   DynamicModalOverlayReportPageShape,
   EntityShape,
   FormJson,
-  isFieldElement,
   ReportShape,
   ReportStatus,
 } from "types";
@@ -25,6 +24,7 @@ import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  isFieldElement,
   parseCustomHtml,
   setClearedEntriesToDefaultValue,
   useBreakpoint,
@@ -42,9 +42,6 @@ export const DynamicModalOverlayReportPageV2 = ({
   const { isTablet, isMobile } = useBreakpoint();
   const { updateReport } = useContext(ReportContext);
   const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState<boolean>();
-  const [currentEntity, setCurrentEntity] = useState<EntityShape | undefined>(
-    undefined
-  );
   const [entering, setEntering] = useState<boolean>(false);
   const [form, setForm] = useState<FormJson>({} as FormJson);
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -55,6 +52,7 @@ export const DynamicModalOverlayReportPageV2 = ({
   const {
     editable,
     report = {} as ReportShape,
+    selectedEntity,
     setSelectedEntity,
   } = useStore();
   const isDisabled = Boolean(userIsAdmin || userIsReadOnly);
@@ -72,14 +70,14 @@ export const DynamicModalOverlayReportPageV2 = ({
   // Open/Close overlay action methods
   const openEntityDetailsOverlay = (entity: EntityShape) => {
     window.scrollTo(0, 0);
-    setCurrentEntity(entity);
+    setSelectedEntity(entity);
     setIsEntityDetailsOpen(true);
     setSidebarHidden(true);
   };
 
   const closeEntityDetailsOverlay = () => {
     window.scrollTo(0, 0);
-    setCurrentEntity(undefined);
+    setSelectedEntity(undefined);
     setIsEntityDetailsOpen(false);
     setSidebarHidden(false);
   };
@@ -94,21 +92,18 @@ export const DynamicModalOverlayReportPageV2 = ({
       };
       const currentEntities = [...(report.fieldData[entityType] || [])];
       const selectedEntityIndex = report.fieldData[entityType].findIndex(
-        (entity: EntityShape) => entity.id === currentEntity?.id
+        (entity: EntityShape) => entity.id === selectedEntity?.id
       );
-      const filteredFormData = filterFormData(
-        enteredData,
-        form.fields.filter(isFieldElement)
-      );
-      const entriesToClear = getEntriesToClear(
-        enteredData,
-        form.fields.filter(isFieldElement)
-      );
+      const nonTableFields = form.fields
+        .filter(isFieldElement)
+        .filter((f) => !f.forTableOnly);
+      const filteredFormData = filterFormData(enteredData, nonTableFields);
+      const entriesToClear = getEntriesToClear(enteredData, nonTableFields);
       const newEntity = {
-        ...currentEntity,
+        ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
-      let newEntities = currentEntities;
+      const newEntities = currentEntities;
       newEntities[selectedEntityIndex] = newEntity;
       newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
         newEntities[selectedEntityIndex],
@@ -182,8 +177,7 @@ export const DynamicModalOverlayReportPageV2 = ({
           form={form}
           onSubmit={onSubmit}
           route={route}
-          selectedEntity={currentEntity}
-          setSelectedEntity={setSelectedEntity}
+          selectedEntity={selectedEntity}
           submitting={submitting}
           setEntering={setEntering}
           validateOnRender={false}

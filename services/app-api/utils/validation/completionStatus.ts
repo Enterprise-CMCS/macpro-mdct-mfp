@@ -2,13 +2,15 @@
 import { DEFAULT_TARGET_POPULATION_NAMES } from "../constants/constants";
 import {
   AnyObject,
-  CompletionData,
-  FormJson,
-  FieldChoice,
   Choice,
+  CompletionData,
+  EntityType,
+  FieldChoice,
   FormField,
-  ReportRoute,
+  FormJson,
   PageTypes,
+  ReportRoute,
+  StepType,
 } from "../types";
 // utils
 import { validateFieldData } from "./completionValidation";
@@ -138,7 +140,7 @@ export const calculateCompletionStatus = async (
       if (fieldData[entityType] && fieldData[entityType].length > 0) {
         // if target population, at least one must be applicable to be complete
         if (
-          entityType === "targetPopulations" &&
+          entityType === EntityType.TARGET_POPULATIONS &&
           nestedFormTemplate?.id === "tb-drawer"
         ) {
           atLeastOneTargetPopApplicable = isDefaultPopulationApplicable(
@@ -161,12 +163,18 @@ export const calculateCompletionStatus = async (
           formTemplate.entities && !formTemplate.entities[entityType]?.required;
       }
     }
-    if (entityType === "targetPopulations" && !atLeastOneTargetPopApplicable) {
+    if (
+      entityType === EntityType.TARGET_POPULATIONS &&
+      !atLeastOneTargetPopApplicable
+    ) {
       return false;
     }
     return areAllFormsComplete;
   };
 
+  /**
+   * @deprecated No longer used as of Report Year 2026, Period 2
+   */
   const calculateEntityWithStepsCompletion = async (
     stepFormTemplates: any[],
     entityType: string
@@ -188,8 +196,8 @@ export const calculateCompletionStatus = async (
           (!stepData || stepData.length === 0)
         ) {
           areAllFormsComplete &&= false;
-        } else if (stepForm.stepType === "closeOutInformation") {
-          // TODO: skip over closeOut at the moment until we can make WP copies
+        } else if (stepForm.stepType === StepType.CLOSE_OUT_INFORMATION) {
+          //skip over closeOut at the moment until we can make WP copies
         } else {
           //determine which fieldData to match to the stepForm
           const entityFieldsList = stepData ?? [entityFields];
@@ -235,6 +243,9 @@ export const calculateCompletionStatus = async (
     return areAllFormsComplete;
   };
 
+  /**
+   * @deprecated No longer used as of Report Year 2026, Period 2
+   */
   const calculateDynamicModalOverlayCompletion = async (
     initiatives: any[],
     entityType: string
@@ -242,7 +253,6 @@ export const calculateCompletionStatus = async (
     let areAllFormsComplete = true;
 
     for (const initiative of initiatives) {
-      // TODO: Update for v2
       const isComplete = initiative.entitySteps
         ? await calculateEntityWithStepsCompletion(
             initiative.entitySteps,
@@ -296,10 +306,10 @@ export const calculateCompletionStatus = async (
             ),
           };
         } else {
-          if (!route.modalForm) break;
+          if (!route.modalForm || !route.overlayForm) break;
           routeCompletion = {
             [route.path]: await calculateEntityCompletion(
-              [route.modalForm],
+              [route.modalForm, route.overlayForm],
               route.entityType
             ),
           };
@@ -315,8 +325,13 @@ export const calculateCompletionStatus = async (
             ),
           };
         } else {
-          // TODO: Update for v2
-          routeCompletion = { [route.path]: true };
+          if (!route.overlayForm) break;
+          routeCompletion = {
+            [route.path]: await calculateEntityCompletion(
+              [route.overlayForm],
+              route.entityType
+            ),
+          };
         }
         break;
       case PageTypes.REVIEW_SUBMIT:
