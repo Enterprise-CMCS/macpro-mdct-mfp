@@ -55,11 +55,8 @@ export const formTemplateForReportType = async (
   const flagNames = Object.keys(flagsByReportType);
 
   // Legacy WP field data should always produce a legacy SAR template, regardless of feature flags
-  if (
-    reportType === ReportType.SAR &&
-    workPlanFieldData &&
-    "strategy_additionalDetails" in workPlanFieldData
-  ) {
+  const isLegacySAR = reportType === ReportType.SAR && workPlanFieldData && "strategy_additionalDetails" in workPlanFieldData;
+  if (isLegacySAR) {
     return structuredClone(sarReportJson as ReportJson);
   }
 
