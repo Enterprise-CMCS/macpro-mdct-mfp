@@ -323,6 +323,51 @@ describe("Test form contents", () => {
   });
 });
 
+describe("Test formTemplateForReportType legacy WP & SAR", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const getInitiativesRoute = (formTemplate: ReportJson) =>
+    formTemplate.routes.find(
+      (route) => route.path === "/sar/state-or-territory-specific-initiatives"
+    ) as DynamicModalOverlayReportPageShape | undefined;
+
+  it("returns legacy SAR template (with entitySteps) when workPlanFieldData is from a legacy WP", async () => {
+    const legacyFieldData = { strategy_additionalDetails: "some value" };
+    const template = await formTemplateForReportType(
+      ReportType.SAR,
+      legacyFieldData
+    );
+    const initiativesRoute = getInitiativesRoute(template);
+    expect("entitySteps" in (initiativesRoute?.initiatives?.[0] ?? {})).toBe(
+      true
+    );
+  });
+
+  it("returns new SAR template when workPlanFieldData lacks 'strategy_additionalDetails'", async () => {
+    (isFeatureFlagEnabled as jest.Mock).mockResolvedValue(true);
+    const modernFieldData = { someOtherKey: "value" };
+    const template = await formTemplateForReportType(
+      ReportType.SAR,
+      modernFieldData
+    );
+    const initiativesRoute = getInitiativesRoute(template);
+    expect(
+      "entitySteps" in (initiativesRoute?.initiatives?.[0] ?? {})
+    ).toBeFalsy();
+  });
+
+  it("does not short-circuit feature flagged templates when workPlanFieldData is absent", async () => {
+    (isFeatureFlagEnabled as jest.Mock).mockResolvedValue(false);
+    await formTemplateForReportType(ReportType.WP);
+    expect(isFeatureFlagEnabled).toHaveBeenCalled();
+
+    await formTemplateForReportType(ReportType.SAR);
+    expect(isFeatureFlagEnabled).toHaveBeenCalled();
+  });
+});
+
 describe("Test compileValidationJsonFromRoutes", () => {
   it("Compiles validation from forms of any kind", () => {
     const result = compileValidationJsonFromRoutes(
