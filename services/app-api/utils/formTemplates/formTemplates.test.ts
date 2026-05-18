@@ -333,16 +333,14 @@ describe("Test formTemplateForReportType legacy WP & SAR", () => {
       (route) => route.path === "/sar/state-or-territory-specific-initiatives"
     ) as DynamicModalOverlayReportPageShape | undefined;
 
-  it("returns legacy SAR template (with entitySteps) when workPlanFieldData is from a legacy WP", async () => {
+  it("returns legacy SAR template (with initiatives) when workPlanFieldData is from a legacy WP", async () => {
     const legacyFieldData = { strategy_additionalDetails: "some value" };
     const template = await formTemplateForReportType(
       ReportType.SAR,
       legacyFieldData
     );
     const initiativesRoute = getInitiativesRoute(template);
-    expect("entitySteps" in (initiativesRoute?.initiatives?.[0] ?? {})).toBe(
-      true
-    );
+    expect("initiatives" in (initiativesRoute ?? {})).toBe(true);
   });
 
   it("returns new SAR template when workPlanFieldData lacks 'strategy_additionalDetails'", async () => {
@@ -353,9 +351,7 @@ describe("Test formTemplateForReportType legacy WP & SAR", () => {
       modernFieldData
     );
     const initiativesRoute = getInitiativesRoute(template);
-    expect(
-      "entitySteps" in (initiativesRoute?.initiatives?.[0] ?? {})
-    ).toBeFalsy();
+    expect("initiatives" in (initiativesRoute ?? {})).toBeFalsy();
   });
 
   it("does not short-circuit feature flagged templates when workPlanFieldData is absent", async () => {
