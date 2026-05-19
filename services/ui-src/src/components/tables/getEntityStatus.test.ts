@@ -69,6 +69,48 @@ describe("tables/getEntityStatus", () => {
 
       expect(result).toEqual(["field1", "field2", "nestedField3"]);
     });
+
+    test("should not throw when entity field values are null", () => {
+      // typeof null === "object", so null values must be filtered out
+      // before accessing `.key` on them.
+      const fields = [
+        {
+          id: "field1",
+          type: ReportFormFieldType.TEXT,
+          validation: ValidationType.TEXT,
+        },
+        {
+          id: "field2",
+          type: ReportFormFieldType.RADIO,
+          validation: ValidationType.RADIO,
+          props: {
+            choices: [
+              {
+                id: "choice1",
+                children: [
+                  {
+                    id: "nestedField3",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ];
+      const entity = {
+        id: "entity1",
+        type: EntityType.INITIATIVE,
+        field1: null,
+        field2: [null, { key: "choice1key" }],
+      };
+
+      expect(() => getValidationList(fields, entity)).not.toThrow();
+      expect(getValidationList(fields, entity)).toEqual([
+        "field1",
+        "field2",
+        "nestedField3",
+      ]);
+    });
   });
 
   describe("getEntityStatus()", () => {
