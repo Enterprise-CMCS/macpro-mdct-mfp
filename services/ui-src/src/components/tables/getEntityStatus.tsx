@@ -42,7 +42,7 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
   const entityNestedKeys = entityNestedSelection
     .flat()
     .map((entity) => {
-      return entity?.key;
+      return entity.key;
     })
     .filter(Boolean);
 
