@@ -30,13 +30,10 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
     .filter(Boolean);
 
   //Loop through the user entered entity to see which nested id the user had selected
-  const entityNestedSelection: AnyObject[] = [];
-  Object.values(entity).forEach((field: AnyObject) => {
-    // typeof null === "object", so guard against null field values
-    if (field !== null && typeof field === "object") {
-      entityNestedSelection.push(field);
-    }
-  });
+  // typeof null === "object", so we need to guard against null field values
+  const entityNestedSelection = Object.values(entity).filter(
+    (field) => field !== null && typeof field === "object"
+  );
 
   //Strip it to only the key information
   const entityNestedKeys = entityNestedSelection

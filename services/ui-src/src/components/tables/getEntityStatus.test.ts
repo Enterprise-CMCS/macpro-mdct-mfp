@@ -104,7 +104,6 @@ describe("tables/getEntityStatus", () => {
         field2: [null, { key: "choice1key" }],
       };
 
-      expect(() => getValidationList(fields, entity)).not.toThrow();
       expect(getValidationList(fields, entity)).toEqual([
         "field1",
         "field2",
