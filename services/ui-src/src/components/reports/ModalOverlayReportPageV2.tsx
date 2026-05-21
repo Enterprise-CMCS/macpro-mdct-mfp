@@ -33,6 +33,7 @@ import {
   getReportVerbiage,
   isClosedInitiative,
   isFieldElement,
+  isTableField,
   resetClearProp,
   setClearedEntriesToDefaultValue,
   useBreakpoint,
@@ -164,7 +165,7 @@ export const ModalOverlayReportPageV2 = ({
       );
       const nonTableFields = form.fields
         .filter(isFieldElement)
-        .filter((f) => !f.forTableOnly);
+        .filter((f) => !isTableField(f));
       const filteredFormData = filterFormData(enteredData, nonTableFields);
       const entriesToClear = getEntriesToClear(enteredData, nonTableFields);
       const closeOutInitiative = isClosedInitiative(enteredData)

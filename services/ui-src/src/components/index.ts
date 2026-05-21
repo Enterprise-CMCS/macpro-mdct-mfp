@@ -134,6 +134,7 @@ export { DynamicTableRows } from "./tables/DynamicTableRows";
 export { EntityModalTable } from "./tables/EntityModalTable";
 export { EntityRow } from "./tables/EntityRow";
 export { EntityStatusIcon } from "./tables/EntityStatusIcon";
+export { ErrorMessage } from "./tables/ErrorMessage";
 export { SummationTable } from "./tables/SummationTable";
 export { Table } from "./tables/Table";
 // widgets

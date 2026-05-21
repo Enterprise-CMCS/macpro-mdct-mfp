@@ -1,4 +1,11 @@
-import { useContext, useState } from "react";
+import {
+  BaseSyntheticEvent,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useFormContext } from "react-hook-form";
 // components
 import {
   Box,
@@ -19,6 +26,7 @@ import {
   DeleteEntityModal,
   DynamicTableContext,
   DynamicTableRows,
+  ErrorMessage,
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
@@ -45,6 +53,26 @@ export const EntityModalTable = ({
   styleAsOptionalHeadRows,
   verbiage,
 }: Props) => {
+  const form = useFormContext();
+  const formErrorState = form?.formState?.errors || {};
+  const [errorMessage, setErrorMessage] = useState<ReactNode>(undefined);
+  const errorId = `${tableId}__error`;
+  const ariaProps = errorMessage ? { "aria-describedby": errorId } : {};
+
+  useEffect(() => {
+    const errorKey = Object.keys(formErrorState).find((key) =>
+      key.startsWith(tableId)
+    );
+
+    if (!errorKey || formData?.[errorKey]?.length > 0) {
+      setErrorMessage(undefined);
+      return;
+    }
+
+    const message = formErrorState[errorKey]?.message as ReactNode;
+    setErrorMessage(message);
+  }, [formData, formErrorState, tableId]);
+
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
   const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
@@ -65,7 +93,8 @@ export const EntityModalTable = ({
     setCurrentEntityId(entityId);
     keyMetricsModalOnOpenHandler();
   };
-  const closeModal = () => {
+  const closeModal = (closedAfterSave?: boolean | BaseSyntheticEvent) => {
+    if (closedAfterSave === true) setErrorMessage(undefined);
     setCurrentEntityId(undefined);
     keyMetricsModalOnCloseHandler();
   };
@@ -131,8 +160,8 @@ export const EntityModalTable = ({
       {verbiage?.subtitle && (
         <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
       )}
-
-      <Table id={tableId} sx={sx.table}>
+      <ErrorMessage id={errorId} message={errorMessage} />
+      <Table id={tableId} sx={sx.table} {...ariaProps}>
         <TableCaption placement="top" sx={sx.captionBox}>
           <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
         </TableCaption>
