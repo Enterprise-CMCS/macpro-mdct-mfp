@@ -164,6 +164,116 @@ export const renderCalculationTables = (
   });
 };
 
+export const renderEntityTables = (
+  tables: any[],
+  entity: any,
+  headingLevel: string = "h4",
+  isEmbedded: boolean = false
+) => {
+  return tables.map((table: any) => {
+    const headRow = table.headRows[0];
+
+    const dynamicData = entity[table.dynamicRowsTemplate?.id] || [];
+
+    const dynamicBodyRows = dynamicData.map((item: any) => {
+      const rowValues: any[] = [];
+      const fields = table.dynamicRowsTemplate.props.dynamicFields;
+
+      let skipNext = false;
+      fields.forEach((f: any, index: number) => {
+        if (skipNext) {
+          skipNext = false;
+          return;
+        }
+
+        const { fieldType } = getFieldParts(f.id);
+        let fieldValue = item[fieldType];
+
+        // Special handling for baseline period - combine start and end dates
+        if (fieldType === "baselineStartDate" && index + 1 < fields.length) {
+          const nextField = fields[index + 1];
+          const { fieldType: nextFieldType } = getFieldParts(nextField.id);
+
+          if (nextFieldType === "baselineEndDate") {
+            const startDate = item[fieldType] || "Not answered";
+            const endDate = item[nextFieldType] || "Not answered";
+            rowValues.push(`${startDate} - ${endDate}`);
+            skipNext = true; // Skip the next field since we've already processed it
+            return;
+          }
+        }
+
+        if (Array.isArray(fieldValue) && fieldValue[0]?.value) {
+          fieldValue = fieldValue[0].value;
+        }
+
+        if (fieldType.endsWith("-otherText")) {
+          const baseFieldType = fieldType.replace("-otherText", "");
+          const baseField = item[baseFieldType];
+          if (
+            Array.isArray(baseField) &&
+            baseField[0]?.value === "Other, specify"
+          ) {
+            fieldValue = item[fieldType];
+          }
+        }
+
+        if (f.type === ReportFormFieldType.NUMBER) {
+          fieldValue = maskResponseData(fieldValue, f.props.mask);
+        }
+
+        if (f.type === ReportFormFieldType.DATE && fieldValue) {
+          rowValues.push(fieldValue);
+          return;
+        }
+
+        rowValues.push(fieldValue || "Not answered");
+      });
+
+      return rowValues;
+    });
+
+    const bodyRows = dynamicBodyRows.length > 0 ? dynamicBodyRows : [];
+
+    return (
+      <Box
+        key={table.id}
+        sx={isEmbedded ? sx.embeddedEntityTable : sx.entityTable}
+      >
+        <Heading as={headingLevel as any} sx={sx.entityTableHeading}>
+          {table.verbiage?.title}
+        </Heading>
+        {dynamicBodyRows.length === 0 && table.verbiage?.emptyTableMessage ? (
+          <Box sx={sx.emptyTableMessage}>
+            {table.verbiage.emptyTableMessage}
+          </Box>
+        ) : (
+          <Table
+            sx={
+              isEmbedded
+                ? {
+                    ...sx.table,
+                    ...sx.tableCommonStyle,
+                    ...sx.embeddedTableStyle,
+                  }
+                : {
+                    ...sx.table,
+                    ...sx.tableCommonStyle,
+                    ...sx.entityTableStyle,
+                  }
+            }
+            content={{
+              headRow: headRow,
+              bodyRows: bodyRows,
+            }}
+            data-testid={`entity-table-${table.id}`}
+          />
+        )}
+      </Box>
+    );
+  });
+};
+
 export const sx = {
   table: sxSharedExportStyles.table,
   serviceTable: {
@@ -211,5 +321,36 @@ export const sx = {
     fontWeight: "bold",
     color: "gray_dark",
     marginTop: "spacer2",
+  },
+  entityTable: {
+    marginTop: "spacer4",
+  },
+  embeddedEntityTable: {
+    marginTop: "1.5rem",
+    marginBottom: 0,
+  },
+  entityTableHeading: {
+    fontSize: "md",
+    fontWeight: "bold",
+    marginBottom: "spacer2",
+  },
+  tableCommonStyle: {
+    "& th, & td": {
+      padding: "0.75rem 0.5rem",
+      fontSize: "sm",
+    },
+    "& thead tr": {
+      backgroundColor: "gray.50",
+    },
+  },
+  entityTableStyle: {},
+  embeddedTableStyle: {
+    marginTop: 0,
+    marginBottom: 0,
+  },
+  emptyTableMessage: {
+    padding: "spacer3",
+    fontStyle: "italic",
+    color: "gray_dark",
   },
 };

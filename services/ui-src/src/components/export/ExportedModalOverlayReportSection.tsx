@@ -1,13 +1,21 @@
-import { getReportVerbiage, useStore } from "utils";
+import React from "react";
+import {
+  getReportVerbiage,
+  useStore,
+  renderEntityTables,
+  parseCustomHtml,
+} from "utils";
 // components
 import {
   EntityStatusIcon,
   ExportedEntityDetailsOverlaySection,
+  ExportedEntityDetailsTableRow,
   Alert,
   ExportedOverlayModalReportSection,
   Table,
 } from "components";
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, Tr, Td } from "@chakra-ui/react";
+import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
 // types
 import {
   AlertTypes,
@@ -144,6 +152,14 @@ export function renderModalOverlayTableBody(
         const headingText = entity.initiative_name
           ? `${idx + 1}. ${entity.initiative_name}`
           : "Not entered";
+
+        // Check if V2
+        const hasOverlayForm = !!(section as AnyObject).overlayForm;
+        const overlayFormFields =
+          (section as AnyObject).overlayForm?.fields || [];
+        const overlayFormTables =
+          (section as AnyObject).overlayForm?.tables || [];
+
         return (
           <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
             <Flex>
@@ -164,67 +180,81 @@ export function renderModalOverlayTableBody(
                 </Text>
               </Box>
             </Flex>
-            {/* Depending on what the entity step type is, render its corresponding component */}
-            {entitySteps.map((step, stepIdx) => {
-              const type = step[0].toString();
-              switch (type) {
-                case EntityDetailsStepTypes.DEFINE_INITIATIVE: {
-                  const currentLevel = parseInt(headingLevel.charAt(1), 10);
-                  const nextLevel = currentLevel + 1;
-                  const nextHeadingLevel = `h${nextLevel}`;
 
-                  return (
-                    <Box key={`${type}${idx}${stepIdx}`}>
-                      <ExportedEntityDetailsOverlaySection
-                        section={section as ModalOverlayReportPageShape}
-                        entity={entity}
-                        entityStep={step}
-                        showHintText={true}
-                        headingLevel={nextHeadingLevel as HeadingLevel}
-                      />
-                    </Box>
-                  );
-                }
-                case OverlayModalStepTypes.EVALUATION_PLAN:
-                  return (
-                    <Box key={`${type}${idx}${stepIdx}`}>
-                      <ExportedOverlayModalReportSection
-                        section={section as OverlayModalPageShape}
-                        entity={entity}
-                        entityStep={step}
-                      />
-                    </Box>
-                  );
-                case OverlayModalStepTypes.FUNDING_SOURCES:
-                  return (
-                    <Box key={`${type}${idx}${stepIdx}`}>
-                      <ExportedOverlayModalReportSection
-                        section={section as OverlayModalPageShape}
-                        entity={entity}
-                        entityStep={step}
-                      />
-                    </Box>
-                  );
-                case EntityDetailsStepTypes.CLOSE_OUT_INFORMATION:
-                  //clean up title
-                  step[1] = (step[1] as string).replace(" (if applicable)", "");
-                  return (
-                    entity?.isInitiativeClosed && (
+            {/* V2 Route: Render overlayForm fields directly */}
+            {hasOverlayForm && overlayFormFields.length > 0 && (
+              <EntityFieldsTable
+                fields={overlayFormFields}
+                entity={entity}
+                tables={overlayFormTables}
+              />
+            )}
+
+            {/* V1: Render entitySteps (deprecated) */}
+            {!hasOverlayForm &&
+              entitySteps.map((step, stepIdx) => {
+                const type = step[0].toString();
+                switch (type) {
+                  case EntityDetailsStepTypes.DEFINE_INITIATIVE: {
+                    const currentLevel = parseInt(headingLevel.charAt(1), 10);
+                    const nextLevel = currentLevel + 1;
+                    const nextHeadingLevel = `h${nextLevel}`;
+
+                    return (
                       <Box key={`${type}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection
                           section={section as ModalOverlayReportPageShape}
                           entity={entity}
                           entityStep={step}
-                          showHintText={false}
-                          closed={true}
+                          showHintText={true}
+                          headingLevel={nextHeadingLevel as HeadingLevel}
                         />
                       </Box>
-                    )
-                  );
-                default:
-                  return <Box key={`${type}${idx}${stepIdx}`}></Box>;
-              }
-            })}
+                    );
+                  }
+                  case OverlayModalStepTypes.EVALUATION_PLAN:
+                    return (
+                      <Box key={`${type}${idx}${stepIdx}`}>
+                        <ExportedOverlayModalReportSection
+                          section={section as OverlayModalPageShape}
+                          entity={entity}
+                          entityStep={step}
+                        />
+                      </Box>
+                    );
+                  case OverlayModalStepTypes.FUNDING_SOURCES:
+                    return (
+                      <Box key={`${type}${idx}${stepIdx}`}>
+                        <ExportedOverlayModalReportSection
+                          section={section as OverlayModalPageShape}
+                          entity={entity}
+                          entityStep={step}
+                        />
+                      </Box>
+                    );
+                  case EntityDetailsStepTypes.CLOSE_OUT_INFORMATION:
+                    //clean up title
+                    step[1] = (step[1] as string).replace(
+                      " (if applicable)",
+                      ""
+                    );
+                    return (
+                      entity?.isInitiativeClosed && (
+                        <Box key={`${type}${idx}${stepIdx}`}>
+                          <ExportedEntityDetailsOverlaySection
+                            section={section as ModalOverlayReportPageShape}
+                            entity={entity}
+                            entityStep={step}
+                            showHintText={false}
+                            closed={true}
+                          />
+                        </Box>
+                      )
+                    );
+                  default:
+                    return <Box key={`${type}${idx}${stepIdx}`}></Box>;
+                }
+              })}
           </Box>
         );
       });
@@ -328,9 +358,242 @@ export function renderModalOverlayTableBody(
   }
 }
 
+// Helper component to render V2 in PDF
+const EntityFieldsTable = ({
+  fields,
+  entity,
+  tables,
+}: {
+  fields: (FormField | FormLayoutElement)[];
+  entity: EntityShape;
+  tables?: any[];
+}) => {
+  const { report } = useStore();
+  const { exportVerbiage } = getReportVerbiage(report?.reportType);
+  const { tableHeaders } = exportVerbiage;
+
+  const tableRows: React.ReactElement[] = [];
+  const entityType = entity.type;
+  const entityId = entity.id;
+
+  const renderFieldRow = (formField: FormField | FormLayoutElement) => {
+    const isDynamicRowsTemplate = (formField as any).type === "dynamicObject";
+
+    if (isDynamicRowsTemplate) {
+      const templateId = (formField as any).id;
+      const tableId = templateId.split("_performanceIndicators")[0];
+      const table = tables?.find((t) => t.id === tableId);
+
+      if (table) {
+        tableRows.push(
+          <Tr
+            key={formField.id}
+            sx={{ border: "none !important", borderBottom: "none !important" }}
+          >
+            <Td
+              colSpan={2}
+              sx={{
+                padding: 0,
+                border: "none !important",
+                verticalAlign: "top",
+              }}
+            >
+              <Box sx={{ margin: 0 }}>
+                {renderEntityTables([table], entity, "h5", true)}
+              </Box>
+            </Td>
+          </Tr>
+        );
+      }
+      return;
+    }
+
+    const hasTitle = !!(formField as any).props?.title;
+    const hasSubtitle = !!(formField as any).props?.subtitle;
+
+    if (hasTitle && hasSubtitle) {
+      const fieldTitle = (formField as any).props.title;
+      const fieldSubtitle = (formField as any).props.subtitle;
+      const fieldLabel = (formField as any).props.label;
+
+      const modifiedField = {
+        ...formField,
+        props: {
+          ...formField.props,
+          label: "",
+        },
+      };
+
+      // Render as: H4 title -> subtitle text -> H5 label -> table
+      tableRows.push(
+        <Tr
+          key={formField.id}
+          sx={{ border: "none !important", borderBottom: "none !important" }}
+        >
+          <Td
+            colSpan={2}
+            sx={{ padding: 0, border: "none !important", verticalAlign: "top" }}
+          >
+            <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
+              <Heading as="h4" sx={sx.sectionHeading}>
+                {fieldTitle}
+              </Heading>
+              <Text sx={sx.helperText}>{parseCustomHtml(fieldSubtitle)}</Text>
+              <Heading as="h5" sx={sx.subsectionHeading}>
+                {fieldLabel}
+              </Heading>
+              <Table
+                content={{
+                  headRow: [tableHeaders.indicator, tableHeaders.response],
+                }}
+                sx={{
+                  ...sxSharedExportStyles.table,
+                  marginTop: "1.5rem",
+                  marginBottom: 0,
+                }}
+              >
+                <ExportedEntityDetailsTableRow
+                  formField={modifiedField as FormField}
+                  pageType={PageTypes.MODAL_OVERLAY}
+                  entityType={entityType}
+                  entityId={entityId}
+                  showHintText={true}
+                />
+              </Table>
+            </Box>
+          </Td>
+        </Tr>
+      );
+      return;
+    }
+
+    // Check if field has a title property only (like Qualitative Methods, Funding Sources, Describe Initiative)
+    if (hasTitle) {
+      const fieldTitle = (formField as any).props.title;
+      const isDescribeInitiative =
+        formField.id === "defineInitiative_describeInitiative";
+      const helperText = isDescribeInitiative
+        ? "Provide initiative description, including target populations and timeframe"
+        : null;
+
+      // Render as: H4 heading -> mini-table
+      tableRows.push(
+        <Tr
+          key={formField.id}
+          sx={{ border: "none !important", borderBottom: "none !important" }}
+        >
+          <Td
+            colSpan={2}
+            sx={{ padding: 0, border: "none !important", verticalAlign: "top" }}
+          >
+            <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
+              <Heading as="h4" sx={sx.sectionHeading}>
+                {fieldTitle}
+              </Heading>
+              {helperText && <Text sx={sx.helperText}>{helperText}</Text>}
+              <Table
+                content={{
+                  headRow: [tableHeaders.indicator, tableHeaders.response],
+                }}
+                sx={{
+                  ...sxSharedExportStyles.table,
+                  marginTop: "1.5rem",
+                  marginBottom: 0,
+                }}
+              >
+                <ExportedEntityDetailsTableRow
+                  formField={formField}
+                  pageType={PageTypes.MODAL_OVERLAY}
+                  entityType={entityType}
+                  entityId={entityId}
+                  showHintText={true}
+                />
+              </Table>
+            </Box>
+          </Td>
+        </Tr>
+      );
+      return;
+    }
+
+    // Normal field rendering
+    tableRows.push(
+      <ExportedEntityDetailsTableRow
+        key={formField.id}
+        formField={formField}
+        pageType={PageTypes.MODAL_OVERLAY}
+        entityType={entityType}
+        entityId={entityId}
+        showHintText={true}
+      />
+    );
+  };
+
+  fields.forEach((field: FormField | FormLayoutElement) => {
+    if ((field as any).forCopyoverOnly) {
+      return;
+    }
+
+    // Skip nested children fields (they're rendered by their parent)
+    if (
+      (field as FormField).validation &&
+      typeof (field as FormField).validation === "object"
+    ) {
+      const validation = (field as FormField).validation as any;
+      if (validation.nested === true) {
+        return;
+      }
+    }
+
+    if ((field as FormField).type) {
+      renderFieldRow(field);
+    }
+  });
+
+  return (
+    <Box sx={sx.v2FieldsContainer}>
+      {tableRows.length > 0 && (
+        <Box sx={sx.fieldsTableContainer}>
+          <Table
+            content={{}}
+            sx={sxSharedExportStyles.table}
+            data-testid="exportTable"
+          >
+            {tableRows}
+          </Table>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
 const sx = {
   entityContainer: {
     "& + &": { marginTop: "spacer4" },
+  },
+  v2FieldsContainer: {
+    marginTop: "spacer4",
+  },
+  fieldsTableContainer: {
+    marginTop: "spacer2",
+  },
+  sectionHeading: {
+    fontSize: "lg",
+    fontWeight: "bold",
+    marginBottom: 0,
+  },
+  subsectionHeading: {
+    fontSize: "md",
+    fontWeight: "bold",
+    marginBottom: 0,
+    marginTop: "spacer2",
+  },
+  helperText: {
+    lineHeight: "lg",
+    fontSize: "sm",
+    color: "gray_dark",
+    marginTop: "spacer2",
+    marginBottom: "spacer2",
   },
   statusIcon: {
     paddingLeft: "spacer_half",
