@@ -557,7 +557,7 @@ const EntityFieldsTable = ({
           <Table
             content={{}}
             sx={sxSharedExportStyles.table}
-            data-testid="exportTable"
+            data-testid="exportFieldsTable"
           >
             {tableRows}
           </Table>
