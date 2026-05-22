@@ -29,6 +29,13 @@ const mockRhfMethods = {
   setValue: jest.fn(),
   getValues: jest.fn(),
   trigger: mockTrigger,
+  formState: {
+    errors: {
+      mockTable_mockServices: {
+        message: "Mock error message",
+      },
+    },
+  },
 };
 const mockUseFormContext = useFormContext as unknown as jest.Mock<
   typeof useFormContext
@@ -410,6 +417,41 @@ describe("<EntityModalTable />", () => {
           expect(closedModal).not.toBeVisible();
         });
       });
+    });
+
+    test("table shows error message", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const errorMessage = screen.getByText("Mock error message");
+      expect(errorMessage).toBeVisible();
+    });
+
+    test("table does not show error message", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        formData: {
+          mockTable_mockServices: [
+            {
+              id: "mockId",
+            },
+          ],
+        },
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const errorMessage = screen.queryByText("Mock error message");
+      expect(errorMessage).not.toBeInTheDocument();
     });
   });
 
