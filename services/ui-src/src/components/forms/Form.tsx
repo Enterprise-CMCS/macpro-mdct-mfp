@@ -323,7 +323,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
       (errors: AnyObject) => {
         const formErrors = Object.keys(errors).filter((key) => {
           const hasTableError = tableFieldIds.includes(key);
-          const hasTableData = formData[key]?.length > 0;
+          const hasTableData = formData?.[key]?.length > 0;
 
           if (hasTableError && hasTableData) {
             // If table has data, clear the error
