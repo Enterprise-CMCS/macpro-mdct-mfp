@@ -260,6 +260,13 @@ export function renderModalOverlayTableBody(
       });
     case ReportType.SAR:
       return entities.map((entity, idx) => {
+        // Check if this is V2 route structure with overlayForm
+        const hasOverlayForm = !!(section as AnyObject).overlayForm;
+        const overlayFormFields =
+          (section as AnyObject).overlayForm?.fields || [];
+        const overlayFormTables =
+          (section as AnyObject).overlayForm?.tables || [];
+
         return (
           <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
             <Flex>
@@ -296,57 +303,73 @@ export function renderModalOverlayTableBody(
                 )}
               </Box>
             </Flex>
-            {dynamicSection[idx].entitySteps.map(
-              (step: any, stepIdx: number) => {
-                switch (step.stepType) {
-                  case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
-                    return (
-                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
-                        <ExportedOverlayModalReportSection
-                          section={dynamicSection[idx] as OverlayModalPageShape}
-                          entity={entity}
-                          entityStep={step}
-                        />
-                      </Box>
-                    );
-                  case EntityDetailsStepTypes.INITIATIVE_PROGRESS:
-                    return (
-                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
-                        <ExportedEntityDetailsOverlaySection
-                          section={step}
-                          entity={entity}
-                          entityStep={step}
-                          showHintText={true}
-                        />
-                      </Box>
-                    );
-                  case EntityDetailsStepTypes.EXPENDITURES: {
-                    const cloneSection = structuredClone(step);
-                    if (cloneSection?.form?.fields)
-                      cloneSection.form.fields = [
-                        cloneSection.form.fields.pop(),
-                      ];
 
-                    const tableSection = structuredClone(step);
-                    if (tableSection?.form?.fields)
-                      tableSection.form.fields.pop();
-
-                    return (
-                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
-                        <ExportedEntityDetailsOverlaySection
-                          section={step}
-                          entity={entity}
-                          entityStep={cloneSection}
-                          tableSection={tableSection}
-                        />
-                      </Box>
-                    );
-                  }
-                  default:
-                    return <Box key={`${step.stepType}${idx}${stepIdx}`}></Box>;
-                }
-              }
+            {/* V2 Route: Render overlayForm fields directly */}
+            {hasOverlayForm && overlayFormFields.length > 0 && (
+              <EntityFieldsTable
+                fields={overlayFormFields}
+                entity={entity}
+                tables={overlayFormTables}
+              />
             )}
+
+            {/* V1: Render entitySteps (deprecated) */}
+            {!hasOverlayForm &&
+              dynamicSection[idx].entitySteps.map(
+                (step: any, stepIdx: number) => {
+                  switch (step.stepType) {
+                    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
+                      return (
+                        <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                          <ExportedOverlayModalReportSection
+                            section={
+                              dynamicSection[idx] as OverlayModalPageShape
+                            }
+                            entity={entity}
+                            entityStep={step}
+                          />
+                        </Box>
+                      );
+                    case EntityDetailsStepTypes.INITIATIVE_PROGRESS:
+                      return (
+                        <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                          <ExportedEntityDetailsOverlaySection
+                            section={step}
+                            entity={entity}
+                            entityStep={step}
+                            showHintText={true}
+                          />
+                        </Box>
+                      );
+                    case EntityDetailsStepTypes.EXPENDITURES: {
+                      const cloneSection = structuredClone(step);
+                      if (cloneSection?.form?.fields)
+                        cloneSection.form.fields = [
+                          cloneSection.form.fields.pop(),
+                        ];
+
+                      const tableSection = structuredClone(step);
+                      if (tableSection?.form?.fields)
+                        tableSection.form.fields.pop();
+
+                      return (
+                        <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                          <ExportedEntityDetailsOverlaySection
+                            section={step}
+                            entity={entity}
+                            entityStep={cloneSection}
+                            tableSection={tableSection}
+                          />
+                        </Box>
+                      );
+                    }
+                    default:
+                      return (
+                        <Box key={`${step.stepType}${idx}${stepIdx}`}></Box>
+                      );
+                  }
+                }
+              )}
           </Box>
         );
       });
@@ -410,6 +433,8 @@ const EntityFieldsTable = ({
 
     const hasTitle = !!(formField as any).props?.title;
     const hasSubtitle = !!(formField as any).props?.subtitle;
+    const hasSectionTitle = !!(formField as any).props?.sectionTitle;
+    const hasSubsectionTitle = !!(formField as any).props?.subsectionTitle;
 
     if (hasTitle && hasSubtitle) {
       const fieldTitle = (formField as any).props.title;
@@ -467,16 +492,17 @@ const EntityFieldsTable = ({
       return;
     }
 
-    // Check if field has a title property only (like Qualitative Methods, Funding Sources, Describe Initiative)
-    if (hasTitle) {
-      const fieldTitle = (formField as any).props.title;
+    // Check if field has a title or sectionTitle property (like Qualitative Methods, Funding Sources, Describe Initiative, Initiative Progress)
+    if (hasTitle || hasSectionTitle) {
+      const fieldTitle =
+        (formField as any).props.title || (formField as any).props.sectionTitle;
       const isDescribeInitiative =
         formField.id === "defineInitiative_describeInitiative";
       const helperText = isDescribeInitiative
         ? "Provide initiative description, including target populations and timeframe"
         : null;
 
-      // Render as: H4 heading -> mini-table
+      // Render as: H4 heading -> optional helper text -> mini-table
       tableRows.push(
         <Tr
           key={formField.id}
@@ -491,6 +517,48 @@ const EntityFieldsTable = ({
                 {fieldTitle}
               </Heading>
               {helperText && <Text sx={sx.helperText}>{helperText}</Text>}
+              <Table
+                content={{
+                  headRow: [tableHeaders.indicator, tableHeaders.response],
+                }}
+                sx={{
+                  ...sxSharedExportStyles.table,
+                  marginTop: "1.5rem",
+                  marginBottom: 0,
+                }}
+              >
+                <ExportedEntityDetailsTableRow
+                  formField={formField}
+                  pageType={PageTypes.MODAL_OVERLAY}
+                  entityType={entityType}
+                  entityId={entityId}
+                  showHintText={true}
+                />
+              </Table>
+            </Box>
+          </Td>
+        </Tr>
+      );
+      return;
+    }
+
+    if (hasSubsectionTitle) {
+      const subsectionTitle = (formField as any).props.subsectionTitle;
+
+      // Render as: H5 heading -> mini-table
+      tableRows.push(
+        <Tr
+          key={formField.id}
+          sx={{ border: "none !important", borderBottom: "none !important" }}
+        >
+          <Td
+            colSpan={2}
+            sx={{ padding: 0, border: "none !important", verticalAlign: "top" }}
+          >
+            <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
+              <Heading as="h5" sx={sx.subsectionHeading}>
+                {subsectionTitle}
+              </Heading>
               <Table
                 content={{
                   headRow: [tableHeaders.indicator, tableHeaders.response],
