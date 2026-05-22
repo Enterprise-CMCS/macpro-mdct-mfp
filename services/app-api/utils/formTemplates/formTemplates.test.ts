@@ -345,7 +345,7 @@ describe("Test formTemplateForReportType legacy WP & SAR", () => {
       ReportType.SAR,
       modernFieldData
     );
-    expect(isLegacySAR(template)).toBeFalsy();
+    expect(isLegacySAR(template)).toBe(false);
   });
 
   it("does not short-circuit feature flagged templates when workPlanFieldData is absent", async () => {

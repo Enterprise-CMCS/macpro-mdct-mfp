@@ -101,7 +101,7 @@ describe("tables/getEntityStatus", () => {
         id: "entity1",
         type: EntityType.INITIATIVE,
         field1: null,
-        field2: [null, { key: "choice1key" }],
+        field2: [{ key: "choice1key" }],
       };
 
       expect(getValidationList(fields, entity)).toEqual([
