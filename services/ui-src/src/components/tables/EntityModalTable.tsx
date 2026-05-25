@@ -63,8 +63,11 @@ export const EntityModalTable = ({
     const errorKey = Object.keys(formErrorState).find((key) =>
       key.startsWith(tableId)
     );
+    const currentFormData = report?.fieldData?.[formData?.type]?.find(
+      (t: AnyObject) => t.id === formData?.id
+    );
 
-    if (!errorKey || formData?.[errorKey]?.length > 0) {
+    if (!errorKey || currentFormData?.[errorKey]?.length > 0) {
       setErrorMessage(undefined);
       return;
     }
@@ -171,6 +174,7 @@ export const EntityModalTable = ({
               row,
               rowIndex,
               section: "thead",
+              showEditHeader: true,
               styleAsOptionalHeadRows: styleAsOptionalHeadRows,
               ...sharedCellProps,
             })

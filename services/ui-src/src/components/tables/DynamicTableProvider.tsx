@@ -307,6 +307,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     row,
     rowIndex,
     section,
+    showEditHeader = false,
     showEditColumn = true,
     styleAsOptionalHeadRows = [],
     tableId,
@@ -347,8 +348,12 @@ export const DynamicTableProvider = ({ children }: any) => {
     };
 
     const Cell = section === "thead" ? Th : Td;
-    const content =
-      section === "thead" ? <VisuallyHidden>Options</VisuallyHidden> : null;
+    const actionLabel = showEditHeader ? (
+      "Actions"
+    ) : (
+      <VisuallyHidden>Actions</VisuallyHidden>
+    );
+    const content = section === "thead" ? actionLabel : null;
     const rowId = section === "tbody" ? "thead" : section;
 
     const isOptional = (cell: FormTableCell) => {
@@ -602,6 +607,7 @@ interface GenerateRows {
   rowIndex: number;
   section: string;
   showEditColumn?: boolean;
+  showEditHeader?: boolean;
   styleAsOptionalHeadRows?: string[];
   tableId?: string;
 }
