@@ -36,7 +36,7 @@ const mockRhfMethods = {
   trigger: mockTrigger,
   formState: {
     errors: {
-      mockTable_mockServices: {
+      mockTable_mockServices_errorTable: {
         message: "Mock error message",
       },
     },
@@ -448,11 +448,24 @@ describe("<EntityModalTable />", () => {
       const updatedProps = {
         ...mockProps,
         formData: {
-          mockTable_mockServices: [
-            {
-              id: "mockId",
-            },
-          ],
+          id: "mockId",
+          type: "mockTable_mockServices",
+        },
+        report: {
+          fieldData: {
+            mockTable_mockServices: [
+              {
+                id: "mockId",
+                type: "mockTable_mockServices",
+                mockTable_mockServices_errorTable: [
+                  {
+                    id: "mockErrorId",
+                    type: "mockTable_mockServices_errorTable",
+                  },
+                ],
+              },
+            ],
+          },
         },
         dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
       };
