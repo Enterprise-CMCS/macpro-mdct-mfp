@@ -75,7 +75,18 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
           tableType: FormTableType.ENTITY_MODAL,
           verbiage: {
             sectionTitle: "Initiative Evaluation",
-            subtitle: "Auto-populated from the previous Work Plan.",
+            subtitle: [
+              {
+                type: "p",
+                content:
+                  "Enter quantitative findings in the actuals field if any findings were recorded during this reporting period.",
+              },
+              {
+                type: "p",
+                content:
+                  "Performance indicator data is auto-populated from the previous Work Plan.",
+              },
+            ],
             title: "Key Metrics",
           },
         },
@@ -92,6 +103,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
             },
           },
           props: {
+            hint: "Reference the initiative’s purpose, goals, and key activities from the MFP Work Plan. In the sections that follow, you will have an opportunity to provide updates on the key metrics and performance measures.",
             label:
               "Describe any progress made under this initiative during the reporting period.",
             maxLength: 1800,
@@ -108,6 +120,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
             },
           },
           props: {
+            hint: "If your state or territory has not achieved the targets/benchmarks for performance indicators or the projected date set in the initiative’s evaluation plan, describe the barriers or challenges that have hindered progress and your plans to address them. Include any planned discussions with your CMS Project Officers around these challenges and what potential changes may be made to the initiative.",
             label:
               "Describe any issues or challenges that have impacted the development and implementation of the initiative during the reporting period.",
             maxLength: 1800,
@@ -127,7 +140,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
             },
           },
           props: {
-            label: "Describe any qualitative detailed in your Work Plan.",
+            label: "Describe any qualitative detailed in your Work Plan",
             maxLength: 1800,
             subsectionTitle: "Findings and Sustainability",
           },
@@ -137,6 +150,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
           type: ReportFormFieldType.RADIO,
           validation: ValidationType.RADIO,
           props: {
+            hint: "Please describe your selection of Yes, No, or Partially. Explain whether you accomplished what you planned and provide any additional qualitative or quantitative findings not reported above to support your selection.",
             label: "Did the initiative achieve its expected results?",
             choices: [
               {
@@ -219,80 +233,20 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
           type: ReportFormFieldType.RADIO,
           validation: ValidationType.RADIO,
           props: {
-            label:
-              "Do you plan to sustain this initiative beyond the grant period?",
+            hint: "States and territories have multiple programs and options available to sustain the great work conducted through the MFP demonstration grant. These options could include incorporating successes and lessons learned into other HCBS authorities or the Rural Health Transformation Program, using state rebalancing funds to support transitions from institutions to community-based care, or using other Medicaid program funding to carry on the success of MFP initiatives.<br><br>Select “yes” for initiatives in which the MFP recipient has secured funding and staff to continue supporting the initiative. Select “unsure” for initiatives in which the MFP recipient is awaiting further internal discussion or decisions about the future of the initiative. Otherwise, select “no.”",
+            label: "Do you plan to sustain this initiative?",
             choices: [
               {
                 id: "a18b25AS9qTaHgs6Nf7bP8",
                 label: "Yes",
-                children: [
-                  {
-                    id: "initiativeEvaluation_sustainBeyondGrantPeriod_describeYes",
-                    type: ReportFormFieldType.TEXTAREA,
-                    validation: {
-                      type: ValidationType.TEXT_CUSTOM,
-                      options: {
-                        maxLength: 1800,
-                      },
-                      nested: true,
-                      parentFieldName:
-                        "initiativeEvaluation_sustainBeyondGrantPeriod",
-                      parentOptionId: "a18b25AS9qTaHgs6Nf7bP8",
-                    },
-                    props: {
-                      label: "Please describe:",
-                      maxLength: 1800,
-                    },
-                  },
-                ],
               },
               {
                 id: "VyoPjoZU5j7VKS5BeRyfRt",
                 label: "No",
-                children: [
-                  {
-                    id: "initiativeEvaluation_sustainBeyondGrantPeriod_describeNo",
-                    type: ReportFormFieldType.TEXTAREA,
-                    validation: {
-                      type: ValidationType.TEXT_CUSTOM,
-                      options: {
-                        maxLength: 1800,
-                      },
-                      nested: true,
-                      parentFieldName:
-                        "initiativeEvaluation_sustainBeyondGrantPeriod",
-                      parentOptionId: "VyoPjoZU5j7VKS5BeRyfRt",
-                    },
-                    props: {
-                      label: "Please describe:",
-                      maxLength: 1800,
-                    },
-                  },
-                ],
               },
               {
                 id: "78sKnhsJFcaGZ41JDiq1mB",
                 label: "Unsure",
-                children: [
-                  {
-                    id: "initiativeEvaluation_sustainBeyondGrantPeriod_describeUnsure",
-                    type: ReportFormFieldType.TEXTAREA,
-                    validation: {
-                      type: ValidationType.TEXT_CUSTOM,
-                      options: {
-                        maxLength: 1800,
-                      },
-                      nested: true,
-                      parentFieldName:
-                        "initiativeEvaluation_sustainBeyondGrantPeriod",
-                      parentOptionId: "78sKnhsJFcaGZ41JDiq1mB",
-                    },
-                    props: {
-                      label: "Please describe:",
-                      maxLength: 1800,
-                    },
-                  },
-                ],
               },
             ],
           },
@@ -309,13 +263,24 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
           },
           props: {
             label:
-              "Describe how you will use the evaluation results for program improvement or decision-making:",
+              "Describe how you will use the evaluation results for program improvement or decision-making",
             maxLength: 1800,
             subsectionTitle: "Use of Findings",
           },
         },
       ],
-      verbiage: {},
+      verbiage: {
+        accordion: {
+          buttonLabel: "Instructions",
+          text: [
+            {
+              type: "p",
+              content:
+                "Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, recipients must report on the progress toward addressing the gap, challenge, or opportunity that the initiative aims to address, as described in the MFP Work Plan. Progress toward these gaps, challenges, or opportunities indicates the state or territory’s greater ability to provide HCBS instead of services in institutional settings.",
+            },
+          ],
+        },
+      },
     },
     verbiage: {
       // Dashboard
@@ -323,57 +288,15 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
       intro: {
         info: [
           {
-            type: "h3",
-            content: "Report progress for each initiative",
-          },
-          {
             type: "p",
             content:
               "Your initiatives are auto-populated from your most recent approved MFP Work Plan.",
           },
           {
             type: "p",
-            content:
-              "Recipients must report on the progress of initiatives that were ongoing during the current reporting period. For each initiative, enter information on expenditures and activities, whether continuing from prior reporting periods or initiated during this reporting period.",
-          },
-          {
-            type: "p",
-            content:
-              "For each initiative, recipients must report on the progress toward achieving the objective(s) identified in the initiative’s evaluation plan, as described in the MFP Work Plan. Progress toward these objectives indicates the state or territory’s greater ability to provide HCBS instead of services in institutional settings.",
-          },
-          {
-            type: "p",
-            content:
-              "If your state or territory has not achieved the targets for performance measures or expected time frames for deliverables set in the initiative’s evaluation plan, use the following questions to explain the barriers or challenges that have hindered progress and describe plans to address them.",
+            content: "Select an initiative below to report the status.",
           },
         ],
-        introAccordion: {
-          buttonLabel: "Instructions",
-          intro: [
-            {
-              type: "html",
-              content:
-                "This section requests information on current, new, or expanded initiatives implemented under the MFP demonstration. These initiatives can be funded using one or more of these funding sources:",
-            },
-          ],
-          list: [
-            "MFP cooperative agreement funds for:",
-            [
-              "Qualified home and community-based services (HCBS) and demonstration services",
-              "Supplemental services",
-              "Administrative activities",
-              "Capacity building initiatives",
-            ],
-            "State/Territory equivalent funds attributable to the MFP-enhanced match",
-          ],
-          text: [
-            {
-              type: "html",
-              content:
-                "State or territory-specific initiatives are a distinct set of activities designed to increase the use of HCBS rather than institutional long-term services and supports (LTSS). These initiatives are specified in your MFP Work Plan and imported into the form below.",
-            },
-          ],
-        },
         section: "",
         subsection: "State or Territory-Specific Initiatives",
       },
