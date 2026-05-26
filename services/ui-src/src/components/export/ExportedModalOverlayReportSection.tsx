@@ -4,6 +4,9 @@ import {
   useStore,
   renderEntityTables,
   parseCustomHtml,
+  updateRenderFields,
+  isFieldElement,
+  parseFormFieldInfo,
 } from "utils";
 // components
 import {
@@ -155,10 +158,17 @@ export function renderModalOverlayTableBody(
 
         // Check if V2
         const hasOverlayForm = !!(section as AnyObject).overlayForm;
-        const overlayFormFields =
+        const rawOverlayFormFields =
           (section as AnyObject).overlayForm?.fields || [];
         const overlayFormTables =
           (section as AnyObject).overlayForm?.tables || [];
+
+        // Process fields to inject target populations and other dynamic data
+        const overlayFormFields = updateRenderFields(
+          report,
+          rawOverlayFormFields,
+          entity
+        );
 
         return (
           <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
@@ -260,6 +270,20 @@ export function renderModalOverlayTableBody(
       });
     case ReportType.SAR:
       return entities.map((entity, idx) => {
+        // Check if V2
+        const hasOverlayForm = !!(
+          dynamicSection && dynamicSection[idx]?.overlayForm
+        );
+        const rawOverlayFormFields =
+          (dynamicSection && dynamicSection[idx]?.overlayForm?.fields) || [];
+        const overlayFormTables =
+          (dynamicSection && dynamicSection[idx]?.overlayForm?.tables) || [];
+
+        // Process fields to inject target populations and other dynamic data
+        const overlayFormFields = hasOverlayForm
+          ? updateRenderFields(report, rawOverlayFormFields, entity)
+          : [];
+
         return (
           <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
             <Flex>
@@ -296,57 +320,74 @@ export function renderModalOverlayTableBody(
                 )}
               </Box>
             </Flex>
-            {dynamicSection[idx].entitySteps.map(
-              (step: any, stepIdx: number) => {
-                switch (step.stepType) {
-                  case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
-                    return (
-                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
-                        <ExportedOverlayModalReportSection
-                          section={dynamicSection[idx] as OverlayModalPageShape}
-                          entity={entity}
-                          entityStep={step}
-                        />
-                      </Box>
-                    );
-                  case EntityDetailsStepTypes.INITIATIVE_PROGRESS:
-                    return (
-                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
-                        <ExportedEntityDetailsOverlaySection
-                          section={step}
-                          entity={entity}
-                          entityStep={step}
-                          showHintText={true}
-                        />
-                      </Box>
-                    );
-                  case EntityDetailsStepTypes.EXPENDITURES: {
-                    const cloneSection = structuredClone(step);
-                    if (cloneSection?.form?.fields)
-                      cloneSection.form.fields = [
-                        cloneSection.form.fields.pop(),
-                      ];
 
-                    const tableSection = structuredClone(step);
-                    if (tableSection?.form?.fields)
-                      tableSection.form.fields.pop();
-
-                    return (
-                      <Box key={`${step.stepType}${idx}${stepIdx}`}>
-                        <ExportedEntityDetailsOverlaySection
-                          section={step}
-                          entity={entity}
-                          entityStep={cloneSection}
-                          tableSection={tableSection}
-                        />
-                      </Box>
-                    );
-                  }
-                  default:
-                    return <Box key={`${step.stepType}${idx}${stepIdx}`}></Box>;
-                }
-              }
+            {/* V2 Route: Render overlayForm fields directly */}
+            {hasOverlayForm && overlayFormFields.length > 0 && (
+              <EntityFieldsTable
+                fields={overlayFormFields}
+                entity={entity}
+                tables={overlayFormTables}
+              />
             )}
+
+            {/* V1: Render entitySteps (deprecated) */}
+            {!hasOverlayForm &&
+              dynamicSection &&
+              dynamicSection[idx].entitySteps.map(
+                (step: any, stepIdx: number) => {
+                  switch (step.stepType) {
+                    case OverlayModalStepTypes.OBJECTIVE_PROGRESS:
+                      return (
+                        <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                          <ExportedOverlayModalReportSection
+                            section={
+                              dynamicSection[idx] as OverlayModalPageShape
+                            }
+                            entity={entity}
+                            entityStep={step}
+                          />
+                        </Box>
+                      );
+                    case EntityDetailsStepTypes.INITIATIVE_PROGRESS:
+                      return (
+                        <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                          <ExportedEntityDetailsOverlaySection
+                            section={step}
+                            entity={entity}
+                            entityStep={step}
+                            showHintText={true}
+                          />
+                        </Box>
+                      );
+                    case EntityDetailsStepTypes.EXPENDITURES: {
+                      const cloneSection = structuredClone(step);
+                      if (cloneSection?.form?.fields)
+                        cloneSection.form.fields = [
+                          cloneSection.form.fields.pop(),
+                        ];
+
+                      const tableSection = structuredClone(step);
+                      if (tableSection?.form?.fields)
+                        tableSection.form.fields.pop();
+
+                      return (
+                        <Box key={`${step.stepType}${idx}${stepIdx}`}>
+                          <ExportedEntityDetailsOverlaySection
+                            section={step}
+                            entity={entity}
+                            entityStep={cloneSection}
+                            tableSection={tableSection}
+                          />
+                        </Box>
+                      );
+                    }
+                    default:
+                      return (
+                        <Box key={`${step.stepType}${idx}${stepIdx}`}></Box>
+                      );
+                  }
+                }
+              )}
           </Box>
         );
       });
@@ -406,6 +447,68 @@ const EntityFieldsTable = ({
         );
       }
       return;
+    }
+
+    // Check if this is a radio/checkbox field with nested children
+    const hasNestedChildren =
+      isFieldElement(formField) &&
+      formField.props?.choices &&
+      formField.props.choices.some((choice: any) => choice.children);
+
+    // If field has nested children, render with custom logic to show child values
+    if (hasNestedChildren && formField.props) {
+      const parentFieldValue = entity[formField.id];
+
+      // Find the selected choice
+      const selectedChoice = Array.isArray(parentFieldValue)
+        ? parentFieldValue[0]
+        : null;
+
+      if (selectedChoice?.key) {
+        // Extract the choice ID from the key (format: "fieldName-choiceId")
+        const selectedChoiceId = selectedChoice.key.split("-").pop();
+
+        // Find the choice definition that matches the selected ID and has children
+        const choiceWithChildren = formField.props.choices.find(
+          (choice: any) => choice.id === selectedChoiceId && choice.children
+        );
+
+        if (
+          choiceWithChildren?.children &&
+          choiceWithChildren.children.length > 0
+        ) {
+          // Get the nested child field (there should be only one child per choice)
+          const childField = choiceWithChildren.children[0];
+          const childValue = entity[childField.id];
+
+          // Render the parent field with the child value displayed
+          const formFieldInfo = parseFormFieldInfo(formField?.props);
+          tableRows.push(
+            <Tr key={formField.id} data-testid="exportRow">
+              <Td sx={{ width: "14rem" }}>
+                <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
+                  {formFieldInfo.label}
+                </Text>
+                {formFieldInfo.hint && (
+                  <Text
+                    sx={{
+                      lineHeight: "lg",
+                      fontSize: "sm",
+                      color: "gray_dark",
+                    }}
+                  >
+                    {parseCustomHtml(formFieldInfo.hint)}
+                  </Text>
+                )}
+              </Td>
+              <Td>
+                <Text>{childValue || "Not answered"}</Text>
+              </Td>
+            </Tr>
+          );
+          return;
+        }
+      }
     }
 
     const hasTitle = !!(formField as any).props?.title;
@@ -534,13 +637,29 @@ const EntityFieldsTable = ({
       return;
     }
 
-    // Skip nested children fields (they're rendered by their parent)
+    // Handle nested children fields - check if parent choice is selected before rendering
     if (
       (field as FormField).validation &&
       typeof (field as FormField).validation === "object"
     ) {
       const validation = (field as FormField).validation as any;
       if (validation.nested === true) {
+        // Check if the parent choice that contains this field is selected
+        const parentFieldId = validation.parentFieldName;
+        const parentOptionId = validation.parentOptionId;
+
+        if (parentFieldId && parentOptionId && entity[parentFieldId]) {
+          const parentValue = entity[parentFieldId];
+          // Check if this parent choice is selected - do exact match on the key
+          const isParentChoiceSelected =
+            Array.isArray(parentValue) &&
+            parentValue.some((choice: any) => choice.key === parentOptionId);
+
+          // Only render if parent choice is selected
+          if (isParentChoiceSelected) {
+            renderFieldRow(field);
+          }
+        }
         return;
       }
     }
