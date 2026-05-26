@@ -239,14 +239,74 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
               {
                 id: "a18b25AS9qTaHgs6Nf7bP8",
                 label: "Yes",
+                children: [
+                  {
+                    id: "initiativeEvaluation_sustainBeyondGrantPeriod_describeYes",
+                    type: ReportFormFieldType.TEXTAREA,
+                    validation: {
+                      type: ValidationType.TEXT_CUSTOM,
+                      options: {
+                        maxLength: 1800,
+                      },
+                      nested: true,
+                      parentFieldName:
+                        "initiativeEvaluation_sustainBeyondGrantPeriod",
+                      parentOptionId: "a18b25AS9qTaHgs6Nf7bP8",
+                    },
+                    props: {
+                      label: "Please describe:",
+                      maxLength: 1800,
+                    },
+                  },
+                ],
               },
               {
                 id: "VyoPjoZU5j7VKS5BeRyfRt",
                 label: "No",
+                children: [
+                  {
+                    id: "initiativeEvaluation_sustainBeyondGrantPeriod_describeNo",
+                    type: ReportFormFieldType.TEXTAREA,
+                    validation: {
+                      type: ValidationType.TEXT_CUSTOM,
+                      options: {
+                        maxLength: 1800,
+                      },
+                      nested: true,
+                      parentFieldName:
+                        "initiativeEvaluation_sustainBeyondGrantPeriod",
+                      parentOptionId: "VyoPjoZU5j7VKS5BeRyfRt",
+                    },
+                    props: {
+                      label: "Please describe:",
+                      maxLength: 1800,
+                    },
+                  },
+                ],
               },
               {
                 id: "78sKnhsJFcaGZ41JDiq1mB",
                 label: "Unsure",
+                children: [
+                  {
+                    id: "initiativeEvaluation_sustainBeyondGrantPeriod_describeUnsure",
+                    type: ReportFormFieldType.TEXTAREA,
+                    validation: {
+                      type: ValidationType.TEXT_CUSTOM,
+                      options: {
+                        maxLength: 1800,
+                      },
+                      nested: true,
+                      parentFieldName:
+                        "initiativeEvaluation_sustainBeyondGrantPeriod",
+                      parentOptionId: "78sKnhsJFcaGZ41JDiq1mB",
+                    },
+                    props: {
+                      label: "Please describe:",
+                      maxLength: 1800,
+                    },
+                  },
+                ],
               },
             ],
           },
