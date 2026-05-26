@@ -129,7 +129,7 @@ describe("<Form />", () => {
     expect(entityModalInput).toBeVisible();
 
     const fieldHeading = screen.getByRole("heading", {
-      level: 3,
+      level: 2,
       name: "Mock field title",
     });
     expect(fieldHeading).toBeVisible();
