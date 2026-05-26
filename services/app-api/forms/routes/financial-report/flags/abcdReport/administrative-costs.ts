@@ -193,7 +193,7 @@ const subRecipientModalFieldsSettings = {
   },
   [ServiceFieldType.DESCRIPTION]: {
     props: {
-      hint: "Describe in 100 characters or less the type of work this sub recipient does for your state or territory. Include the scope of their work, including which MFP populations the sub recipient supports, and the activities and deliverables the sub recipient completes. Note how the sub recipient’s work supports the goals of the MFP program.",
+      hint: "Provide a brief description of the work this subrecipient performs for your state or territory (100 characters or fewer). Include key details about the scope of their work, MFP populations served, activities performed, and deliverables completed. If you reach the character limit, alternatively reference the section of MFP Worksheet for Proposed Budget where this information is described.",
       label: "Describe Statement of Work (SOW)",
       maxLength: 100,
     },
