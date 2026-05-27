@@ -326,7 +326,7 @@ export const sx = {
     marginTop: "spacer4",
   },
   embeddedEntityTable: {
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
     marginBottom: 0,
   },
   entityTableHeading: {
@@ -336,7 +336,8 @@ export const sx = {
   },
   tableCommonStyle: {
     "& th, & td": {
-      padding: "0.75rem 0.5rem",
+      paddingX: "spacer1",
+      paddingY: "spacer2",
       fontSize: "sm",
     },
     "& thead tr": {

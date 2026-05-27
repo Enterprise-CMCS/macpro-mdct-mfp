@@ -430,10 +430,15 @@ const EntityFieldsTable = ({
       return;
     }
 
-    const hasTitle = !!(formField as any).props?.title;
-    const hasSubtitle = !!(formField as any).props?.subtitle;
-    const hasSectionTitle = !!(formField as any).props?.sectionTitle;
-    const hasSubsectionTitle = !!(formField as any).props?.subsectionTitle;
+    const fieldProps = formField.props || {};
+
+    const fieldTitle = fieldProps.title;
+    const fieldSubtitle = fieldProps.subtitle;
+
+    const hasTitle = Boolean(fieldTitle);
+    const hasSubtitle = Boolean(fieldSubtitle);
+    const hasSectionTitle = Boolean(fieldProps.sectionTitle);
+    const hasSubsectionTitle = Boolean(fieldProps.subsectionTitle);
 
     if (hasTitle && hasSubtitle) {
       const fieldTitle = (formField as any).props.title;
