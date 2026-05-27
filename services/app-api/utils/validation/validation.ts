@@ -77,7 +77,10 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
 // return created endDate schema
 export const makeEndDateFieldSchema = (fieldValidationObject: AnyObject) => {
   const { dependentFieldName } = fieldValidationObject;
-  return endDate(dependentFieldName);
+  const fields = Array.isArray(dependentFieldName)
+    ? dependentFieldName
+    : [dependentFieldName];
+  return endDate(fields);
 };
 
 // return created nested field schema

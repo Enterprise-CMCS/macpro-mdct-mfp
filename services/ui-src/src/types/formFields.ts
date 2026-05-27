@@ -89,7 +89,7 @@ export interface CustomFieldValidation {
 
 export interface DependentFieldValidation {
   type: string;
-  dependentFieldName: string;
+  dependentFieldName: string | string[];
   options?: never;
   parentOptionId?: never;
 }
@@ -104,7 +104,7 @@ export interface NestedFieldValidation {
 
 export interface NestedDependentFieldValidation {
   type: string;
-  dependentFieldName: string;
+  dependentFieldName: string | string[];
   options?: never;
   nested: true;
   parentFieldName: string;

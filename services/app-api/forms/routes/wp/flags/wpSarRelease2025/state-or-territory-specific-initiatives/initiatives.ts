@@ -180,8 +180,7 @@ const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   },
   dynamicRowId: keyMetricsDynamicRowId,
   label: "Key Metrics",
-  // TODO: Change to true when table statusing is figured out
-  required: false,
+  required: true,
   verbiage: {
     buttonText: "Add key metric",
     hint: "",
@@ -329,7 +328,10 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         type: ReportFormFieldType.DATE,
         validation: {
           type: ValidationType.END_DATE,
-          dependentFieldName: "defineInitiative_expectedStartDate_value",
+          dependentFieldName: [
+            "defineInitiative_actualStartDate_value",
+            "defineInitiative_expectedStartDate_value",
+          ],
         },
         props: {
           label:
