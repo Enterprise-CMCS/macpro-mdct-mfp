@@ -233,6 +233,7 @@ export const mockBadTablesForm = {
   ...mockTablesForm,
   tables: [
     {
+      ...mockTablesForm.tables[0],
       tableType: "badType",
     },
   ],

@@ -1,4 +1,5 @@
 import {
+  BaseSyntheticEvent,
   forwardRef,
   Fragment,
   ReactNode,
@@ -39,6 +40,7 @@ import {
   getFieldParts,
   hydrateFormFields,
   isFieldElement,
+  isTableField,
   labelTextWithOptional,
   mapValidationTypesToSchema,
   parseCustomHtml,
@@ -87,9 +89,11 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     location.pathname.startsWith("/sar/recruitment-enrollment-transitions");
 
   // create validation schema
-  const formValidationJson = compileValidationJsonFromFields(
-    fields.filter(isFieldElement).filter((f: FormField) => !f.forTableOnly)
-  );
+  const allFields = fields.filter(isFieldElement);
+  const tableFieldIds = allFields
+    .filter(isTableField)
+    .map((f: FormField) => f.id);
+  const formValidationJson = compileValidationJsonFromFields(allFields);
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
   const formResolverSchema = yupSchema(formValidationSchema || {});
 
@@ -110,13 +114,19 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     // focus the first error on the page and scroll to it
     const firstError = sortedErrors[0];
 
-    // Get input with aria-invalid; choice lists don't use aria-invalid
-    const fieldToFocus = (document.querySelector(
+    // Get input with aria-invalid
+    const elementByNameAndAria = document.querySelector(
       `[name^='${firstError}'][aria-invalid="true"]`
-    ) ||
-      document.querySelector(
-        `[name^='${firstError}']`
-      )) as HTMLInputElement | null;
+    );
+    // Choice lists don't use aria-invalid
+    const elementByName = document.querySelector(`[name^='${firstError}']`);
+    // Use element id for table
+    const { tableId } = getFieldParts(firstError);
+    const elementById = document.getElementById(tableId);
+
+    const fieldToFocus = (elementByNameAndAria ||
+      elementByName ||
+      elementById) as HTMLInputElement | null;
 
     fieldToFocus?.scrollIntoView({ behavior: "smooth", block: "center" });
     fieldToFocus?.focus({ preventScroll: true });
@@ -256,7 +266,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     const renderedFieldsAndTables = fields.map((field, index) => {
       const { tableId } = getFieldParts(field.id);
 
-      if (field.forTableOnly) {
+      if (isTableField(field)) {
         const table = tables.find((t) => t.id === tableId);
         if (!table || renderedTableIds.has(tableId)) {
           return null;
@@ -305,8 +315,37 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   };
 
   const FormTag = nestedForm ? "fieldset" : "form";
+  const submit = (e?: BaseSyntheticEvent) => {
+    e?.preventDefault();
 
-  const submit = form.handleSubmit(onSubmit as any, onError || onErrorHandler);
+    form.handleSubmit(
+      (data) => onSubmit(data),
+      (errors: AnyObject) => {
+        const formErrors = Object.keys(errors).filter((key) => {
+          const currentFormData = report?.fieldData?.[formData.type]?.find(
+            (t: AnyObject) => t.id === formData.id
+          );
+          const hasTableError = tableFieldIds.includes(key);
+          const hasTableData = currentFormData?.[key]?.length > 0;
+
+          if (hasTableError && hasTableData) {
+            // If table has data, clear the error
+            form.clearErrors(key);
+            return false;
+          }
+
+          return true;
+        });
+
+        if (formErrors.length === 0) {
+          onSubmit(form.getValues());
+          return;
+        }
+
+        onError ? onError(errors) : onErrorHandler(errors);
+      }
+    )(e);
+  };
 
   // Submit fieldset ref like a form
   useImperativeHandle(

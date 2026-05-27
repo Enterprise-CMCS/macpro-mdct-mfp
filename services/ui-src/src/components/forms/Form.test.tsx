@@ -1,14 +1,17 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+// components
 import { Form } from "components";
+// utils
+import { useStore } from "utils";
+import { testA11yAct } from "utils/testing/commonTests";
+import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
 import {
   mockBadTablesForm,
   mockForm,
   mockTablesForm,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { testA11yAct } from "utils/testing/commonTests";
-import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
-import { useStore } from "utils";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
@@ -68,7 +71,22 @@ describe("<Form />", () => {
     expect(form).toBeEnabled();
   });
 
+  test("submitting incomplete form shows errors", async () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
+    render(formComponent());
+    const submitButton = screen.getByRole("button", {
+      name: "Submit",
+    });
+    await act(async () => {
+      await userEvent.click(submitButton);
+    });
+
+    const errorMessage = screen.getAllByText("A response is required");
+    expect(errorMessage).toHaveLength(3);
+  });
+
   test("form tables are visible", () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
     render(formComponent(mockTablesForm));
 
     const tables = screen.getAllByRole("table");
@@ -136,6 +154,7 @@ describe("<Form />", () => {
   });
 
   test("bad table type is skipped", () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
     render(formComponent(mockBadTablesForm));
 
     const table = screen.queryByRole("table");

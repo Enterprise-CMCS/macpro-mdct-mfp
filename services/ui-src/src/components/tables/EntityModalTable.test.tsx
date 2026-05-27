@@ -2,7 +2,11 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
-import { DynamicTableProvider, EntityModalTable } from "components";
+import {
+  DynamicTableProvider,
+  EntityModalTable,
+  ReportContext,
+} from "components";
 // types
 import {
   EntityType,
@@ -18,6 +22,7 @@ import {
   mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
   mockStateUserStore,
+  mockWpReportContext,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
@@ -29,6 +34,13 @@ const mockRhfMethods = {
   setValue: jest.fn(),
   getValues: jest.fn(),
   trigger: mockTrigger,
+  formState: {
+    errors: {
+      mockTable_mockServices_errorTable: {
+        message: "Mock error message",
+      },
+    },
+  },
 };
 const mockUseFormContext = useFormContext as unknown as jest.Mock<
   typeof useFormContext
@@ -215,9 +227,11 @@ const mockProps = {
 
 const tableComponent = (props = mockProps) => (
   <RouterWrappedComponent>
-    <DynamicTableProvider>
-      <EntityModalTable {...props} />
-    </DynamicTableProvider>
+    <ReportContext.Provider value={mockWpReportContext}>
+      <DynamicTableProvider>
+        <EntityModalTable {...props} />
+      </DynamicTableProvider>
+    </ReportContext.Provider>
   </RouterWrappedComponent>
 );
 
@@ -410,6 +424,89 @@ describe("<EntityModalTable />", () => {
           expect(closedModal).not.toBeVisible();
         });
       });
+    });
+  });
+
+  describe("error message", () => {
+    test("table shows error message", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const errorMessage = screen.getByText("Mock error message");
+      expect(errorMessage).toBeVisible();
+    });
+
+    test("table does not show error message", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        formData: {
+          id: "mockId",
+          type: "mockTable_mockServices",
+        },
+        report: {
+          fieldData: {
+            mockTable_mockServices: [
+              {
+                id: "mockId",
+                type: "mockTable_mockServices",
+                mockTable_mockServices_errorTable: [
+                  {
+                    id: "mockErrorId",
+                    type: "mockTable_mockServices_errorTable",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const errorMessage = screen.queryByText("Mock error message");
+      expect(errorMessage).not.toBeInTheDocument();
+    });
+
+    test("saving in modal clears error message", async () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const errorMessage = screen.getByText("Mock error message");
+      expect(errorMessage).toBeVisible();
+
+      const button = screen.getByRole("button", {
+        name: "Mock dynamic row button",
+      });
+      await userEvent.click(button);
+
+      const modal = screen.getByRole("dialog", { name: "Add mock heading" });
+      await waitFor(() => {
+        expect(modal).toBeVisible();
+      });
+
+      const saveButton = screen.getByRole("button", {
+        name: "Save",
+      });
+      await act(async () => {
+        await userEvent.click(saveButton);
+      });
+
+      expect(errorMessage).not.toBeInTheDocument();
     });
   });
 
