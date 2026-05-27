@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { Table, Tbody } from "@chakra-ui/react";
 import { TableRow } from "./TableRow";
 //types
-import { ReportPageProgress } from "types";
+import { ReportPageProgress, ReportType } from "types";
 // utils
 import { useStore } from "utils";
 import {
@@ -78,18 +78,107 @@ describe("<TableRow />", () => {
     expect(screen.queryByAltText("Success notification")).toBeNull();
   });
 
-  test("TableRow does not display success status for Financial Reporting Form page", () => {
-    mockedUseStore.mockReturnValue(mockUseStore);
+  test("TableRow displays success status for Financial Reporting Form General Information page", () => {
+    mockedUseStore.mockReturnValue({
+      report: {
+        reportType: ReportType.FINANCIAL_REPORT,
+      },
+    });
     render(
       tableRowComponent({
-        page: mockFinancialReportingFormTableRowPage,
+        page: {
+          ...mockFinancialReportingFormTableRowPage,
+          status: true,
+        },
         rowDepth: 0,
       })
     );
     expect(
       screen.getByText(mockFinancialReportingFormTableRowPage.name)
     ).toBeVisible();
+    expect(screen.getByAltText("Success notification")).toBeVisible();
+  });
+
+  test("TableRow displays error status for Financial Reporting Form General Information page", () => {
+    mockedUseStore.mockReturnValue({
+      report: {
+        reportType: ReportType.FINANCIAL_REPORT,
+      },
+    });
+    render(
+      tableRowComponent({
+        page: {
+          ...mockFinancialReportingFormTableRowPage,
+          status: false,
+        },
+        rowDepth: 0,
+      })
+    );
+    expect(
+      screen.getByText(mockFinancialReportingFormTableRowPage.name)
+    ).toBeVisible();
+    expect(screen.getByAltText("Error notification")).toBeVisible();
+  });
+
+  test("TableRow displays success status for Financial Reporting Form FMAP page", () => {
+    mockedUseStore.mockReturnValue({
+      report: {
+        reportType: ReportType.FINANCIAL_REPORT,
+      },
+    });
+    render(
+      tableRowComponent({
+        page: {
+          ...mockFinancialReportingFormTableRowPage,
+          path: "/financial-report/fmap-percentages",
+          status: true,
+        },
+        rowDepth: 0,
+      })
+    );
+    expect(
+      screen.getByText(mockFinancialReportingFormTableRowPage.name)
+    ).toBeVisible();
+    expect(screen.getByAltText("Success notification")).toBeVisible();
+  });
+
+  test("TableRow displays error status for Financial Reporting Form FMAP page", () => {
+    mockedUseStore.mockReturnValue({
+      report: {
+        reportType: ReportType.FINANCIAL_REPORT,
+      },
+    });
+    render(
+      tableRowComponent({
+        page: {
+          ...mockFinancialReportingFormTableRowPage,
+          path: "/financial-report/fmap-percentages",
+          status: false,
+        },
+        rowDepth: 0,
+      })
+    );
+    expect(
+      screen.getByText(mockFinancialReportingFormTableRowPage.name)
+    ).toBeVisible();
+    expect(screen.getByAltText("Error notification")).toBeVisible();
+  });
+
+  test("TableRow does not display status for other Financial Reporting Form pages", () => {
+    mockedUseStore.mockReturnValue({
+      report: {
+        reportType: ReportType.FINANCIAL_REPORT,
+      },
+    });
+    render(
+      tableRowComponent({
+        page: mockTableRowPage,
+        rowDepth: 0,
+      })
+    );
+    expect(screen.getByText(mockTableRowPage.name)).toBeVisible();
     expect(screen.queryByAltText("Success notification")).toBeNull();
+    expect(screen.queryByAltText("Error notification")).toBeNull();
   });
 
   testA11yAct(tableRowComponent({ page: mockTableRowPage, rowDepth: 1 }));

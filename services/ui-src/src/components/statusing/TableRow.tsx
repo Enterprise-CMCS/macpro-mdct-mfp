@@ -1,12 +1,12 @@
 import { Td, Text, Tr } from "@chakra-ui/react";
-import { ReportPageProgress } from "types";
+import { ReportPageProgress, ReportType } from "types";
 import { routeChecker, useBreakpoint, useStore } from "utils";
 import { EditButton } from "./EditButton";
 import { StatusIcon } from "./StatusIcon";
 
 export const TableRow = ({ page, rowDepth }: RowProps) => {
   const { isMobile } = useBreakpoint();
-  const { editable } = useStore();
+  const { editable, report } = useStore();
   const { name, path, children, status } = page;
   const buttonAriaLabel = editable ? `Edit  ${name}` : `View  ${name}`;
 
@@ -25,7 +25,15 @@ export const TableRow = ({ page, rowDepth }: RowProps) => {
     ptRowDepthOver1 = "1rem";
   }
 
-  const hideSuccess = routeChecker.isFinancialReportingFormPage(page);
+  /**
+   * We want to show completion status only for FRF pages that have required fields,
+   * but we don't have a way of distinguishing if a page is complete because all fields
+   * were filled out or if there were only optional fields.
+   */
+  const hideSuccess =
+    report?.reportType === ReportType.FINANCIAL_REPORT &&
+    !routeChecker.isFrfFmapPercentagesPage(page) &&
+    !routeChecker.isFrfGeneralInformationPage(page);
 
   return (
     <Tr>
