@@ -21,12 +21,12 @@ import {
   useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
+import { InlineError } from "@cmsgov/design-system";
 import {
   AddEditKeyMetricsModal,
   DeleteEntityModal,
   DynamicTableContext,
   DynamicTableRows,
-  ErrorMessage,
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
@@ -39,7 +39,7 @@ import {
   ReportShape,
 } from "types";
 // utils
-import { parseCustomHtml } from "utils";
+import { parseCustomHtml, shimComponent } from "utils";
 
 export const EntityModalTable = ({
   bodyRows,
@@ -58,6 +58,7 @@ export const EntityModalTable = ({
   const [errorMessage, setErrorMessage] = useState<ReactNode>(undefined);
   const errorId = `${tableId}__error`;
   const ariaProps = errorMessage ? { "aria-describedby": errorId } : {};
+  const InlineErrorShim = shimComponent(InlineError);
 
   useEffect(() => {
     const errorKey = Object.keys(formErrorState).find((key) =>
@@ -163,7 +164,7 @@ export const EntityModalTable = ({
       {verbiage?.subtitle && (
         <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
       )}
-      <ErrorMessage id={errorId} message={errorMessage} />
+      <InlineErrorShim id={errorId}>{errorMessage}</InlineErrorShim>
       <Table id={tableId} sx={sx.table} {...ariaProps}>
         <TableCaption placement="top" sx={sx.captionBox}>
           <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
