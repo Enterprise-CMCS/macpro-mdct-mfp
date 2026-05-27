@@ -31,6 +31,7 @@ import {
   OverlayModalPageShape,
   OverlayModalStepTypes,
   PageTypes,
+  ReportFormFieldType,
   ReportShape,
   ReportType,
 } from "types";
@@ -154,11 +155,10 @@ export function renderModalOverlayTableBody(
           : "Not entered";
 
         // Check if V2
-        const hasOverlayForm = !!(section as AnyObject).overlayForm;
-        const overlayFormFields =
-          (section as AnyObject).overlayForm?.fields || [];
-        const overlayFormTables =
-          (section as AnyObject).overlayForm?.tables || [];
+        const { overlayForm } = section as AnyObject;
+        const hasOverlayForm = Boolean(overlayForm);
+        const overlayFormFields = overlayForm?.fields || [];
+        const overlayFormTables = overlayForm?.tables || [];
 
         return (
           <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
@@ -190,7 +190,7 @@ export function renderModalOverlayTableBody(
               />
             )}
 
-            {/* V1: Render entitySteps (deprecated) */}
+            {/* deprecated: V1 Render entitySteps */}
             {!hasOverlayForm &&
               entitySteps.map((step, stepIdx) => {
                 const type = step[0].toString();
@@ -261,11 +261,10 @@ export function renderModalOverlayTableBody(
     case ReportType.SAR:
       return entities.map((entity, idx) => {
         // Check if this is V2 route structure with overlayForm
-        const hasOverlayForm = !!(section as AnyObject).overlayForm;
-        const overlayFormFields =
-          (section as AnyObject).overlayForm?.fields || [];
-        const overlayFormTables =
-          (section as AnyObject).overlayForm?.tables || [];
+        const overlayForm = dynamicSection?.[idx]?.overlayForm;
+        const hasOverlayForm = Boolean(overlayForm);
+        const overlayFormFields = overlayForm?.fields || [];
+        const overlayFormTables = overlayForm?.tables || [];
 
         return (
           <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
@@ -313,7 +312,7 @@ export function renderModalOverlayTableBody(
               />
             )}
 
-            {/* V1: Render entitySteps (deprecated) */}
+            {/* deprecated: V1 Render entitySteps */}
             {!hasOverlayForm &&
               dynamicSection[idx].entitySteps.map(
                 (step: any, stepIdx: number) => {
@@ -400,10 +399,10 @@ const EntityFieldsTable = ({
   const entityId = entity.id;
 
   const renderFieldRow = (formField: FormField | FormLayoutElement) => {
-    const isDynamicRowsTemplate = (formField as any).type === "dynamicObject";
+    const isDynamicRowsTemplate = ReportFormFieldType.DYNAMIC_OBJECT;
 
     if (isDynamicRowsTemplate) {
-      const templateId = (formField as any).id;
+      const templateId = formField.id;
       const tableId = templateId.split("_performanceIndicators")[0];
       const table = tables?.find((t) => t.id === tableId);
 
