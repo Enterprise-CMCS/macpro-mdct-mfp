@@ -78,7 +78,7 @@ describe("utils/auth", () => {
       Hub.listen = jest
         .fn()
         .mockImplementation((channel: string, callback: any) => {
-          callback({ payload: { event: "nonExistantEvent" } });
+          callback({ payload: { event: "nonExistentEvent" } });
         });
       initAuthManager();
       const savedTime = localStorage.getItem("mdctmfp_session_exp");

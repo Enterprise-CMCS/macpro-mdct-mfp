@@ -288,7 +288,7 @@ describe("<AddEditOverlayEntityModal />", () => {
       expect(mockCloseHandler).toHaveBeenCalledTimes(1);
     });
 
-    test("Successfuly edits an existing entity", async () => {
+    test("Successfully edits an existing entity", async () => {
       const result = render(modalComponentWithSelectedEntity);
       const form = result.getByTestId("add-edit-entity-form");
       await fillAndSubmitForm(form);

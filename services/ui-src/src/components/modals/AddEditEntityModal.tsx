@@ -3,20 +3,21 @@ import uuid from "react-uuid";
 // components
 import { ErrorAlert, Form, Modal, ReportContext } from "components";
 import { Text, Spinner } from "@chakra-ui/react";
-// utils
+// types
 import {
   AnyObject,
   EntityShape,
   ErrorVerbiage,
   FormJson,
   InputChangeEvent,
-  isFieldElement,
   ReportStatus,
 } from "types";
+// utils
 import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  isFieldElement,
   setClearedEntriesToDefaultValue,
   useStore,
 } from "utils";

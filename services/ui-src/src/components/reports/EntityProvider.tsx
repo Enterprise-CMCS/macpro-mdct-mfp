@@ -15,7 +15,7 @@ export const EntityContext = createContext<EntityContextShape>({
  *
  * Many reports have repeatable entities, like plans or submissions. Form items that are
  * directly related to an entity can use the EntityProvider to understand which
- * field data they shoud be modifiying.
+ * field data they should be modifying.
  *
  * @param children - React nodes
  */
@@ -52,7 +52,7 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
     () => ({
       prepareEntityPayload,
     }),
-    [selectedEntity]
+    [selectedEntity, report]
   );
 
   return (

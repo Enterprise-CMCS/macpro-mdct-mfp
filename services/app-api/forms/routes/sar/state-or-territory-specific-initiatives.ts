@@ -81,7 +81,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
     },
     template: {
       dashboard: {
-        name: "Intitiative Details Dashboard",
+        name: "Initiative Details Dashboard",
         verbiage: {
           intro: {
             section: "State or Territory-Specific Initiatives",

@@ -244,7 +244,7 @@ const sarMockProps = {
             stepType: OverlayModalStepTypes.OBJECTIVE_PROGRESS,
           },
           {
-            stepType: EntityDetailsStepTypes.INITIAVTIVE_PROGRESS,
+            stepType: EntityDetailsStepTypes.INITIATIVE_PROGRESS,
             form: {
               fields: [],
             },

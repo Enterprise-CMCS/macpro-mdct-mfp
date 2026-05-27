@@ -50,6 +50,7 @@ export interface StandardReportPageShape extends ReportPageShapeBase {
   template?: never;
   initiatives?: never;
   objectiveCards?: never;
+  overlayForm?: never;
 }
 
 export interface DrawerReportPageShape extends ReportPageShapeBase {
@@ -63,6 +64,7 @@ export interface DrawerReportPageShape extends ReportPageShapeBase {
   template?: never;
   initiatives?: never;
   objectiveCards?: never;
+  overlayForm?: never;
 }
 
 export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
@@ -76,6 +78,7 @@ export interface ModalDrawerReportPageShape extends ReportPageShapeBase {
   template?: never;
   initiatives?: never;
   objectiveCards?: never;
+  overlayForm?: never;
 }
 
 export interface ModalOverlayReportPageShape extends ReportPageShapeBase {
@@ -131,6 +134,7 @@ export interface OverlayModalPageShape extends ReportPageShapeBase {
   objectiveCards?: {
     modalForm?: FormJson;
   }[];
+  overlayForm?: never;
 }
 
 export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
@@ -148,6 +152,7 @@ export interface EntityDetailsOverlayShape extends ReportPageShapeBase {
   objectiveCards?: {
     modalForm?: FormJson;
   }[];
+  overlayForm?: never;
 }
 
 export interface EntityDetailsDashboardOverlayShape extends ReportPageShapeBase {
@@ -170,6 +175,7 @@ export interface ReportRouteWithoutForm extends ReportRouteBase {
   template?: never;
   initiatives?: never;
   objectiveCards?: never;
+  overlayForm?: never;
 }
 
 export interface ReportPageVerbiage {

@@ -105,7 +105,7 @@ describe("utils/reports/entitySteps", () => {
       expect(result).toEqual({});
     });
 
-    test("Should return an appropriately-shaped object even for nullish entites", () => {
+    test("Should return an appropriately-shaped object even for nullish entities", () => {
       const result = getFormattedEntityData(
         OverlayModalStepTypes.FUNDING_SOURCES,
         undefined

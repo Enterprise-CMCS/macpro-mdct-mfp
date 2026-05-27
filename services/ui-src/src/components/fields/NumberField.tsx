@@ -142,7 +142,12 @@ export const NumberField = ({
         defaultValue,
         hydrationValue,
       });
-      const fieldsToSave = updatedNumberFields(fields, report?.fieldData);
+
+      const entityFieldData = selectedEntity
+        ? { ...report?.fieldData, ...selectedEntity }
+        : report?.fieldData;
+
+      const fieldsToSave = updatedNumberFields(fields, entityFieldData);
 
       const reportArgs = {
         id: report?.id,

@@ -279,7 +279,7 @@ export function renderModalOverlayTableBody(
                         />
                       </Box>
                     );
-                  case EntityDetailsStepTypes.INITIAVTIVE_PROGRESS:
+                  case EntityDetailsStepTypes.INITIATIVE_PROGRESS:
                     return (
                       <Box key={`${step.stepType}${idx}${stepIdx}`}>
                         <ExportedEntityDetailsOverlaySection

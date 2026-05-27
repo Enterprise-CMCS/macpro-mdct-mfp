@@ -60,7 +60,7 @@ export function maskResponseData(
 }
 
 /**
- * Converts a number-like string to a comma seperated value
+ * Converts a number-like string to a comma separated value
  * @param {String} value
  * @returns {MaskedValue}
  */

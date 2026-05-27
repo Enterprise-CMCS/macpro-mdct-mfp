@@ -2,6 +2,13 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ReportContext, ModalDrawerReportPage } from "components";
+// types
+import {
+  AnyObject,
+  ModalDrawerReportPageShape,
+  ReportContextShape,
+  ReportShape,
+} from "types";
 // utils
 import {
   mockModalDrawerReportPageJson,
@@ -12,18 +19,12 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { useStore } from "utils/state/useStore";
+import { testA11yAct } from "utils/testing/commonTests";
+// constants
 import {
   getDefaultTargetPopulationNames,
   saveAndCloseText,
 } from "../../constants";
-// types
-import {
-  ModalDrawerReportPageShape,
-  ReportContextShape,
-  ReportShape,
-} from "types";
-import { AnyObject } from "yup/lib/types";
-import { testA11yAct } from "utils/testing/commonTests";
 
 const mockUseNavigate = jest.fn();
 jest.mock("react-router", () => ({

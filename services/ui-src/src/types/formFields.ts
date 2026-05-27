@@ -89,7 +89,7 @@ export interface CustomFieldValidation {
 
 export interface DependentFieldValidation {
   type: string;
-  dependentFieldName: string;
+  dependentFieldName: string | string[];
   options?: never;
   parentOptionId?: never;
 }
@@ -104,7 +104,7 @@ export interface NestedFieldValidation {
 
 export interface NestedDependentFieldValidation {
   type: string;
-  dependentFieldName: string;
+  dependentFieldName: string | string[];
   options?: never;
   nested: true;
   parentFieldName: string;
@@ -135,20 +135,6 @@ export interface FormField {
 
 export interface Transformation {
   rule: string;
-}
-
-export function isFieldElement(
-  field: FormField | FormLayoutElement
-): field is FormField {
-  /*
-   * This function is duplicated in app-api/utils/formTemplates/formTemplates.ts
-   * If you change it here, change it there!
-   */
-  const formLayoutElementTypes = [
-    ReportFormFieldType.SECTION_HEADER,
-    ReportFormFieldType.SECTION_CONTENT,
-  ];
-  return !formLayoutElementTypes.includes(field.type as ReportFormFieldType);
 }
 
 export interface FormLayoutElement {

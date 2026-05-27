@@ -4,19 +4,20 @@ import uuid from "react-uuid";
 // components
 import { Form, Modal, ReportContext } from "components";
 import { Text, Spinner } from "@chakra-ui/react";
-// utils
+// types
 import {
   AnyObject,
   EntityShape,
   FormJson,
-  isFieldElement,
   ReportStatus,
   ReportType,
 } from "types";
+// utils
 import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  isFieldElement,
   setClearedEntriesToDefaultValue,
   useStore,
 } from "utils";
@@ -40,13 +41,13 @@ export const AddEditOverlayEntityModal = ({
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   //using the entityTypes as a path list, recursively go through each object layer to find the desired objectKey
-  const recusiveFindAndUpdate = (
+  const recursiveFindAndUpdate = (
     index: number,
     data: any,
     entityPath: string[],
     newEntity: AnyObject
   ) => {
-    //if index is at the last avaliable path, that is the entityType we want to look at
+    //if index is at the last available path, that is the entityType we want to look at
     if (data && index === entityPath.length - 1) {
       data[entityPath[index]] = newEntity;
     } else {
@@ -56,7 +57,7 @@ export const AddEditOverlayEntityModal = ({
           (entity: EntityShape) =>
             entity.id === entityIdLookup[currentEntityType]
         );
-        recusiveFindAndUpdate(index + 1, currentEntity, entityPath, newEntity);
+        recursiveFindAndUpdate(index + 1, currentEntity, entityPath, newEntity);
       }
     }
   };
@@ -137,7 +138,7 @@ export const AddEditOverlayEntityModal = ({
       );
 
       //using shallow update to modify the copied report data
-      recusiveFindAndUpdate(0, fieldDataObject, entityTypes, updatedEntities);
+      recursiveFindAndUpdate(0, fieldDataObject, entityTypes, updatedEntities);
 
       dataToWrite.fieldData = {
         [entityType[0]]: fieldDataObject?.[entityType[0]],
@@ -154,7 +155,7 @@ export const AddEditOverlayEntityModal = ({
       ];
 
       //using shallow update to modify the copied report data
-      recusiveFindAndUpdate(0, fieldDataObject, entityTypes, newEntityData);
+      recursiveFindAndUpdate(0, fieldDataObject, entityTypes, newEntityData);
 
       // create new entity
       dataToWrite.fieldData = {

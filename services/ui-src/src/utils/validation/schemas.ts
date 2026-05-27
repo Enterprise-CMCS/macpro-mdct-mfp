@@ -202,26 +202,53 @@ export const dateOptional = () =>
       test: (value) => (value ? dateFormatRegex.test(value) : true),
     });
 
-export const endDate = (startDateField: string) =>
+const findFirstPopulatedValue = (
+  fieldNames: string[],
+  parentData: Record<string, any>
+): string | undefined => {
+  return fieldNames.map((fieldName) => parentData[fieldName]).find(Boolean);
+};
+
+const areBothDatesValid = (date1: Date, date2: Date): boolean => {
+  return !isNaN(date1.getTime()) && !isNaN(date2.getTime());
+};
+
+export const endDate = (fields: string[]) =>
   date()
     .typeError(error.INVALID_DATE)
     .test({
       message: error.INVALID_END_DATE,
-      test: (endDateString, context) => {
-        return isEndDateAfterStartDate(
-          context.parent[startDateField],
-          endDateString as string
+      test: (endDateString = "", context) => {
+        const firstPopulatedStartDate = findFirstPopulatedValue(
+          fields,
+          context.parent
         );
+
+        if (!firstPopulatedStartDate) {
+          return true;
+        }
+
+        return isEndDateAfterStartDate(firstPopulatedStartDate, endDateString);
       },
     });
 
 export const isEndDateAfterStartDate = (
   startDateString: string,
   endDateString: string
-) => {
+): boolean => {
+  if (!startDateString || !endDateString) {
+    return true;
+  }
+
   const startDate = new Date(startDateString);
-  const endDate = new Date(endDateString!);
-  return endDate >= startDate;
+  const endDate = new Date(endDateString);
+
+  if (!areBothDatesValid(startDate, endDate)) {
+    return true;
+  }
+
+  const endDateIsOnOrAfterStartDate = endDate >= startDate;
+  return endDateIsOnOrAfterStartDate;
 };
 
 // DROPDOWN

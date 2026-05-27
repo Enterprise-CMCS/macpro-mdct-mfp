@@ -269,6 +269,7 @@ const dynamicRowsTemplateBuilder = ({
   dynamicModalForm,
   dynamicRowId,
   label,
+  required = true,
   verbiage,
 }: DynamicRowsTemplateBuilder) => {
   const dynamicModalFormProps = dynamicModalForm ? { dynamicModalForm } : {};
@@ -285,7 +286,7 @@ const dynamicRowsTemplateBuilder = ({
     },
     type: ReportFormFieldType.DYNAMIC_OBJECT,
     validation: {
-      type: ValidationType.DYNAMIC_OPTIONAL,
+      type: required ? ValidationType.DYNAMIC : ValidationType.DYNAMIC_OPTIONAL,
       options: {
         dynamicFieldValidations,
       },
@@ -305,6 +306,7 @@ export const serviceFieldDynamicRowsTemplateBuilder = ({
   dynamicModalVerbiage,
   dynamicRowId,
   label,
+  required = false,
   verbiage,
 }: ServiceFieldDynamicRowsTemplateBuilder) => {
   const dynamicModalForm = dynamicModalList
@@ -329,6 +331,7 @@ export const serviceFieldDynamicRowsTemplateBuilder = ({
     dynamicModalForm,
     dynamicRowId,
     label,
+    required,
     verbiage,
   });
 };
@@ -341,6 +344,7 @@ export const tableFieldDynamicRowsTemplateBuilder = ({
   dynamicModalList,
   dynamicModalFieldsToReturn,
   dynamicModalVerbiage,
+  required = false,
   label,
   verbiage,
 }: TableFieldDynamicRowsTemplateBuilder) => {
@@ -363,6 +367,7 @@ export const tableFieldDynamicRowsTemplateBuilder = ({
     dynamicModalForm,
     dynamicRowId,
     label,
+    required,
     verbiage,
   });
 };
@@ -374,6 +379,7 @@ interface DynamicRowsTemplateBuilder {
   dynamicModalForm?: FormJson;
   dynamicRowId: string;
   label: string;
+  required?: boolean;
   verbiage: DynamicRowsTemplateVerbiage;
 }
 
@@ -384,6 +390,7 @@ interface FieldDynamicRowsTemplateBuilder {
   dynamicModalVerbiage?: AnyObject;
   dynamicRowId: string;
   label: string;
+  required?: boolean;
   verbiage: DynamicRowsTemplateVerbiage;
 }
 

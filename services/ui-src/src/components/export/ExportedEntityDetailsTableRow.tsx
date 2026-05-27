@@ -1,9 +1,10 @@
 // components
 import { Box, Tr, Td, Text } from "@chakra-ui/react";
 // types
-import { FormField, FormLayoutElement, isFieldElement } from "types";
+import { FormField, FormLayoutElement } from "types";
 // utils
 import {
+  isFieldElement,
   parseFormFieldInfo,
   parseCustomHtml,
   renderOverlayEntityDataCell,

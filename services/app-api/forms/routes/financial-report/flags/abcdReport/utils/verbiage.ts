@@ -32,7 +32,7 @@ export const accordionWithFmapLink = {
     {
       type: "p",
       content:
-        "Previously this information was reported in Form A (Services) in the Excel version of the MFP Financial Reporting Form.",
+        "Previously this information was reported in Form B (Opt&Other Detail) in the excel version of the MFP Financial Reporting Form.",
     },
     {
       type: "p",

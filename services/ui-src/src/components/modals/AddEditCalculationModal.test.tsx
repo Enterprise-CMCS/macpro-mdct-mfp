@@ -19,11 +19,11 @@ const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
 
 const getReport = (
-  submitedReport: boolean = false,
+  submittedReport: boolean = false,
   emptyFieldData: boolean = false
 ) => ({
   ...mockWPFullReport,
-  status: submitedReport ? ReportStatus.SUBMITTED : ReportStatus.IN_PROGRESS,
+  status: submittedReport ? ReportStatus.SUBMITTED : ReportStatus.IN_PROGRESS,
   fieldData: emptyFieldData
     ? undefined
     : {
@@ -38,12 +38,12 @@ const getReport = (
 });
 
 const mockedReportContext = (
-  submitedReport: boolean = false,
+  submittedReport: boolean = false,
   emptyFieldData: boolean = false
 ) => ({
   ...mockWpReportContext,
   updateReport: mockUpdateReport,
-  report: getReport(submitedReport, emptyFieldData),
+  report: getReport(submittedReport, emptyFieldData),
 });
 const modalComponent = (
   userIsAdmin?: boolean,
