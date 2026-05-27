@@ -337,7 +337,7 @@ export const sx = {
   tableCommonStyle: {
     "& th, & td": {
       paddingX: "spacer1",
-      paddingY: "spacer2",
+      paddingY: "spacer1",
       fontSize: "sm",
     },
     "& thead tr": {
@@ -347,10 +347,10 @@ export const sx = {
   entityTableStyle: {
     thead: {
       "tr:first-of-type": {
-        borderBottom: "1px solid #383838",
+        borderBottom: "2px solid #383838",
         borderColor: "#383838",
         th: {
-          borderBottom: "1px solid #383838",
+          borderBottom: "2px solid #383838",
           borderColor: "#383838",
           color: "gray_dark",
           verticalAlign: "bottom",
@@ -363,10 +363,10 @@ export const sx = {
     marginBottom: 0,
     thead: {
       "tr:first-of-type": {
-        borderBottom: "1px solid #383838",
+        borderBottom: "2px solid #383838",
         borderColor: "#383838",
         th: {
-          borderBottom: "1px solid #383838",
+          borderBottom: "2px solid #383838",
           borderColor: "#383838",
           color: "gray_dark",
           verticalAlign: "bottom",

@@ -2,6 +2,7 @@ import {
   renderServiceTableBody,
   renderFieldTableBody,
   renderCalculationTables,
+  renderEntityTables,
 } from "./exportFieldTableHelpers";
 import {
   ReportFormFieldType,
@@ -219,6 +220,37 @@ describe("exportFieldTableHelpers", () => {
         expect(screen.getByTestId(`service-table-${id}`)).toBeVisible();
         expect(screen.getByText(`Percentage: ${pct}%`)).toBeVisible();
       });
+    });
+  });
+
+  describe("renderEntityTables()", () => {
+    test("should render entity tables with data", () => {
+      const table = {
+        id: "testTable",
+        headRows: [["Name", "Value"]],
+        dynamicRowsTemplate: {
+          id: "testData",
+          props: {
+            dynamicFields: [
+              { id: "name", type: ReportFormFieldType.TEXT, props: {} },
+              { id: "value", type: ReportFormFieldType.TEXT, props: {} },
+            ],
+          },
+        },
+        verbiage: { title: "Test Table" },
+      };
+
+      const entity = {
+        id: "1",
+        testData: [{ name: "Item 1", value: "Value 1" }],
+      };
+
+      const result = renderEntityTables([table], entity, "h4", false);
+      render(<>{result}</>);
+
+      expect(screen.getByText("Test Table")).toBeVisible();
+      expect(screen.getByText("Item 1")).toBeVisible();
+      expect(screen.getByText("Value 1")).toBeVisible();
     });
   });
 });

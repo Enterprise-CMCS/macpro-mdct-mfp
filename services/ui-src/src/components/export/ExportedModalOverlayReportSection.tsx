@@ -415,10 +415,11 @@ const EntityFieldsTable = ({
   const entityId = entity.id;
 
   const renderFieldRow = (formField: FormField | FormLayoutElement) => {
-    const isDynamicRowsTemplate = ReportFormFieldType.DYNAMIC_OBJECT;
+    const isDynamicRowsTemplate =
+      formField.type === ReportFormFieldType.DYNAMIC_OBJECT;
 
     if (isDynamicRowsTemplate) {
-      const templateId = formField.id;
+      const templateId = (formField as any).id;
       const tableId = templateId.split("_performanceIndicators")[0];
       const table = tables?.find((t) => t.id === tableId);
 
@@ -472,7 +473,7 @@ const EntityFieldsTable = ({
           (choice: any) => choice.id === selectedChoiceId && choice.children
         );
 
-        if (choiceWithChildren.children?.length > 0) {
+        if (choiceWithChildren?.children?.length > 0) {
           // Get the nested child field (there should be only one child per choice)
           const childField = choiceWithChildren.children[0];
           const childValue = entity[childField.id];
@@ -522,7 +523,8 @@ const EntityFieldsTable = ({
         }
       }
 
-      // If field has nested children but no choice selected, render it normally
+      // If field has nested children but no choice selected, still render it normally
+      // Fall through to normal rendering below
     }
 
     const fieldProps = formField.props || {};
