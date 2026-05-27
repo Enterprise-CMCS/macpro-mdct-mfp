@@ -279,7 +279,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
       return (
         <Fragment key={`${field.id}-${index}`}>
           {titleText && (
-            <Heading as="h3" className="verbiage-title">
+            <Heading as="h2" className="verbiage-title">
               {titleText}
             </Heading>
           )}
