@@ -34,6 +34,7 @@ import {
   OverlayModalPageShape,
   OverlayModalStepTypes,
   PageTypes,
+  ReportFormFieldType,
   ReportShape,
   ReportType,
 } from "types";
@@ -157,11 +158,10 @@ export function renderModalOverlayTableBody(
           : "Not entered";
 
         // Check if V2
-        const hasOverlayForm = !!(section as AnyObject).overlayForm;
-        const rawOverlayFormFields =
-          (section as AnyObject).overlayForm?.fields || [];
-        const overlayFormTables =
-          (section as AnyObject).overlayForm?.tables || [];
+        const { overlayForm } = section as AnyObject;
+        const hasOverlayForm = Boolean(overlayForm);
+        const rawOverlayFormFields = overlayForm?.fields || [];
+        const overlayFormTables = overlayForm?.tables || [];
 
         // Process fields to inject target populations and other dynamic data
         const overlayFormFields = updateRenderFields(
@@ -200,7 +200,7 @@ export function renderModalOverlayTableBody(
               />
             )}
 
-            {/* V1: Render entitySteps (deprecated) */}
+            {/* deprecated: V1 Render entitySteps */}
             {!hasOverlayForm &&
               entitySteps.map((step, stepIdx) => {
                 const type = step[0].toString();
@@ -271,13 +271,10 @@ export function renderModalOverlayTableBody(
     case ReportType.SAR:
       return entities.map((entity, idx) => {
         // Check if V2
-        const hasOverlayForm = !!(
-          dynamicSection && dynamicSection[idx]?.overlayForm
-        );
-        const rawOverlayFormFields =
-          (dynamicSection && dynamicSection[idx]?.overlayForm?.fields) || [];
-        const overlayFormTables =
-          (dynamicSection && dynamicSection[idx]?.overlayForm?.tables) || [];
+        const overlayForm = dynamicSection?.[idx]?.overlayForm;
+        const hasOverlayForm = Boolean(overlayForm);
+        const rawOverlayFormFields = overlayForm?.fields || [];
+        const overlayFormTables = overlayForm?.tables || [];
 
         // Process fields to inject target populations and other dynamic data
         const overlayFormFields = hasOverlayForm
@@ -330,7 +327,7 @@ export function renderModalOverlayTableBody(
               />
             )}
 
-            {/* V1: Render entitySteps (deprecated) */}
+            {/* deprecated: V1 Render entitySteps */}
             {!hasOverlayForm &&
               dynamicSection &&
               dynamicSection[idx].entitySteps.map(
@@ -418,10 +415,10 @@ const EntityFieldsTable = ({
   const entityId = entity.id;
 
   const renderFieldRow = (formField: FormField | FormLayoutElement) => {
-    const isDynamicRowsTemplate = (formField as any).type === "dynamicObject";
+    const isDynamicRowsTemplate = ReportFormFieldType.DYNAMIC_OBJECT;
 
     if (isDynamicRowsTemplate) {
-      const templateId = (formField as any).id;
+      const templateId = formField.id;
       const tableId = templateId.split("_performanceIndicators")[0];
       const table = tables?.find((t) => t.id === tableId);
 
@@ -475,10 +472,7 @@ const EntityFieldsTable = ({
           (choice: any) => choice.id === selectedChoiceId && choice.children
         );
 
-        if (
-          choiceWithChildren?.children &&
-          choiceWithChildren.children.length > 0
-        ) {
+        if (choiceWithChildren.children?.length > 0) {
           // Get the nested child field (there should be only one child per choice)
           const childField = choiceWithChildren.children[0];
           const childValue = entity[childField.id];
@@ -531,8 +525,13 @@ const EntityFieldsTable = ({
       // If field has nested children but no choice selected, render it normally
     }
 
-    const hasTitle = !!(formField as any).props?.title;
-    const hasSubtitle = !!(formField as any).props?.subtitle;
+    const fieldProps = formField.props || {};
+
+    const fieldTitle = fieldProps.title;
+    const fieldSubtitle = fieldProps.subtitle;
+
+    const hasTitle = Boolean(fieldTitle);
+    const hasSubtitle = Boolean(fieldSubtitle);
 
     if (hasTitle && hasSubtitle) {
       const fieldTitle = (formField as any).props.title;
