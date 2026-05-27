@@ -449,14 +449,16 @@ const EntityFieldsTable = ({
       return;
     }
 
-    // Check if this is a radio/checkbox field with nested children
+    // Special handling for start date field with nested children
+    // This field shows "Expected start date" or "Actual start date" choice with a nested date field
+    const isStartDateField = formField.id === "defineInitiative_startDate";
     const hasNestedChildren =
       isFieldElement(formField) &&
       formField.props?.choices &&
       formField.props.choices.some((choice: any) => choice.children);
 
-    // If field has nested children, render with custom logic to show child values
-    if (hasNestedChildren && formField.props) {
+    // If this is the start date field with nested children, render with custom logic
+    if (isStartDateField && hasNestedChildren && formField.props) {
       const parentFieldValue = entity[formField.id];
 
       // Find the selected choice
@@ -481,8 +483,10 @@ const EntityFieldsTable = ({
           const childField = choiceWithChildren.children[0];
           const childValue = entity[childField.id];
 
-          // Render the parent field with the child value displayed
+          // Render the parent field with the selected choice label
           const formFieldInfo = parseFormFieldInfo(formField?.props);
+
+          // First row: show the parent label with the selected choice as value
           tableRows.push(
             <Tr key={formField.id} data-testid="exportRow">
               <Td sx={{ width: "14rem" }}>
@@ -502,6 +506,20 @@ const EntityFieldsTable = ({
                 )}
               </Td>
               <Td>
+                <Text>{choiceWithChildren.label}</Text>
+              </Td>
+            </Tr>
+          );
+
+          // Second row: show the selected choice label with the child value
+          tableRows.push(
+            <Tr key={`${formField.id}_value`} data-testid="exportRow">
+              <Td sx={{ width: "14rem" }}>
+                <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
+                  {choiceWithChildren.label}
+                </Text>
+              </Td>
+              <Td>
                 <Text>{childValue || "Not answered"}</Text>
               </Td>
             </Tr>
@@ -509,6 +527,8 @@ const EntityFieldsTable = ({
           return;
         }
       }
+
+      // If field has nested children but no choice selected, render it normally
     }
 
     const hasTitle = !!(formField as any).props?.title;

@@ -343,10 +343,35 @@ export const sx = {
       backgroundColor: "gray.50",
     },
   },
-  entityTableStyle: {},
+  entityTableStyle: {
+    thead: {
+      "tr:first-of-type": {
+        borderBottom: "1px solid #383838",
+        borderColor: "#383838",
+        th: {
+          borderBottom: "1px solid #383838",
+          borderColor: "#383838",
+          color: "#5A5A5A",
+          verticalAlign: "bottom",
+        },
+      },
+    },
+  },
   embeddedTableStyle: {
     marginTop: 0,
     marginBottom: 0,
+    thead: {
+      "tr:first-of-type": {
+        borderBottom: "1px solid #383838",
+        borderColor: "#383838",
+        th: {
+          borderBottom: "1px solid #383838",
+          borderColor: "#383838",
+          color: "#5A5A5A",
+          verticalAlign: "bottom",
+        },
+      },
+    },
   },
   emptyTableMessage: {
     padding: "spacer3",
