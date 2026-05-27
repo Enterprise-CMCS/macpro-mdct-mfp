@@ -4,6 +4,9 @@ import {
   useStore,
   renderEntityTables,
   parseCustomHtml,
+  updateRenderFields,
+  isFieldElement,
+  parseFormFieldInfo,
 } from "utils";
 // components
 import {
@@ -157,8 +160,15 @@ export function renderModalOverlayTableBody(
         // Check if V2
         const { overlayForm } = section as AnyObject;
         const hasOverlayForm = Boolean(overlayForm);
-        const overlayFormFields = overlayForm?.fields || [];
+        const rawOverlayFormFields = overlayForm?.fields || [];
         const overlayFormTables = overlayForm?.tables || [];
+
+        // Process fields to inject target populations and other dynamic data
+        const overlayFormFields = updateRenderFields(
+          report,
+          rawOverlayFormFields,
+          entity
+        );
 
         return (
           <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
@@ -260,11 +270,16 @@ export function renderModalOverlayTableBody(
       });
     case ReportType.SAR:
       return entities.map((entity, idx) => {
-        // Check if this is V2 route structure with overlayForm
+        // Check if V2
         const overlayForm = dynamicSection?.[idx]?.overlayForm;
         const hasOverlayForm = Boolean(overlayForm);
-        const overlayFormFields = overlayForm?.fields || [];
+        const rawOverlayFormFields = overlayForm?.fields || [];
         const overlayFormTables = overlayForm?.tables || [];
+
+        // Process fields to inject target populations and other dynamic data
+        const overlayFormFields = hasOverlayForm
+          ? updateRenderFields(report, rawOverlayFormFields, entity)
+          : [];
 
         return (
           <Box key={`${reportType}${idx}`} sx={sx.entityContainer}>
@@ -314,6 +329,7 @@ export function renderModalOverlayTableBody(
 
             {/* deprecated: V1 Render entitySteps */}
             {!hasOverlayForm &&
+              dynamicSection &&
               dynamicSection[idx].entitySteps.map(
                 (step: any, stepIdx: number) => {
                   switch (step.stepType) {
@@ -399,7 +415,8 @@ const EntityFieldsTable = ({
   const entityId = entity.id;
 
   const renderFieldRow = (formField: FormField | FormLayoutElement) => {
-    const isDynamicRowsTemplate = ReportFormFieldType.DYNAMIC_OBJECT;
+    const isDynamicRowsTemplate =
+      formField.type === ReportFormFieldType.DYNAMIC_OBJECT;
 
     if (isDynamicRowsTemplate) {
       const templateId = formField.id;
@@ -430,10 +447,95 @@ const EntityFieldsTable = ({
       return;
     }
 
-    const hasTitle = !!(formField as any).props?.title;
-    const hasSubtitle = !!(formField as any).props?.subtitle;
-    const hasSectionTitle = !!(formField as any).props?.sectionTitle;
-    const hasSubsectionTitle = !!(formField as any).props?.subsectionTitle;
+    // Special handling for start date field with nested children
+    // This field shows "Expected start date" or "Actual start date" choice with a nested date field
+    const isStartDateField = formField.id === "defineInitiative_startDate";
+    const hasNestedChildren =
+      isFieldElement(formField) &&
+      formField.props?.choices &&
+      formField.props.choices.some((choice: any) => choice.children);
+
+    // If this is the start date field with nested children, render with custom logic
+    if (isStartDateField && hasNestedChildren && formField.props) {
+      const parentFieldValue = entity[formField.id];
+
+      // Find the selected choice
+      const selectedChoice = Array.isArray(parentFieldValue)
+        ? parentFieldValue[0]
+        : null;
+
+      if (selectedChoice?.key) {
+        // Extract the choice ID from the key (format: "fieldName-choiceId")
+        const selectedChoiceId = selectedChoice.key.split("-").pop();
+
+        // Find the choice definition that matches the selected ID and has children
+        const choiceWithChildren = formField.props.choices.find(
+          (choice: any) => choice.id === selectedChoiceId && choice.children
+        );
+
+        if (choiceWithChildren?.children?.length > 0) {
+          // Get the nested child field (there should be only one child per choice)
+          const childField = choiceWithChildren.children[0];
+          const childValue = entity[childField.id];
+
+          // Render the parent field with the selected choice label
+          const formFieldInfo = parseFormFieldInfo(formField?.props);
+
+          // First row: show the parent label with the selected choice as value
+          tableRows.push(
+            <Tr key={formField.id} data-testid="exportRow">
+              <Td sx={{ width: "14rem" }}>
+                <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
+                  {formFieldInfo.label}
+                </Text>
+                {formFieldInfo.hint && (
+                  <Text
+                    sx={{
+                      lineHeight: "lg",
+                      fontSize: "sm",
+                      color: "gray_dark",
+                    }}
+                  >
+                    {parseCustomHtml(formFieldInfo.hint)}
+                  </Text>
+                )}
+              </Td>
+              <Td>
+                <Text>{choiceWithChildren.label}</Text>
+              </Td>
+            </Tr>
+          );
+
+          // Second row: show the selected choice label with the child value
+          tableRows.push(
+            <Tr key={`${formField.id}_value`} data-testid="exportRow">
+              <Td sx={{ width: "14rem" }}>
+                <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
+                  {choiceWithChildren.label}
+                </Text>
+              </Td>
+              <Td>
+                <Text>{childValue || "Not answered"}</Text>
+              </Td>
+            </Tr>
+          );
+          return;
+        }
+      }
+
+      // If field has nested children but no choice selected, still render it normally
+      // Fall through to normal rendering below
+    }
+
+    const fieldProps = formField.props || {};
+
+    const fieldTitle = fieldProps.title;
+    const fieldSubtitle = fieldProps.subtitle;
+
+    const hasTitle = Boolean(fieldTitle);
+    const hasSubtitle = Boolean(fieldSubtitle);
+    const hasSectionTitle = Boolean(fieldProps.sectionTitle);
+    const hasSubsectionTitle = Boolean(fieldProps.subsectionTitle);
 
     if (hasTitle && hasSubtitle) {
       const fieldTitle = (formField as any).props.title;
@@ -601,13 +703,29 @@ const EntityFieldsTable = ({
       return;
     }
 
-    // Skip nested children fields (they're rendered by their parent)
+    // Handle nested children fields - check if parent choice is selected before rendering
     if (
       (field as FormField).validation &&
       typeof (field as FormField).validation === "object"
     ) {
       const validation = (field as FormField).validation as any;
       if (validation.nested === true) {
+        // Check if the parent choice that contains this field is selected
+        const parentFieldId = validation.parentFieldName;
+        const parentOptionId = validation.parentOptionId;
+
+        if (parentFieldId && parentOptionId && entity[parentFieldId]) {
+          const parentValue = entity[parentFieldId];
+          // Check if this parent choice is selected - do exact match on the key
+          const isParentChoiceSelected =
+            Array.isArray(parentValue) &&
+            parentValue.some((choice: any) => choice.key === parentOptionId);
+
+          // Only render if parent choice is selected
+          if (isParentChoiceSelected) {
+            renderFieldRow(field);
+          }
+        }
         return;
       }
     }

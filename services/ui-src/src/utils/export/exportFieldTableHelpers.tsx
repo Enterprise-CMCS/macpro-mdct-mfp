@@ -326,7 +326,7 @@ export const sx = {
     marginTop: "spacer4",
   },
   embeddedEntityTable: {
-    marginTop: "1.5rem",
+    marginTop: "spacer3",
     marginBottom: 0,
   },
   entityTableHeading: {
@@ -336,17 +336,43 @@ export const sx = {
   },
   tableCommonStyle: {
     "& th, & td": {
-      padding: "0.75rem 0.5rem",
+      paddingX: "spacer1",
+      paddingY: "spacer1",
       fontSize: "sm",
     },
     "& thead tr": {
       backgroundColor: "gray.50",
     },
   },
-  entityTableStyle: {},
+  entityTableStyle: {
+    thead: {
+      "tr:first-of-type": {
+        borderBottom: "2px solid #383838",
+        borderColor: "#383838",
+        th: {
+          borderBottom: "2px solid #383838",
+          borderColor: "#383838",
+          color: "gray_dark",
+          verticalAlign: "bottom",
+        },
+      },
+    },
+  },
   embeddedTableStyle: {
     marginTop: 0,
     marginBottom: 0,
+    thead: {
+      "tr:first-of-type": {
+        borderBottom: "2px solid #383838",
+        borderColor: "#383838",
+        th: {
+          borderBottom: "2px solid #383838",
+          borderColor: "#383838",
+          color: "gray_dark",
+          verticalAlign: "bottom",
+        },
+      },
+    },
   },
   emptyTableMessage: {
     padding: "spacer3",
