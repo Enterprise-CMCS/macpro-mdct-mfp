@@ -232,8 +232,16 @@ describe("exportFieldTableHelpers", () => {
           id: "testData",
           props: {
             dynamicFields: [
-              { id: "name", type: ReportFormFieldType.TEXT, props: {} },
-              { id: "value", type: ReportFormFieldType.TEXT, props: {} },
+              {
+                id: "testData-name",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+              {
+                id: "testData-value",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
             ],
           },
         },
