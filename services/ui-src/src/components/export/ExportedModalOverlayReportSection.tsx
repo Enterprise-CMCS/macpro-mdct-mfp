@@ -270,8 +270,11 @@ export function renderModalOverlayTableBody(
       });
     case ReportType.SAR:
       return entities.map((entity, idx) => {
-        // Check if V2
-        const overlayForm = dynamicSection?.[idx]?.overlayForm;
+        // Check if V2 - for DYNAMIC_MODAL_OVERLAY, overlayForm is on section directly
+        const overlayForm =
+          section.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY
+            ? (section as AnyObject).overlayForm
+            : dynamicSection?.[idx]?.overlayForm;
         const hasOverlayForm = Boolean(overlayForm);
         const rawOverlayFormFields = overlayForm?.fields || [];
         const overlayFormTables = overlayForm?.tables || [];
@@ -409,6 +412,20 @@ const EntityFieldsTable = ({
   const { report } = useStore();
   const { exportVerbiage } = getReportVerbiage(report?.reportType);
   const { tableHeaders } = exportVerbiage;
+
+  // Flatten nested fields from choices.children into main fields array
+  const flattenedFields: (FormField | FormLayoutElement)[] = [];
+  fields.forEach((field) => {
+    flattenedFields.push(field);
+    const choices = (field as FormField).props?.choices;
+    if (Array.isArray(choices)) {
+      choices.forEach((choice: any) => {
+        if (Array.isArray(choice.children)) {
+          flattenedFields.push(...choice.children);
+        }
+      });
+    }
+  });
 
   const tableRows: React.ReactElement[] = [];
   const entityType = entity.type;
@@ -698,36 +715,52 @@ const EntityFieldsTable = ({
     );
   };
 
-  fields.forEach((field: FormField | FormLayoutElement) => {
+  flattenedFields.forEach((field: FormField | FormLayoutElement) => {
     if ((field as any).forCopyoverOnly) {
       return;
     }
 
     // Handle nested children fields - check if parent choice is selected before rendering
-    if (
-      (field as FormField).validation &&
-      typeof (field as FormField).validation === "object"
-    ) {
-      const validation = (field as FormField).validation as any;
-      if (validation.nested === true) {
-        // Check if the parent choice that contains this field is selected
-        const parentFieldId = validation.parentFieldName;
-        const parentOptionId = validation.parentOptionId;
+    const validation = (field as FormField).validation as any;
+    if (validation?.nested === true) {
+      const parentFieldId = validation.parentFieldName;
+      const parentOptionId = validation.parentOptionId;
 
-        if (parentFieldId && parentOptionId && entity[parentFieldId]) {
-          const parentValue = entity[parentFieldId];
-          // Check if this parent choice is selected - do exact match on the key
-          const isParentChoiceSelected =
-            Array.isArray(parentValue) &&
-            parentValue.some((choice: any) => choice.key === parentOptionId);
+      if (parentFieldId && parentOptionId && entity[parentFieldId]) {
+        const parentValue = entity[parentFieldId];
+        // Check if this parent choice is selected (key format: "fieldName-optionId")
+        const isParentChoiceSelected =
+          Array.isArray(parentValue) &&
+          parentValue.some((choice: any) => {
+            const choiceId = choice.key?.split("-").pop();
+            return choiceId === parentOptionId;
+          });
 
-          // Only render if parent choice is selected
-          if (isParentChoiceSelected) {
+        if (isParentChoiceSelected) {
+          const fieldLabel = (field as FormField).props?.label;
+
+          if (fieldLabel === "Please describe:") {
+            // Render "Please describe:" as a simple table row
+            const fieldId = (field as FormField).id;
+            const fieldValue = entity[fieldId];
+            tableRows.push(
+              <Tr key={fieldId} data-testid="exportRow">
+                <Td sx={{ width: "14rem" }}>
+                  <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
+                    Please describe:
+                  </Text>
+                </Td>
+                <Td>
+                  <Text>{fieldValue || "Not answered"}</Text>
+                </Td>
+              </Tr>
+            );
+          } else {
             renderFieldRow(field);
           }
         }
-        return;
       }
+      return;
     }
 
     if ((field as FormField).type) {

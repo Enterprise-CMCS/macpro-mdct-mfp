@@ -172,6 +172,14 @@ export const renderEntityTables = (
 ) => {
   return tables.map((table: any) => {
     const headRow = table.headRows[0];
+    const styleAsOptionalHeadRows = table.styleAsOptionalHeadRows || [];
+
+    const transformedHeadRow = headRow.map((header: string) => {
+      if (styleAsOptionalHeadRows.includes(header)) {
+        return `${header}<span style="font-weight: normal;"> (optional)</span>`;
+      }
+      return header;
+    });
 
     const dynamicData = entity[table.dynamicRowsTemplate?.id] || [];
 
@@ -263,7 +271,7 @@ export const renderEntityTables = (
                   }
             }
             content={{
-              headRow: headRow,
+              headRow: transformedHeadRow,
               bodyRows: bodyRows,
             }}
             data-testid={`entity-table-${table.id}`}
