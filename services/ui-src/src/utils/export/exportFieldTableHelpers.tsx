@@ -172,6 +172,14 @@ export const renderEntityTables = (
 ) => {
   return tables.map((table: any) => {
     const headRow = table.headRows[0];
+    const styleAsOptionalHeadRows = table.styleAsOptionalHeadRows || [];
+
+    const transformedHeadRow = headRow.map((header: string) => {
+      if (styleAsOptionalHeadRows.includes(header)) {
+        return `${header}<span style="font-weight: normal;"> (optional)</span>`;
+      }
+      return header;
+    });
 
     const dynamicData = entity[table.dynamicRowsTemplate?.id] || [];
 
@@ -248,6 +256,11 @@ export const renderEntityTables = (
         key={table.id}
         sx={isEmbedded ? sx.embeddedEntityTable : sx.entityTable}
       >
+        {table.verbiage?.sectionTitle && (
+          <Heading as="h5" sx={sx.entityTableSectionHeading}>
+            {table.verbiage.sectionTitle}
+          </Heading>
+        )}
         <Heading as={headingLevel as any} sx={sx.entityTableHeading}>
           {table.verbiage?.title}
         </Heading>
@@ -271,7 +284,7 @@ export const renderEntityTables = (
                   }
             }
             content={{
-              headRow: headRow,
+              headRow: transformedHeadRow,
               bodyRows: bodyRows,
             }}
             data-testid={`entity-table-${table.id}`}
@@ -336,6 +349,11 @@ export const sx = {
   embeddedEntityTable: {
     marginTop: "spacer3",
     marginBottom: 0,
+  },
+  entityTableSectionHeading: {
+    fontSize: "lg",
+    fontWeight: "bold",
+    marginBottom: "spacer3",
   },
   entityTableHeading: {
     fontSize: "md",

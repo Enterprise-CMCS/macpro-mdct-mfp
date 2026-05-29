@@ -270,8 +270,11 @@ export function renderModalOverlayTableBody(
       });
     case ReportType.SAR:
       return entities.map((entity, idx) => {
-        // Check if V2
-        const overlayForm = dynamicSection?.[idx]?.overlayForm;
+        // Check if V2 - for DYNAMIC_MODAL_OVERLAY, overlayForm is on section directly
+        const overlayForm =
+          section.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY
+            ? (section as AnyObject).overlayForm
+            : dynamicSection?.[idx]?.overlayForm;
         const hasOverlayForm = Boolean(overlayForm);
         const rawOverlayFormFields = overlayForm?.fields || [];
         const overlayFormTables = overlayForm?.tables || [];
@@ -410,6 +413,20 @@ const EntityFieldsTable = ({
   const { exportVerbiage } = getReportVerbiage(report?.reportType);
   const { tableHeaders } = exportVerbiage;
 
+  // Flatten nested fields from choices.children into main fields array
+  const flattenedFields: (FormField | FormLayoutElement)[] = [];
+  fields.forEach((field) => {
+    flattenedFields.push(field);
+    const choices = (field as FormField).props?.choices;
+    if (Array.isArray(choices)) {
+      choices.forEach((choice: any) => {
+        if (Array.isArray(choice.children)) {
+          flattenedFields.push(...choice.children);
+        }
+      });
+    }
+  });
+
   const tableRows: React.ReactElement[] = [];
   const entityType = entity.type;
   const entityId = entity.id;
@@ -419,7 +436,7 @@ const EntityFieldsTable = ({
       formField.type === ReportFormFieldType.DYNAMIC_OBJECT;
 
     if (isDynamicRowsTemplate) {
-      const templateId = (formField as any).id;
+      const templateId = formField.id;
       const tableId = templateId.split("_performanceIndicators")[0];
       const table = tables?.find((t) => t.id === tableId);
 
@@ -534,6 +551,8 @@ const EntityFieldsTable = ({
 
     const hasTitle = Boolean(fieldTitle);
     const hasSubtitle = Boolean(fieldSubtitle);
+    const hasSectionTitle = Boolean(fieldProps.sectionTitle);
+    const hasSubsectionTitle = Boolean(fieldProps.subsectionTitle);
 
     if (hasTitle && hasSubtitle) {
       const fieldTitle = (formField as any).props.title;
@@ -591,16 +610,17 @@ const EntityFieldsTable = ({
       return;
     }
 
-    // Check if field has a title property only (like Qualitative Methods, Funding Sources, Describe Initiative)
-    if (hasTitle) {
-      const fieldTitle = (formField as any).props.title;
+    // Check if field has a title or sectionTitle property (like Qualitative Methods, Funding Sources, Describe Initiative, Initiative Progress)
+    if (hasTitle || hasSectionTitle) {
+      const fieldTitle =
+        (formField as any).props.title || (formField as any).props.sectionTitle;
       const isDescribeInitiative =
         formField.id === "defineInitiative_describeInitiative";
       const helperText = isDescribeInitiative
         ? "Provide initiative description, including target populations and timeframe"
         : null;
 
-      // Render as: H4 heading -> mini-table
+      // Render as: H4 heading -> optional helper text -> mini-table
       tableRows.push(
         <Tr
           key={formField.id}
@@ -640,6 +660,48 @@ const EntityFieldsTable = ({
       return;
     }
 
+    if (hasSubsectionTitle) {
+      const subsectionTitle = (formField as any).props.subsectionTitle;
+
+      // Render as: H5 heading -> mini-table
+      tableRows.push(
+        <Tr
+          key={formField.id}
+          sx={{ border: "none !important", borderBottom: "none !important" }}
+        >
+          <Td
+            colSpan={2}
+            sx={{ padding: 0, border: "none !important", verticalAlign: "top" }}
+          >
+            <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
+              <Heading as="h5" sx={sx.subsectionHeading}>
+                {subsectionTitle}
+              </Heading>
+              <Table
+                content={{
+                  headRow: [tableHeaders.indicator, tableHeaders.response],
+                }}
+                sx={{
+                  ...sxSharedExportStyles.table,
+                  marginTop: "1.5rem",
+                  marginBottom: 0,
+                }}
+              >
+                <ExportedEntityDetailsTableRow
+                  formField={formField}
+                  pageType={PageTypes.MODAL_OVERLAY}
+                  entityType={entityType}
+                  entityId={entityId}
+                  showHintText={true}
+                />
+              </Table>
+            </Box>
+          </Td>
+        </Tr>
+      );
+      return;
+    }
+
     // Normal field rendering
     tableRows.push(
       <ExportedEntityDetailsTableRow
@@ -653,36 +715,52 @@ const EntityFieldsTable = ({
     );
   };
 
-  fields.forEach((field: FormField | FormLayoutElement) => {
+  flattenedFields.forEach((field: FormField | FormLayoutElement) => {
     if ((field as any).forCopyoverOnly) {
       return;
     }
 
     // Handle nested children fields - check if parent choice is selected before rendering
-    if (
-      (field as FormField).validation &&
-      typeof (field as FormField).validation === "object"
-    ) {
-      const validation = (field as FormField).validation as any;
-      if (validation.nested === true) {
-        // Check if the parent choice that contains this field is selected
-        const parentFieldId = validation.parentFieldName;
-        const parentOptionId = validation.parentOptionId;
+    const validation = (field as FormField).validation as any;
+    if (validation?.nested === true) {
+      const parentFieldId = validation.parentFieldName;
+      const parentOptionId = validation.parentOptionId;
 
-        if (parentFieldId && parentOptionId && entity[parentFieldId]) {
-          const parentValue = entity[parentFieldId];
-          // Check if this parent choice is selected - do exact match on the key
-          const isParentChoiceSelected =
-            Array.isArray(parentValue) &&
-            parentValue.some((choice: any) => choice.key === parentOptionId);
+      if (parentFieldId && parentOptionId && entity[parentFieldId]) {
+        const parentValue = entity[parentFieldId];
+        // Check if this parent choice is selected (key format: "fieldName-optionId")
+        const isParentChoiceSelected =
+          Array.isArray(parentValue) &&
+          parentValue.some((choice: any) => {
+            const choiceId = choice.key?.split("-").pop();
+            return choiceId === parentOptionId;
+          });
 
-          // Only render if parent choice is selected
-          if (isParentChoiceSelected) {
+        if (isParentChoiceSelected) {
+          const fieldLabel = (field as FormField).props?.label;
+
+          if (fieldLabel === "Please describe:") {
+            // Render "Please describe:" as a simple table row
+            const fieldId = (field as FormField).id;
+            const fieldValue = entity[fieldId];
+            tableRows.push(
+              <Tr key={fieldId} data-testid="exportRow">
+                <Td sx={{ width: "14rem" }}>
+                  <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
+                    Please describe:
+                  </Text>
+                </Td>
+                <Td>
+                  <Text>{fieldValue || "Not answered"}</Text>
+                </Td>
+              </Tr>
+            );
+          } else {
             renderFieldRow(field);
           }
         }
-        return;
       }
+      return;
     }
 
     if ((field as FormField).type) {
