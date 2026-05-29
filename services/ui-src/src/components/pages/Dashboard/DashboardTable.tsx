@@ -74,7 +74,7 @@ export const DashboardTable = ({
             reportType as ReportType,
             report.status,
             report.archived,
-            report.submissionCount
+            report.submissionCount,
           )}
         </Td>
         {/* Admin: Submission count */}
@@ -127,7 +127,7 @@ export const DashboardTable = ({
 
 export const copyOverSubText = (
   report: ReportMetadataShape,
-  reportsByState: ReportMetadataShape[]
+  reportsByState: ReportMetadataShape[],
 ) =>
   report.isCopied && (
     <Text sx={sx.copyOverText}>{`copied from ${
@@ -158,7 +158,7 @@ export const getStatus = (
   reportType: ReportType,
   status: string,
   archived?: boolean,
-  submissionCount?: number
+  submissionCount?: number,
 ) => {
   if (archived) {
     return `Archived`;
@@ -183,7 +183,7 @@ export const tableBody = (body: TableContentShape, isAdmin: boolean) => {
 
   if (isAdmin) {
     tableContent.headRow = tableContent.headRow.filter(
-      (e) => !["Due date", "Target populations"].includes(e)
+      (e) => !["Due date", "Target populations"].includes(e),
     );
   } else {
     tableContent.headRow = tableContent.headRow.filter((e) => e !== "#");
@@ -201,7 +201,7 @@ const EditReportButton = ({
       <button onClick={() => openCreateReportModal(report)}>
         <Image
           src={editIcon}
-          alt={`Edit ${report.reportYear} Period ${report.reportPeriod} report submission set-up information`}
+          alt={`Edit ${report.reportYear} Period ${report.reportPeriod} report`}
         />
       </button>
     </Td>
@@ -274,7 +274,7 @@ const AdminReleaseButton = ({
     report.reportType as ReportType,
     report.status,
     report.archived,
-    report.submissionCount
+    report.submissionCount,
   );
   const isDisabled = !(reportStatus === "Submitted");
 
