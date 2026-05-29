@@ -35,7 +35,10 @@ import * as wpFlags from "../../forms/routes/wp/flags";
 import * as sarFlags from "../../forms/routes/sar/flags";
 import * as financialReportFlags from "../../forms/routes/financial-report/flags";
 
-export const formTemplateForReportType = async (reportType: ReportType) => {
+export const formTemplateForReportType = async (
+  reportType: ReportType,
+  workPlanFieldData?: AnyObject
+) => {
   const routeMap: Record<ReportType, ReportJsonFile> = {
     [ReportType.WP]: wpReportJson,
     [ReportType.SAR]: sarReportJson,
@@ -50,6 +53,15 @@ export const formTemplateForReportType = async (reportType: ReportType) => {
 
   const flagsByReportType = flagMap[reportType];
   const flagNames = Object.keys(flagsByReportType);
+
+  // Legacy WP field data should always produce a legacy SAR template, regardless of feature flags
+  const sarWithLegacyWorkPlan =
+    reportType === ReportType.SAR &&
+    workPlanFieldData &&
+    "strategy_additionalDetails" in workPlanFieldData;
+  if (sarWithLegacyWorkPlan) {
+    return structuredClone(sarReportJson as ReportJson);
+  }
 
   // Loop through flags and replace routes if flag is enabled
   for (const flagName of flagNames) {
@@ -71,7 +83,10 @@ export async function getOrCreateFormTemplate(
   reportYear: number,
   workPlanFieldData?: AnyObject
 ) {
-  let currentFormTemplate = await formTemplateForReportType(reportType);
+  let currentFormTemplate = await formTemplateForReportType(
+    reportType,
+    workPlanFieldData
+  );
 
   if (currentFormTemplate?.routes) {
     currentFormTemplate = transformFormTemplate(
@@ -142,6 +157,16 @@ export async function getOrCreateFormTemplate(
     };
   }
 }
+
+export const isLegacySAR = (template: ReportJson): boolean => {
+  // If you duplicate this function in ui-src, update it there too!
+  const initiativesRoute = template.routes.find(
+    (route) => route.path === "/sar/state-or-territory-specific-initiatives"
+  );
+
+  // Pre-2026 SAR templates will include an initiatives array in the SAR State or Territory Specific Initiatives route, while 2026+ templates will not
+  return initiativesRoute ? "initiatives" in initiativesRoute : false;
+};
 
 // returns flattened array of valid routes for given reportJson
 export const flattenReportRoutesArray = (

@@ -12,6 +12,7 @@ import {
   getOrCreateFormTemplate,
   isFieldElement,
   isLayoutElement,
+  isLegacySAR,
 } from "./formTemplates";
 // forms
 import { wpReportJson as wp, sarReportJson as sar } from "../../forms";
@@ -320,6 +321,40 @@ describe("Test form contents", () => {
     const template = await formTemplateForReportType(ReportType.WP);
     expect(wpFlags).toEqual({ default: { mockFlag }, mockFlag });
     expect(template).toEqual(mockFlag);
+  });
+});
+
+describe("Test formTemplateForReportType legacy WP & SAR", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("returns legacy SAR template (with initiatives) when workPlanFieldData is from a legacy WP", async () => {
+    const legacyFieldData = { strategy_additionalDetails: "some value" };
+    const template = await formTemplateForReportType(
+      ReportType.SAR,
+      legacyFieldData
+    );
+    expect(isLegacySAR(template)).toBe(true);
+  });
+
+  it("returns new SAR template when workPlanFieldData lacks 'strategy_additionalDetails'", async () => {
+    (isFeatureFlagEnabled as jest.Mock).mockResolvedValue(true);
+    const modernFieldData = { someOtherKey: "value" };
+    const template = await formTemplateForReportType(
+      ReportType.SAR,
+      modernFieldData
+    );
+    expect(isLegacySAR(template)).toBe(false);
+  });
+
+  it("does not short-circuit feature flagged templates when workPlanFieldData is absent", async () => {
+    (isFeatureFlagEnabled as jest.Mock).mockResolvedValue(false);
+    await formTemplateForReportType(ReportType.WP);
+    expect(isFeatureFlagEnabled).toHaveBeenCalled();
+
+    await formTemplateForReportType(ReportType.SAR);
+    expect(isFeatureFlagEnabled).toHaveBeenCalled();
   });
 });
 

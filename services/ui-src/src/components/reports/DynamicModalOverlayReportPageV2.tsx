@@ -25,6 +25,7 @@ import {
   filterFormData,
   getEntriesToClear,
   isFieldElement,
+  isTableField,
   parseCustomHtml,
   setClearedEntriesToDefaultValue,
   useBreakpoint,
@@ -55,7 +56,7 @@ export const DynamicModalOverlayReportPageV2 = ({
     selectedEntity,
     setSelectedEntity,
   } = useStore();
-  const isDisabled = Boolean(userIsAdmin || userIsReadOnly);
+  const isDisabled = Boolean(userIsAdmin || userIsReadOnly || !editable);
 
   // Display Variables
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
@@ -96,7 +97,7 @@ export const DynamicModalOverlayReportPageV2 = ({
       );
       const nonTableFields = form.fields
         .filter(isFieldElement)
-        .filter((f) => !f.forTableOnly);
+        .filter((f) => !isTableField(f));
       const filteredFormData = filterFormData(enteredData, nonTableFields);
       const entriesToClear = getEntriesToClear(enteredData, nonTableFields);
       const newEntity = {

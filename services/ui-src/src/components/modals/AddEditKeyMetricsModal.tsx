@@ -67,7 +67,7 @@ export const AddEditKeyMetricsModal = ({
 
   const handleSubmit = async (enteredData: AnyObject) => {
     if (viewOnly) {
-      modalDisclosure.onClose();
+      modalDisclosure.onClose(false);
       return;
     }
 
@@ -130,7 +130,7 @@ export const AddEditKeyMetricsModal = ({
     setIsEditing(false);
     setSubmitting(false);
 
-    modalDisclosure.onClose();
+    modalDisclosure.onClose(true);
   };
 
   const submitForm = (event: SubmitEvent) => {
@@ -180,7 +180,7 @@ interface Props {
   form: FormJson;
   modalDisclosure: {
     isOpen: boolean;
-    onClose: any;
+    onClose: Function;
   };
   report?: ReportShape;
   parentEntityId?: string;

@@ -180,8 +180,7 @@ const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   },
   dynamicRowId: keyMetricsDynamicRowId,
   label: "Key Metrics",
-  // TODO: Change to true when table statusing is figured out
-  required: false,
+  required: true,
   verbiage: {
     buttonText: "Add key metric",
     hint: "",

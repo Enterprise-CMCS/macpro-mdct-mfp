@@ -215,6 +215,14 @@ export const renderEntityTables = (
           fieldValue = fieldValue[0].value;
         }
 
+        // If the field value is "Other, specify", look for the nested field
+        if (fieldValue === "Other, specify") {
+          const otherTextValue = item["otherText"];
+          if (otherTextValue) {
+            fieldValue = otherTextValue;
+          }
+        }
+
         if (fieldType.endsWith("-otherText")) {
           const baseFieldType = fieldType.replace("-otherText", "");
           const baseField = item[baseFieldType];
