@@ -82,8 +82,9 @@ export const DynamicField = ({
   // update display value on change
   const onChangeHandler = (event: InputChangeEvent) => {
     const { id, value } = event.target;
-    const currentEntityIndex =
-      displayValues.findIndex((entity) => entity.id === id) || 0;
+    const currentEntityIndex = displayValues.findIndex(
+      (entity) => entity.id === id
+    );
 
     // Clear error on input
     if (value.trim() && fieldErrorState?.[currentEntityIndex]?.name) {
