@@ -181,7 +181,7 @@ export const mockModalDrawerReportPageVerbiage = {
   deleteModalTitle: "Mock delete modal title",
   deleteModalConfirmButtonText: "Mock delete modal confirm button text",
   deleteModalWarning: "Mock delete modal warning",
-  entityUnfinishedMessage: "Mock entity unfinished messsage",
+  entityUnfinishedMessage: "Mock entity unfinished message",
   enterEntityDetailsButtonText: "Mock enter entity details button text",
   readOnlyEntityDetailsButtonText: "Mock read-only entity details button text",
   editEntityDetailsButtonText: "Mock edit entity details button text",

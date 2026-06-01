@@ -1,5 +1,6 @@
 import {
   DependentFieldValidation,
+  EntityType,
   FormJson,
   NumberMask,
   PageTypes,
@@ -247,7 +248,7 @@ export interface SARStateOrTerritorySpecificInitiativesRoute extends BaseRoute {
 
 export interface SARStateOrTerritorySpecificInitiativesV2Route extends BaseRoute {
   entityInfo: string[];
-  entityType: StepEntityType;
+  entityType: EntityType;
   overlayForm: ReportFormWithTables;
   pageType: string;
 }

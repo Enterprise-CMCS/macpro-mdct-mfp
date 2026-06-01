@@ -5,8 +5,10 @@
  */
 process.env.WpReportsTable = "local-wp-reports";
 process.env.SarReportsTable = "local-sar-reports";
+process.env.FinancialReportsTable = "local-financial-reports";
 process.env.WP_FORM_BUCKET = "database-local-wp";
 process.env.SAR_FORM_BUCKET = "database-local-sar";
+process.env.FINANCIAL_REPORT_FORM_BUCKET = "database-local-financial";
 process.env.FormTemplateVersionsTable = "local-form-template-versions";
 process.env.BannerTable = "local-banners";
 

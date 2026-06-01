@@ -90,7 +90,7 @@ export const convertDateUtcToEt = (date: number): string => {
 };
 
 /*
- * This code ensures the date has a preceeding 0 if the month/day is a single digit.
+ * This code ensures the date has a preceding 0 if the month/day is a single digit.
  * Ex: 7 becomes 07 while 10 stays 10
  */
 export const twoDigitCalendarDate = (date: number) => {

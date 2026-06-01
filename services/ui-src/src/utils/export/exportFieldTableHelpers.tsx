@@ -1,20 +1,24 @@
 import { ReactElement } from "react";
+// components
 import { Box, Heading } from "@chakra-ui/react";
+import { ExportedReportFieldRow, Table } from "components";
+// types
 import {
   FormField,
   FormLayoutElement,
-  isFieldElement,
   FieldChoice,
   ReportFormFieldType,
   PageTypes,
 } from "types";
+// utils
 import {
-  useStore,
-  parseCustomHtml,
-  maskResponseData,
   getFieldParts,
+  isFieldElement,
+  maskResponseData,
+  parseCustomHtml,
+  useStore,
 } from "utils";
-import { ExportedReportFieldRow, Table } from "components";
+// assets
 import { sxSharedExportStyles } from "components/pages/Export/ExportedReportPage";
 
 export const renderServiceTableBody = (bodyRows: any, headRow: string[]) => {

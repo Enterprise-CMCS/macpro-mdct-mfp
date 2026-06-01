@@ -23,23 +23,23 @@ import {
   AlertTypes,
   EntityDetailsOverlayShape,
   AnyObject,
-  isFieldElement,
   EntityShape,
   ReportStatus,
 } from "types";
-// assets
-import closeIcon from "assets/icons/icon_cancel_x_white.png";
-import closeGrayIcon from "assets/icons/icon_cancel_x_gray.png";
-import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 // utils
 import {
   entityWasUpdated,
   getEntriesToClear,
   filterFormData,
+  isFieldElement,
+  parseCustomHtml,
   setClearedEntriesToDefaultValue,
   useStore,
-  parseCustomHtml,
 } from "utils";
+// assets
+import closeIcon from "assets/icons/icon_cancel_x_white.png";
+import closeGrayIcon from "assets/icons/icon_cancel_x_gray.png";
+import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 
 /**
  * @deprecated No longer used as of Report Year 2026, Period 2
@@ -84,7 +84,7 @@ export const EntityDetailsOverlay = ({
   if (disableCloseOut === undefined) {
     const closedOut =
       selectedEntity?.isInitiativeClosed ??
-      !getCloseoutStatus(form, selectedEntity!);
+      !getCloseoutStatus(form, selectedEntity);
     setDisableCloseOut(closedOut);
   }
 

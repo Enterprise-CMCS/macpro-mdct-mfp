@@ -1,22 +1,31 @@
 import {
-  EntityDetailsOverlayShape,
-  EntityShape,
-  EntityStatuses,
-  EntityType,
-  FormField,
-  OverlayModalPageShape,
-  OverlayModalStepTypes,
-  OverlayModalTypes,
-  PageTypes,
-  ReportShape,
-} from "types";
-import {
   getValidationList,
   getEntityStatus,
   getInitiativeStatus,
   getInitiativeDashboardStatus,
   getCloseoutStatus,
 } from "./getEntityStatus";
+// types
+import {
+  EntityDetailsOverlayShape,
+  EntityDetailsOverlayTypes,
+  EntityShape,
+  EntityStatuses,
+  EntityType,
+  FormField,
+  OverlayModalPageShape,
+  OverlayModalTypes,
+  ReportFormFieldType,
+  ReportRoute,
+  ReportShape,
+  ValidationType,
+} from "types";
+// utils
+import {
+  mockSARReportWithOverlays,
+  mockWPFullReport,
+  mockWPReportWithOverlays,
+} from "utils/testing/setupJest";
 
 describe("tables/getEntityStatus", () => {
   describe("getValidationList()", () => {
@@ -24,13 +33,13 @@ describe("tables/getEntityStatus", () => {
       const fields = [
         {
           id: "field1",
-          type: "text",
-          validation: "text",
+          type: ReportFormFieldType.TEXT,
+          validation: ValidationType.TEXT,
         },
         {
           id: "field2",
-          type: "radio",
-          validation: "radio",
+          type: ReportFormFieldType.RADIO,
+          validation: ValidationType.RADIO,
           props: {
             choices: [
               {
@@ -47,7 +56,7 @@ describe("tables/getEntityStatus", () => {
       ];
       const entity = {
         id: "entity1",
-        type: "initiative" as const,
+        type: EntityType.INITIATIVE,
         field1: {
           key: "field1key",
         },
@@ -60,10 +69,51 @@ describe("tables/getEntityStatus", () => {
 
       expect(result).toEqual(["field1", "field2", "nestedField3"]);
     });
+
+    test("should not throw when entity field values are null", () => {
+      // typeof null === "object", so null values must be filtered out
+      // before accessing `.key` on them.
+      const fields = [
+        {
+          id: "field1",
+          type: ReportFormFieldType.TEXT,
+          validation: ValidationType.TEXT,
+        },
+        {
+          id: "field2",
+          type: ReportFormFieldType.RADIO,
+          validation: ValidationType.RADIO,
+          props: {
+            choices: [
+              {
+                id: "choice1",
+                children: [
+                  {
+                    id: "nestedField3",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ];
+      const entity = {
+        id: "entity1",
+        type: EntityType.INITIATIVE,
+        field1: null,
+        field2: [{ key: "choice1key" }],
+      };
+
+      expect(getValidationList(fields, entity)).toEqual([
+        "field1",
+        "field2",
+        "nestedField3",
+      ]);
+    });
   });
 
   describe("getEntityStatus()", () => {
-    test("should recognize when an entity is complete", () => {
+    test("returns complete status", () => {
       const report = {
         formTemplate: {
           flatRoutes: [
@@ -73,8 +123,8 @@ describe("tables/getEntityStatus", () => {
                 fields: [
                   {
                     id: "field1",
-                    type: "text",
-                    validation: "text",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
                   },
                 ],
               },
@@ -94,7 +144,7 @@ describe("tables/getEntityStatus", () => {
       expect(result).toBe(EntityStatuses.COMPLETE);
     });
 
-    test("should recognize when an entity is not complete", () => {
+    test("returns incomplete status", () => {
       const report = {
         formTemplate: {
           flatRoutes: [
@@ -104,13 +154,13 @@ describe("tables/getEntityStatus", () => {
                 fields: [
                   {
                     id: "field1",
-                    type: "text",
-                    validation: "text",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
                   },
                   {
                     id: "field2",
-                    type: "text",
-                    validation: "text",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
                   },
                 ],
               },
@@ -130,7 +180,7 @@ describe("tables/getEntityStatus", () => {
       expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
-    test("should ignore irrelevant routes", () => {
+    test("returns complete status, ignoring non-matching entityType route", () => {
       const report = {
         formTemplate: {
           flatRoutes: [
@@ -140,8 +190,8 @@ describe("tables/getEntityStatus", () => {
                 fields: [
                   {
                     id: "field2",
-                    type: "text",
-                    validation: "text",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
                   },
                 ],
               },
@@ -152,8 +202,8 @@ describe("tables/getEntityStatus", () => {
                 fields: [
                   {
                     id: "field1",
-                    type: "text",
-                    validation: "text",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
                   },
                 ],
               },
@@ -173,31 +223,18 @@ describe("tables/getEntityStatus", () => {
       expect(result).toBe(EntityStatuses.COMPLETE);
     });
 
-    // TODO this feels like a bug, right? Or can it never come up?
-    test("should ignore subsequent routes?", () => {
+    test("returns incomplete status for non-matching entityType route", () => {
       const report = {
         formTemplate: {
           flatRoutes: [
             {
-              entityType: "mockEntityType",
-              form: {
-                fields: [
-                  {
-                    id: "field1",
-                    type: "text",
-                    validation: "text",
-                  },
-                ],
-              },
-            },
-            {
-              entityType: "mockEntityType",
+              entityType: "different entity type",
               form: {
                 fields: [
                   {
                     id: "field2",
-                    type: "text",
-                    validation: "text",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
                   },
                 ],
               },
@@ -209,6 +246,50 @@ describe("tables/getEntityStatus", () => {
         id: "mockEntityId",
         type: EntityType.INITIATIVE,
         field1: "mock text data",
+      };
+      const entityType = "mockEntityType";
+
+      const result = getEntityStatus(report, entity, entityType);
+
+      expect(result).toBe(EntityStatuses.INCOMPLETE);
+    });
+
+    test("returns complete status for multiple routes of same entityType", () => {
+      const report = {
+        formTemplate: {
+          flatRoutes: [
+            {
+              entityType: "mockEntityType",
+              form: {
+                fields: [
+                  {
+                    id: "field1",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
+                  },
+                ],
+              },
+            },
+            {
+              entityType: "mockEntityType",
+              form: {
+                fields: [
+                  {
+                    id: "field2",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      } as ReportShape;
+      const entity = {
+        id: "mockEntityId",
+        type: EntityType.INITIATIVE,
+        field1: "mock text data",
+        field2: "mock text data",
       };
       const entityType = "mockEntityType";
 
@@ -219,289 +300,300 @@ describe("tables/getEntityStatus", () => {
   });
 
   describe("getInitiativeStatus()", () => {
-    test("should return CLOSE for closed initiatives in the Work Plan", () => {
-      const report = {
-        reportType: "WP",
-        formTemplate: {
-          routes: [
-            {},
-            {},
-            {},
-            {
-              children: [
-                {
-                  // we are in reportChild
-                  entityType: OverlayModalTypes.INITIATIVE,
-                  entitySteps: [
-                    {
-                      stepType: "mock step type",
-                      form: {
-                        fields: [
-                          {
-                            id: "field1",
-                            type: "text",
-                            validation: "text",
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      } as ReportShape;
-      const entity = {
-        id: "entity1",
-        type: "initiative",
-        isInitiativeClosed: true,
-      } as EntityShape;
-      const isPdf = false;
-      const ignore: string[] = [];
+    const entity = {
+      id: "entity1",
+      type: EntityType.INITIATIVE,
+      isInitiativeClosed: false,
+    } as EntityShape;
 
-      const result = getInitiativeStatus(report, entity, isPdf, ignore);
-
-      expect(result).toBe(EntityStatuses.CLOSE);
-    });
-
-    test("should not return CLOSE for closed initiatives in the SAR", () => {
-      const entity = {
-        id: "entity1",
-        type: "initiative",
+    describe("closed initiative", () => {
+      const closedEntity = {
+        ...entity,
         isInitiativeClosed: true,
       } as EntityShape;
 
-      const report = {
-        reportType: "SAR",
-        formTemplate: {
-          routes: [
-            {},
-            {},
-            {
-              pageType: PageTypes.DYNAMIC_MODAL_OVERLAY,
-              entityType: "initiative",
-              entityInfo: ["initiative_name", "initiative_wpTopic"],
-              verbiage: {
-                intro: {
-                  section: "",
-                },
-              },
-              initiatives: [entity],
-            },
-          ],
-        },
-      } as ReportShape;
-      const isPdf = false;
-      const ignore: string[] = [];
+      test("returns close status for Work Plan", () => {
+        const result = getInitiativeStatus(
+          mockWPReportWithOverlays,
+          closedEntity
+        );
 
-      const result = getInitiativeStatus(report, entity, isPdf, ignore);
+        expect(result).toBe(EntityStatuses.CLOSE);
+      });
 
-      expect(result).not.toBe(EntityStatuses.CLOSE);
+      test("returns incomplete status for SAR", () => {
+        const result = getInitiativeStatus(
+          mockSARReportWithOverlays,
+          closedEntity
+        );
+
+        expect(result).toBe(EntityStatuses.INCOMPLETE);
+      });
     });
 
-    test("should return incomplete for entities without steps", () => {
-      const report = {
-        formTemplate: {
-          routes: [
-            {},
-            {},
-            {},
-            {
-              children: [
-                {
-                  entityType: OverlayModalTypes.INITIATIVE,
-                },
-              ],
-            },
-          ],
-        },
-      } as ReportShape;
-      const entity = {
-        id: "entity1",
-        type: "initiative",
-        isInitiativeClosed: false,
-      } as EntityShape;
-      const isPdf = false;
-      const ignore: string[] = [];
-
-      const result = getInitiativeStatus(report, entity, isPdf, ignore);
-
-      expect(result).toBe(EntityStatuses.INCOMPLETE);
-    });
-
-    test("should check all steps for completeness", () => {
-      const report = {
-        reportType: "WP",
-        formTemplate: {
-          routes: [
-            {},
-            {},
-            {},
-            {
-              children: [
-                {
-                  // we are in reportChild
-                  entityType: OverlayModalTypes.INITIATIVE,
-                  entitySteps: [
-                    {
-                      stepType: "mock step type",
-                      form: {
-                        fields: [
-                          {
-                            id: "field1",
-                            type: "text",
-                            validation: "text",
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      } as ReportShape;
-      const entity = {
-        id: "entity1",
-        type: "initiative",
-        isInitiativeClosed: false,
-      } as EntityShape;
-      const isPdf = false;
-      const ignore: string[] = [];
-
-      let result = getInitiativeStatus(report, entity, isPdf, ignore);
-      expect(result).toBe(EntityStatuses.INCOMPLETE);
-
-      (entity as any).field1 = "mock data";
-      result = getInitiativeStatus(report, entity, isPdf, ignore);
-      expect(result).toBe(EntityStatuses.COMPLETE);
-    });
-  });
-
-  test("should ignore specified step types", () => {
-    const report = {
-      reportType: "WP",
-      formTemplate: {
-        routes: [
-          {},
-          {},
-          {},
-          {
-            children: [
+    describe("initiativeV1", () => {
+      test("returns incomplete status for missing WP initiative page", () => {
+        const report = {
+          ...mockWPReportWithOverlays,
+          formTemplate: {
+            ...mockWPFullReport.formTemplate,
+            routes: [
               {
-                // we are in reportChild
-                entityType: OverlayModalTypes.INITIATIVE,
-                entitySteps: [
+                name: "mock-initiatives-route",
+                path: "/wp/state-or-territory-specific-initiatives",
+                children: [
                   {
-                    stepType: "mock step type",
-                    form: {
-                      fields: [
-                        {
-                          id: "field1",
-                          type: "text",
-                          validation: "text",
-                        },
-                      ],
-                    },
+                    path: "/mock/child-page",
+                    entityType: "other entity type",
                   },
+                ],
+              } as ReportRoute,
+            ],
+          },
+        } as ReportShape;
+        const result = getInitiativeStatus(report, entity);
+
+        expect(result).toBe(EntityStatuses.INCOMPLETE);
+      });
+
+      test("returns incomplete status for missing SAR initiative page", () => {
+        const report = {
+          ...mockSARReportWithOverlays,
+          formTemplate: {
+            ...mockWPFullReport.formTemplate,
+            routes: [],
+          },
+        } as ReportShape;
+        const result = getInitiativeStatus(report, entity);
+
+        expect(result).toBe(EntityStatuses.INCOMPLETE);
+      });
+
+      test("returns incomplete status for missing child routes", () => {
+        const report = {
+          ...mockWPReportWithOverlays,
+          formTemplate: {
+            ...mockWPFullReport.formTemplate,
+            routes: [
+              {
+                name: "mock-initiatives-route",
+                path: "/wp/state-or-territory-specific-initiatives",
+              } as ReportRoute,
+            ],
+          },
+        } as ReportShape;
+        const result = getInitiativeStatus(report, entity);
+
+        expect(result).toBe(EntityStatuses.INCOMPLETE);
+      });
+
+      test("returns incomplete status for unknown reportType", () => {
+        const report = {
+          ...mockWPReportWithOverlays,
+          reportType: "unknown",
+        } as ReportShape;
+        const result = getInitiativeStatus(report, entity);
+        expect(result).toBe(EntityStatuses.INCOMPLETE);
+      });
+
+      describe("filled initiative", () => {
+        test("returns complete status", () => {
+          const updatedEntity = {
+            ...entity,
+            mockStepId1: "mock value",
+            mockStepId2: "mock value",
+            mockCloseOutStepId: "mock value",
+          } as EntityShape;
+          expect(
+            getInitiativeStatus(mockWPReportWithOverlays, updatedEntity)
+          ).toBe(EntityStatuses.COMPLETE);
+        });
+
+        test("returns incomplete status", () => {
+          const updatedEntity = {
+            ...entity,
+            mockStepId1: "mock value",
+            mockStepId2: "mock value",
+          } as EntityShape;
+
+          expect(
+            getInitiativeStatus(mockWPReportWithOverlays, updatedEntity)
+          ).toBe(EntityStatuses.INCOMPLETE);
+        });
+      });
+
+      describe("ignored steps", () => {
+        const updatedEntity = {
+          ...entity,
+          mockStepId1: "mock value",
+          mockCloseOutStepId: "mock value",
+        } as EntityShape;
+
+        test("returns complete status", () => {
+          expect(
+            getInitiativeStatus(
+              mockWPReportWithOverlays,
+              updatedEntity,
+              false,
+              ["other step type" as EntityDetailsOverlayTypes]
+            )
+          ).toBe(EntityStatuses.COMPLETE);
+        });
+
+        test("returns incomplete status", () => {
+          expect(
+            getInitiativeStatus(
+              mockWPReportWithOverlays,
+              updatedEntity,
+              false,
+              []
+            )
+          ).toBe(EntityStatuses.INCOMPLETE);
+        });
+      });
+
+      describe("PDF", () => {
+        const updatedEntity = {
+          ...entity,
+          mockStepId1: "mock value",
+          mockStepId2: "mock value",
+        } as EntityShape;
+
+        test("returns complete status for PDF", () => {
+          expect(
+            getInitiativeStatus(mockWPReportWithOverlays, updatedEntity, true)
+          ).toBe(EntityStatuses.COMPLETE);
+        });
+
+        test("returns incomplete status for non-PDF", () => {
+          expect(
+            getInitiativeStatus(mockWPReportWithOverlays, updatedEntity, false)
+          ).toBe(EntityStatuses.INCOMPLETE);
+        });
+      });
+    });
+
+    describe("initiativeV2", () => {
+      describe("filled WP initiative", () => {
+        const report = {
+          ...mockWPReportWithOverlays,
+          formTemplate: {
+            ...mockWPFullReport.formTemplate,
+            routes: [
+              {
+                name: "mock-initiatives-route",
+                path: "/wp/state-or-territory-specific-initiatives",
+                children: [
                   {
-                    stepType: "other step type",
-                    form: {
+                    path: "/wp/state-or-territory-specific-initiatives/initiatives",
+                    entityType: OverlayModalTypes.INITIATIVE,
+                    overlayForm: {
                       fields: [
                         {
-                          id: "field2",
-                          type: "text",
-                          validation: "text",
+                          id: "mockFieldId",
+                          type: ReportFormFieldType.TEXT,
+                          validation: ValidationType.TEXT,
                         },
                       ],
                     },
                   },
                 ],
-              },
+              } as ReportRoute,
             ],
-          },
-        ],
-      },
-    } as ReportShape;
-    const entity = {
-      id: "entity1",
-      type: "initiative",
-      isInitiativeClosed: false,
-      field1: "mock value",
-    } as EntityShape;
-    const isPdf = false;
-    let ignore: string[] = [];
-
-    let result = getInitiativeStatus(report, entity, isPdf, ignore);
-    expect(result).toBe(EntityStatuses.INCOMPLETE);
-
-    ignore = ["other step type"];
-    result = getInitiativeStatus(report, entity, isPdf, ignore);
-    expect(result).toBe(EntityStatuses.COMPLETE);
-  });
-
-  test("should ignore the closeout step when evaluating for PDF", () => {
-    const report = {
-      reportType: "WP",
-      formTemplate: {
-        routes: [
-          {},
-          {},
-          {},
-          {
-            children: [
+            flatRoutes: [
               {
-                // we are in reportChild
-                entityType: OverlayModalTypes.INITIATIVE,
-                entitySteps: [
-                  {
-                    stepType: OverlayModalStepTypes.FUNDING_SOURCES,
-                    form: {
-                      fields: [
-                        {
-                          id: "field1",
-                          type: "text",
-                          validation: "text",
-                        },
-                      ],
-                    },
-                  },
-                  {
-                    stepType: "closeOutInformation",
-                    form: {
-                      fields: [
-                        {
-                          id: "field2",
-                          type: "text",
-                          validation: "text",
-                        },
-                      ],
-                    },
-                  },
-                ],
+                name: "mock-initiatives-route",
+                path: "/wp/state-or-territory-specific-initiatives",
               },
+              {
+                path: "/wp/state-or-territory-specific-initiatives/initiatives",
+                entityType: OverlayModalTypes.INITIATIVE,
+                overlayForm: {
+                  fields: [
+                    {
+                      id: "mockFieldId",
+                      type: ReportFormFieldType.TEXT,
+                      validation: ValidationType.TEXT,
+                    },
+                  ],
+                },
+              } as ReportRoute,
             ],
           },
-        ],
-      },
-    } as ReportShape;
-    const entity = {
-      id: "entity1",
-      type: "initiative",
-      isInitiativeClosed: false,
-      field1: "mock value",
-    } as EntityShape;
-    let isPdf = false;
-    const ignore: string[] = [];
+        };
 
-    let result = getInitiativeStatus(report, entity, isPdf, ignore);
-    expect(result).toBe(EntityStatuses.INCOMPLETE);
+        test("returns complete status", () => {
+          const updatedEntity = {
+            ...entity,
+            mockFieldId: "mock value",
+          } as EntityShape;
+          expect(getInitiativeStatus(report, updatedEntity)).toBe(
+            EntityStatuses.COMPLETE
+          );
+        });
 
-    isPdf = true;
-    result = getInitiativeStatus(report, entity, isPdf, ignore);
-    expect(result).toBe(EntityStatuses.COMPLETE);
+        test("returns incomplete status", () => {
+          expect(getInitiativeStatus(report, entity)).toBe(
+            EntityStatuses.INCOMPLETE
+          );
+        });
+      });
+
+      describe("filled SAR initiative", () => {
+        const report = {
+          ...mockSARReportWithOverlays,
+          formTemplate: {
+            ...mockWPFullReport.formTemplate,
+            routes: [
+              {
+                path: "/sar/state-or-territory-specific-initiatives",
+                entityType: OverlayModalTypes.INITIATIVE,
+                overlayForm: {
+                  fields: [
+                    {
+                      id: "mockFieldId",
+                      type: ReportFormFieldType.TEXT,
+                      validation: ValidationType.TEXT,
+                    },
+                  ],
+                },
+              } as ReportRoute,
+            ],
+            flatRoutes: [
+              {
+                path: "/sar/state-or-territory-specific-initiatives",
+                entityType: OverlayModalTypes.INITIATIVE,
+                overlayForm: {
+                  fields: [
+                    {
+                      id: "mockFieldId",
+                      type: ReportFormFieldType.TEXT,
+                      validation: ValidationType.TEXT,
+                    },
+                  ],
+                },
+              } as ReportRoute,
+            ],
+          },
+        };
+
+        test("returns complete status", () => {
+          const updatedEntity = {
+            ...entity,
+            mockFieldId: "mock value",
+          } as EntityShape;
+          expect(getInitiativeStatus(report, updatedEntity)).toBe(
+            EntityStatuses.COMPLETE
+          );
+        });
+
+        test("returns incomplete status", () => {
+          expect(getInitiativeStatus(report, entity)).toBe(
+            EntityStatuses.INCOMPLETE
+          );
+        });
+      });
+    });
   });
 
   describe("getInitiativeDashboardStatus()", () => {
@@ -509,16 +601,43 @@ describe("tables/getEntityStatus", () => {
       const formEntity = {
         stepType: "mockStepType",
         form: {
-          // TODO test modalForm
           fields: [
             {
               id: "field1",
-              type: "text",
-              validation: "text",
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
             },
           ],
         },
       } as EntityDetailsOverlayShape;
+      const entity = {
+        id: "entity1",
+        type: EntityType.INITIATIVE,
+        mockStepType: [
+          {
+            field1: "mock value",
+          },
+        ],
+      };
+
+      const result = getInitiativeDashboardStatus(formEntity, entity);
+
+      expect(result).toBe(EntityStatuses.COMPLETE);
+    });
+
+    test("should find completed fields for modal form", () => {
+      const formEntity = {
+        stepType: "mockStepType",
+        modalForm: {
+          fields: [
+            {
+              id: "field1",
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
+            },
+          ],
+        },
+      } as OverlayModalPageShape;
       const entity = {
         id: "entity1",
         type: EntityType.INITIATIVE,
@@ -541,8 +660,8 @@ describe("tables/getEntityStatus", () => {
           fields: [
             {
               id: "field1",
-              type: "text",
-              validation: "text",
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
             },
           ],
         },
@@ -569,8 +688,8 @@ describe("tables/getEntityStatus", () => {
           fields: [
             {
               id: "field1",
-              type: "text",
-              validation: "text",
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
             },
           ],
         },
@@ -592,8 +711,8 @@ describe("tables/getEntityStatus", () => {
           fields: [
             {
               id: "field1",
-              type: "text",
-              validation: "text",
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
             },
           ],
         },
@@ -616,8 +735,8 @@ describe("tables/getEntityStatus", () => {
           fields: [
             {
               id: "field1",
-              type: "radio",
-              validation: "radio",
+              type: ReportFormFieldType.RADIO,
+              validation: ValidationType.RADIO,
               props: {
                 choices: [
                   {
@@ -625,8 +744,8 @@ describe("tables/getEntityStatus", () => {
                     children: [
                       {
                         id: "nestedField2",
-                        type: "text",
-                        validation: "text",
+                        type: ReportFormFieldType.TEXT,
+                        validation: ValidationType.TEXT,
                       } as FormField,
                     ],
                   },
@@ -657,8 +776,8 @@ describe("tables/getEntityStatus", () => {
           fields: [
             {
               id: "field1",
-              type: "radio",
-              validation: "radio",
+              type: ReportFormFieldType.RADIO,
+              validation: ValidationType.RADIO,
               props: {
                 choices: [
                   {
@@ -666,8 +785,8 @@ describe("tables/getEntityStatus", () => {
                     children: [
                       {
                         id: "nestedField2",
-                        type: "text",
-                        validation: "text",
+                        type: ReportFormFieldType.TEXT,
+                        validation: ValidationType.TEXT,
                       } as FormField,
                     ],
                   },
@@ -700,8 +819,8 @@ describe("tables/getEntityStatus", () => {
         fields: [
           {
             id: "field1",
-            type: "text",
-            validation: "text",
+            type: ReportFormFieldType.TEXT,
+            validation: ValidationType.TEXT,
           },
         ],
       };
@@ -722,8 +841,8 @@ describe("tables/getEntityStatus", () => {
         fields: [
           {
             id: "field1",
-            type: "text",
-            validation: "text",
+            type: ReportFormFieldType.TEXT,
+            validation: ValidationType.TEXT,
           },
         ],
       };
@@ -737,20 +856,37 @@ describe("tables/getEntityStatus", () => {
       expect(result).toBe(false);
     });
 
+    test("should return false for no entity", () => {
+      const form = {
+        id: "form1",
+        fields: [
+          {
+            id: "field1",
+            type: ReportFormFieldType.TEXT,
+            validation: ValidationType.TEXT,
+          },
+        ],
+      };
+
+      const result = getCloseoutStatus(form);
+
+      expect(result).toBe(false);
+    });
+
     test("should not require optional fields", () => {
       const form = {
         id: "form1",
         fields: [
           {
             id: "field1",
-            type: "text",
-            validation: "textOptional",
+            type: ReportFormFieldType.TEXT,
+            validation: ValidationType.TEXT_OPTIONAL,
           },
           {
             id: "field2",
-            type: "text",
+            type: ReportFormFieldType.TEXT,
             validation: {
-              type: "textOptional",
+              type: ValidationType.TEXT_OPTIONAL,
             },
           },
         ],
@@ -778,16 +914,15 @@ describe("tables/getEntityStatus", () => {
             value: "Discontinued initiative",
           },
         ],
-      };
+      } as EntityShape;
 
       // Without
       let result = getCloseoutStatus(form, entity);
       expect(result).toBe(false);
 
       // With
-      (entity as any)[
-        "closeOutInformation_initiativeStatus-terminationReason"
-      ] = "mock text";
+      entity["closeOutInformation_initiativeStatus-terminationReason"] =
+        "mock text";
       result = getCloseoutStatus(form, entity);
       expect(result).toBe(true);
     });
@@ -805,14 +940,14 @@ describe("tables/getEntityStatus", () => {
             value: "Sustaining initiative through a Medicaid authority",
           },
         ],
-      };
+      } as EntityShape;
 
       // Without
       let result = getCloseoutStatus(form, entity);
       expect(result).toBe(false);
 
       // With
-      (entity as any)["closeOutInformation_initiativeStatus-alternateFunding"] =
+      entity["closeOutInformation_initiativeStatus-alternateFunding"] =
         "mock text";
       result = getCloseoutStatus(form, entity);
       expect(result).toBe(true);

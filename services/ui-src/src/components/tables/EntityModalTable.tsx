@@ -1,4 +1,11 @@
-import { useContext, useState } from "react";
+import {
+  BaseSyntheticEvent,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useFormContext } from "react-hook-form";
 // components
 import {
   Box,
@@ -14,6 +21,7 @@ import {
   useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
+import { InlineError } from "@cmsgov/design-system";
 import {
   AddEditKeyMetricsModal,
   DeleteEntityModal,
@@ -31,7 +39,7 @@ import {
   ReportShape,
 } from "types";
 // utils
-import { parseCustomHtml } from "utils";
+import { parseCustomHtml, shimComponent } from "utils";
 
 export const EntityModalTable = ({
   bodyRows,
@@ -45,6 +53,30 @@ export const EntityModalTable = ({
   styleAsOptionalHeadRows,
   verbiage,
 }: Props) => {
+  const form = useFormContext();
+  const formErrorState = form?.formState?.errors || {};
+  const [errorMessage, setErrorMessage] = useState<ReactNode>(undefined);
+  const errorId = `${tableId}__error`;
+  const ariaProps = errorMessage ? { "aria-describedby": errorId } : {};
+  const InlineErrorShim = shimComponent(InlineError);
+
+  useEffect(() => {
+    const errorKey = Object.keys(formErrorState).find((key) =>
+      key.startsWith(tableId)
+    );
+    const currentFormData = report?.fieldData?.[formData?.type]?.find(
+      (t: AnyObject) => t.id === formData?.id
+    );
+
+    if (!errorKey || currentFormData?.[errorKey]?.length > 0) {
+      setErrorMessage(undefined);
+      return;
+    }
+
+    const message = formErrorState[errorKey]?.message as ReactNode;
+    setErrorMessage(message);
+  }, [formData, formErrorState, tableId]);
+
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
   const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
@@ -65,7 +97,8 @@ export const EntityModalTable = ({
     setCurrentEntityId(entityId);
     keyMetricsModalOnOpenHandler();
   };
-  const closeModal = () => {
+  const closeModal = (closedAfterSave?: boolean | BaseSyntheticEvent) => {
+    if (closedAfterSave === true) setErrorMessage(undefined);
     setCurrentEntityId(undefined);
     keyMetricsModalOnCloseHandler();
   };
@@ -131,8 +164,8 @@ export const EntityModalTable = ({
       {verbiage?.subtitle && (
         <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
       )}
-
-      <Table id={tableId} sx={sx.table}>
+      <InlineErrorShim id={errorId}>{errorMessage}</InlineErrorShim>
+      <Table id={tableId} sx={sx.table} {...ariaProps}>
         <TableCaption placement="top" sx={sx.captionBox}>
           <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
         </TableCaption>
@@ -142,6 +175,7 @@ export const EntityModalTable = ({
               row,
               rowIndex,
               section: "thead",
+              showEditHeader: true,
               styleAsOptionalHeadRows: styleAsOptionalHeadRows,
               ...sharedCellProps,
             })

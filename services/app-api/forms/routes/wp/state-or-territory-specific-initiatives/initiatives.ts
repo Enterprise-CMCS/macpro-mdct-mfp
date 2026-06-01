@@ -163,7 +163,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     ],
   },
   dashboard: {
-    name: "Intitiative Details Dashboard",
+    name: "Initiative Details Dashboard",
     verbiage: {
       intro: {
         section: "State or Territory-Specific Initiatives",

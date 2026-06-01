@@ -29,19 +29,19 @@ import {
   EntityType,
   ModalDrawerReportPageShape,
   ReportStatus,
-  isFieldElement,
   ErrorVerbiage,
 } from "types";
 // utils
 import {
-  parseCustomHtml,
-  getFormattedEntityData,
-  useStore,
+  entityWasUpdated,
   filterFormData,
   getEntriesToClear,
-  setClearedEntriesToDefaultValue,
-  entityWasUpdated,
+  getFormattedEntityData,
+  isFieldElement,
+  parseCustomHtml,
   resetClearProp,
+  setClearedEntriesToDefaultValue,
+  useStore,
 } from "utils";
 import { getDefaultTargetPopulationNames } from "../../constants";
 

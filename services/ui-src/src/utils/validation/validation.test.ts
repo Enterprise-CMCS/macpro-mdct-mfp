@@ -1,7 +1,9 @@
 import { mapValidationTypesToSchema } from "./validation";
+// types
+import { FormJson, ValidationType } from "types";
+// utils
+import { compileValidationJsonFromFields, isFieldElement } from "utils";
 import * as schema from "./schemas";
-import { FormJson, isFieldElement, ValidationType } from "types";
-import { compileValidationJsonFromFields } from "utils/reports/reports";
 import * as yup from "yup";
 
 const mockStandardValidationType = {
@@ -75,7 +77,7 @@ describe("utils/validation", () => {
       const result = mapValidationTypesToSchema(mockDependentValidationType);
       expect(JSON.stringify(result)).toEqual(
         JSON.stringify({
-          key: schema.endDate("mock-dependent-field-name"),
+          key: schema.endDate(["mock-dependent-field-name"]),
         })
       );
     });
@@ -87,7 +89,7 @@ describe("utils/validation", () => {
       expect(JSON.stringify(result)).toEqual(
         JSON.stringify({
           key: schema.nested(
-            () => schema.endDate("mock-dependent-field-name"),
+            () => schema.endDate(["mock-dependent-field-name"]),
             "mock-parent-field-name",
             "mock-parent-option-name"
           ),

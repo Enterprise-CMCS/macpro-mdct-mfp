@@ -15,10 +15,11 @@ import {
 // utils
 import {
   getReportVerbiage,
-  useStore,
-  sx,
-  renderFieldTableBody,
+  isTableField,
   renderCalculationTables,
+  renderFieldTableBody,
+  sx,
+  useStore,
 } from "utils";
 
 export const ExportedReportFieldTable = ({
@@ -69,7 +70,7 @@ export const ExportedReportFieldTable = ({
     );
   }
 
-  const nonTableFields = formFields.filter((f) => !f.forTableOnly);
+  const nonTableFields = formFields.filter((f) => !isTableField(f));
   const currentLevel = parseInt(headingLevel.charAt(1), 10);
   const nextLevel = currentLevel + 1;
   const nextHeadingLevel = `h${nextLevel}`;

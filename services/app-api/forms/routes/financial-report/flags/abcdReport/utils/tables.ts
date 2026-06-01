@@ -380,8 +380,8 @@ export const c1915WaiverServices = (prefix: string) => [
     label: "Live-In Caregiver (42 CFR §441.303(f)(8))",
   },
   {
-    id: `${prefix}_captivatedPaymentsForLongTermCareServices`,
-    label: "Captivated Payments for Long Term Care Services",
+    id: `${prefix}_capitatedPaymentsForLongTermCareServices`,
+    label: "Capitated Payments for Long Term Care Services",
   },
 ];
 

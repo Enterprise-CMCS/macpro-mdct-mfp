@@ -77,7 +77,7 @@ describe("Test mapValidationTypesToSchema", () => {
     const result = mapValidationTypesToSchema(mockDependentValidationType);
     expect(JSON.stringify(result)).toEqual(
       JSON.stringify({
-        key: endDate("mock-dependent-field-name"),
+        key: endDate(["mock-dependent-field-name"]),
       })
     );
   });
@@ -89,7 +89,7 @@ describe("Test mapValidationTypesToSchema", () => {
     expect(JSON.stringify(result)).toEqual(
       JSON.stringify({
         key: nested(
-          () => endDate("mock-dependent-field-name"),
+          () => endDate(["mock-dependent-field-name"]),
           "mock-parent-field-name",
           "mock-parent-option-name"
         ),

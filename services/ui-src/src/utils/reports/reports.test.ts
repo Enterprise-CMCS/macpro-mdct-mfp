@@ -47,7 +47,7 @@ describe("flattenReportRoutesArray", () => {
 
 describe("utils/reports", () => {
   describe("getEligibleWorkPlan()", () => {
-    test("should grab the oldest eligble workplan", async () => {
+    test("should grab the oldest eligible workplan", async () => {
       const submissions: ReportMetadataShape[] = [
         {
           submissionName: "New Jersey Work Plan 2023 - Period 2",
@@ -101,7 +101,7 @@ describe("utils/reports", () => {
       expect(getEligibleWorkPlan(submissions)).toBe(undefined);
     });
 
-    test("should return undefined if given submissions but none are eligble", async () => {
+    test("should return undefined if given submissions but none are eligible", async () => {
       const submissions: ReportMetadataShape[] = [
         {
           reportType: "WP",

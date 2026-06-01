@@ -9,10 +9,8 @@ export const financialReportPeriodsMap = {
 };
 
 export const generateReportYearOptions = () => {
-  const FINANCIAL_REPORTING_LAUNCH_YEAR = 2025;
   const currentYear = new Date(Date.now()).getFullYear();
-  return [currentYear - 1, currentYear, currentYear + 1]
-    .filter((year) => year >= FINANCIAL_REPORTING_LAUNCH_YEAR)
+  return [currentYear, currentYear + 1, currentYear + 2]
     .map((year) => ({
       id: `reportYear-${year}`,
       label: `${year}`,

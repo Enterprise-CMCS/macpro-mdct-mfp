@@ -12,7 +12,11 @@ import {
   ReportFormFieldType,
 } from "types";
 // utils
-import { getReportVerbiage, maskResponseData } from "utils";
+import {
+  getReportVerbiage,
+  isFieldValidationOptional,
+  maskResponseData,
+} from "utils";
 
 // checks for type of data cell to be render and calls the appropriate renderer
 export const renderDataCell = (
@@ -60,12 +64,7 @@ export const renderOverlayEntityDataCell = (
   } = exportVerbiage;
 
   if (!entity || !entity[formField.id]) {
-    const validationType =
-      typeof formField.validation === "object"
-        ? formField.validation.type
-        : formField.validation;
-
-    if (validationType.includes("Optional")) {
+    if (isFieldValidationOptional(formField)) {
       return <Text>{noResponse}, optional</Text>;
     } else {
       return <Text sx={sx.noResponse}>{noResponse}; required</Text>;
@@ -131,12 +130,6 @@ export const renderResponseData = (
   notApplicable: boolean = false
 ) => {
   const fieldType = formField.type as ReportFormFieldType;
-  const fieldValidation =
-    typeof formField.validation === "object"
-      ? formField.validation.type
-      : formField.validation;
-  const isOptional = fieldValidation.includes("Optional");
-
   const isDynamicField = [
     ReportFormFieldType.DYNAMIC,
     ReportFormFieldType.DYNAMIC_OBJECT,
@@ -159,7 +152,7 @@ export const renderResponseData = (
 
   // check for and handle no response
   if (!hasResponse) {
-    if (isOptional) {
+    if (isFieldValidationOptional(formField)) {
       return <Text>{missingEntryVerbiage}, optional</Text>;
     }
     return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;
