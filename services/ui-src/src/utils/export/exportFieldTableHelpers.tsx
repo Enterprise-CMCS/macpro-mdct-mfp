@@ -14,7 +14,6 @@ import {
 import {
   getFieldParts,
   isFieldElement,
-  labelTextWithOptional,
   maskResponseData,
   parseCustomHtml,
   useStore,
@@ -177,7 +176,7 @@ export const renderEntityTables = (
 
     const transformedHeadRow = headRow.map((header: string) => {
       if (styleAsOptionalHeadRows.includes(header)) {
-        return labelTextWithOptional(header);
+        return `${header}<span style="font-weight: normal;"> (optional)</span>`;
       }
       return header;
     });
