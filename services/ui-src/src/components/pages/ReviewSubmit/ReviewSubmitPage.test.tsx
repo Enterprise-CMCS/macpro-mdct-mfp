@@ -42,6 +42,15 @@ const mockFilledReport = {
   },
 };
 
+const {
+  alertBox,
+  review: {
+    modal: { structure: modal },
+    pageLink: { text: submitButtonText },
+  },
+  submitted: { intro },
+} = reviewVerbiage;
+
 const mockSubmittedReport = {
   ...mockFilledReport,
   status: ReportStatus.SUBMITTED,
@@ -57,11 +66,9 @@ describe("<ReviewSubmitPage />", () => {
       test("Show alert message if status is NOT_STARTED and is not able to be submitted", () => {
         mockedUseStore.mockReturnValue(mockUseStore);
         render(WpReviewSubmitPage);
-        const { alertBox } = reviewVerbiage;
-        const { title, description } = alertBox;
-        expect(screen.getByText(title)).toBeVisible();
-        expect(screen.getByText(description)).toBeVisible();
-        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
+        expect(screen.getByText(alertBox.title)).toBeVisible();
+        expect(screen.getByText(alertBox.description)).toBeVisible();
+        expect(screen.getByText(submitButtonText)).toBeDisabled();
       });
 
       test("Admin users get same experience and can't submit form", () => {
@@ -70,11 +77,9 @@ describe("<ReviewSubmitPage />", () => {
           user: mockAdminUserStore,
         });
         render(WpReviewSubmitPage);
-        const { alertBox } = reviewVerbiage;
-        const { title, description } = alertBox;
-        expect(screen.getByText(title)).toBeVisible();
-        expect(screen.getByText(description)).toBeVisible();
-        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
+        expect(screen.getByText(alertBox.title)).toBeVisible();
+        expect(screen.getByText(alertBox.description)).toBeVisible();
+        expect(screen.getByText(submitButtonText)).toBeDisabled();
       });
     });
 
@@ -85,11 +90,9 @@ describe("<ReviewSubmitPage />", () => {
           report: { ...mockUseStore.report, status: ReportStatus.IN_PROGRESS },
         });
         render(WpReviewSubmitPage);
-        const { alertBox } = reviewVerbiage;
-        const { title, description } = alertBox;
-        expect(screen.getByText(title)).toBeVisible();
-        expect(screen.getByText(description)).toBeVisible();
-        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
+        expect(screen.getByText(alertBox.title)).toBeVisible();
+        expect(screen.getByText(alertBox.description)).toBeVisible();
+        expect(screen.getByText(submitButtonText)).toBeDisabled();
 
         const unfilledPageImg = document.querySelector(
           "img[alt='Error notification']"
@@ -104,11 +107,9 @@ describe("<ReviewSubmitPage />", () => {
           user: mockAdminUserStore,
         });
         render(WpReviewSubmitPage);
-        const { alertBox } = reviewVerbiage;
-        const { title, description } = alertBox;
-        expect(screen.getByText(title)).toBeVisible();
-        expect(screen.getByText(description)).toBeVisible();
-        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
+        expect(screen.getByText(alertBox.title)).toBeVisible();
+        expect(screen.getByText(alertBox.description)).toBeVisible();
+        expect(screen.getByText(submitButtonText)).toBeDisabled();
 
         const unfilledPageImg = document.querySelector(
           "img[alt='Error notification']"
@@ -124,11 +125,11 @@ describe("<ReviewSubmitPage />", () => {
           report: mockFilledReport,
         });
         render(WpReviewSubmitPage);
-        const { alertBox } = reviewVerbiage;
-        const { title, description } = alertBox;
-        expect(screen.queryByText(title)).not.toBeInTheDocument();
-        expect(screen.queryByText(description)).not.toBeInTheDocument();
-        expect(screen.getByText("Submit MFP Work Plan")).not.toBeDisabled();
+        expect(screen.queryByText(alertBox.title)).not.toBeInTheDocument();
+        expect(
+          screen.queryByText(alertBox.description)
+        ).not.toBeInTheDocument();
+        expect(screen.getByText(submitButtonText)).not.toBeDisabled();
         const unfilledPageImg = document.querySelector(
           "img[alt='Error notification']"
         );
@@ -141,11 +142,9 @@ describe("<ReviewSubmitPage />", () => {
           report: mockFilledReport,
         });
         render(WpReviewSubmitPage);
-        const { review } = reviewVerbiage;
-        const { modal, pageLink } = review;
-        const submitCheckButton = screen.getByText(pageLink.text);
+        const submitCheckButton = screen.getByText(submitButtonText);
         await userEvent.click(submitCheckButton);
-        const modalTitle = screen.getByText(modal.structure.heading);
+        const modalTitle = screen.getByText(modal.heading);
         await waitFor(() => {
           expect(modalTitle).toBeVisible();
         });
@@ -157,7 +156,7 @@ describe("<ReviewSubmitPage />", () => {
           report: mockFilledReport,
         });
         render(WpReviewSubmitPage);
-        const reviewSubmitButton = screen.getByText("Submit MFP Work Plan");
+        const reviewSubmitButton = screen.getByText(submitButtonText);
         await userEvent.click(reviewSubmitButton);
         const modalSubmitButton = screen.getByTestId("modal-submit-button");
         await userEvent.click(modalSubmitButton);
@@ -170,8 +169,6 @@ describe("<ReviewSubmitPage />", () => {
           report: mockSubmittedReport,
         });
         render(WpReviewSubmitPage);
-        const { submitted } = reviewVerbiage;
-        const { intro } = submitted;
         expect(screen.getByText(intro.header)).toBeVisible();
       });
 
@@ -182,11 +179,11 @@ describe("<ReviewSubmitPage />", () => {
           user: mockAdminUserStore,
         });
         render(WpReviewSubmitPage);
-        const { alertBox } = reviewVerbiage;
-        const { title, description } = alertBox;
-        expect(screen.queryByText(title)).not.toBeInTheDocument();
-        expect(screen.queryByText(description)).not.toBeInTheDocument();
-        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
+        expect(screen.queryByText(alertBox.title)).not.toBeInTheDocument();
+        expect(
+          screen.queryByText(alertBox.description)
+        ).not.toBeInTheDocument();
+        expect(screen.getByText(submitButtonText)).toBeDisabled();
         const unfilledPageImg = document.querySelector(
           "img[alt='Error notification']"
         );
