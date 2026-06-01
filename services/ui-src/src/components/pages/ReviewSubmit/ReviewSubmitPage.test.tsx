@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 // components
 import { ReportContext, ReviewSubmitPage } from "components";
 import { SuccessMessageGenerator } from "./ReviewSubmitPage";
@@ -63,8 +63,11 @@ describe("<ReviewSubmitPage />", () => {
     });
 
     describe("User has not started filling out the form", () => {
-      test("Show alert message if status is NOT_STARTED and is not able to be submitted", () => {
+      beforeEach(() => {
         mockedUseStore.mockReturnValue(mockUseStore);
+      });
+
+      test("Show alert message if status is NOT_STARTED and is not able to be submitted", () => {
         render(WpReviewSubmitPage);
         expect(screen.getByText(alertBox.title)).toBeVisible();
         expect(screen.getByText(alertBox.description)).toBeVisible();
@@ -84,11 +87,14 @@ describe("<ReviewSubmitPage />", () => {
     });
 
     describe("User has errors on the form", () => {
-      test("Show alert message that form has not been filled out and is not able to be submitted", () => {
+      beforeEach(() => {
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: { ...mockUseStore.report, status: ReportStatus.IN_PROGRESS },
         });
+      });
+
+      test("Show alert message that form has not been filled out and is not able to be submitted", () => {
         render(WpReviewSubmitPage);
         expect(screen.getByText(alertBox.title)).toBeVisible();
         expect(screen.getByText(alertBox.description)).toBeVisible();
@@ -111,11 +117,14 @@ describe("<ReviewSubmitPage />", () => {
     });
 
     describe("User has filled out the form correctly", () => {
-      test("Show no alert message or errors and the submit button is enabled", () => {
+      beforeEach(() => {
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: mockFilledReport,
         });
+      });
+
+      test("Show no alert message or errors and the submit button is enabled", () => {
         render(WpReviewSubmitPage);
         expect(screen.queryByText(alertBox.title)).not.toBeInTheDocument();
         expect(
@@ -137,10 +146,6 @@ describe("<ReviewSubmitPage />", () => {
       });
 
       test("WpReviewSubmitPage updates report status on submit confirmation", async () => {
-        mockedUseStore.mockReturnValue({
-          ...mockUseStore,
-          report: mockFilledReport,
-        });
         render(WpReviewSubmitPage);
         const reviewSubmitButton = screen.getByText(submitButtonText);
         await userEvent.click(reviewSubmitButton);
@@ -149,7 +154,7 @@ describe("<ReviewSubmitPage />", () => {
           modal.actionButtonText
         );
         await userEvent.click(modalSubmitButton);
-        await expect(mockReportMethods.submitReport).toHaveBeenCalledTimes(1);
+        expect(mockReportMethods.submitReport).toHaveBeenCalledTimes(1);
       });
 
       test("WpReviewSubmitPage renders success state when report status is 'submitted'", () => {
