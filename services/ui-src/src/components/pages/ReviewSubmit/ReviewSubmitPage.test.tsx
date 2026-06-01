@@ -144,9 +144,7 @@ describe("<ReviewSubmitPage />", () => {
         const { review } = reviewVerbiage;
         const { modal, pageLink } = review;
         const submitCheckButton = screen.getByText(pageLink.text);
-        await act(async () => {
-          await userEvent.click(submitCheckButton);
-        });
+        await userEvent.click(submitCheckButton);
         const modalTitle = screen.getByText(modal.structure.heading);
         await waitFor(() => {
           expect(modalTitle).toBeVisible();
@@ -160,13 +158,9 @@ describe("<ReviewSubmitPage />", () => {
         });
         render(WpReviewSubmitPage);
         const reviewSubmitButton = screen.getByText("Submit MFP Work Plan");
-        await act(async () => {
-          await userEvent.click(reviewSubmitButton);
-        });
+        await userEvent.click(reviewSubmitButton);
         const modalSubmitButton = screen.getByTestId("modal-submit-button");
-        await act(async () => {
-          await userEvent.click(modalSubmitButton);
-        });
+        await userEvent.click(modalSubmitButton);
         await expect(mockReportMethods.submitReport).toHaveBeenCalledTimes(1);
       });
 
