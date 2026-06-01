@@ -61,7 +61,7 @@ describe("<ReviewSubmitPage />", () => {
         const { title, description } = alertBox;
         expect(screen.getByText(title)).toBeVisible();
         expect(screen.getByText(description)).toBeVisible();
-        expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
+        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
       });
 
       test("Admin users get same experience and can't submit form", () => {
@@ -74,7 +74,7 @@ describe("<ReviewSubmitPage />", () => {
         const { title, description } = alertBox;
         expect(screen.getByText(title)).toBeVisible();
         expect(screen.getByText(description)).toBeVisible();
-        expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
+        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
       });
     });
 
@@ -89,7 +89,7 @@ describe("<ReviewSubmitPage />", () => {
         const { title, description } = alertBox;
         expect(screen.getByText(title)).toBeVisible();
         expect(screen.getByText(description)).toBeVisible();
-        expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
+        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
 
         const unfilledPageImg = document.querySelector(
           "img[alt='Error notification']"
@@ -108,7 +108,7 @@ describe("<ReviewSubmitPage />", () => {
         const { title, description } = alertBox;
         expect(screen.getByText(title)).toBeVisible();
         expect(screen.getByText(description)).toBeVisible();
-        expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
+        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
 
         const unfilledPageImg = document.querySelector(
           "img[alt='Error notification']"
@@ -128,7 +128,7 @@ describe("<ReviewSubmitPage />", () => {
         const { title, description } = alertBox;
         expect(screen.queryByText(title)).not.toBeInTheDocument();
         expect(screen.queryByText(description)).not.toBeInTheDocument();
-        expect(screen.getByText("Submit MFP Work Plan")!).not.toBeDisabled();
+        expect(screen.getByText("Submit MFP Work Plan")).not.toBeDisabled();
         const unfilledPageImg = document.querySelector(
           "img[alt='Error notification']"
         );
@@ -143,11 +143,11 @@ describe("<ReviewSubmitPage />", () => {
         render(WpReviewSubmitPage);
         const { review } = reviewVerbiage;
         const { modal, pageLink } = review;
-        const submitCheckButton = screen.getByText(pageLink.text)!;
+        const submitCheckButton = screen.getByText(pageLink.text);
         await act(async () => {
           await userEvent.click(submitCheckButton);
         });
-        const modalTitle = screen.getByText(modal.structure.heading)!;
+        const modalTitle = screen.getByText(modal.structure.heading);
         await waitFor(() => {
           expect(modalTitle).toBeVisible();
         });
@@ -159,11 +159,11 @@ describe("<ReviewSubmitPage />", () => {
           report: mockFilledReport,
         });
         render(WpReviewSubmitPage);
-        const reviewSubmitButton = screen.getByText("Submit MFP Work Plan")!;
+        const reviewSubmitButton = screen.getByText("Submit MFP Work Plan");
         await act(async () => {
           await userEvent.click(reviewSubmitButton);
         });
-        const modalSubmitButton = screen.getByTestId("modal-submit-button")!;
+        const modalSubmitButton = screen.getByTestId("modal-submit-button");
         await act(async () => {
           await userEvent.click(modalSubmitButton);
         });
@@ -192,7 +192,7 @@ describe("<ReviewSubmitPage />", () => {
         const { title, description } = alertBox;
         expect(screen.queryByText(title)).not.toBeInTheDocument();
         expect(screen.queryByText(description)).not.toBeInTheDocument();
-        expect(screen.getByText("Submit MFP Work Plan")!).toBeDisabled();
+        expect(screen.getByText("Submit MFP Work Plan")).toBeDisabled();
         const unfilledPageImg = document.querySelector(
           "img[alt='Error notification']"
         );
