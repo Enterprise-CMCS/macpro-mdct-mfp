@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 // components
 import { ReportContext, ReviewSubmitPage } from "components";
 import { SuccessMessageGenerator } from "./ReviewSubmitPage";
@@ -93,11 +93,7 @@ describe("<ReviewSubmitPage />", () => {
         expect(screen.getByText(alertBox.title)).toBeVisible();
         expect(screen.getByText(alertBox.description)).toBeVisible();
         expect(screen.getByText(submitButtonText)).toBeDisabled();
-
-        const unfilledPageImg = document.querySelector(
-          "img[alt='Error notification']"
-        );
-        expect(unfilledPageImg).toBeVisible();
+        expect(screen.getByAltText("Error notification")).toBeVisible();
       });
 
       test("Admin users get same experience and can't submit form", () => {
@@ -110,11 +106,7 @@ describe("<ReviewSubmitPage />", () => {
         expect(screen.getByText(alertBox.title)).toBeVisible();
         expect(screen.getByText(alertBox.description)).toBeVisible();
         expect(screen.getByText(submitButtonText)).toBeDisabled();
-
-        const unfilledPageImg = document.querySelector(
-          "img[alt='Error notification']"
-        );
-        expect(unfilledPageImg).toBeVisible();
+        expect(screen.getByAltText("Error notification")).toBeVisible();
       });
     });
 
@@ -130,20 +122,14 @@ describe("<ReviewSubmitPage />", () => {
           screen.queryByText(alertBox.description)
         ).not.toBeInTheDocument();
         expect(screen.getByText(submitButtonText)).not.toBeDisabled();
-        const unfilledPageImg = document.querySelector(
-          "img[alt='Error notification']"
-        );
-        expect(unfilledPageImg).toBe(null);
+        expect(
+          screen.queryByAltText("Error notification")
+        ).not.toBeInTheDocument();
       });
 
-      test("WpReviewPage shows modal on submit button click", async () => {
-        mockedUseStore.mockReturnValue({
-          ...mockUseStore,
-          report: mockFilledReport,
-        });
+      test("shows confirmation modal when submit is clicked", async () => {
         render(WpReviewSubmitPage);
-        const submitCheckButton = screen.getByText(submitButtonText);
-        await userEvent.click(submitCheckButton);
+        await userEvent.click(screen.getByText(submitButtonText));
         const modalTitle = screen.getByText(modal.heading);
         await waitFor(() => {
           expect(modalTitle).toBeVisible();
@@ -158,7 +144,10 @@ describe("<ReviewSubmitPage />", () => {
         render(WpReviewSubmitPage);
         const reviewSubmitButton = screen.getByText(submitButtonText);
         await userEvent.click(reviewSubmitButton);
-        const modalSubmitButton = screen.getByTestId("modal-submit-button");
+        const confirmation = await screen.findByRole("dialog");
+        const modalSubmitButton = within(confirmation).getByText(
+          modal.actionButtonText
+        );
         await userEvent.click(modalSubmitButton);
         await expect(mockReportMethods.submitReport).toHaveBeenCalledTimes(1);
       });
@@ -184,10 +173,9 @@ describe("<ReviewSubmitPage />", () => {
           screen.queryByText(alertBox.description)
         ).not.toBeInTheDocument();
         expect(screen.getByText(submitButtonText)).toBeDisabled();
-        const unfilledPageImg = document.querySelector(
-          "img[alt='Error notification']"
-        );
-        expect(unfilledPageImg).toBe(null);
+        expect(
+          screen.queryByAltText("Error notification")
+        ).not.toBeInTheDocument();
       });
     });
 
