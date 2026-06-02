@@ -226,7 +226,7 @@ export const ActionButton = ({
   return (
     <Button
       variant="outline"
-      aria-label={`${editOrView} ${report.reportYear} Period ${report.reportPeriod} report submission set-up information`}
+      aria-label={`${editOrView} ${report.reportYear} Period ${report.reportPeriod} report`}
       onClick={() => enterSelectedReport(report)}
       data-testid="enter-report"
     >
