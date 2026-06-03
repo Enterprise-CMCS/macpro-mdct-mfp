@@ -31,6 +31,7 @@ import {
   FormLayoutElement,
   HeadingLevel,
   ModalOverlayReportPageShape,
+  NestedFieldValidation,
   OverlayModalPageShape,
   OverlayModalStepTypes,
   PageTypes,
@@ -273,7 +274,7 @@ export function renderModalOverlayTableBody(
         // Check if V2 - for DYNAMIC_MODAL_OVERLAY, overlayForm is on section directly
         const overlayForm =
           section.pageType === PageTypes.DYNAMIC_MODAL_OVERLAY
-            ? (section as AnyObject).overlayForm
+            ? (section as ModalOverlayReportPageShape).overlayForm
             : dynamicSection?.[idx]?.overlayForm;
         const hasOverlayForm = Boolean(overlayForm);
         const rawOverlayFormFields = overlayForm?.fields || [];
@@ -417,7 +418,7 @@ const EntityFieldsTable = ({
   const flattenedFields: (FormField | FormLayoutElement)[] = [];
   fields.forEach((field) => {
     flattenedFields.push(field);
-    const choices = (field as FormField).props?.choices;
+    const choices = field.props?.choices;
     if (Array.isArray(choices)) {
       choices.forEach((choice: any) => {
         if (Array.isArray(choice.children)) {
@@ -548,6 +549,8 @@ const EntityFieldsTable = ({
 
     const fieldTitle = fieldProps.title;
     const fieldSubtitle = fieldProps.subtitle;
+    const sectionTitle = fieldProps.sectionTitle;
+    const subsectionTitle = (formField as any).props.subsectionTitle;
 
     const hasTitle = Boolean(fieldTitle);
     const hasSubtitle = Boolean(fieldSubtitle);
@@ -612,8 +615,7 @@ const EntityFieldsTable = ({
 
     // Check if field has a title or sectionTitle property (like Qualitative Methods, Funding Sources, Describe Initiative, Initiative Progress)
     if (hasTitle || hasSectionTitle) {
-      const fieldTitle =
-        (formField as any).props.title || (formField as any).props.sectionTitle;
+      const fieldOrSectionTitle = fieldTitle || sectionTitle;
       const isDescribeInitiative =
         formField.id === "defineInitiative_describeInitiative";
       const helperText = isDescribeInitiative
@@ -632,7 +634,7 @@ const EntityFieldsTable = ({
           >
             <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
               <Heading as="h4" sx={sx.sectionHeading}>
-                {fieldTitle}
+                {fieldOrSectionTitle}
               </Heading>
               {helperText && <Text sx={sx.helperText}>{helperText}</Text>}
               <Table
@@ -661,8 +663,6 @@ const EntityFieldsTable = ({
     }
 
     if (hasSubsectionTitle) {
-      const subsectionTitle = (formField as any).props.subsectionTitle;
-
       // Render as: H5 heading -> mini-table
       tableRows.push(
         <Tr
@@ -721,7 +721,7 @@ const EntityFieldsTable = ({
     }
 
     // Handle nested children fields - check if parent choice is selected before rendering
-    const validation = (field as FormField).validation as any;
+    const validation = (field as FormField).validation as NestedFieldValidation;
     if (validation?.nested === true) {
       const parentFieldId = validation.parentFieldName;
       const parentOptionId = validation.parentOptionId;
@@ -737,11 +737,11 @@ const EntityFieldsTable = ({
           });
 
         if (isParentChoiceSelected) {
-          const fieldLabel = (field as FormField).props?.label;
+          const fieldLabel = field.props?.label;
 
           if (fieldLabel === "Please describe:") {
             // Render "Please describe:" as a simple table row
-            const fieldId = (field as FormField).id;
+            const fieldId = field.id;
             const fieldValue = entity[fieldId];
             tableRows.push(
               <Tr key={fieldId} data-testid="exportRow">
