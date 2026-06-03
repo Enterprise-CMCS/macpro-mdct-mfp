@@ -46,7 +46,7 @@ This skill teaches the agent how to write effective unit tests, covering test st
 - Explicit edge cases should be tested, such as empty inputs, null values, and boundary conditions. This helps to ensure that the component behaves correctly under all circumstances.
 - Build in error resilience by testing edge cases and potential failure points, verifying no exceptions are thrown for bad input.
 - Test return value shape explicitly instead of just checking for partial matches.
-- Component tests should include accessibility checks using `testA11yAct(${component})` to ensure the component meets accessibility standards.
+- Component tests should include accessibility checks using `testA11yAct(component)` to ensure the component meets accessibility standards.
 
 ### Code Quality
 
