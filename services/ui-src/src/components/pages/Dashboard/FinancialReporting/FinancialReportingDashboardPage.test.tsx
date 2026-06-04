@@ -63,15 +63,15 @@ describe("Test Financial Report Dashboard", () => {
 
     //Check if the header and table are present
     expect(
-      screen.getByRole("heading", { name: /MFP Financial Reporting Form/i })
+      screen.getByRole("heading", { name: /MFP Financial Reporting Form/i }),
     ).toBeVisible();
     expect(
-      screen.queryByText(financialReportVerbiage.body.table.caption)
+      screen.queryByText(financialReportVerbiage.body.table.caption),
     ).toBeInTheDocument();
 
     //Check that the empty table message is present
     expect(
-      screen.queryByText(financialReportVerbiage.body.empty)
+      screen.queryByText(financialReportVerbiage.body.empty),
     ).toBeInTheDocument();
   });
 
@@ -81,22 +81,22 @@ describe("Test Financial Report Dashboard", () => {
 
     //Check if the header and table are present
     expect(
-      screen.getByRole("heading", { name: /MFP Financial Reporting Form/i })
+      screen.getByRole("heading", { name: /MFP Financial Reporting Form/i }),
     ).toBeVisible();
     expect(
-      screen.queryByText(financialReportVerbiage.body.table.caption)
+      screen.queryByText(financialReportVerbiage.body.table.caption),
     ).toBeInTheDocument();
 
     //Check that the report data is present
     expect(
       screen.getByText(
-        "Financial Report Submission Period: 1 Year: 2024 Status: Not started"
-      )
+        "Financial Report Submission Period: 1 Year: 2024 Status: Not started",
+      ),
     ).toBeInTheDocument();
 
     //Check that the empty table message is NOT present
     expect(
-      screen.queryByText(financialReportVerbiage.body.empty)
+      screen.queryByText(financialReportVerbiage.body.empty),
     ).not.toBeInTheDocument();
   });
 });
@@ -129,7 +129,7 @@ describe("Test FinancialReportingDashboardPage modal functionality", () => {
       expect(
         screen.getByRole("heading", {
           name: /Start MFP Financial Report/i,
-        })
+        }),
       ).toBeInTheDocument();
     });
   });
@@ -137,7 +137,9 @@ describe("Test FinancialReportingDashboardPage modal functionality", () => {
   test("Check that modal opens when setModalReport is called with a report", async () => {
     render(financialReportDashboardViewWithReports);
 
-    const editModalButton = screen.getByRole("img", { name: /edit/i });
+    const editModalButton = screen.getByRole("button", {
+      name: /edit reporting/i,
+    });
     expect(editModalButton).toBeInTheDocument();
 
     await act(async () => {
@@ -148,7 +150,7 @@ describe("Test FinancialReportingDashboardPage modal functionality", () => {
       expect(
         screen.getByRole("heading", {
           name: /Edit MFP Financial Report/i,
-        })
+        }),
       ).toBeInTheDocument();
     });
   });
