@@ -164,6 +164,137 @@ export const renderCalculationTables = (
   });
 };
 
+export const renderEntityTables = (
+  tables: any[],
+  entity: any,
+  headingLevel: string = "h4",
+  isEmbedded: boolean = false
+) => {
+  return tables.map((table: any) => {
+    const headRow = table.headRows[0];
+    const styleAsOptionalHeadRows = table.styleAsOptionalHeadRows || [];
+
+    const transformedHeadRow = headRow.map((header: string) => {
+      if (styleAsOptionalHeadRows.includes(header)) {
+        return `${header}<span style="font-weight: normal;"> (optional)</span>`;
+      }
+      return header;
+    });
+
+    const dynamicData = entity[table.dynamicRowsTemplate?.id] || [];
+
+    const dynamicBodyRows = dynamicData.map((item: any) => {
+      const rowValues: any[] = [];
+      const fields = table.dynamicRowsTemplate.props.dynamicFields;
+
+      let skipNext = false;
+      fields.forEach((f: any, index: number) => {
+        if (skipNext) {
+          skipNext = false;
+          return;
+        }
+
+        const { fieldType } = getFieldParts(f.id);
+        let fieldValue = item[fieldType];
+
+        // Special handling for baseline period - combine start and end dates
+        if (fieldType === "baselineStartDate" && index + 1 < fields.length) {
+          const nextField = fields[index + 1];
+          const { fieldType: nextFieldType } = getFieldParts(nextField.id);
+
+          if (nextFieldType === "baselineEndDate") {
+            const startDate = item[fieldType] || "Not answered";
+            const endDate = item[nextFieldType] || "Not answered";
+            rowValues.push(`${startDate} - ${endDate}`);
+            skipNext = true; // Skip the next field since we've already processed it
+            return;
+          }
+        }
+
+        if (Array.isArray(fieldValue) && fieldValue[0]?.value) {
+          fieldValue = fieldValue[0].value;
+        }
+
+        // If the field value is "Other, specify", look for the nested field
+        if (fieldValue === "Other, specify") {
+          const otherTextValue = item["otherText"];
+          if (otherTextValue) {
+            fieldValue = otherTextValue;
+          }
+        }
+
+        if (fieldType.endsWith("-otherText")) {
+          const baseFieldType = fieldType.replace("-otherText", "");
+          const baseField = item[baseFieldType];
+          if (
+            Array.isArray(baseField) &&
+            baseField[0]?.value === "Other, specify"
+          ) {
+            fieldValue = item[fieldType];
+          }
+        }
+
+        if (f.type === ReportFormFieldType.NUMBER) {
+          fieldValue = maskResponseData(fieldValue, f.props.mask);
+        }
+
+        if (f.type === ReportFormFieldType.DATE && fieldValue) {
+          rowValues.push(fieldValue);
+          return;
+        }
+
+        rowValues.push(fieldValue || "Not answered");
+      });
+
+      return rowValues;
+    });
+
+    const bodyRows = dynamicBodyRows.length > 0 ? dynamicBodyRows : [];
+
+    return (
+      <Box
+        key={table.id}
+        sx={isEmbedded ? sx.embeddedEntityTable : sx.entityTable}
+      >
+        {table.verbiage?.sectionTitle && (
+          <Heading as="h5" sx={sx.entityTableSectionHeading}>
+            {table.verbiage.sectionTitle}
+          </Heading>
+        )}
+        <Heading as={headingLevel as any} sx={sx.entityTableHeading}>
+          {table.verbiage?.title}
+        </Heading>
+        {dynamicBodyRows.length === 0 && table.verbiage?.emptyTableMessage ? (
+          <Box sx={sx.emptyTableMessage}>
+            {table.verbiage.emptyTableMessage}
+          </Box>
+        ) : (
+          <Table
+            sx={
+              isEmbedded
+                ? {
+                    ...sx.table,
+                    ...sx.tableCommonStyle,
+                    ...sx.embeddedTableStyle,
+                  }
+                : {
+                    ...sx.table,
+                    ...sx.tableCommonStyle,
+                    ...sx.entityTableStyle,
+                  }
+            }
+            content={{
+              headRow: transformedHeadRow,
+              bodyRows: bodyRows,
+            }}
+            data-testid={`entity-table-${table.id}`}
+          />
+        )}
+      </Box>
+    );
+  });
+};
+
 export const sx = {
   table: sxSharedExportStyles.table,
   serviceTable: {
@@ -211,5 +342,67 @@ export const sx = {
     fontWeight: "bold",
     color: "gray_dark",
     marginTop: "spacer2",
+  },
+  entityTable: {
+    marginTop: "spacer4",
+  },
+  embeddedEntityTable: {
+    marginTop: "spacer3",
+    marginBottom: 0,
+  },
+  entityTableSectionHeading: {
+    fontSize: "lg",
+    fontWeight: "bold",
+    marginBottom: "spacer3",
+  },
+  entityTableHeading: {
+    fontSize: "md",
+    fontWeight: "bold",
+    marginBottom: "spacer2",
+  },
+  tableCommonStyle: {
+    "& th, & td": {
+      paddingX: "spacer1",
+      paddingY: "spacer1",
+      fontSize: "sm",
+    },
+    "& thead tr": {
+      backgroundColor: "gray.50",
+    },
+  },
+  entityTableStyle: {
+    thead: {
+      "tr:first-of-type": {
+        borderBottom: "2px solid #383838",
+        borderColor: "#383838",
+        th: {
+          borderBottom: "2px solid #383838",
+          borderColor: "#383838",
+          color: "gray_dark",
+          verticalAlign: "bottom",
+        },
+      },
+    },
+  },
+  embeddedTableStyle: {
+    marginTop: 0,
+    marginBottom: 0,
+    thead: {
+      "tr:first-of-type": {
+        borderBottom: "2px solid #383838",
+        borderColor: "#383838",
+        th: {
+          borderBottom: "2px solid #383838",
+          borderColor: "#383838",
+          color: "gray_dark",
+          verticalAlign: "bottom",
+        },
+      },
+    },
+  },
+  emptyTableMessage: {
+    padding: "spacer3",
+    fontStyle: "italic",
+    color: "gray_dark",
   },
 };

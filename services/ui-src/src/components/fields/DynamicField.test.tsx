@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { FormProvider, useForm } from "react-hook-form";
@@ -51,10 +52,20 @@ const mockedReportContext = {
   updateReport: mockUpdateReport,
 };
 
-const MockForm = ({ dynamicLabel, hint, hydrationValue }: any) => {
+const MockForm = ({ dynamicLabel, error, hint, hydrationValue }: any) => {
   const form = useForm({
     shouldFocusError: false,
   });
+
+  useEffect(() => {
+    if (error) {
+      form.setError(`${mockDynamicField}.0.name`, {
+        type: "required",
+        message: "A response is required",
+      });
+    }
+  }, []);
+
   return (
     <ReportContext.Provider value={mockedReportContext}>
       <EntityProvider>
@@ -75,9 +86,15 @@ const MockForm = ({ dynamicLabel, hint, hydrationValue }: any) => {
   );
 };
 
-const DynamicFieldComponent = ({ dynamicLabel, hint, hydrationValue }: any) => (
+const DynamicFieldComponent = ({
+  dynamicLabel,
+  error,
+  hint,
+  hydrationValue,
+}: any) => (
   <MockForm
     dynamicLabel={dynamicLabel}
+    error={error}
     hint={hint}
     hydrationValue={hydrationValue}
   />
@@ -217,6 +234,27 @@ describe("<DynamicField />", () => {
         })
       );
       expect(firstDynamicField).toHaveValue("test user input");
+    });
+  });
+  describe("Error handling", () => {
+    test("input clears existing error", async () => {
+      render(<DynamicFieldComponent error={true} />);
+
+      const fieldset = screen.getByRole("group", {
+        name: mockFieldLabel,
+      });
+
+      const firstDynamicField = within(fieldset).getByRole("textbox");
+
+      const error = screen.getByText("A response is required");
+      expect(error).toBeVisible();
+
+      await act(async () => {
+        await userEvent.type(firstDynamicField, "123");
+      });
+
+      const updatedError = screen.queryByText("A response is required");
+      expect(updatedError).not.toBeInTheDocument();
     });
   });
 
