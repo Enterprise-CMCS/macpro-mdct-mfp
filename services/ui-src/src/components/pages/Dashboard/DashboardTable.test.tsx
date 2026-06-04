@@ -44,11 +44,11 @@ describe("<DashboardTable />", () => {
       render(
         <RouterWrappedComponent>
           <DashboardTable {...createProps({ isAdmin: true })} />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
 
       expect(
-        screen.getByRole("button", { name: /view reporting/i }),
+        screen.getByRole("button", { name: /view reporting/i })
       ).toBeVisible();
     });
 
@@ -56,11 +56,11 @@ describe("<DashboardTable />", () => {
       render(
         <RouterWrappedComponent>
           <DashboardTable {...createProps({ isAdmin: false })} />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
 
       expect(
-        screen.getByRole("button", { name: /edit reporting/i }),
+        screen.getByRole("button", { name: /edit reporting/i })
       ).toBeVisible();
     });
   });
@@ -68,13 +68,13 @@ describe("<DashboardTable />", () => {
   describe("getStatus()", () => {
     test("should render the correct status if report has been unlocked", () => {
       expect(getStatus(ReportType.WP, "In revision", false, 1)).toBe(
-        "In revision",
+        "In revision"
       );
     });
 
     test("should render the correct status if report been started", () => {
       expect(getStatus(ReportType.WP, "In progress", false, 0)).toBe(
-        "In progress",
+        "In progress"
       );
     });
 
@@ -88,19 +88,19 @@ describe("<DashboardTable />", () => {
 
     test("should render the correct status if report has not started", () => {
       expect(getStatus(ReportType.WP, "Not started", false, 1)).toBe(
-        "Not started",
+        "Not started"
       );
     });
 
     test("should render the correct status for SAR reports", () => {
       expect(getStatus(ReportType.SAR, "In progress", false, 1)).toBe(
-        "In progress",
+        "In progress"
       );
     });
 
     test("should render the correct status for SAR reports", () => {
       expect(getStatus(ReportType.SAR, "Not started", false, 1)).toBe(
-        "Not started",
+        "Not started"
       );
     });
   });
@@ -157,7 +157,7 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       const button = container.querySelector("button");
       expect(button).toHaveStyle({ width: "auto" });
@@ -173,7 +173,7 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       const button = container.querySelector("button");
       expect(button).toHaveStyle({ width: "5rem" });
@@ -189,7 +189,7 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       const button = container.querySelector("button");
       expect(button).toHaveStyle({ width: "5rem" });
@@ -205,7 +205,7 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       expect(screen.getByRole("button", { name: /Edit/i })).toBeVisible();
     });
@@ -224,7 +224,7 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       expect(screen.getByRole("button", { name: /View/i })).toBeVisible();
     });
@@ -239,7 +239,7 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       expect(screen.getByRole("button", { name: /View/i })).toBeVisible();
     });

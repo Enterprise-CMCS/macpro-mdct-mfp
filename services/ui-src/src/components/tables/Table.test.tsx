@@ -5,7 +5,6 @@ import { RouterWrappedComponent } from "utils/testing/setupJest";
 import { Table } from "components";
 import { testA11yAct } from "utils/testing/commonTests";
 // types
-import { TableHeaderCellShape } from "types";
 import { normalizeHeaderCell } from "./Table";
 
 const tableContent = {
@@ -43,7 +42,7 @@ describe("<Table />", () => {
       const { container } = render(
         <RouterWrappedComponent>
           <Table content={contentWithColSpan} />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       const headerCells = container.querySelectorAll("th");
       expect(headerCells[1]).toHaveAttribute("colspan", "2");
@@ -61,7 +60,7 @@ describe("<Table />", () => {
       const { container } = render(
         <RouterWrappedComponent>
           <Table content={mixedContent} />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       const headerCells = container.querySelectorAll("th");
       expect(headerCells).toHaveLength(2);

@@ -20,7 +20,7 @@ import { TableContentShape, TableHeaderCellShape } from "types";
 import { notAnsweredText } from "../../constants";
 
 export const normalizeHeaderCell = (
-  cell: string | TableHeaderCellShape,
+  cell: string | TableHeaderCellShape
 ): TableHeaderCellShape => (typeof cell === "string" ? { title: cell } : cell);
 
 export const Table = ({
@@ -69,7 +69,7 @@ export const Table = ({
                     {sanitizeAndParseHtml(title)}
                   </Th>
                 );
-              },
+              }
             )}
           </Tr>
         </Thead>

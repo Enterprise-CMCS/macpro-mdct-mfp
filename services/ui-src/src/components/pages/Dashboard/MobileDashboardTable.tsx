@@ -72,7 +72,7 @@ export const MobileDashboardTable = ({
               reportType as ReportType,
               report.status,
               report.archived,
-              report.submissionCount,
+              report.submissionCount
             )}
           </Text>
         </Box>
@@ -202,7 +202,7 @@ const AdminReleaseButton = ({
     report.reportType as ReportType,
     report.status,
     report.archived,
-    report.submissionCount,
+    report.submissionCount
   );
   const isDisabled = !(reportStatus === "Submitted");
 
