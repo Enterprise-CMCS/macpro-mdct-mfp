@@ -15,9 +15,13 @@ import {
 // utils
 import { sanitizeAndParseHtml } from "utils";
 // types
-import { TableContentShape } from "types";
+import { TableContentShape, TableHeaderCellShape } from "types";
 // constants
 import { notAnsweredText } from "../../constants";
+
+export const normalizeHeaderCell = (
+  cell: string | TableHeaderCellShape,
+): TableHeaderCellShape => (typeof cell === "string" ? { title: cell } : cell);
 
 export const Table = ({
   content,
@@ -42,16 +46,31 @@ export const Table = ({
         <Thead>
           {/* Head Row */}
           <Tr>
-            {content.headRow.map((headerCell: string, index: number) => (
-              <Th
-                key={`${index}-head-cell`}
-                scope="col"
-                sx={{ ...sx.tableHeader, ...sxOverride }}
-                aria-label={ariaOverride?.headRow?.[index]}
-              >
-                {sanitizeAndParseHtml(headerCell)}
-              </Th>
-            ))}
+            {content.headRow.map(
+              (headerCell: string | TableHeaderCellShape, index: number) => {
+                const { title, colSpan, align } =
+                  normalizeHeaderCell(headerCell);
+                const ariaLabel = ariaOverride?.headRow?.[index]
+                  ? normalizeHeaderCell(ariaOverride.headRow[index]).title
+                  : undefined;
+
+                return (
+                  <Th
+                    key={`${index}-head-cell`}
+                    scope="col"
+                    colSpan={colSpan}
+                    sx={{
+                      ...sx.tableHeader,
+                      ...sxOverride,
+                      ...(align && { textAlign: align }),
+                    }}
+                    aria-label={ariaLabel}
+                  >
+                    {sanitizeAndParseHtml(title)}
+                  </Th>
+                );
+              },
+            )}
           </Tr>
         </Thead>
       )}

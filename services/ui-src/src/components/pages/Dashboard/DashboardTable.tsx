@@ -1,5 +1,5 @@
 // components
-import { Button, Image, Td, Tr, Spinner, Text } from "@chakra-ui/react";
+import { Button, Td, Tr, Spinner, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // types
 import {
@@ -11,8 +11,6 @@ import {
 } from "types";
 // utils
 import { convertDateUtcToEt, isArchivable, prettifyChoices } from "utils";
-// assets
-import editIcon from "assets/icons/icon_edit_square_gray.png";
 
 export const DashboardTable = ({
   reportsByState,
@@ -28,106 +26,126 @@ export const DashboardTable = ({
   sxOverride,
   isStateLevelUser,
   isAdmin,
-}: DashboardTableProps) => (
-  <Table content={tableBody(body.table, isAdmin)} sx={sx.table}>
-    {reportsByState.map((report: ReportMetadataShape) => (
-      <Tr key={report.id}>
-        {/* Edit Button */}
-        {reportType !== ReportType.WP && (
-          <EditReportButton
-            report={report}
-            openCreateReportModal={openCreateReportModal}
-            sxOverride={sxOverride}
-          />
-        )}
-        {/* Report Name */}
-        {reportType === ReportType.WP ||
-        reportType === ReportType.FINANCIAL_REPORT ? (
-          <>
-            <Td sx={sxOverride.wpSubmissionNameText}>
+}: DashboardTableProps) => {
+  const isNonWorkPlan = reportType !== ReportType.WP;
+  const actionCellSx = isNonWorkPlan
+    ? {
+        ...sxOverride.editReportButtonCell,
+        width: "5rem",
+        "& button": {
+          width: "5rem",
+        },
+      }
+    : sxOverride.editReportButtonCell;
+
+  return (
+    <Table content={tableBody(body.table, isAdmin)} sx={sx.table}>
+      {reportsByState.map((report: ReportMetadataShape) => (
+        <Tr key={report.id}>
+          {/* Report Name */}
+          {reportType === ReportType.WP ||
+          reportType === ReportType.FINANCIAL_REPORT ? (
+            <>
+              <Td sx={sxOverride.wpSubmissionNameText}>
+                {report.submissionName}
+                {copyOverSubText(report, reportsByState)}
+              </Td>
+            </>
+          ) : (
+            <Td sx={sxOverride.sarSubmissionNameText}>
               {report.submissionName}
-              {copyOverSubText(report, reportsByState)}
             </Td>
-          </>
-        ) : (
-          <Td sx={sxOverride.sarSubmissionNameText}>{report.submissionName}</Td>
-        )}
-        {/* Target populations */}
-        {!isAdmin && reportType === ReportType.SAR && report?.populations && (
-          <Td>{prettifyChoices(report?.populations)}</Td>
-        )}
-        {/* Report Year */}
-        {reportType === ReportType.FINANCIAL_REPORT && (
-          <Td>{report.reportYear}</Td>
-        )}
-        {/* Report Period */}
-        {reportType === ReportType.FINANCIAL_REPORT && (
-          <Td>{report.reportPeriod}</Td>
-        )}
-        {/* Date Fields */}
-        <DateFields report={report} reportType={reportType} isAdmin={isAdmin} />
-        {/* Last Altered By */}
-        <Td>{report?.lastAlteredBy || "-"}</Td>
-        {/* Report Status */}
-        <Td>
-          {getStatus(
-            reportType as ReportType,
-            report.status,
-            report.archived,
-            report.submissionCount
           )}
-        </Td>
-        {/* Admin: Submission count */}
-        {isAdmin && (
-          <Td data-testid="dashboard-submission-count">
-            {!report.submissionCount || report.submissionCount === 0
-              ? 1
-              : report.submissionCount}
-          </Td>
-        )}
-        {/* Action Buttons */}
-        <Td sx={sxOverride.editReportButtonCell}>
-          <ActionButton
+          {/* Target populations */}
+          {!isAdmin && reportType === ReportType.SAR && report?.populations && (
+            <Td>{prettifyChoices(report?.populations)}</Td>
+          )}
+          {/* Report Year */}
+          {reportType === ReportType.FINANCIAL_REPORT && (
+            <Td>{report.reportYear}</Td>
+          )}
+          {/* Report Period */}
+          {reportType === ReportType.FINANCIAL_REPORT && (
+            <Td>{report.reportPeriod}</Td>
+          )}
+          {/* Date Fields */}
+          <DateFields
             report={report}
-            reportId={reportId}
-            isStateLevelUser={isStateLevelUser}
-            entering={entering}
-            enterSelectedReport={enterSelectedReport}
+            reportType={reportType}
+            isAdmin={isAdmin}
           />
-        </Td>
-        {isAdmin && (
-          <>
-            {
-              <AdminReleaseButton
-                report={report}
-                reportType={reportType}
-                reportId={reportId}
-                releaseReport={releaseReport}
-                releasing={releasing}
-                sxOverride={sxOverride}
-              />
-            }
-            {isArchivable(reportType) && !report?.associatedSar && (
-              <AdminArchiveButton
-                report={report}
-                reportType={reportType}
-                reportId={reportId}
-                archive={archive}
-                releaseReport={releaseReport}
-                releasing={releasing}
-                sxOverride={sxOverride}
-              />
+          {/* Last Altered By */}
+          <Td>{report?.lastAlteredBy || "-"}</Td>
+          {/* Report Status */}
+          <Td>
+            {getStatus(
+              reportType as ReportType,
+              report.status,
+              report.archived,
+              report.submissionCount,
             )}
-          </>
-        )}
-      </Tr>
-    ))}
-  </Table>
-);
+          </Td>
+          {/* Admin: Submission count */}
+          {isAdmin && (
+            <Td data-testid="dashboard-submission-count">
+              {!report.submissionCount || report.submissionCount === 0
+                ? 1
+                : report.submissionCount}
+            </Td>
+          )}
+          {/* Edit Button */}
+          {isNonWorkPlan && (
+            <EditReportButton
+              report={report}
+              openCreateReportModal={openCreateReportModal}
+              isAdmin={isAdmin}
+              sxOverride={sxOverride}
+            />
+          )}
+          {/* Action Buttons */}
+          <Td sx={actionCellSx}>
+            <ActionButton
+              report={report}
+              reportId={reportId}
+              isStateLevelUser={isStateLevelUser}
+              entering={entering}
+              enterSelectedReport={enterSelectedReport}
+            />
+          </Td>
+          {isAdmin && (
+            <>
+              {
+                <AdminReleaseButton
+                  report={report}
+                  reportType={reportType}
+                  reportId={reportId}
+                  releaseReport={releaseReport}
+                  releasing={releasing}
+                  sxOverride={sxOverride}
+                />
+              }
+              {isArchivable(reportType) && !report?.associatedSar && (
+                <AdminArchiveButton
+                  report={report}
+                  reportType={reportType}
+                  reportId={reportId}
+                  archive={archive}
+                  releaseReport={releaseReport}
+                  releasing={releasing}
+                  sxOverride={sxOverride}
+                />
+              )}
+            </>
+          )}
+        </Tr>
+      ))}
+    </Table>
+  );
+};
 
 export const copyOverSubText = (
   report: ReportMetadataShape,
-  reportsByState: ReportMetadataShape[]
+  reportsByState: ReportMetadataShape[],
 ) =>
   report.isCopied && (
     <Text sx={sx.copyOverText}>{`copied from ${
@@ -158,7 +176,7 @@ export const getStatus = (
   reportType: ReportType,
   status: string,
   archived?: boolean,
-  submissionCount?: number
+  submissionCount?: number,
 ) => {
   if (archived) {
     return `Archived`;
@@ -181,29 +199,39 @@ export const tableBody = (body: TableContentShape, isAdmin: boolean) => {
     return body;
   }
 
+  const getHeaderText = (cell: string | AnyObject): string =>
+    typeof cell === "string" ? cell : cell.title;
+
   if (isAdmin) {
     tableContent.headRow = tableContent.headRow.filter(
-      (e) => !["Due date", "Target populations"].includes(e)
+      (e) => !["Due date", "Target populations"].includes(getHeaderText(e)),
     );
   } else {
-    tableContent.headRow = tableContent.headRow.filter((e) => e !== "#");
+    tableContent.headRow = tableContent.headRow.filter(
+      (e) => getHeaderText(e) !== "#",
+    );
   }
   return tableContent;
 };
 
-const EditReportButton = ({
+export const EditReportButton = ({
   report,
   openCreateReportModal,
+  isAdmin,
   sxOverride,
 }: EditReportProps) => {
+  const actionText = isAdmin ? "View Reporting" : "Edit reporting";
+
   return (
     <Td sx={sxOverride.editReport}>
-      <button onClick={() => openCreateReportModal(report)}>
-        <Image
-          src={editIcon}
-          alt={`Edit ${report.reportYear} Period ${report.reportPeriod} report submission set-up information`}
-        />
-      </button>
+      <Button
+        onClick={() => openCreateReportModal(report)}
+        variant="link"
+        sx={sx.editReporting}
+        aria-label={`${actionText} of ${report}`}
+      >
+        {actionText}
+      </Button>
     </Td>
   );
 };
@@ -211,6 +239,7 @@ const EditReportButton = ({
 interface EditReportProps {
   report: ReportMetadataShape;
   openCreateReportModal: Function;
+  isAdmin: boolean;
   sxOverride: SxObject;
 }
 
@@ -222,10 +251,15 @@ export const ActionButton = ({
   enterSelectedReport,
 }: ActionButtonProps) => {
   const editOrView = isStateLevelUser && !report?.locked ? "Edit" : "View";
+  const isWorkPlan = report.reportType === ReportType.WP;
 
   return (
     <Button
       variant="outline"
+      sx={{
+        width: isWorkPlan ? "auto" : "5rem",
+        minWidth: isWorkPlan ? "auto" : "5rem",
+      }}
       aria-label={`${editOrView} ${report.reportYear} Period ${report.reportPeriod} report submission set-up information`}
       onClick={() => enterSelectedReport(report)}
       data-testid="enter-report"
@@ -274,7 +308,7 @@ const AdminReleaseButton = ({
     report.reportType as ReportType,
     report.status,
     report.archived,
-    report.submissionCount
+    report.submissionCount,
   );
   const isDisabled = !(reportStatus === "Submitted");
 
@@ -372,5 +406,11 @@ const sx = {
   },
   archivedText: {
     paddingLeft: 3,
+  },
+  editReporting: {
+    textDecoration: "underline",
+    color: "primary",
+    fontSize: "sm",
+    fontWeight: "300",
   },
 };
