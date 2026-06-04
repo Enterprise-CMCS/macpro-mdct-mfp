@@ -10,11 +10,14 @@ import {
 } from "utils/testing/mockReport";
 import {
   EntityDetailsStepTypes,
+  FormTableType,
   ModalOverlayReportPageVerbiage,
   OverlayModalPageShape,
   OverlayModalTypes,
   OverlayModalStepTypes,
   PageTypes,
+  ReportFormFieldType,
+  ValidationType,
 } from "types";
 import {
   ExportedModalOverlayReportSection,
@@ -326,9 +329,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       report: mockWPReportWithOverlays,
     });
     render(testComponent(wpMockProps));
-    expect(
-      screen.getAllByTestId("exportedOverlayModalPage")[0]
-    ).toBeInTheDocument();
+    expect(screen.getAllByTestId("exportedOverlayModalPage")[0]).toBeVisible();
   });
 
   test("should render correct initiative topic", () => {
@@ -337,8 +338,8 @@ describe("<ExportedModalOverlayReportSection />", () => {
       report: mockWPReportWithOverlays,
     });
     render(testComponent(wpMockProps));
-    expect(screen.getByText("mock WP topic")).toBeInTheDocument();
-    expect(screen.getByText("Unique initiative type")).toBeInTheDocument();
+    expect(screen.getByText("mock WP topic")).toBeVisible();
+    expect(screen.getByText("Unique initiative type")).toBeVisible();
   });
 
   test("should render for SAR", () => {
@@ -347,10 +348,8 @@ describe("<ExportedModalOverlayReportSection />", () => {
       report: mockSARReportWithOverlays,
     });
     render(testComponent(sarMockProps));
-    expect(
-      screen.getByText("% of total projected spending")
-    ).toBeInTheDocument();
-    expect(screen.getByText("42.86%")).toBeInTheDocument(); // (5+10)/(15+20)
+    expect(screen.getByText("% of total projected spending")).toBeVisible();
+    expect(screen.getByText("42.86%")).toBeVisible(); // (5+10)/(15+20)
   });
 
   test("should skip fields with forCopyoverOnly flag", () => {
@@ -362,21 +361,21 @@ describe("<ExportedModalOverlayReportSection />", () => {
           fields: [
             {
               id: "copyover_field",
-              type: "text",
-              validation: "text",
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
               forCopyoverOnly: true,
               props: { label: "Should be skipped" },
             },
             {
               id: "regular_field",
-              type: "text",
-              validation: "text",
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
               props: { label: "Regular Field" },
             },
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
@@ -384,6 +383,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
     });
     render(testComponent(propsWithCopyoverField));
     expect(screen.queryByText("Should be skipped")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Regular Field").length).toBe(2);
   });
 
   test("should render nested field with Please describe label", () => {
@@ -432,15 +432,15 @@ describe("<ExportedModalOverlayReportSection />", () => {
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: reportWithNestedField,
     });
     render(testComponent(propsWithNestedField));
-    expect(screen.getByText("Please describe:")).toBeInTheDocument();
-    expect(screen.getByText("Test description")).toBeInTheDocument();
+    expect(screen.getByText("Please describe:")).toBeVisible();
+    expect(screen.getByText("Test description")).toBeVisible();
   });
 
   test("should render nested field without Please describe label", () => {
@@ -489,14 +489,15 @@ describe("<ExportedModalOverlayReportSection />", () => {
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: reportWithNestedField,
     });
     render(testComponent(propsWithNestedField));
-    expect(screen.getByTestId("exportTable")).toBeInTheDocument();
+    expect(screen.getByText("Nested Field Label")).toBeVisible();
+    expect(screen.getByText("Nested value")).toBeVisible();
   });
 
   test("should not render nested field when parent choice is not selected", () => {
@@ -545,7 +546,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
@@ -587,14 +588,14 @@ describe("<ExportedModalOverlayReportSection />", () => {
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
     });
     render(testComponent(propsWithChoicesChildren));
-    expect(screen.getByTestId("exportTable")).toBeInTheDocument();
+    expect(screen.getAllByText("Parent Choice Field").length).toBe(2);
   });
 
   test("should render start date field with nested children", () => {
@@ -646,16 +647,14 @@ describe("<ExportedModalOverlayReportSection />", () => {
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: reportWithStartDate,
     });
     render(testComponent(propsWithStartDate));
-    expect(screen.getAllByText("Expected start date").length).toBeGreaterThan(
-      0
-    );
+    expect(screen.getAllByText("Expected start date").length).toBe(2);
   });
 
   test("should render field with title and subtitle", () => {
@@ -678,14 +677,14 @@ describe("<ExportedModalOverlayReportSection />", () => {
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
     });
     render(testComponent(propsWithTitleSubtitle));
-    expect(screen.getAllByText("Unique Field Title").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Unique Field Title").length).toBe(2);
   });
 
   test("should render field with sectionTitle", () => {
@@ -707,16 +706,14 @@ describe("<ExportedModalOverlayReportSection />", () => {
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
     });
     render(testComponent(propsWithSectionTitle));
-    expect(
-      screen.getAllByText("Unique Section Title Test").length
-    ).toBeGreaterThan(0);
+    expect(screen.getAllByText("Unique Section Title Test").length).toBe(2);
   });
 
   test("should render field with subsectionTitle", () => {
@@ -738,16 +735,14 @@ describe("<ExportedModalOverlayReportSection />", () => {
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
     });
     render(testComponent(propsWithSubsectionTitle));
-    expect(
-      screen.getAllByText("Unique Subsection Title Test").length
-    ).toBeGreaterThan(0);
+    expect(screen.getAllByText("Unique Subsection Title Test").length).toBe(2);
   });
 
   test("should render field with defineInitiative_describeInitiative id", () => {
@@ -769,21 +764,19 @@ describe("<ExportedModalOverlayReportSection />", () => {
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
     });
     render(testComponent(propsWithDescribeInitiative));
-    expect(
-      screen.getAllByText("Unique Describe Initiative").length
-    ).toBeGreaterThan(0);
+    expect(screen.getAllByText("Unique Describe Initiative").length).toBe(2);
     expect(
       screen.getAllByText(
         "Provide initiative description, including target populations and timeframe"
       ).length
-    ).toBeGreaterThan(0);
+    ).toBe(2);
   });
 
   test("should render dynamic object field with table", () => {
@@ -805,29 +798,41 @@ describe("<ExportedModalOverlayReportSection />", () => {
           tables: [
             {
               id: "testTable",
+              bodyRows: [],
+              footRows: [],
               headRows: [["Indicator", "Baseline"]],
+              tableType: FormTableType.ENTITY_MODAL,
               verbiage: { title: "Unique Test Table" },
               dynamicRowsTemplate: {
                 id: "testTable_performanceIndicators",
+                type: ReportFormFieldType.DYNAMIC_OBJECT,
+                validation: {
+                  type: ValidationType.DYNAMIC_OPTIONAL,
+                  options: { dynamicFieldValidations: {} },
+                },
                 props: {
                   dynamicFields: [
                     { id: "testTable_indicator", type: "text", props: {} },
                     { id: "testTable_baseline", type: "number", props: {} },
                   ],
                 },
+                verbiage: {
+                  buttonText: "Add",
+                  hint: "",
+                },
               },
             },
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
     });
     render(testComponent(propsWithDynamicObject));
-    expect(screen.getByTestId("exportTable")).toBeInTheDocument();
+    expect(screen.getAllByText("Unique Test Table").length).toBe(2);
   });
 
   test("should handle dynamic object field without matching table", () => {
@@ -849,26 +854,38 @@ describe("<ExportedModalOverlayReportSection />", () => {
           tables: [
             {
               id: "differentTable",
+              bodyRows: [],
+              footRows: [],
               headRows: [["Header"]],
+              tableType: FormTableType.ENTITY_MODAL,
               verbiage: { title: "Different Table" },
               dynamicRowsTemplate: {
                 id: "differentTable_data",
+                type: ReportFormFieldType.DYNAMIC_OBJECT,
+                validation: {
+                  type: ValidationType.DYNAMIC_OPTIONAL,
+                  options: { dynamicFieldValidations: {} },
+                },
                 props: {
                   dynamicFields: [{ id: "field", type: "text", props: {} }],
+                },
+                verbiage: {
+                  buttonText: "Add",
+                  hint: "",
                 },
               },
             },
           ],
         },
       },
-    } as unknown as Props;
+    };
 
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       report: mockWPReportWithOverlays,
     });
     render(testComponent(propsWithDynamicObjectNoTable));
-    expect(screen.getByTestId("exportTable")).toBeInTheDocument();
+    expect(screen.getByTestId("exportTable")).toBeVisible();
   });
 
   testA11yAct(testComponent(wpMockProps), () => {
