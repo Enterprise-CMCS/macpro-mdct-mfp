@@ -256,11 +256,7 @@ export const ActionButton = ({
   return (
     <Button
       variant="outline"
-      sx={{
-        width: isWorkPlan ? "auto" : "5rem",
-        minWidth: isWorkPlan ? "auto" : "5rem",
-      }}
-      aria-label={`${editOrView} ${report.reportYear} Period ${report.reportPeriod} report submission set-up information`}
+      aria-label={`${editOrView} ${report.reportYear} Period ${report.reportPeriod} report`}
       onClick={() => enterSelectedReport(report)}
       data-testid="enter-report"
     >
