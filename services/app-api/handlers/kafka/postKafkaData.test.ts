@@ -271,6 +271,18 @@ describe("Kafka message sending", () => {
     });
   });
 
+  it("should ignore oversized S3 payloads before fetching or sending", async () => {
+    const record = structuredClone(wpFormTemplateRecord);
+    record.s3.object.size = 1_000_000;
+    const event = { Records: [record] };
+    await handler(event);
+    expect(console.warn).toHaveBeenCalledWith(
+      expect.stringContaining("Ignoring record: oversized S3 object")
+    );
+    expect(mockS3Get).not.toHaveBeenCalled();
+    expect(mockSendBatch).not.toHaveBeenCalled();
+  });
+
   it("should ignore events from buckets with no associated topic", async () => {
     const record = structuredClone(wpFormTemplateRecord);
     record.s3.bucket.name = "unknown-bucket";
