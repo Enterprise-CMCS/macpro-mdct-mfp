@@ -56,8 +56,8 @@ describe("<AdminDashSelector />", () => {
     const form = result.container;
     const dropdownInput = form.querySelector("[name='state']")!;
     await fireEvent.change(dropdownInput, { target: { value: "CA" } });
-    const reportInput = form.querySelector("[name='report']")!;
-    fireEvent.click(reportInput, { target: { value: "WP" } });
+    const wpRadio = screen.getByLabelText("MFP Work Plan");
+    fireEvent.click(wpRadio);
     const submitButton = screen.getByRole("button", {
       name: "Go to Report Dashboard",
     });
@@ -72,8 +72,10 @@ describe("<AdminDashSelector />", () => {
     const form = result.container;
     const dropdownInput = form.querySelector("[name='state']")!;
     await fireEvent.change(dropdownInput, { target: { value: "CA" } });
-    const reportInput = form.querySelector("[name='report']")!;
-    fireEvent.click(reportInput, { target: { value: "FINANCIAL_REPORT" } });
+    const financialReportRadio = screen.getByLabelText(
+      "MFP Financial Reporting Form"
+    );
+    fireEvent.click(financialReportRadio);
     const submitButton = screen.getByRole("button", {
       name: "Go to Report Dashboard",
     });
@@ -88,8 +90,10 @@ describe("<AdminDashSelector />", () => {
     const form = result.container;
     const dropdownInput = form.querySelector("[name='state']")!;
     await fireEvent.change(dropdownInput, { target: { value: "CA" } });
-    const reportInput = form.querySelector("[name='report']")!;
-    fireEvent.click(reportInput, { target: { value: "SAR" } });
+    const sarRadio = screen.getByLabelText(
+      "MFP Semi-Annual Progress Report (SAR)"
+    );
+    fireEvent.click(sarRadio);
     const submitButton = screen.getByRole("button", {
       name: "Go to Report Dashboard",
     });
