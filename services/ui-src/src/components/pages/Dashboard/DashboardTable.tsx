@@ -391,7 +391,7 @@ const sx = {
       borderColor: "gray_light",
     },
     td: {
-      minWidth: "3rem",
+      minWidth: "6rem",
       padding: "0.5rem 0.75rem",
       paddingLeft: 0,
       borderTop: "1px solid",
