@@ -148,7 +148,7 @@ describe("<DashboardTable />", () => {
 
   describe("<ActionButton /> conditional width", () => {
     test("should render with auto width for Work Plan report", () => {
-      const { container } = render(
+      render(
         <RouterWrappedComponent>
           <ActionButton
             report={mockWPFullReport}
@@ -159,12 +159,12 @@ describe("<DashboardTable />", () => {
           />
         </RouterWrappedComponent>
       );
-      const button = container.querySelector("button");
+      const button = screen.getByTestId("enter-report");
       expect(button).toHaveStyle({ width: "auto" });
     });
 
     test("should render with 5rem width for non-Work Plan report (SAR)", () => {
-      const { container } = render(
+      render(
         <RouterWrappedComponent>
           <ActionButton
             report={mockSARFullReport}
@@ -175,12 +175,12 @@ describe("<DashboardTable />", () => {
           />
         </RouterWrappedComponent>
       );
-      const button = container.querySelector("button");
+      const button = screen.getByTestId("enter-report");
       expect(button).toHaveStyle({ width: "5rem" });
     });
 
     test("should render with 5rem width for Financial Report", () => {
-      const { container } = render(
+      render(
         <RouterWrappedComponent>
           <ActionButton
             report={mockFinancialReportNotStartedReport}
@@ -191,7 +191,7 @@ describe("<DashboardTable />", () => {
           />
         </RouterWrappedComponent>
       );
-      const button = container.querySelector("button");
+      const button = screen.getByTestId("enter-report");
       expect(button).toHaveStyle({ width: "5rem" });
     });
 
@@ -207,7 +207,9 @@ describe("<DashboardTable />", () => {
           />
         </RouterWrappedComponent>
       );
-      expect(screen.getByRole("button", { name: /Edit/i })).toBeVisible();
+      expect(
+        screen.getByRole("button", { name: "Edit 2024 Period 1 report" })
+      ).toBeVisible();
     });
 
     test("should display View text for locked report", () => {
@@ -226,7 +228,9 @@ describe("<DashboardTable />", () => {
           />
         </RouterWrappedComponent>
       );
-      expect(screen.getByRole("button", { name: /View/i })).toBeVisible();
+      expect(
+        screen.getByRole("button", { name: "View 2024 Period 1 report" })
+      ).toBeVisible();
     });
 
     test("should display View text for non-state-level user", () => {

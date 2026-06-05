@@ -39,13 +39,14 @@ describe("<Table />", () => {
         headRow: ["Header 1", { title: "Actions", colSpan: 2 }],
         bodyRows: [],
       };
-      const { container } = render(
+      render(
         <RouterWrappedComponent>
           <Table content={contentWithColSpan} />
         </RouterWrappedComponent>
       );
-      const headerCells = container.querySelectorAll("th");
-      expect(headerCells[1]).toHaveAttribute("colspan", "2");
+      expect(
+        screen.getByRole("columnheader", { name: "Actions" })
+      ).toHaveAttribute("colspan", "2");
     });
 
     test("should handle mixed string and object headers", () => {
@@ -57,12 +58,12 @@ describe("<Table />", () => {
         ],
         bodyRows: [],
       };
-      const { container } = render(
+      render(
         <RouterWrappedComponent>
           <Table content={mixedContent} />
         </RouterWrappedComponent>
       );
-      const headerCells = container.querySelectorAll("th");
+      const headerCells = screen.getAllByRole("columnheader");
       expect(headerCells).toHaveLength(2);
       expect(headerCells[0]).toHaveTextContent("String header");
       expect(headerCells[1]).toHaveTextContent("Object header");

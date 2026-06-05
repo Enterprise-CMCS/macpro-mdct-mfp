@@ -203,9 +203,15 @@ export const tableBody = (body: TableContentShape, isAdmin: boolean) => {
     typeof cell === "string" ? cell : cell.title;
 
   if (isAdmin) {
-    tableContent.headRow = tableContent.headRow.filter(
-      (e) => !["Due date", "Target populations"].includes(getHeaderText(e))
-    );
+    tableContent.headRow = tableContent.headRow
+      .filter(
+        (e) => !["Due date", "Target populations"].includes(getHeaderText(e))
+      )
+      .map((e) =>
+        typeof e !== "string" && e.title === "Actions"
+          ? { ...e, colSpan: 4 }
+          : e
+      );
   } else {
     tableContent.headRow = tableContent.headRow.filter(
       (e) => getHeaderText(e) !== "#"
@@ -221,6 +227,7 @@ export const EditReportButton = ({
   sxOverride,
 }: EditReportProps) => {
   const actionText = isAdmin ? "View Reporting" : "Edit reporting";
+  const reportLabel = report.submissionName;
 
   return (
     <Td sx={sxOverride.editReport}>
@@ -228,7 +235,7 @@ export const EditReportButton = ({
         onClick={() => openCreateReportModal(report)}
         variant="link"
         sx={sx.editReporting}
-        aria-label={`${actionText} of ${report}`}
+        aria-label={`${actionText} of ${reportLabel}`}
       >
         {actionText}
       </Button>
@@ -384,7 +391,7 @@ const sx = {
       borderColor: "gray_light",
     },
     td: {
-      minWidth: "6rem",
+      minWidth: "3rem",
       padding: "0.5rem 0.75rem",
       paddingLeft: 0,
       borderTop: "1px solid",

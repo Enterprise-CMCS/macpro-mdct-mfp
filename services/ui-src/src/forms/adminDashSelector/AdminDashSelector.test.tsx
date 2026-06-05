@@ -67,5 +67,37 @@ describe("<AdminDashSelector />", () => {
     expect(window.location.pathname).toEqual("/wp");
   });
 
+  test("Form submits to correct URL for Financial Report", async () => {
+    const result = render(adminDashSelectorView());
+    const form = result.container;
+    const dropdownInput = form.querySelector("[name='state']")!;
+    await fireEvent.change(dropdownInput, { target: { value: "CA" } });
+    const reportInput = form.querySelector("[name='report']")!;
+    fireEvent.click(reportInput, { target: { value: "FINANCIAL_REPORT" } });
+    const submitButton = screen.getByRole("button", {
+      name: "Go to Report Dashboard",
+    });
+    await act(async () => {
+      await userEvent.click(submitButton);
+    });
+    expect(window.location.pathname).toEqual("/financial-report");
+  });
+
+  test("Form submits to correct URL for SAR", async () => {
+    const result = render(adminDashSelectorView());
+    const form = result.container;
+    const dropdownInput = form.querySelector("[name='state']")!;
+    await fireEvent.change(dropdownInput, { target: { value: "CA" } });
+    const reportInput = form.querySelector("[name='report']")!;
+    fireEvent.click(reportInput, { target: { value: "SAR" } });
+    const submitButton = screen.getByRole("button", {
+      name: "Go to Report Dashboard",
+    });
+    await act(async () => {
+      await userEvent.click(submitButton);
+    });
+    expect(window.location.pathname).toEqual("/sar");
+  });
+
   testA11yAct(adminDashSelectorView());
 });
