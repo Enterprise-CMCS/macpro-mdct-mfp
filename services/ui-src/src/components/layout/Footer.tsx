@@ -236,7 +236,7 @@ const sx = {
   },
   link: {
     margin: "0.5rem 0",
-    "&:focus, &:visited:focus": {
+    "&:focus-visible, &:visited:focus-visible": {
       color: "gray_lighter",
     },
     ".desktop &": {
