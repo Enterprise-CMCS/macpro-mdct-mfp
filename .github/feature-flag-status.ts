@@ -21,6 +21,7 @@ async function run() {
       return client;
     } catch (error) {
       console.error(error);
+      console.log("Error connecting to LaunchDarkly.");
       return;
     }
   };
