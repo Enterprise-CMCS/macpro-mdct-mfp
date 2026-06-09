@@ -26,11 +26,15 @@ jobs:
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version-file: ".nvmrc"
+      - name: Create temporary package.json
+        run: echo '{"type":"module"}' > package.json
       - name: Install LaunchDarkly SDK
         run: npm install @launchdarkly/node-server-sdk
       - name: Create status report
         run: |
-          echo "status=$(./.github/feature-flag-status.ts)" >> $GITHUB_ENV
+          echo "status<<EOF" >> $GITHUB_ENV
+          ./.github/feature-flag-status.ts >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
         env:
           LD_SDK_KEY_PROD: ${{ secrets.LD_SDK_KEY_PROD }}
       - name: Test Slack notification
