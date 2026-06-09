@@ -226,7 +226,7 @@ export const EditReportButton = ({
   isAdmin,
   sxOverride,
 }: EditReportProps) => {
-  const actionText = isAdmin ? "View Reporting" : "Edit reporting";
+  const actionText = isAdmin ? "View reporting" : "Edit reporting";
   const reportLabel = report.submissionName;
 
   return (
