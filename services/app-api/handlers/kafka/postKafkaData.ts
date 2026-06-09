@@ -103,7 +103,7 @@ const getS3Topic: GetS3Topic = (record) => {
     return undefined;
   }
 
-  const objectSize = Number((record.s3.object as { size?: number }).size);
+  const objectSize = Number(record.s3.object.size);
   if (Number.isFinite(objectSize) && objectSize >= MAX_KAFKA_S3_PAYLOAD_BYTES) {
     console.warn(
       `Ignoring record: oversized S3 object ${bucket}#${key} (${objectSize} bytes); Kafka rejects 1MB+ messages.`
