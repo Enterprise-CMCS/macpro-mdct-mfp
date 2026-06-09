@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { AdminDashSelector, ReportContext } from "components";
@@ -55,9 +55,13 @@ describe("<AdminDashSelector />", () => {
     const result = render(adminDashSelectorView());
     const form = result.container;
     const dropdownInput = form.querySelector("[name='state']")!;
-    await fireEvent.change(dropdownInput, { target: { value: "CA" } });
+    await act(async () => {
+      await userEvent.selectOptions(dropdownInput, "CA");
+    });
     const wpRadio = screen.getByLabelText("MFP Work Plan");
-    fireEvent.click(wpRadio);
+    await act(async () => {
+      await userEvent.click(wpRadio);
+    });
     const submitButton = screen.getByRole("button", {
       name: "Go to Report Dashboard",
     });
@@ -71,11 +75,15 @@ describe("<AdminDashSelector />", () => {
     const result = render(adminDashSelectorView());
     const form = result.container;
     const dropdownInput = form.querySelector("[name='state']")!;
-    await fireEvent.change(dropdownInput, { target: { value: "CA" } });
+    await act(async () => {
+      await userEvent.selectOptions(dropdownInput, "CA");
+    });
     const financialReportRadio = screen.getByLabelText(
       "MFP Financial Reporting Form"
     );
-    fireEvent.click(financialReportRadio);
+    await act(async () => {
+      await userEvent.click(financialReportRadio);
+    });
     const submitButton = screen.getByRole("button", {
       name: "Go to Report Dashboard",
     });
@@ -89,11 +97,15 @@ describe("<AdminDashSelector />", () => {
     const result = render(adminDashSelectorView());
     const form = result.container;
     const dropdownInput = form.querySelector("[name='state']")!;
-    await fireEvent.change(dropdownInput, { target: { value: "CA" } });
+    await act(async () => {
+      await userEvent.selectOptions(dropdownInput, "CA");
+    });
     const sarRadio = screen.getByLabelText(
       "MFP Semi-Annual Progress Report (SAR)"
     );
-    fireEvent.click(sarRadio);
+    await act(async () => {
+      await userEvent.click(sarRadio);
+    });
     const submitButton = screen.getByRole("button", {
       name: "Go to Report Dashboard",
     });
