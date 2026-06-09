@@ -37,17 +37,12 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
         env:
           LD_SDK_KEY_PROD: ${{ secrets.LD_SDK_KEY_PROD }}
-      - name: Test Slack notification
-        if: env.hasKey == 'true'
-        run: |
-          echo ":launchdarkly: ${{ env.PROJECT }} Production Feature Flags"
-          echo "${{ env.status }}"
+      - name: Slack notification
+        if: env.hasKey == 'true' && env.status != ''
+        uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2
         env:
           hasKey: ${{ secrets.LD_SDK_KEY_PROD != '' }}
-      # - name: Slack notification
-      #   uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2
-      #   env:
-      #     MSG_MINIMAL: true
-      #     SLACK_MESSAGE: ${{ env.status }}
-      #     SLACK_TITLE: ":launchdarkly: ${{ env.PROJECT }} Production Feature Flags"
-      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          MSG_MINIMAL: true
+          SLACK_MESSAGE: ${{ env.status }}
+          SLACK_TITLE: ":launchdarkly: ${{ env.PROJECT }} Production Feature Flags"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
