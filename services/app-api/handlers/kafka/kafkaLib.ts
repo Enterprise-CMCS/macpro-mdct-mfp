@@ -181,6 +181,7 @@ type S3StreamRecord = {
     };
     object: {
       key: string;
+      size?: number;
     };
   };
 };
