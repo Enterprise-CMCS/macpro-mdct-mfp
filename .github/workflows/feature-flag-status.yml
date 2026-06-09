@@ -20,6 +20,7 @@ jobs:
         with:
           sparse-checkout: |
             .github/feature-flag-status.ts
+            .nvmrc
           sparse-checkout-cone-mode: false
       - name: Setup Node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
