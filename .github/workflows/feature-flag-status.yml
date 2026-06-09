@@ -27,7 +27,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
       - name: Install LaunchDarkly SDK
-        run: npm install -g @launchdarkly/node-server-sdk
+        run: npm install @launchdarkly/node-server-sdk
       - name: Create status report
         run: |
           echo "status=$(./.github/feature-flag-status.ts)" >> $GITHUB_ENV
