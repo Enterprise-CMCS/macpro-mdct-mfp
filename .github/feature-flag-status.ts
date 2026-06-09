@@ -19,7 +19,8 @@ async function run() {
       });
       await client.waitForInitialization({ timeout: 60 });
       return client;
-    } catch {
+    } catch (error) {
+      console.error(error);
       return;
     }
   };
