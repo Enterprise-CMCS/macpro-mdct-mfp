@@ -1,4 +1,5 @@
-import { MouseEventHandler, useEffect, useState } from "react";
+import { ComponentClass, MouseEventHandler, useEffect, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import {
   Box,
@@ -24,6 +25,7 @@ import { EntityShape, OverlayModalPageShape, ReportType } from "types";
 // utils
 import {
   getFormattedEntityData,
+  getPageTitle,
   parseCustomHtml,
   resetClearProp,
   useStore,
@@ -36,6 +38,8 @@ export const OverlayModalPage = ({
   closeEntityDetailsOverlay,
   route,
 }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   const { verbiage, stepType } = route;
   const { report, selectedEntity, setSelectedEntity, editable } = useStore();
   const [selectedStepEntity, setSelectedStepEntity] = useState<
@@ -121,6 +125,10 @@ export const OverlayModalPage = ({
 
   return (
     <Box>
+      {/* page title */}
+      <Helmet>
+        <title>{report && getPageTitle(report.reportType, route.name)}</title>
+      </Helmet>
       <Button
         sx={sx.backButton}
         variant="none"

@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { ComponentClass, useContext, useEffect, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import {
   Box,
@@ -37,6 +38,7 @@ import {
   filterFormData,
   getEntriesToClear,
   getFormattedEntityData,
+  getPageTitle,
   isFieldElement,
   parseCustomHtml,
   resetClearProp,
@@ -53,6 +55,8 @@ const alertVerbiage: ErrorVerbiage = {
 };
 
 export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
   const {
     entityType,
@@ -214,6 +218,10 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   }, [reportFieldDataEntities]);
   return (
     <Box>
+      {/* page title */}
+      <Helmet>
+        <title>{report && getPageTitle(report.reportType, route.name)}</title>
+      </Helmet>
       {verbiage.intro && (
         <ReportPageIntro text={verbiage.intro} accordion={verbiage.accordion} />
       )}
