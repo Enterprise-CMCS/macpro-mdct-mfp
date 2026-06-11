@@ -237,6 +237,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
           dynamicLabel: "Key Activity",
           hint: "List the key activities currently in progress or planned for future implementation that must occur within the timeframe for starting and completing the initiative. Potential activities could include, but are not limited to, data collection and analysis to inform the initiative, coordination with internal divisions/agencies and external partners, any training required for the initiative (ex., training care coordinators), establishment of new contracts required for the initiative, and gathering data (through key metrics, informational interviews, surveys, etc.) to evaluate the success of the initiative. An initiative must have been implemented, tested, and evaluated to be considered completed.",
           label: "Key Activities",
+          multiline: true,
         },
       },
       {

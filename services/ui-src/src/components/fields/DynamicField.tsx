@@ -28,7 +28,9 @@ export const DynamicField = ({
   hint,
   hydrate,
   label,
+  multiline = false,
   name,
+  rows = 3,
 }: Props) => {
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
   const { report, selectedEntity, setAutosaveState } = useStore();
@@ -238,9 +240,11 @@ export const DynamicField = ({
               name={`${name}[${index}]`}
               hint={undefined}
               label={dynamicLabel}
+              multiline={multiline}
               errorMessage={fieldErrorState?.[index]?.name?.message}
               onChange={onChangeHandler}
               onBlur={onBlurHandler}
+              rows={rows}
               value={field.name || ""}
             />
             {!disabled && (
@@ -279,7 +283,9 @@ interface Props {
   hint?: string;
   hydrate?: DynamicFieldShape[];
   label: string;
+  multiline?: boolean;
   name: string;
+  rows?: number;
 }
 
 const sx = {
