@@ -57,6 +57,7 @@ type SubmittedIntro = {
 };
 
 export interface ReviewSubmitPageVerbiage {
+  title: string;
   alertBox: {
     description: string;
     title: string;

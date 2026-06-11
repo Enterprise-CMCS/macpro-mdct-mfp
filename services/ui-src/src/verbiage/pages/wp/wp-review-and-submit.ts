@@ -1,6 +1,7 @@
 import { ReviewSubmitPageVerbiage } from "types";
 
 const submitReviewVerbiage: ReviewSubmitPageVerbiage = {
+  title: "Review & Submit - WP - MFP",
   print: {
     printPageUrl: "/wp/export",
     printButtonText: "Review PDF",

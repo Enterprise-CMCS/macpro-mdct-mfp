@@ -98,6 +98,7 @@ export { DeleteEntityModal } from "./modals/DeleteEntityModal";
 
 // pages
 export { AdminPage } from "./pages/Admin/AdminPage";
+export { AdminReview } from "./pages/ReviewSubmit/AdminReview";
 export { HomePage } from "./pages/Home/HomePage";
 export { HelpPage } from "./pages/HelpPage/HelpPage";
 export { NotFoundPage } from "./pages/NotFound/NotFoundPage";

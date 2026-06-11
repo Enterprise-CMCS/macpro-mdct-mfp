@@ -1,6 +1,7 @@
 import { ReviewSubmitPageVerbiage } from "types";
 
 const submitReviewVerbiage: ReviewSubmitPageVerbiage = {
+  title: "Review & Submit - FRF - MFP",
   print: {
     printPageUrl: "/financial-report/export",
     printButtonText: "Review PDF",

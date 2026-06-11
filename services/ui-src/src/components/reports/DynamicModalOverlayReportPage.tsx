@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { ComponentClass, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Box, Heading } from "@chakra-ui/react";
 import {
@@ -21,6 +22,7 @@ import {
 } from "types";
 // utils
 import {
+  getPageTitle,
   getReportVerbiage,
   parseCustomHtml,
   useBreakpoint,
@@ -36,6 +38,8 @@ export const DynamicModalOverlayReportPage = ({
   route,
   setSidebarHidden,
 }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   // Route Information
   const { entityType, verbiage, entityInfo, initiatives } = route;
   // Context Information
@@ -103,6 +107,10 @@ export const DynamicModalOverlayReportPage = ({
 
   return (
     <Box>
+      {/* page title */}
+      <Helmet>
+        <title>{report && getPageTitle(report.reportType, route.name)}</title>
+      </Helmet>
       {isEntityDetailsOpen && selectedEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
