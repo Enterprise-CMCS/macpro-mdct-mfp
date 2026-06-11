@@ -40,7 +40,7 @@ describe("<DashboardTable />", () => {
       ...overrides,
     });
 
-    test("should show View Reporting when user is admin", () => {
+    test("should show View reporting when user is admin", () => {
       render(
         <RouterWrappedComponent>
           <DashboardTable {...createProps({ isAdmin: true })} />
@@ -48,7 +48,9 @@ describe("<DashboardTable />", () => {
       );
 
       expect(
-        screen.getByRole("button", { name: /view reporting/i })
+        screen.getByRole("button", {
+          name: "View reporting of 2023 - Alabama 1",
+        })
       ).toBeVisible();
     });
 
@@ -60,7 +62,9 @@ describe("<DashboardTable />", () => {
       );
 
       expect(
-        screen.getByRole("button", { name: /edit reporting/i })
+        screen.getByRole("button", {
+          name: "Edit reporting of 2023 - Alabama 1",
+        })
       ).toBeVisible();
     });
   });
@@ -245,7 +249,9 @@ describe("<DashboardTable />", () => {
           />
         </RouterWrappedComponent>
       );
-      expect(screen.getByRole("button", { name: /View/i })).toBeVisible();
+      expect(
+        screen.getByRole("button", { name: "View 2024 Period 1 report" })
+      ).toBeVisible();
     });
   });
 });
