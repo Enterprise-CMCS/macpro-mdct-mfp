@@ -93,7 +93,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   const [releasing, setReleasing] = useState<boolean>(false);
   const [isResetting, setIsResetting] = useState<boolean>(false);
   const [selectedReport, setSelectedReport] = useState<AnyObject | undefined>(
-    undefined
+    undefined,
   );
 
   const { dashboardVerbiage } = getReportVerbiage(reportType);
@@ -115,7 +115,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
           report.status !== ReportStatus.SUBMITTED &&
           report?.archived !== true
         );
-      }
+      },
     );
     return !workPlanToCopyFrom && activeSarList?.length === 0;
   }, [reportsToDisplay, workPlanToCopyFrom]);
@@ -146,14 +146,14 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
     newReportsToDisplay?.reverse();
     if (!userIsAdmin) {
       newReportsToDisplay = reportsByState?.filter(
-        (report: ReportMetadataShape) => !report?.archived
+        (report: ReportMetadataShape) => !report?.archived,
       );
     }
     if (showFilter) {
       const filteredReports = handleFinancialReportFilter(
         filterYear,
         filterQuarter,
-        newReportsToDisplay
+        newReportsToDisplay,
       );
       setReportsToDisplay(filteredReports);
       setPreviousReport(filteredReports?.[0]);
@@ -223,8 +223,8 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
           reportPeriod: workPlanToCopyFrom?.reportPeriod,
           populations: convertTargetPopulationsFromWPToSAREntity(
             getApplicablePopulations(
-              workPlanToCopyFrom?.fieldData?.targetPopulations
-            )
+              workPlanToCopyFrom?.fieldData?.targetPopulations,
+            ),
           ),
         },
       };
