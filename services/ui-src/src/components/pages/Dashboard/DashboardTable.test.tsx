@@ -167,7 +167,7 @@ describe("<DashboardTable />", () => {
       expect(button).toHaveStyle({ width: "auto" });
     });
 
-    test("should render with 5rem width for non-Work Plan report (SAR)", () => {
+    test("should render with 3rem width for non-Work Plan report (SAR)", () => {
       render(
         <RouterWrappedComponent>
           <ActionButton
@@ -180,10 +180,10 @@ describe("<DashboardTable />", () => {
         </RouterWrappedComponent>
       );
       const button = screen.getByTestId("enter-report");
-      expect(button).toHaveStyle({ width: "5rem" });
+      expect(button).toHaveStyle({ width: "3rem" });
     });
 
-    test("should render with 5rem width for Financial Report", () => {
+    test("should render with 3rem width for Financial Report", () => {
       render(
         <RouterWrappedComponent>
           <ActionButton
@@ -196,7 +196,7 @@ describe("<DashboardTable />", () => {
         </RouterWrappedComponent>
       );
       const button = screen.getByTestId("enter-report");
-      expect(button).toHaveStyle({ width: "5rem" });
+      expect(button).toHaveStyle({ width: "3rem" });
     });
 
     test("should display Edit text for state level user", () => {
