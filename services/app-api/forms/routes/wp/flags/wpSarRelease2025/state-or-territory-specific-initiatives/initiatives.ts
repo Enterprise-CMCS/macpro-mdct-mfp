@@ -443,8 +443,8 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
       {
         forCopyoverOnly: true,
         id: "closeOutInformation_initiativeStatus",
-        type: ReportFormFieldType.CHECKBOX,
-        validation: ValidationType.CHECKBOX_OPTIONAL,
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
           hint: "Select all that apply.",
           label:
