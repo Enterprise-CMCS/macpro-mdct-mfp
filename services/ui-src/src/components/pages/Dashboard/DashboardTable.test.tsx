@@ -44,13 +44,13 @@ describe("<DashboardTable />", () => {
       render(
         <RouterWrappedComponent>
           <DashboardTable {...createProps({ isAdmin: true })} />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
 
       expect(
         screen.queryByRole("button", {
           name: "Edit reporting of 2023 - Alabama 1",
-        }),
+        })
       ).not.toBeInTheDocument();
     });
 
@@ -58,13 +58,13 @@ describe("<DashboardTable />", () => {
       render(
         <RouterWrappedComponent>
           <DashboardTable {...createProps({ isAdmin: false })} />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
 
       expect(
         screen.getByRole("button", {
           name: "Edit reporting of 2023 - Alabama 1",
-        }),
+        })
       ).toBeVisible();
     });
   });
@@ -72,13 +72,13 @@ describe("<DashboardTable />", () => {
   describe("getStatus()", () => {
     test("should render the correct status if report has been unlocked", () => {
       expect(getStatus(ReportType.WP, "In revision", false, 1)).toBe(
-        "In revision",
+        "In revision"
       );
     });
 
     test("should render the correct status if report been started", () => {
       expect(getStatus(ReportType.WP, "In progress", false, 0)).toBe(
-        "In progress",
+        "In progress"
       );
     });
 
@@ -92,19 +92,19 @@ describe("<DashboardTable />", () => {
 
     test("should render the correct status if report has not started", () => {
       expect(getStatus(ReportType.WP, "Not started", false, 1)).toBe(
-        "Not started",
+        "Not started"
       );
     });
 
     test("should render the correct status for SAR reports", () => {
       expect(getStatus(ReportType.SAR, "In progress", false, 1)).toBe(
-        "In progress",
+        "In progress"
       );
     });
 
     test("should render the correct status for SAR reports", () => {
       expect(getStatus(ReportType.SAR, "Not started", false, 1)).toBe(
-        "Not started",
+        "Not started"
       );
     });
   });
@@ -161,7 +161,7 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       const button = screen.getByTestId("enter-report");
       expect(button).not.toHaveStyle("min-width: 3rem");
@@ -178,7 +178,7 @@ describe("<DashboardTable />", () => {
             enterSelectedReport={() => {}}
             compact={true}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       const button = screen.getByTestId("enter-report");
       expect(button).toHaveStyle("min-width: 3rem");
@@ -195,7 +195,7 @@ describe("<DashboardTable />", () => {
             enterSelectedReport={() => {}}
             compact={true}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       const button = screen.getByTestId("enter-report");
       expect(button).toHaveStyle("min-width: 3rem");
@@ -211,10 +211,10 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       expect(
-        screen.getByRole("button", { name: "Edit 2024 Period 1 report" }),
+        screen.getByRole("button", { name: "Edit 2024 Period 1 report" })
       ).toBeVisible();
     });
 
@@ -232,10 +232,10 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       expect(
-        screen.getByRole("button", { name: "View 2024 Period 1 report" }),
+        screen.getByRole("button", { name: "View 2024 Period 1 report" })
       ).toBeVisible();
     });
 
@@ -249,10 +249,10 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>,
+        </RouterWrappedComponent>
       );
       expect(
-        screen.getByRole("button", { name: "View 2024 Period 1 report" }),
+        screen.getByRole("button", { name: "View 2024 Period 1 report" })
       ).toBeVisible();
     });
   });

@@ -95,7 +95,7 @@ export const DashboardTable = ({
                 reportType as ReportType,
                 report.status,
                 report.archived,
-                report.submissionCount,
+                report.submissionCount
               )}
             </Td>
             {/* Admin: Submission count */}
@@ -161,7 +161,7 @@ export const DashboardTable = ({
 
 export const copyOverSubText = (
   report: ReportMetadataShape,
-  reportsByState: ReportMetadataShape[],
+  reportsByState: ReportMetadataShape[]
 ) =>
   report.isCopied && (
     <Text sx={sx.copyOverText}>{`copied from ${
@@ -192,7 +192,7 @@ export const getStatus = (
   reportType: ReportType,
   status: string,
   archived?: boolean,
-  submissionCount?: number,
+  submissionCount?: number
 ) => {
   if (archived) {
     return `Archived`;
@@ -221,16 +221,16 @@ export const tableBody = (body: TableContentShape, isAdmin: boolean) => {
   if (isAdmin) {
     tableContent.headRow = tableContent.headRow
       .filter(
-        (e) => !["Due date", "Target populations"].includes(getHeaderText(e)),
+        (e) => !["Due date", "Target populations"].includes(getHeaderText(e))
       )
       .map((e) =>
         typeof e !== "string" && e.title === "Actions"
           ? { ...e, colSpan: 1 }
-          : e,
+          : e
       );
   } else {
     tableContent.headRow = tableContent.headRow.filter(
-      (e) => getHeaderText(e) !== "#",
+      (e) => getHeaderText(e) !== "#"
     );
   }
   return tableContent;
@@ -264,7 +264,7 @@ interface EditReportProps {
 
 const getCompactButtonSx = (
   compact?: boolean,
-  base: Record<string, unknown> = {},
+  base: Record<string, unknown> = {}
 ) => {
   const buttonSx: Record<string, unknown> = { ...base };
 
@@ -341,7 +341,7 @@ const AdminReleaseButton = ({
     report.reportType as ReportType,
     report.status,
     report.archived,
-    report.submissionCount,
+    report.submissionCount
   );
   const isDisabled = !(reportStatus === "Submitted");
 
