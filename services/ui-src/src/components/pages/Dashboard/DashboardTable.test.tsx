@@ -40,31 +40,31 @@ describe("<DashboardTable />", () => {
       ...overrides,
     });
 
-    test("should show View reporting when user is admin", () => {
+    test("should not show Edit reporting button when user is admin", () => {
       render(
         <RouterWrappedComponent>
           <DashboardTable {...createProps({ isAdmin: true })} />
-        </RouterWrappedComponent>
+        </RouterWrappedComponent>,
       );
 
       expect(
-        screen.getByRole("button", {
-          name: "View reporting of 2023 - Alabama 1",
-        })
-      ).toBeVisible();
+        screen.queryByRole("button", {
+          name: "Edit reporting of 2023 - Alabama 1",
+        }),
+      ).not.toBeInTheDocument();
     });
 
     test("should show Edit reporting when user is not admin", () => {
       render(
         <RouterWrappedComponent>
           <DashboardTable {...createProps({ isAdmin: false })} />
-        </RouterWrappedComponent>
+        </RouterWrappedComponent>,
       );
 
       expect(
         screen.getByRole("button", {
           name: "Edit reporting of 2023 - Alabama 1",
-        })
+        }),
       ).toBeVisible();
     });
   });
@@ -72,13 +72,13 @@ describe("<DashboardTable />", () => {
   describe("getStatus()", () => {
     test("should render the correct status if report has been unlocked", () => {
       expect(getStatus(ReportType.WP, "In revision", false, 1)).toBe(
-        "In revision"
+        "In revision",
       );
     });
 
     test("should render the correct status if report been started", () => {
       expect(getStatus(ReportType.WP, "In progress", false, 0)).toBe(
-        "In progress"
+        "In progress",
       );
     });
 
@@ -92,19 +92,19 @@ describe("<DashboardTable />", () => {
 
     test("should render the correct status if report has not started", () => {
       expect(getStatus(ReportType.WP, "Not started", false, 1)).toBe(
-        "Not started"
+        "Not started",
       );
     });
 
     test("should render the correct status for SAR reports", () => {
       expect(getStatus(ReportType.SAR, "In progress", false, 1)).toBe(
-        "In progress"
+        "In progress",
       );
     });
 
     test("should render the correct status for SAR reports", () => {
       expect(getStatus(ReportType.SAR, "Not started", false, 1)).toBe(
-        "Not started"
+        "Not started",
       );
     });
   });
@@ -151,7 +151,7 @@ describe("<DashboardTable />", () => {
   });
 
   describe("<ActionButton /> conditional width", () => {
-    test("should render with auto width for Work Plan report", () => {
+    test("should not apply compact width by default", () => {
       render(
         <RouterWrappedComponent>
           <ActionButton
@@ -161,13 +161,13 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>
+        </RouterWrappedComponent>,
       );
       const button = screen.getByTestId("enter-report");
-      expect(button).toHaveStyle({ width: "auto" });
+      expect(button).not.toHaveStyle("min-width: 3rem");
     });
 
-    test("should render with 3rem width for non-Work Plan report (SAR)", () => {
+    test("should render with 3rem min-width when compact is true (SAR)", () => {
       render(
         <RouterWrappedComponent>
           <ActionButton
@@ -176,14 +176,15 @@ describe("<DashboardTable />", () => {
             isStateLevelUser={true}
             entering={false}
             enterSelectedReport={() => {}}
+            compact={true}
           />
-        </RouterWrappedComponent>
+        </RouterWrappedComponent>,
       );
       const button = screen.getByTestId("enter-report");
-      expect(button).toHaveStyle({ width: "3rem" });
+      expect(button).toHaveStyle("min-width: 3rem");
     });
 
-    test("should render with 3rem width for Financial Report", () => {
+    test("should render with 3rem min-width when compact is true (Financial)", () => {
       render(
         <RouterWrappedComponent>
           <ActionButton
@@ -192,11 +193,12 @@ describe("<DashboardTable />", () => {
             isStateLevelUser={true}
             entering={false}
             enterSelectedReport={() => {}}
+            compact={true}
           />
-        </RouterWrappedComponent>
+        </RouterWrappedComponent>,
       );
       const button = screen.getByTestId("enter-report");
-      expect(button).toHaveStyle({ width: "3rem" });
+      expect(button).toHaveStyle("min-width: 3rem");
     });
 
     test("should display Edit text for state level user", () => {
@@ -209,10 +211,10 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>
+        </RouterWrappedComponent>,
       );
       expect(
-        screen.getByRole("button", { name: "Edit 2024 Period 1 report" })
+        screen.getByRole("button", { name: "Edit 2024 Period 1 report" }),
       ).toBeVisible();
     });
 
@@ -230,10 +232,10 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>
+        </RouterWrappedComponent>,
       );
       expect(
-        screen.getByRole("button", { name: "View 2024 Period 1 report" })
+        screen.getByRole("button", { name: "View 2024 Period 1 report" }),
       ).toBeVisible();
     });
 
@@ -247,10 +249,10 @@ describe("<DashboardTable />", () => {
             entering={false}
             enterSelectedReport={() => {}}
           />
-        </RouterWrappedComponent>
+        </RouterWrappedComponent>,
       );
       expect(
-        screen.getByRole("button", { name: "View 2024 Period 1 report" })
+        screen.getByRole("button", { name: "View 2024 Period 1 report" }),
       ).toBeVisible();
     });
   });
