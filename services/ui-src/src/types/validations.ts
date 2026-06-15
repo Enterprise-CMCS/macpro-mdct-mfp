@@ -14,7 +14,6 @@ export enum ValidationType {
   NUMBER_COMPARISON_OPTIONAL = "numberComparisonOptional",
   NUMBER_OPTIONAL = "numberOptional",
   RADIO = "radio",
-  RADIO_OPTIONAL = "radioOptional",
   TEXT = "text",
   TEXT_CUSTOM = "textCustom",
   TEXT_CUSTOM_OPTIONAL = "textCustomOptional",
