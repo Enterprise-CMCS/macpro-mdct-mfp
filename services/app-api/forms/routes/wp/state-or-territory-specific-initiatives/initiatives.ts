@@ -632,8 +632,8 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           },
           {
             id: "closeOutInformation_initiativeStatus",
-            type: ReportFormFieldType.RADIO,
-            validation: ValidationType.RADIO,
+            type: ReportFormFieldType.CHECKBOX,
+            validation: ValidationType.CHECKBOX,
             props: {
               label:
                 "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, indicate the status below:",
