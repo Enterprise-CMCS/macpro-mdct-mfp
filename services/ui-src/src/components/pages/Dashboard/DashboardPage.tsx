@@ -59,6 +59,7 @@ import {
 import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   const {
@@ -290,11 +291,12 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
         if (!previousReport) {
           return false;
         } else {
-          // Prevent creating a new WP if the previous WP is for Q1 2026 and approved
+          // Prevent creating a new WP if the previous WP is for Q1 2026 and approved and feature flag is off
           if (
             previousReport.reportPeriod === 1 &&
             previousReport.reportYear === 2026 &&
-            previousReport.status === ReportStatus.APPROVED
+            previousReport.status === ReportStatus.APPROVED &&
+            Boolean(useFlags()?.wpSarRelease2025) === false
           )
             return true;
           // Allow creating a new WP only if the previous WP is approved

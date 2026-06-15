@@ -14,6 +14,7 @@ import {
   mockWPApprovedFullReport,
 } from "utils/testing/mockReport";
 import {
+  mockLDFlags,
   mockReportStore,
   mockUseAdminStore,
   mockUseEmptyReportStore,
@@ -133,7 +134,9 @@ describe("<DashboardPage />", () => {
       expect(callToActionButton).toBeDisabled();
     });
 
-    test("Check that WP Dashboard continue button is disabled if latest WP is from period 1 and year 2026 and approved", () => {
+    test("Check that WP Dashboard continue button is disabled if latest WP is from period 1 and year 2026 and approved and flag is off", () => {
+      mockLDFlags.set({ wpSarRelease2025: false });
+
       const mockStoreWith2026Q1Approved = {
         ...mockUseStore,
         reportsByState: [
@@ -152,6 +155,29 @@ describe("<DashboardPage />", () => {
         wpVerbiage.body.callToActionAdditions!
       );
       expect(callToActionButton).toBeDisabled();
+    });
+
+    test("Check that WP Dashboard continue button is enabled if latest WP is from period 1 and year 2026 and approved and flag is on", () => {
+      mockLDFlags.set({ wpSarRelease2025: true });
+
+      const mockStoreWith2026Q1Approved = {
+        ...mockUseStore,
+        reportsByState: [
+          {
+            ...mockWPApprovedFullReport,
+            reportPeriod: 1,
+            reportYear: 2026,
+            status: "Approved",
+          },
+        ],
+      };
+      mockedUseStore.mockReturnValue(mockStoreWith2026Q1Approved);
+      render(wpDashboardViewWithReports);
+
+      const callToActionButton = screen.getByText(
+        wpVerbiage.body.callToActionAdditions!
+      );
+      expect(callToActionButton).toBeEnabled();
     });
 
     test("Show copied from verbiage on report versions 2 or higher", () => {
