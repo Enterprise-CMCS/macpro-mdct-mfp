@@ -9,7 +9,6 @@ const dashboardPageVerbiage: DashboardPageVerbiage = {
     table: {
       caption: "Caption",
       headRow: [
-        "",
         "Report name",
         "Reporting year",
         "Reporting period",
@@ -17,7 +16,7 @@ const dashboardPageVerbiage: DashboardPageVerbiage = {
         "Edited by",
         "Status",
         "#",
-        "",
+        { title: "Actions", colSpan: 2, align: "center" },
       ],
     },
     empty:

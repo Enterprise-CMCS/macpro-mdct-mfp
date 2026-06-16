@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { AdminDashSelector, ReportContext } from "components";
@@ -55,9 +55,13 @@ describe("<AdminDashSelector />", () => {
     const result = render(adminDashSelectorView());
     const form = result.container;
     const dropdownInput = form.querySelector("[name='state']")!;
-    await fireEvent.change(dropdownInput, { target: { value: "CA" } });
-    const reportInput = form.querySelector("[name='report']")!;
-    fireEvent.click(reportInput, { target: { value: "WP" } });
+    await act(async () => {
+      await userEvent.selectOptions(dropdownInput, "CA");
+    });
+    const wpRadio = screen.getByLabelText("MFP Work Plan");
+    await act(async () => {
+      await userEvent.click(wpRadio);
+    });
     const submitButton = screen.getByRole("button", {
       name: "Go to Report Dashboard",
     });
@@ -65,6 +69,50 @@ describe("<AdminDashSelector />", () => {
       await userEvent.click(submitButton);
     });
     expect(window.location.pathname).toEqual("/wp");
+  });
+
+  test("Form submits to correct URL for Financial Report", async () => {
+    const result = render(adminDashSelectorView());
+    const form = result.container;
+    const dropdownInput = form.querySelector("[name='state']")!;
+    await act(async () => {
+      await userEvent.selectOptions(dropdownInput, "CA");
+    });
+    const financialReportRadio = screen.getByLabelText(
+      "MFP Financial Reporting Form"
+    );
+    await act(async () => {
+      await userEvent.click(financialReportRadio);
+    });
+    const submitButton = screen.getByRole("button", {
+      name: "Go to Report Dashboard",
+    });
+    await act(async () => {
+      await userEvent.click(submitButton);
+    });
+    expect(window.location.pathname).toEqual("/financial-report");
+  });
+
+  test("Form submits to correct URL for SAR", async () => {
+    const result = render(adminDashSelectorView());
+    const form = result.container;
+    const dropdownInput = form.querySelector("[name='state']")!;
+    await act(async () => {
+      await userEvent.selectOptions(dropdownInput, "CA");
+    });
+    const sarRadio = screen.getByLabelText(
+      "MFP Semi-Annual Progress Report (SAR)"
+    );
+    await act(async () => {
+      await userEvent.click(sarRadio);
+    });
+    const submitButton = screen.getByRole("button", {
+      name: "Go to Report Dashboard",
+    });
+    await act(async () => {
+      await userEvent.click(submitButton);
+    });
+    expect(window.location.pathname).toEqual("/sar");
   });
 
   testA11yAct(adminDashSelectorView());
