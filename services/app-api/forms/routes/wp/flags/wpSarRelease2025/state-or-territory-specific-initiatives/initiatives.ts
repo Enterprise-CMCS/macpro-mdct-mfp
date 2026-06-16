@@ -207,8 +207,13 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         tableType: FormTableType.ENTITY_MODAL,
         verbiage: {
           emptyTableMessage: "No Performance Indicators",
-          subtitle:
-            "If you are not measuring this initiative quantitatively, please detail the qualitative measures in the section below",
+          subtitle: [
+            {
+              type: "p",
+              content:
+                "If you are not measuring this initiative quantitatively, please detail the qualitative measures in the section below",
+            },
+          ],
           title: "Key Metrics",
         },
       },
