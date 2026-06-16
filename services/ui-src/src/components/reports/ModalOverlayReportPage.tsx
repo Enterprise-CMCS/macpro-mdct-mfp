@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { ComponentClass, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
 import {
@@ -23,6 +24,7 @@ import {
 } from "types";
 // utils
 import {
+  getPageTitle,
   getReportVerbiage,
   resetClearProp,
   useBreakpoint,
@@ -36,6 +38,8 @@ import addIcon from "assets/icons/icon_add_white.png";
  * @deprecated No longer used as of Report Year 2026, Period 2
  */
 export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   // Route Information
   const { entityType, verbiage, modalForm, dashboard, entityInfo } = route;
   // Context Information
@@ -117,6 +121,10 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
 
   return (
     <Box>
+      {/* page title */}
+      <Helmet>
+        <title>{report && getPageTitle(report.reportType, route.name)}</title>
+      </Helmet>
       {dashboard && isEntityDetailsOpen && selectedEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay

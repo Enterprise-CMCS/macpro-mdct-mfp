@@ -332,11 +332,23 @@ export const ExportRETTable = ({ section }: Props) => {
   let ariaOverride: TableContentShape = {};
   if (Object.keys(rows).length > 0) {
     table = generateMainTable(rows, formattedFieldData, section.name);
-    formatFooterForRET(form?.id, report!, table.footRow!, table.headRow!);
+    // Extract header titles for formatFooterForRET
+    const headerTitles = table.headRow?.map((cell) =>
+      typeof cell === "string" ? cell : cell.title
+    );
+    if (table.footRow && headerTitles) {
+      formatFooterForRET(form?.id, report!, table.footRow, headerTitles);
+    }
     //copying the current table before label truncating; these are the desired aria-labels
     ariaOverride = structuredClone(table);
     //truncating the table labels
-    table.headRow = table.headRow?.map((label) => formatHeaderForRET(label));
+    table.headRow = table.headRow?.map((cell) => {
+      const label = typeof cell === "string" ? cell : cell.title;
+      const formattedLabel = formatHeaderForRET(label);
+      return typeof cell === "string"
+        ? formattedLabel
+        : { ...cell, title: formattedLabel };
+    });
     table.bodyRows = table.bodyRows?.map((rows) => {
       rows[0] = formatLabelForRET(form?.id, rows[0], report!);
       return rows;

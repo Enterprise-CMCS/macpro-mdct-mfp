@@ -9,6 +9,9 @@ import {
 } from "./kafkaLib";
 import { createClient } from "../../storage/s3-lib";
 
+// Kafka rejects messages at 1 MB and above.
+const MAX_KAFKA_S3_PAYLOAD_BYTES = 1_000_000;
+
 const getConfig: GetKafkaConfig = () => {
   const { brokerString, STAGE } = process.env;
 
@@ -97,6 +100,14 @@ const getS3Topic: GetS3Topic = (record) => {
 
   if (!matchingRule) {
     console.warn(`Ignoring record: no matching s3 rule. ${bucket}#${key}`);
+    return undefined;
+  }
+
+  const objectSize = Number(record.s3.object.size);
+  if (Number.isFinite(objectSize) && objectSize >= MAX_KAFKA_S3_PAYLOAD_BYTES) {
+    console.warn(
+      `Ignoring record: oversized S3 object ${bucket}#${key} (${objectSize} bytes); Kafka rejects 1MB+ messages.`
+    );
     return undefined;
   }
 

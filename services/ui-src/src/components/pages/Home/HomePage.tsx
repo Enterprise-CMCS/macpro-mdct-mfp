@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+import { ComponentClass, useEffect } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
+import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import { Box, Collapse, Heading, Link, Text } from "@chakra-ui/react";
 import {
@@ -11,12 +13,14 @@ import {
 import { checkDateRangeStatus, useStore } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/home";
-import { useFlags } from "launchdarkly-react-client-sdk";
+import { FULL_APP_TITLE } from "../../../constants";
 
 export const HomePage = () => {
   const { bannerData, bannerActive, setBannerActive } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
   const financialReport = useFlags()?.abcdReport;
+
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
   useEffect(() => {
     let bannerActivity = false;
@@ -34,6 +38,9 @@ export const HomePage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{FULL_APP_TITLE}</title>
+      </Helmet>
       <Collapse in={showBanner}>
         <Banner bannerData={bannerData} />
       </Collapse>

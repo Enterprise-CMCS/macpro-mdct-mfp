@@ -92,6 +92,7 @@ export interface ReportFormFieldProps {
   label?: string;
   mask?: NumberMask | null;
   maxLength?: number;
+  multiline?: boolean;
   sectionTitle?: string;
   styleAsOptional?: boolean;
   styleTitleAsOptional?: boolean;

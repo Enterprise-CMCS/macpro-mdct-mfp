@@ -83,9 +83,15 @@ export interface InputChangeEvent extends React.ChangeEvent<HTMLInputElement> {}
 
 export type { IconType } from "react-icons";
 
+export interface TableHeaderCellShape {
+  title: string;
+  colSpan?: number;
+  align?: "left" | "center" | "right";
+}
+
 export interface TableContentShape {
   caption?: string;
-  headRow?: string[];
+  headRow?: (string | TableHeaderCellShape)[];
   bodyRows?: string[][];
   footRow?: string[][];
 }
