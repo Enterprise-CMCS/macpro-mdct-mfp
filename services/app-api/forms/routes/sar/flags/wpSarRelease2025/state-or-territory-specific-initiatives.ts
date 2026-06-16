@@ -48,7 +48,7 @@ const sarKeyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   },
   dynamicRowId: keyMetricsDynamicRowId,
   label: "Key Metrics",
-  required: true,
+  required: false,
   verbiage: {
     buttonText: "",
     hint: "",
