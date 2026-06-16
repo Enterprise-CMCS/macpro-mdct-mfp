@@ -1,5 +1,9 @@
 # Work Plan Kafka Ingestion Guide
 
+_Last updated: 2026-06-17_
+
+The following content represents the most current version of the Work Plan, but the report content can change based on organizational needs. For a full changelog of yearly updates to the Work Plan in MDCT, see [Work Plan Form Template documentation in CMS Confluence](https://confluenceent.cms.gov/spaces/CMDCT/pages/1245101522/Work+Plan+Form+Template).
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -116,7 +120,7 @@ The user-entered data for a report submission. This is unique to each state and 
 | `isInitiativeClosed`                                                               | boolean       | —                  |           |         | Set on initiative close-out                                    |
 | `closedBy`                                                                         | text          | —                  |           |         | Full name of user who closed the initiative                    |
 
-#### Notes:
+#### Notes
 
 - Radio/checkbox fields are arrays of `{ key, value }` objects.
 - `quarterlyProjections{YYYY}Q{1-4}` is dynamically generated based on the Work Plan's `reportYear` and `reportPeriod`. For report year 2026, this expands to `2026Q1` - `2028Q4`.
@@ -245,7 +249,7 @@ wp-form-template message key: formTemplates/template-789.json
 }
 ```
 
-#### Notes:
+#### Notes
 
 - `createdAt` and `lastAltered` are epoch milliseconds.
 - `associatedSar` is only present if a user has created a SAR from the WP.
@@ -424,6 +428,6 @@ wp-form-template message key: formTemplates/template-789.json
 }
 ```
 
-#### Notes:
+#### Notes
 
 - `defineInitiative_keyMetrics_performanceIndicators` may be an empty array if the user has not yet entered any indicators.
