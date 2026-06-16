@@ -211,7 +211,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
             {
               type: "p",
               content:
-                "If you are not measuring this initiative quantitatively, please detail the qualitative measures in the section below",
+                "If you are not measuring this initiative quantitatively, please detail the qualitative measures in the section below.",
             },
           ],
           title: "Key Metrics",
