@@ -235,8 +235,9 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         props: {
           dynamicButtonText: "Add key activity",
           dynamicLabel: "Key Activity",
-          hint: "List the key activities currently in progress or planned for future implementation that must occur within the timeframe for starting and completing the initiative. Potential activities could include, but are not limited to, data collection and analysis to inform the initiative, coordination with internal divisions/agencies and external partners, any training required for the initiative (ex., training care coordinators), establishment of new contracts required for the initiative, and gathering data (through key metrics, informational interviews, surveys, etc.) to evaluate the success of the initiative. An initiative must have been implemented, tested, and evaluated to be considered completed.",
+          hint: "List the key activities currently in progress or planned for future implementation that must occur within the timeframe for starting and completing the initiative. Potential activities could include, but are not limited to, data collection and analysis to inform the initiative, coordination with internal divisions/agencies and external partners, any training required for the initiative (ex., training care coordinators), establishment of new contracts required for the initiative, and gathering data (through informational interviews or surveys) to evaluate the success of the initiative. An initiative must have been implemented, tested, and evaluated to be considered completed.",
           label: "Key Activities",
+          multiline: true,
         },
       },
       {
@@ -385,7 +386,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         validation: ValidationType.CHECKBOX,
         props: {
           label: "Identify funding source(s):",
-          hint: "Select the funding sources used for this initiative. Cooperative Agreement is an alternative assistance instrument used whenever substantial federal involvement with the recipient during performance is anticipated. The difference between grants and cooperative agreements is the degree of federal programmatic involvement rather than the type of administrative requirements imposed. MFP recipients will no longer need to provide projected quarterly expenditures for each initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report (SAR).",
+          hint: "Select the funding sources used for this initiative. Cooperative Agreement is an alternative assistance instrument used whenever substantial federal involvement with the recipient during performance is anticipated. The difference between grants and cooperative agreements is the degree of federal programmatic involvement rather than the type of administrative requirements imposed. MFP recipients will no longer need to provide projected quarterly expenditures for each initiative.",
           title: "Funding Sources",
           choices: [
             {
@@ -575,10 +576,6 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
             {
               id: "I9A6C2SY0Dk3ezfvywqqwB",
               label: "Stakeholder engagement",
-            },
-            {
-              id: "2qjBuLtpA5pDvUM1HSHMVq",
-              label: "Equity and social determinants of health (SDOH)",
             },
             {
               id: "18Wb9b2zMIF13pZwWstdJF",

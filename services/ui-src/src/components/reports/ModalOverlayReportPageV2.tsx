@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { ComponentClass, useContext, useEffect, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Box, Button, Heading, Image, useDisclosure } from "@chakra-ui/react";
 import {
@@ -30,6 +31,7 @@ import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  getPageTitle,
   getReportVerbiage,
   isClosedInitiative,
   isFieldElement,
@@ -47,6 +49,8 @@ export const ModalOverlayReportPageV2 = ({
   route,
   setSidebarHidden,
 }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   // Route Information
   const { entityInfo, entityType, modalForm, overlayForm, verbiage } = route;
   // Context Information
@@ -220,6 +224,10 @@ export const ModalOverlayReportPageV2 = ({
   const tablePage = () => {
     return (
       <Box sx={sx.content}>
+        {/* page title */}
+        <Helmet>
+          <title>{report && getPageTitle(report.reportType, route.name)}</title>
+        </Helmet>
         <ReportPageIntro accordion={verbiage.accordion} text={verbiage.intro} />
         {showAlert && (
           <Alert

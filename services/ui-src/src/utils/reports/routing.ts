@@ -73,6 +73,8 @@ export const routeChecker: RouteChecker = {
   ),
   // Financial Reporting Form
   isFinancialReportingFormPage: hasPath("financial-report"),
+  isFrfFmapPercentagesPage: isPath("/financial-report/fmap-percentages"),
+  isFrfGeneralInformationPage: isPath("/financial-report/general-information"),
 };
 
 interface RouteChecker {

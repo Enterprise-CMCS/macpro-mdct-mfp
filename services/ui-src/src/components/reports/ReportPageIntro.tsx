@@ -71,22 +71,9 @@ interface Props {
 const sx = {
   introBox: {
     marginBottom: "spacer2",
-
     p: {
       marginBottom: "spacer2",
       marginTop: "0",
-    },
-    ".mdct-table th": {
-      textTransform: "capitalize",
-      fontSize: "sm",
-      fontWeight: "600",
-      color: "gray",
-      borderColor: "gray_lighter",
-    },
-    ".mdct-smalltext": {
-      fontSize: "xs",
-      marginTop: "0.625rem",
-      color: "gray",
     },
   },
   smallHeading: {
@@ -108,6 +95,62 @@ const sx = {
       color: "primary",
       "&:hover": {
         color: "primary_darker",
+      },
+    },
+    ".mdct-achievements-list": {
+      color: "gray_dark",
+      columnGap: "spacer5",
+      columns: "2",
+      paddingLeft: "spacer2",
+      "li::before": {
+        color: "gray_dark",
+      },
+    },
+    ".mdct-instructions-text": {
+      borderTopColor: "gray_lighter",
+      borderTopStyle: "solid",
+      borderTopWidth: "1px",
+      color: "gray_dark",
+      paddingTop: "spacer4",
+    },
+    ".mdct-instructions-list": {
+      marginBottom: "spacer4",
+      marginLeft: "spacer5",
+      li: {
+        marginBottom: "spacer2",
+      },
+    },
+    ".mdct-instructions-list-roman": {
+      listStyleType: "upper-roman",
+      marginBottom: "spacer5",
+      marginLeft: "spacer5",
+      li: {
+        padding: "spacer1",
+      },
+    },
+    ".mdct-smalltext": {
+      color: "gray",
+      fontSize: "xs",
+      marginBottom: "spacer5",
+      marginTop: "0.625rem",
+    },
+    ".mdct-table": {
+      th: {
+        borderColor: "gray_lighter",
+        color: "gray",
+        fontSize: "sm",
+        fontWeight: "600",
+        textTransform: "capitalize",
+      },
+      td: {
+        borderBottomColor: "gray_lighter",
+        verticalAlign: "top",
+      },
+      li: {
+        marginTop: "spacer1",
+        "&:first-of-type": {
+          marginTop: "0",
+        },
       },
     },
   },

@@ -120,7 +120,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
             },
           },
           props: {
-            hint: "If your state or territory has not achieved the targets/benchmarks for performance indicators or the projected date set in the initiative’s evaluation plan, describe the barriers or challenges that have hindered progress and your plans to address them. Include any planned discussions with your CMS Project Officers around these challenges and what potential changes may be made to the initiative.",
+            hint: "If your state or territory has not achieved the targets/benchmarks for performance indicators or the projected end date set in the initiative’s evaluation plan, describe the barriers or challenges that have hindered progress and your plans to address them. Include any planned discussions with your CMS Project Officers around these challenges and what potential changes may be made to the initiative.",
             label:
               "Describe any issues or challenges that have impacted the development and implementation of the initiative during the reporting period.",
             maxLength: 1800,
@@ -140,9 +140,9 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
             },
           },
           props: {
-            label: "Describe any qualitative detailed in your Work Plan",
+            label:
+              "Describe any qualitative findings that were recorded during this reporting period.",
             maxLength: 1800,
-            subsectionTitle: "Findings and Sustainability",
           },
         },
         {
@@ -152,6 +152,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
           props: {
             hint: "Please describe your selection of Yes, No, or Partially. Explain whether you accomplished what you planned and provide any additional qualitative or quantitative findings not reported above to support your selection.",
             label: "Did the initiative achieve its expected results?",
+            subsectionTitle: "Findings and Sustainability",
             choices: [
               {
                 id: "2NywCe4me9M7mWNMDb53Av",
@@ -323,7 +324,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
           },
           props: {
             label:
-              "Describe how you will use the evaluation results for program improvement or decision-making",
+              "Describe how you will use the evaluation results for program improvement or decision-making.",
             maxLength: 1800,
             subsectionTitle: "Use of Findings",
           },

@@ -1,7 +1,7 @@
 // types
 import { ReportJsonFile, ReportType } from "../../../../../utils/types";
 // routes
-import { additionalAchievementsRoute } from "../../additional-achievements";
+import { additionalAchievementsRoute } from "./additional-achievements";
 import { generalInformationRoute } from "../../general-information";
 import { organizationAndAdministrationRoute } from "../../organization-and-administration";
 import { recruitmentEnrollmentAndTransitionsRoute } from "../../recruitment-enrollment-transitions";

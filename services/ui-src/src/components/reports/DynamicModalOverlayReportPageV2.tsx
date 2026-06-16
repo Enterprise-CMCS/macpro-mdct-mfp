@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { ComponentClass, useContext, useEffect, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Box, Heading } from "@chakra-ui/react";
 import {
@@ -24,6 +25,7 @@ import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  getPageTitle,
   isFieldElement,
   isTableField,
   parseCustomHtml,
@@ -36,6 +38,8 @@ export const DynamicModalOverlayReportPageV2 = ({
   route,
   setSidebarHidden,
 }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   // Route Information
   const { entityInfo, entityType, overlayForm, verbiage } = route;
 
@@ -139,6 +143,10 @@ export const DynamicModalOverlayReportPageV2 = ({
   const tablePage = () => {
     return (
       <Box sx={sx.content}>
+        {/* page title */}
+        <Helmet>
+          <title>{report && getPageTitle(report.reportType, route.name)}</title>
+        </Helmet>
         <ReportPageIntro accordion={verbiage.accordion} text={verbiage.intro} />
         <Heading as="h3" sx={sx.dashboardTitle}>
           {dashTitle}

@@ -2,6 +2,7 @@ import {
   renderServiceTableBody,
   renderFieldTableBody,
   renderCalculationTables,
+  renderEntityTables,
 } from "./exportFieldTableHelpers";
 import {
   ReportFormFieldType,
@@ -219,6 +220,321 @@ describe("exportFieldTableHelpers", () => {
         expect(screen.getByTestId(`service-table-${id}`)).toBeVisible();
         expect(screen.getByText(`Percentage: ${pct}%`)).toBeVisible();
       });
+    });
+  });
+
+  describe("renderEntityTables()", () => {
+    test("should render entity tables with data", () => {
+      const table = {
+        id: "testTable",
+        headRows: [["Name", "Value"]],
+        dynamicRowsTemplate: {
+          id: "testData",
+          props: {
+            dynamicFields: [
+              {
+                id: "testData-name",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+              {
+                id: "testData-value",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+            ],
+          },
+        },
+        verbiage: { title: "Test Table" },
+      };
+
+      const entity = {
+        id: "1",
+        testData: [{ name: "Item 1", value: "Value 1" }],
+      };
+
+      const result = renderEntityTables([table], entity, "h4", false);
+      render(<>{result}</>);
+
+      expect(screen.getByText("Test Table")).toBeVisible();
+      expect(screen.getByText("Item 1")).toBeVisible();
+      expect(screen.getByText("Value 1")).toBeVisible();
+    });
+
+    test('should display user-entered value when field has "Other, specify" selected', () => {
+      const table = {
+        id: "keyMetricsTable",
+        headRows: [["Indicator", "Data Source"]],
+        dynamicRowsTemplate: {
+          id: "keyMetrics",
+          props: {
+            dynamicFields: [
+              {
+                id: "keyMetrics-indicator",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+              {
+                id: "keyMetrics-dataSource",
+                type: ReportFormFieldType.DROPDOWN,
+                props: {},
+              },
+            ],
+          },
+        },
+        verbiage: { title: "Key Metrics" },
+      };
+
+      const entity = {
+        id: "1",
+        keyMetrics: [
+          {
+            indicator: "Test Metric",
+            dataSource: [{ value: "Other, specify" }],
+            otherText: "Custom Data Source Name",
+          },
+        ],
+      };
+
+      const result = renderEntityTables([table], entity, "h4", false);
+      render(<>{result}</>);
+
+      expect(screen.getByText("Key Metrics")).toBeVisible();
+      expect(screen.getByText("Test Metric")).toBeVisible();
+      expect(screen.getByText("Custom Data Source Name")).toBeVisible();
+      expect(screen.queryByText("Other, specify")).not.toBeInTheDocument();
+    });
+
+    test("should combine baseline start and end dates", () => {
+      const table = {
+        id: "baselineTable",
+        headRows: [["Indicator", "Baseline Period"]],
+        dynamicRowsTemplate: {
+          id: "baselineData",
+          props: {
+            dynamicFields: [
+              {
+                id: "baselineData-indicator",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+              {
+                id: "baselineData-baselineStartDate",
+                type: ReportFormFieldType.DATE,
+                props: {},
+              },
+              {
+                id: "baselineData-baselineEndDate",
+                type: ReportFormFieldType.DATE,
+                props: {},
+              },
+            ],
+          },
+        },
+        verbiage: { title: "Baseline Data" },
+      };
+
+      const entity = {
+        id: "1",
+        baselineData: [
+          {
+            indicator: "Test Baseline",
+            baselineStartDate: "01/01/2024",
+            baselineEndDate: "12/31/2024",
+          },
+        ],
+      };
+
+      const result = renderEntityTables([table], entity, "h4", false);
+      render(<>{result}</>);
+
+      expect(screen.getByText("01/01/2024 - 12/31/2024")).toBeVisible();
+    });
+
+    test("should handle NUMBER field type with mask", () => {
+      const table = {
+        id: "numberTable",
+        headRows: [["Metric", "Value"]],
+        dynamicRowsTemplate: {
+          id: "numberData",
+          props: {
+            dynamicFields: [
+              {
+                id: "numberData-metric",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+              {
+                id: "numberData-value",
+                type: ReportFormFieldType.NUMBER,
+                props: {
+                  mask: "currency",
+                },
+              },
+            ],
+          },
+        },
+        verbiage: { title: "Number Table" },
+      };
+
+      const entity = {
+        id: "1",
+        numberData: [
+          {
+            metric: "Test Number",
+            value: 1234.56,
+          },
+        ],
+      };
+
+      const result = renderEntityTables([table], entity, "h4", false);
+      render(<>{result}</>);
+
+      expect(screen.getByText("Number Table")).toBeVisible();
+    });
+
+    test("should handle date field type", () => {
+      const table = {
+        id: "dateTable",
+        headRows: [["Event", "Date"]],
+        dynamicRowsTemplate: {
+          id: "dateData",
+          props: {
+            dynamicFields: [
+              {
+                id: "dateData-event",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+              {
+                id: "dateData-date",
+                type: ReportFormFieldType.DATE,
+                props: {},
+              },
+            ],
+          },
+        },
+        verbiage: { title: "Date Table" },
+      };
+
+      const entity = {
+        id: "1",
+        dateData: [
+          {
+            event: "Test Event",
+            date: "01/15/2024",
+          },
+        ],
+      };
+
+      const result = renderEntityTables([table], entity, "h4", false);
+      render(<>{result}</>);
+
+      expect(screen.getByText("01/15/2024")).toBeVisible();
+    });
+
+    test("should render with sectionTitle", () => {
+      const table = {
+        id: "sectionTitleTable",
+        headRows: [["Name"]],
+        dynamicRowsTemplate: {
+          id: "sectionData",
+          props: {
+            dynamicFields: [
+              {
+                id: "sectionData-name",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+            ],
+          },
+        },
+        verbiage: {
+          sectionTitle: "Test Section Title",
+          title: "Section Table",
+        },
+      };
+
+      const entity = {
+        id: "1",
+        sectionData: [{ name: "Item 1" }],
+      };
+
+      const result = renderEntityTables([table], entity, "h4", false);
+      render(<>{result}</>);
+
+      expect(screen.getByText("Test Section Title")).toBeVisible();
+      expect(screen.getByText("Section Table")).toBeVisible();
+    });
+
+    test("should render empty table message when no data", () => {
+      const table = {
+        id: "emptyTable",
+        headRows: [["Name"]],
+        dynamicRowsTemplate: {
+          id: "emptyData",
+          props: {
+            dynamicFields: [
+              {
+                id: "emptyData-name",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+            ],
+          },
+        },
+        verbiage: {
+          title: "Empty Table",
+          emptyTableMessage: "No data available",
+        },
+      };
+
+      const entity = {
+        id: "1",
+        emptyData: [],
+      };
+
+      const result = renderEntityTables([table], entity, "h4", false);
+      render(<>{result}</>);
+
+      expect(screen.getByText("Empty Table")).toBeVisible();
+      expect(screen.getByText("No data available")).toBeVisible();
+    });
+
+    test("should render with styleAsOptionalHeadRows", () => {
+      const table = {
+        id: "optionalTable",
+        headRows: [["Required Field", "Optional Field"]],
+        styleAsOptionalHeadRows: ["Optional Field"],
+        dynamicRowsTemplate: {
+          id: "optionalData",
+          props: {
+            dynamicFields: [
+              {
+                id: "optionalData-required",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+              {
+                id: "optionalData-optional",
+                type: ReportFormFieldType.TEXT,
+                props: {},
+              },
+            ],
+          },
+        },
+        verbiage: { title: "Optional Table" },
+      };
+
+      const entity = {
+        id: "1",
+        optionalData: [{ required: "Value 1", optional: "Value 2" }],
+      };
+
+      const result = renderEntityTables([table], entity, "h4", false);
+      render(<>{result}</>);
+
+      expect(screen.getByText("Optional Table")).toBeVisible();
     });
   });
 });

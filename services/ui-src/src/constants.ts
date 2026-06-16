@@ -1,6 +1,10 @@
 // HOST DOMAIN
 export const PRODUCTION_HOST_DOMAIN = "mdctmfp.cms.gov";
 
+// REPORT
+export const APP_TITLE = "MFP";
+export const FULL_APP_TITLE = "Money Follows the Person";
+
 // FIELDS
 export const dropdownDefaultOptionText = "- Select an option -";
 

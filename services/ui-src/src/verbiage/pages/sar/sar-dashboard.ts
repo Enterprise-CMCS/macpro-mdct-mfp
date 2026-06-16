@@ -9,7 +9,6 @@ const dashboardPageVerbiage: DashboardPageVerbiage = {
     table: {
       caption: "WP Programs",
       headRow: [
-        "",
         "Submission name",
         "Target populations",
         "Due date",
@@ -17,7 +16,7 @@ const dashboardPageVerbiage: DashboardPageVerbiage = {
         "Edited by",
         "Status",
         "#",
-        "",
+        { title: "Actions", colSpan: 2, align: "center" },
       ],
     },
     empty: "Once you start a SAR submission, you can access it here.",

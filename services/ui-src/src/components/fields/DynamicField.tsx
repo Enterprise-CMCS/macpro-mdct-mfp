@@ -28,7 +28,9 @@ export const DynamicField = ({
   hint,
   hydrate,
   label,
+  multiline = false,
   name,
+  rows = 3,
 }: Props) => {
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
   const { report, selectedEntity, setAutosaveState } = useStore();
@@ -80,10 +82,17 @@ export const DynamicField = ({
   };
 
   // update display value on change
-  const onChangeHandler = async (event: InputChangeEvent) => {
+  const onChangeHandler = (event: InputChangeEvent) => {
     const { id, value } = event.target;
-    const currentEntity = displayValues.find((entity) => entity.id === id);
-    const currentEntityIndex = displayValues.indexOf(currentEntity!);
+    const currentEntityIndex = displayValues.findIndex(
+      (entity) => entity.id === id
+    );
+
+    // Clear error on input
+    if (value.trim() && fieldErrorState?.[currentEntityIndex]?.name) {
+      form.clearErrors(`${name}.${currentEntityIndex}.name`);
+    }
+
     const newDisplayValues = [...displayValues];
     newDisplayValues[currentEntityIndex].name = value;
     setDisplayValues(newDisplayValues);
@@ -219,28 +228,42 @@ export const DynamicField = ({
       )}
 
       {displayValues.map((field: DynamicFieldShape, index: number) => {
+        const errorMessage = fieldErrorState?.[index]?.name?.message;
+        const hasError = Boolean(errorMessage);
+        const textareaStyle = hasError
+          ? sx.removeBoxTextareaError
+          : sx.removeBoxTextarea;
+        const removeBoxStyle = multiline ? textareaStyle : sx.removeBoxInput;
+
         return (
           <Flex
             key={field.id}
-            sx={
-              dynamicLabel ? sx.dynamicFieldWithDynamicLabel : sx.dynamicField
-            }
+            sx={{
+              ...(dynamicLabel
+                ? sx.dynamicFieldWithDynamicLabel
+                : sx.dynamicField),
+              ...(multiline ? sx.dynamicFieldTextarea : sx.dynamicFieldInput),
+            }}
           >
             <CmsdsTextField
-              id={field.id}
-              name={`${name}[${index}]`}
+              errorMessage={errorMessage}
               hint={undefined}
+              id={field.id}
               label={dynamicLabel}
-              errorMessage={fieldErrorState?.[index]?.name?.message}
-              onChange={onChangeHandler}
+              multiline={multiline}
+              name={`${name}[${index}]`}
               onBlur={onBlurHandler}
+              onChange={onChangeHandler}
+              rows={rows}
               value={field.name || ""}
             />
             {!disabled && (
-              <Box sx={sx.removeBox}>
+              <Box sx={removeBoxStyle}>
                 <button type="button" onClick={() => deleteRecord(field)}>
                   <Image
-                    sx={sx.removeImage}
+                    sx={
+                      multiline ? sx.removeImageTextarea : sx.removeImageInput
+                    }
                     src={cancelIcon}
                     alt={`Delete ${field.name || field.id}`}
                   />
@@ -272,7 +295,9 @@ interface Props {
   hint?: string;
   hydrate?: DynamicFieldShape[];
   label: string;
+  multiline?: boolean;
   name: string;
+  rows?: number;
 }
 
 const sx = {
@@ -285,13 +310,25 @@ const sx = {
   legendWithDynamicLabel: {
     fontSize: "xl",
   },
-  removeBox: {
+  removeBoxInput: {
     marginBottom: "0.625rem",
     marginLeft: "0.625rem",
   },
-  removeImage: {
+  removeBoxTextarea: {
+    marginLeft: "0.625rem",
+    marginTop: "0",
+  },
+  removeBoxTextareaError: {
+    marginLeft: "0.625rem",
+    marginTop: "1.625rem",
+  },
+  removeImageInput: {
     width: "1.25rem",
     height: "1.25rem",
+  },
+  removeImageTextarea: {
+    width: "1.5rem",
+    height: "1.5rem",
   },
   appendButton: {
     width: "12.5rem",
@@ -302,7 +339,6 @@ const sx = {
     height: "1rem",
   },
   dynamicField: {
-    alignItems: "flex-end",
     ".desktop &": {
       width: "32rem",
     },
@@ -317,7 +353,6 @@ const sx = {
     },
   },
   dynamicFieldWithDynamicLabel: {
-    alignItems: "flex-end",
     ".desktop &": {
       width: "32rem",
     },
@@ -327,5 +362,11 @@ const sx = {
     ".ds-u-clearfix": {
       width: "100%",
     },
+  },
+  dynamicFieldInput: {
+    alignItems: "flex-end",
+  },
+  dynamicFieldTextarea: {
+    alignItems: "center",
   },
 };

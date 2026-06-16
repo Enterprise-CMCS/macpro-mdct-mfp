@@ -1,11 +1,9 @@
 // components
-import { Box, Button, Flex, Image, Text, Spinner } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, Spinner } from "@chakra-ui/react";
 // types
 import { ReportMetadataShape, ReportType, SxObject } from "types";
 // utils
 import { convertDateUtcToEt, isArchivable, prettifyChoices } from "utils";
-// assets
-import editIcon from "assets/icons/icon_edit_square_gray.png";
 import { getStatus, copyOverSubText } from "./DashboardTable";
 
 export const MobileDashboardTable = ({
@@ -28,13 +26,6 @@ export const MobileDashboardTable = ({
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>{"Submission name"}</Text>
           <Flex alignContent="flex-start">
-            {reportType !== ReportType.WP && (
-              <Box sx={sxOverride.editReport}>
-                <button onClick={() => openCreateReportModal(report)}>
-                  <Image src={editIcon} alt="Edit Report" />
-                </button>
-              </Box>
-            )}
             <Text sx={sxOverride.submissionNameText}>
               {report.submissionName}
             </Text>
@@ -98,7 +89,19 @@ export const MobileDashboardTable = ({
         )}
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>Actions</Text>
-          <Flex alignContent="flex-start" gap={2}>
+          <Flex alignItems="center" gap={2} flexWrap="nowrap">
+            {reportType !== ReportType.WP && (
+              <Box>
+                <Button
+                  onClick={() => openCreateReportModal(report)}
+                  variant="link"
+                  sx={sx.editReporting}
+                  aria-label={`Edit reporting ${report.reportYear} period ${report.reportPeriod}`}
+                >
+                  Edit reporting
+                </Button>
+              </Box>
+            )}
             <Box sx={sxOverride.editReportButtonCell}>
               <Button
                 variant="outline"
@@ -281,5 +284,11 @@ const sx = {
     paddingLeft: 2,
     display: "flex",
     alignItems: "center",
+  },
+  editReporting: {
+    textDecoration: "underline",
+    color: "primary",
+    fontSize: "sm",
+    fontWeight: "300",
   },
 };

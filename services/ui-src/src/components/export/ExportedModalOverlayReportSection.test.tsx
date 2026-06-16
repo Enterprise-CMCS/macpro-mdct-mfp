@@ -10,11 +10,14 @@ import {
 } from "utils/testing/mockReport";
 import {
   EntityDetailsStepTypes,
+  FormTableType,
   ModalOverlayReportPageVerbiage,
   OverlayModalPageShape,
   OverlayModalTypes,
   OverlayModalStepTypes,
   PageTypes,
+  ReportFormFieldType,
+  ValidationType,
 } from "types";
 import {
   ExportedModalOverlayReportSection,
@@ -326,9 +329,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       report: mockWPReportWithOverlays,
     });
     render(testComponent(wpMockProps));
-    expect(
-      screen.getAllByTestId("exportedOverlayModalPage")[0]
-    ).toBeInTheDocument();
+    expect(screen.getAllByTestId("exportedOverlayModalPage")[0]).toBeVisible();
   });
 
   test("should render correct initiative topic", () => {
@@ -337,8 +338,8 @@ describe("<ExportedModalOverlayReportSection />", () => {
       report: mockWPReportWithOverlays,
     });
     render(testComponent(wpMockProps));
-    expect(screen.getByText("mock WP topic")).toBeInTheDocument();
-    expect(screen.getByText("Unique initiative type")).toBeInTheDocument();
+    expect(screen.getByText("mock WP topic")).toBeVisible();
+    expect(screen.getByText("Unique initiative type")).toBeVisible();
   });
 
   test("should render for SAR", () => {
@@ -347,10 +348,544 @@ describe("<ExportedModalOverlayReportSection />", () => {
       report: mockSARReportWithOverlays,
     });
     render(testComponent(sarMockProps));
+    expect(screen.getByText("% of total projected spending")).toBeVisible();
+    expect(screen.getByText("42.86%")).toBeVisible(); // (5+10)/(15+20)
+  });
+
+  test("should skip fields with forCopyoverOnly flag", () => {
+    const propsWithCopyoverField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "copyover_field",
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
+              forCopyoverOnly: true,
+              props: { label: "Should be skipped" },
+            },
+            {
+              id: "regular_field",
+              type: ReportFormFieldType.TEXT,
+              validation: ValidationType.TEXT,
+              props: { label: "Regular Field" },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
+    });
+    render(testComponent(propsWithCopyoverField));
+    expect(screen.queryByText("Should be skipped")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Regular Field").length).toBe(2);
+  });
+
+  test("should render nested field with Please describe label", () => {
+    const reportWithNestedField = {
+      ...mockWPReportWithOverlays,
+      fieldData: {
+        ...mockWPReportWithOverlays.fieldData,
+        initiative: [
+          {
+            ...mockWPReportWithOverlays.fieldData.initiative[0],
+            parent_field: [{ key: "parent_field-option1", value: "Option 1" }],
+            nested_describe_field: "Test description",
+          },
+        ],
+      },
+    };
+
+    const propsWithNestedField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "parent_field",
+              type: "radio",
+              validation: "text",
+              props: {
+                label: "Parent Field",
+                choices: [
+                  { id: "option1", label: "Option 1" },
+                  { id: "option2", label: "Option 2" },
+                ],
+              },
+            },
+            {
+              id: "nested_describe_field",
+              type: "text",
+              validation: {
+                nested: true,
+                parentFieldName: "parent_field",
+                parentOptionId: "option1",
+              },
+              props: { label: "Please describe:" },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: reportWithNestedField,
+    });
+    render(testComponent(propsWithNestedField));
+    expect(screen.getByText("Please describe:")).toBeVisible();
+    expect(screen.getByText("Test description")).toBeVisible();
+  });
+
+  test("should render nested field without Please describe label", () => {
+    const reportWithNestedField = {
+      ...mockWPReportWithOverlays,
+      fieldData: {
+        ...mockWPReportWithOverlays.fieldData,
+        initiative: [
+          {
+            ...mockWPReportWithOverlays.fieldData.initiative[0],
+            parent_field: [{ key: "parent_field-option1", value: "Option 1" }],
+            nested_field: "Nested value",
+          },
+        ],
+      },
+    };
+
+    const propsWithNestedField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "parent_field",
+              type: "radio",
+              validation: "text",
+              props: {
+                label: "Parent Field",
+                choices: [
+                  { id: "option1", label: "Option 1" },
+                  { id: "option2", label: "Option 2" },
+                ],
+              },
+            },
+            {
+              id: "nested_field",
+              type: "text",
+              validation: {
+                nested: true,
+                parentFieldName: "parent_field",
+                parentOptionId: "option1",
+              },
+              props: { label: "Nested Field Label" },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: reportWithNestedField,
+    });
+    render(testComponent(propsWithNestedField));
+    expect(screen.getByText("Nested Field Label")).toBeVisible();
+    expect(screen.getByText("Nested value")).toBeVisible();
+  });
+
+  test("should not render nested field when parent choice is not selected", () => {
+    const reportWithUnselectedParent = {
+      ...mockWPReportWithOverlays,
+      fieldData: {
+        ...mockWPReportWithOverlays.fieldData,
+        initiative: [
+          {
+            ...mockWPReportWithOverlays.fieldData.initiative[0],
+            parent_field: [{ key: "parent_field-option2", value: "Option 2" }],
+            nested_field: "Should not render",
+          },
+        ],
+      },
+    };
+
+    const propsWithNestedField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "parent_field",
+              type: "radio",
+              validation: "text",
+              props: {
+                label: "Parent Field",
+                choices: [
+                  { id: "option1", label: "Option 1" },
+                  { id: "option2", label: "Option 2" },
+                ],
+              },
+            },
+            {
+              id: "nested_field",
+              type: "text",
+              validation: {
+                nested: true,
+                parentFieldName: "parent_field",
+                parentOptionId: "option1",
+              },
+              props: { label: "Nested Field" },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: reportWithUnselectedParent,
+    });
+    render(testComponent(propsWithNestedField));
+    expect(screen.queryByText("Should not render")).not.toBeInTheDocument();
+  });
+
+  test("should flatten fields with choices.children", () => {
+    const propsWithChoicesChildren = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "parent_choice_field",
+              type: "radio",
+              validation: "text",
+              props: {
+                label: "Parent Choice Field",
+                choices: [
+                  {
+                    id: "choice1",
+                    label: "Choice 1",
+                    children: [
+                      {
+                        id: "child_field",
+                        type: "text",
+                        validation: "text",
+                        props: { label: "Child Field" },
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
+    });
+    render(testComponent(propsWithChoicesChildren));
+    expect(screen.getAllByText("Parent Choice Field").length).toBe(2);
+  });
+
+  test("should render start date field with nested children", () => {
+    const reportWithStartDate = {
+      ...mockWPReportWithOverlays,
+      fieldData: {
+        ...mockWPReportWithOverlays.fieldData,
+        initiative: [
+          {
+            ...mockWPReportWithOverlays.fieldData.initiative[0],
+            defineInitiative_startDate: [
+              { key: "defineInitiative_startDate-expected", value: "Expected" },
+            ],
+            expectedStartDate: "01/01/2026",
+          },
+        ],
+      },
+    };
+
+    const propsWithStartDate = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "defineInitiative_startDate",
+              type: "radio",
+              validation: "text",
+              props: {
+                label: "Start Date",
+                hint: "Select start date type",
+                choices: [
+                  {
+                    id: "expected",
+                    label: "Expected start date",
+                    children: [
+                      {
+                        id: "expectedStartDate",
+                        type: "date",
+                        validation: "date",
+                        props: { label: "Date" },
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: reportWithStartDate,
+    });
+    render(testComponent(propsWithStartDate));
+    expect(screen.getAllByText("Expected start date").length).toBe(2);
+  });
+
+  test("should render field with title and subtitle", () => {
+    const propsWithTitleSubtitle = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "field_with_title_subtitle",
+              type: "text",
+              validation: "text",
+              props: {
+                title: "Unique Field Title",
+                subtitle: "Field subtitle text",
+                label: "Field Label",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
+    });
+    render(testComponent(propsWithTitleSubtitle));
+    expect(screen.getAllByText("Unique Field Title").length).toBe(2);
+  });
+
+  test("should render field with sectionTitle", () => {
+    const propsWithSectionTitle = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "field_with_section_title",
+              type: "text",
+              validation: "text",
+              props: {
+                sectionTitle: "Unique Section Title Test",
+                label: "Field Label",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
+    });
+    render(testComponent(propsWithSectionTitle));
+    expect(screen.getAllByText("Unique Section Title Test").length).toBe(2);
+  });
+
+  test("should render field with subsectionTitle", () => {
+    const propsWithSubsectionTitle = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "field_with_subsection_title",
+              type: "text",
+              validation: "text",
+              props: {
+                subsectionTitle: "Unique Subsection Title Test",
+                label: "Field Label",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
+    });
+    render(testComponent(propsWithSubsectionTitle));
+    expect(screen.getAllByText("Unique Subsection Title Test").length).toBe(2);
+  });
+
+  test("should render field with defineInitiative_describeInitiative id", () => {
+    const propsWithDescribeInitiative = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "defineInitiative_describeInitiative",
+              type: "textarea",
+              validation: "text",
+              props: {
+                title: "Unique Describe Initiative",
+                label: "Description",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
+    });
+    render(testComponent(propsWithDescribeInitiative));
+    expect(screen.getAllByText("Unique Describe Initiative").length).toBe(2);
     expect(
-      screen.getByText("% of total projected spending")
-    ).toBeInTheDocument();
-    expect(screen.getByText("42.86%")).toBeInTheDocument(); // (5+10)/(15+20)
+      screen.getAllByText(
+        "Provide initiative description, including target populations and timeframe"
+      ).length
+    ).toBe(2);
+  });
+
+  test("should render dynamic object field with table", () => {
+    const propsWithDynamicObject = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "testTable_performanceIndicators",
+              type: "dynamicObject",
+              validation: "text",
+              props: {
+                label: "Performance Indicators",
+              },
+            },
+          ],
+          tables: [
+            {
+              id: "testTable",
+              bodyRows: [],
+              footRows: [],
+              headRows: [["Indicator", "Baseline"]],
+              tableType: FormTableType.ENTITY_MODAL,
+              verbiage: { title: "Unique Test Table" },
+              dynamicRowsTemplate: {
+                id: "testTable_performanceIndicators",
+                type: ReportFormFieldType.DYNAMIC_OBJECT,
+                validation: {
+                  type: ValidationType.DYNAMIC_OPTIONAL,
+                  options: { dynamicFieldValidations: {} },
+                },
+                props: {
+                  dynamicFields: [
+                    { id: "testTable_indicator", type: "text", props: {} },
+                    { id: "testTable_baseline", type: "number", props: {} },
+                  ],
+                },
+                verbiage: {
+                  buttonText: "Add",
+                  hint: "",
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
+    });
+    render(testComponent(propsWithDynamicObject));
+    expect(screen.getAllByText("Unique Test Table").length).toBe(2);
+  });
+
+  test("should handle dynamic object field without matching table", () => {
+    const propsWithDynamicObjectNoTable = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "missingTable_performanceIndicators",
+              type: "dynamicObject",
+              validation: "text",
+              props: {
+                label: "Performance Indicators",
+              },
+            },
+          ],
+          tables: [
+            {
+              id: "differentTable",
+              bodyRows: [],
+              footRows: [],
+              headRows: [["Header"]],
+              tableType: FormTableType.ENTITY_MODAL,
+              verbiage: { title: "Different Table" },
+              dynamicRowsTemplate: {
+                id: "differentTable_data",
+                type: ReportFormFieldType.DYNAMIC_OBJECT,
+                validation: {
+                  type: ValidationType.DYNAMIC_OPTIONAL,
+                  options: { dynamicFieldValidations: {} },
+                },
+                props: {
+                  dynamicFields: [{ id: "field", type: "text", props: {} }],
+                },
+                verbiage: {
+                  buttonText: "Add",
+                  hint: "",
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: mockWPReportWithOverlays,
+    });
+    render(testComponent(propsWithDynamicObjectNoTable));
+    expect(screen.getByTestId("exportTable")).toBeVisible();
   });
 
   testA11yAct(testComponent(wpMockProps), () => {

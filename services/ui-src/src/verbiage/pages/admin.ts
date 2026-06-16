@@ -1,4 +1,5 @@
 export default {
+  title: "Admin - MFP",
   intro: {
     header: "Banner Admin",
     body: [
