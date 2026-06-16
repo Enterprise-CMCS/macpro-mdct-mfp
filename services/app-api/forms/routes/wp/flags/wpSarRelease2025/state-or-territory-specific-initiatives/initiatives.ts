@@ -444,10 +444,9 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
       {
         forCopyoverOnly: true,
         id: "closeOutInformation_initiativeStatus",
-        type: ReportFormFieldType.CHECKBOX,
-        validation: ValidationType.CHECKBOX_OPTIONAL,
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO_OPTIONAL,
         props: {
-          hint: "Select all that apply.",
           label:
             "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, indicate the status below:",
           styleAsOptional: true,
