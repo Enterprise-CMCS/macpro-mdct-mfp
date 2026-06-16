@@ -7,9 +7,9 @@ import {
   ValidationType,
 } from "../../../../../utils/types";
 // utils
+import { buildServiceFields } from "../../../../../utils/routes/tables";
 import {
   accordionWithFmapLink,
-  buildServiceFields,
   c1915WaiverServices,
   errorMessageWithFmapLink,
   statePlanServices,

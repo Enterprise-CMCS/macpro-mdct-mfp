@@ -10,9 +10,12 @@ import {
 } from "../../../../../utils/types";
 // utils
 import {
+  buildServiceFields,
+  serviceFieldDynamicRowsTemplateBuilder,
+} from "../../../../../utils/routes/tables";
+import {
   administrativeCosts,
   administrativeCostsHeaders,
-  buildServiceFields,
   capacityBuilding,
   personnelHeaders,
   subRecipientsHeaders,
@@ -62,41 +65,33 @@ const budgetCategoryDynamicFieldsToReturn = [
   ServiceFieldType.CATEGORY,
   ...budgetCategoryFieldsToReturn,
 ];
-const budgetCategoryDynamicRowsTemplate = {
-  forTableOnly: true,
-  id: budgetCategoryDynamicRowId,
-  props: {
-    label: "Miscellaneous Costs",
-    dynamicFields: budgetCategoryDynamicBodyList.flatMap((service) =>
-      buildServiceFields(service, budgetCategoryDynamicFieldsToReturn, {
-        dynamicLabel: "Misc. Costs:",
-      })
-    ),
-  },
-  type: ReportFormFieldType.DYNAMIC_OBJECT,
-  validation: {
-    type: ValidationType.DYNAMIC_OPTIONAL,
-    options: {
-      dynamicFieldValidations: {
-        category: ValidationType.TEXT_OPTIONAL,
-        totalComputable: ValidationType.NUMBER_OPTIONAL,
-        percentageOverride: {
-          type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
-          options: {
-            boundary: 100,
-            comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
-          },
-        },
-        totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
-        totalFederalShare: ValidationType.NUMBER_OPTIONAL,
-      },
+const budgetCategoryDynamicRowsTemplate =
+  serviceFieldDynamicRowsTemplateBuilder({
+    dynamicFieldsBodyList: budgetCategoryDynamicBodyList,
+    dynamicFieldsSettings: {
+      dynamicLabel: "Misc. Costs:",
     },
-  },
-  verbiage: {
-    buttonText: "Add miscellaneous cost",
-    hint: "To add an additional budget category, click the “Add miscellaneous cost” button below.",
-  },
-};
+    dynamicFieldsToReturn: budgetCategoryDynamicFieldsToReturn,
+    dynamicFieldValidations: {
+      category: ValidationType.TEXT_OPTIONAL,
+      totalComputable: ValidationType.NUMBER_OPTIONAL,
+      percentageOverride: {
+        type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+        options: {
+          boundary: 100,
+          comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+        },
+      },
+      totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+      totalFederalShare: ValidationType.NUMBER_OPTIONAL,
+    },
+    dynamicRowId: budgetCategoryDynamicRowId,
+    label: "Miscellaneous Costs",
+    verbiage: {
+      buttonText: "Add miscellaneous cost",
+      hint: "To add an additional budget category, click the “Add miscellaneous cost” button below.",
+    },
+  });
 
 // Capacity Building table
 const capacityBuildingBodyList = capacityBuilding(capacityBuildingTableId);
@@ -226,55 +221,39 @@ const subRecipientModalFieldsSettings = {
     },
   },
 };
-
-const subRecipientsDynamicRowsTemplate = {
-  forTableOnly: true,
-  id: subRecipientsDynamicRowId,
-  props: {
-    label: "Sub Recipients",
-    dynamicFields: subRecipientsDynamicBodyList.flatMap((service) =>
-      buildServiceFields(service, subRecipientsDynamicFieldsToReturn)
-    ),
-    dynamicModalForm: {
-      id: "add-sub-recipient-form",
-      heading: {
-        add: "Add Sub Recipient",
-        edit: "Edit Sub Recipient",
-      },
-      fields: subRecipientsModalList.flatMap((service) =>
-        buildServiceFields(
-          service,
-          subRecipientsModalFieldsToReturn,
-          subRecipientModalFieldsSettings
-        )
-      ),
-    },
-  },
-  type: ReportFormFieldType.DYNAMIC_OBJECT,
-  validation: {
-    type: ValidationType.DYNAMIC_OPTIONAL,
-    options: {
-      dynamicFieldValidations: {
-        name: ValidationType.TEXT_OPTIONAL,
-        description: ValidationType.TEXT_OPTIONAL,
-        totalComputable: ValidationType.NUMBER_OPTIONAL,
-        percentageOverride: {
-          type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
-          options: {
-            boundary: 100,
-            comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
-          },
+const subRecipientsDynamicRowsTemplate = serviceFieldDynamicRowsTemplateBuilder(
+  {
+    dynamicFieldsBodyList: subRecipientsDynamicBodyList,
+    dynamicFieldsToReturn: subRecipientsDynamicFieldsToReturn,
+    dynamicFieldValidations: {
+      name: ValidationType.TEXT_OPTIONAL,
+      description: ValidationType.TEXT_OPTIONAL,
+      totalComputable: ValidationType.NUMBER_OPTIONAL,
+      percentageOverride: {
+        type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+        options: {
+          boundary: 100,
+          comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
         },
-        totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
-        totalFederalShare: ValidationType.NUMBER_OPTIONAL,
       },
+      totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+      totalFederalShare: ValidationType.NUMBER_OPTIONAL,
     },
-  },
-  verbiage: {
-    buttonText: "Add sub recipient",
-    hint: "To add a sub recipient, click the “Add sub recipient” button below.",
-  },
-};
+    dynamicModalList: subRecipientsModalList,
+    dynamicModalFieldsToReturn: subRecipientsModalFieldsToReturn,
+    dynamicModalFieldsSettings: subRecipientModalFieldsSettings,
+    dynamicModalVerbiage: {
+      add: "Add Sub Recipient",
+      edit: "Edit Sub Recipient",
+    },
+    dynamicRowId: subRecipientsDynamicRowId,
+    label: "Sub Recipients",
+    verbiage: {
+      buttonText: "Add sub recipient",
+      hint: "To add a sub recipient, click the “Add sub recipient” button below.",
+    },
+  }
+);
 
 // Personnel table
 const personnelFootList = [
@@ -302,32 +281,22 @@ const personnelDynamicFieldsToReturn = [
   ServiceFieldType.TITLE,
   ...personnelFieldsToReturn,
 ];
-const personnelDynamicRowsTemplate = {
-  forTableOnly: true,
-  id: personnelDynamicRowId,
-  props: {
-    label: "Positions",
-    dynamicFields: personnelDynamicBodyList.flatMap((service) =>
-      buildServiceFields(service, personnelDynamicFieldsToReturn)
-    ),
+const personnelDynamicRowsTemplate = serviceFieldDynamicRowsTemplateBuilder({
+  dynamicFieldsBodyList: personnelDynamicBodyList,
+  dynamicFieldsToReturn: personnelDynamicFieldsToReturn,
+  dynamicFieldValidations: {
+    name: ValidationType.TEXT_OPTIONAL,
+    title: ValidationType.TEXT_OPTIONAL,
+    budgetedFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
+    filledFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
   },
-  type: ReportFormFieldType.DYNAMIC_OBJECT,
-  validation: {
-    type: ValidationType.DYNAMIC_OPTIONAL,
-    options: {
-      dynamicFieldValidations: {
-        name: ValidationType.TEXT_OPTIONAL,
-        title: ValidationType.TEXT_OPTIONAL,
-        budgetedFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
-        filledFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
-      },
-    },
-  },
+  dynamicRowId: personnelDynamicRowId,
+  label: "Positions",
   verbiage: {
     buttonText: "Add personnel",
     hint: "To add more types of roles, click the “Add personnel” button below.",
   },
-};
+});
 
 // Administrative Costs route
 export const administrativeCostsRoute: FormTablesRoute = {
