@@ -15,10 +15,10 @@ export const keyMetricsTableId = "defineInitiative_keyMetrics";
 export const keyMetricsHeaders = [
   "Performance Indicator",
   "Data Source",
-  "Baseline",
+  "Baseline Value",
   "Baseline Period",
-  "Target/Benchmark",
-  "Projected Date to Achieve Benchmark",
+  "Target/Benchmark Value",
+  "Projected Date to Achieve Benchmark Value",
 ];
 
 // Key Metrics table - dynamic rows
