@@ -32,14 +32,14 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.53.2",
     "react-icons": "^4.12.0",
-    "react-router": "7.15.0",
+    "react-router": "7.15.1",
     "react-uuid": "^1.0.3",
     "sass": "^1.84.0",
     "yup": "^0.32.11",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.4",
+    "@babel/core": "^8.0.0",
     "@babel/plugin-transform-react-jsx": "^7.17.3",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
@@ -61,7 +61,7 @@
     "jest-launchdarkly-mock": "^2.0.3",
     "pa11y": "^9.0.0",
     "typescript": "^5.9.3",
-    "vite": "^6.4.2",
+    "vite": "^8.0.16",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "browserslist": {
