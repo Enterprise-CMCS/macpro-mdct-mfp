@@ -27,6 +27,8 @@ export const DashboardTable = ({
   isStateLevelUser,
   isAdmin,
 }: DashboardTableProps) => {
+  const isFinancialReportAdmin =
+    reportType === ReportType.FINANCIAL_REPORT && isAdmin;
   const actionCellSx = {
     ...sxOverride.editReportButtonCell,
     width: "auto",
@@ -109,7 +111,11 @@ export const DashboardTable = ({
             )}
             {/* Action Buttons */}
             <Td sx={actionCellSx}>
-              <HStack spacing={2} justify="flex-start" width="100%">
+              <HStack
+                spacing={2}
+                justify={isFinancialReportAdmin ? "flex-start" : "center"}
+                width="100%"
+              >
                 {showEditReportButton && (
                   <EditReportButton
                     report={report}
