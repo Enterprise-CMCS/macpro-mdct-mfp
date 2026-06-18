@@ -27,29 +27,27 @@ export const DashboardTable = ({
   isStateLevelUser,
   isAdmin,
 }: DashboardTableProps) => {
-  const isFinancialReport = reportType === ReportType.FINANCIAL_REPORT;
-  const actionCellSx = isFinancialReport
-    ? {
-        ...sxOverride.editReportButtonCell,
-        width: "auto",
-        "& .admin-action-button": {
-          width: "auto",
-        },
-        "& .action-outline-button": {
-          width: "auto",
-        },
-      }
-    : sxOverride.editReportButtonCell;
+  const actionCellSx = {
+    ...sxOverride.editReportButtonCell,
+    width: "auto",
+    "& .admin-action-button": {
+      width: "auto",
+    },
+    "& .action-outline-button": {
+      width: "auto",
+    },
+  };
 
   return (
     <Table content={tableBody(body.table, isAdmin)} sx={sx.table}>
       {reportsByState.map((report: ReportMetadataShape) => {
         const showEditReportButton = reportType !== ReportType.WP && !isAdmin;
         const showAdminReleaseButton = isAdmin;
+        const hasAdminArchiveColumn = isAdmin && isArchivable(reportType);
         const showAdminArchiveButton =
-          isAdmin && isArchivable(reportType) && !report?.associatedSar;
+          hasAdminArchiveColumn && !report?.associatedSar;
         const useCompactAdminActions =
-          showAdminReleaseButton && showAdminArchiveButton;
+          showAdminReleaseButton && hasAdminArchiveColumn;
 
         return (
           <Tr key={report.id}>
@@ -95,7 +93,7 @@ export const DashboardTable = ({
                 reportType as ReportType,
                 report.status,
                 report.archived,
-                report.submissionCount
+                report.submissionCount,
               )}
             </Td>
             {/* Admin: Submission count */}
@@ -111,7 +109,7 @@ export const DashboardTable = ({
             )}
             {/* Action Buttons */}
             <Td sx={actionCellSx}>
-              <HStack spacing={2} justify="center">
+              <HStack spacing={2} justify="flex-start" width="100%">
                 {showEditReportButton && (
                   <EditReportButton
                     report={report}
@@ -150,6 +148,20 @@ export const DashboardTable = ({
                     sxOverride={sxOverride}
                   />
                 )}
+                {!showAdminArchiveButton && hasAdminArchiveColumn && (
+                  <Button
+                    className="admin-action-button"
+                    variant="transparent"
+                    sx={getCompactButtonSx(
+                      useCompactAdminActions,
+                      sxOverride.adminActionButton,
+                    )}
+                    visibility="hidden"
+                    pointerEvents="none"
+                    aria-hidden="true"
+                    tabIndex={-1}
+                  />
+                )}
               </HStack>
             </Td>
           </Tr>
@@ -161,7 +173,7 @@ export const DashboardTable = ({
 
 export const copyOverSubText = (
   report: ReportMetadataShape,
-  reportsByState: ReportMetadataShape[]
+  reportsByState: ReportMetadataShape[],
 ) =>
   report.isCopied && (
     <Text sx={sx.copyOverText}>{`copied from ${
@@ -192,7 +204,7 @@ export const getStatus = (
   reportType: ReportType,
   status: string,
   archived?: boolean,
-  submissionCount?: number
+  submissionCount?: number,
 ) => {
   if (archived) {
     return `Archived`;
@@ -221,16 +233,16 @@ export const tableBody = (body: TableContentShape, isAdmin: boolean) => {
   if (isAdmin) {
     tableContent.headRow = tableContent.headRow
       .filter(
-        (e) => !["Due date", "Target populations"].includes(getHeaderText(e))
+        (e) => !["Due date", "Target populations"].includes(getHeaderText(e)),
       )
       .map((e) =>
         typeof e !== "string" && e.title === "Actions"
           ? { ...e, colSpan: 1 }
-          : e
+          : e,
       );
   } else {
     tableContent.headRow = tableContent.headRow.filter(
-      (e) => getHeaderText(e) !== "#"
+      (e) => getHeaderText(e) !== "#",
     );
   }
   return tableContent;
@@ -264,7 +276,7 @@ interface EditReportProps {
 
 const getCompactButtonSx = (
   compact?: boolean,
-  base: Record<string, unknown> = {}
+  base: Record<string, unknown> = {},
 ) => {
   const buttonSx: Record<string, unknown> = { ...base };
 
@@ -341,7 +353,7 @@ const AdminReleaseButton = ({
     report.reportType as ReportType,
     report.status,
     report.archived,
-    report.submissionCount
+    report.submissionCount,
   );
   const isDisabled = !(reportStatus === "Submitted");
 
@@ -368,14 +380,20 @@ const AdminArchiveButton = ({
   return (
     <>
       {report?.archived ? (
-        <Text sx={sx.archivedText}>Archived</Text>
+        <Text
+          sx={getCompactButtonSx(compact, {
+            ...sxOverride.adminActionButton,
+            ...sx.archivedText,
+          })}
+        >
+          Archived
+        </Text>
       ) : (
         <Button
           className="admin-action-button"
           variant="transparent"
           sx={getCompactButtonSx(compact, sxOverride.adminActionButton)}
           onClick={() => archive(report)}
-          disabled={report?.archived}
         >
           Archive
         </Button>
@@ -441,7 +459,14 @@ const sx = {
     color: "gray",
   },
   archivedText: {
-    paddingLeft: 3,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "1.75rem",
+    lineHeight: "1.75rem",
+    minWidth: "4.5rem",
+    fontSize: "sm",
+    fontWeight: "normal",
   },
   submissionCountCell: {
     minWidth: "2rem",
