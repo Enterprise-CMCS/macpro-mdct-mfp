@@ -69,7 +69,7 @@ export const DynamicModalOverlayReportPageV2 = ({
 
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
-    return { headRow: ["", verbiage.tableHeader] };
+    return { headRow: verbiage.tableHeaders };
   };
 
   // Open/Close overlay action methods

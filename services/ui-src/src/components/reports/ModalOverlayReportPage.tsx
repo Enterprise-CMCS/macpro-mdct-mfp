@@ -68,7 +68,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   const dashSubTitle = (verbiage as AnyObject)?.dashboardSubtitle;
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
-    return { headRow: ["", verbiage.tableHeader] };
+    return { headRow: verbiage.tableHeaders };
   };
 
   // Add/edit entity modal disclosure and methods

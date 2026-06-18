@@ -76,7 +76,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
       },
       enterEntityDetailsButtonText: "Edit",
       readOnlyEntityDetailsButtonText: "View",
-      tableHeader: "Initiative name <br/> MFP Work Plan topic",
+      tableHeaders: ["", "Initiative name <br/> MFP Work Plan topic"],
       countEntitiesInTitle: false,
     },
     template: {
