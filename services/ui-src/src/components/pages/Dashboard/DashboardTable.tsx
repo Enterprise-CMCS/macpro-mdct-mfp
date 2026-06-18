@@ -27,8 +27,10 @@ export const DashboardTable = ({
   isStateLevelUser,
   isAdmin,
 }: DashboardTableProps) => {
-  const isFinancialReportAdmin =
-    reportType === ReportType.FINANCIAL_REPORT && isAdmin;
+  const flexStartStyle =
+    isAdmin &&
+    (reportType === ReportType.FINANCIAL_REPORT ||
+      reportType === ReportType.WP);
   const actionCellSx = {
     ...sxOverride.editReportButtonCell,
     width: "auto",
@@ -113,7 +115,7 @@ export const DashboardTable = ({
             <Td sx={actionCellSx}>
               <HStack
                 spacing={2}
-                justify={isFinancialReportAdmin ? "flex-start" : "center"}
+                justify={flexStartStyle ? "flex-start" : "center"}
                 width="100%"
               >
                 {showEditReportButton && (
