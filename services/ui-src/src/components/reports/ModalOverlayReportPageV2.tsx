@@ -370,7 +370,7 @@ const sx = {
         width: "4rem",
       },
       "&:nth-of-type(2)": {
-        width: "200px",
+        width: "280px",
       },
     },
     tr: {

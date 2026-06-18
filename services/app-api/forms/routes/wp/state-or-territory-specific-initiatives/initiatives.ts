@@ -57,7 +57,6 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     countEntitiesInTitle: true,
     tableHeaders: [
       "Status",
-      "",
       "Initiative name <br/> MFP Work Plan topic",
       "Actions",
     ],
