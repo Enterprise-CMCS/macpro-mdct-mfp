@@ -71,6 +71,70 @@ export const statePlanServices = (prefix: string) => [
     id: `${prefix}_healthHomeForEnrolleesWithSubstanceUseDisorder`,
     label: "Health Home for Enrollees with Substance Use Disorder",
   },
+  {
+    id: `${prefix}_caseManagementServices`,
+    label: "Case Management Services",
+  },
+  {
+    id: `${prefix}_homemakerServices`,
+    label: "Homemaker Services",
+  },
+  {
+    id: `${prefix}_companionServices`,
+    label: "Companion Services",
+  },
+  {
+    id: `${prefix}_adultDayHealthServices`,
+    label: "Adult Day Health Services",
+  },
+  {
+    id: `${prefix}_communityIntegrationServices`,
+    label: "Community Integration Services",
+  },
+  {
+    id: `${prefix}_homeBasedHabilitationServices`,
+    label: "Home Based Habilitation Services",
+  },
+  {
+    id: `${prefix}_residentialHabilitationServices`,
+    label: "Residential Habilitation Services",
+  },
+  {
+    id: `${prefix}_dayHabilitationServices`,
+    label: "Day Habilitation Services",
+  },
+  {
+    id: `${prefix}_habilitationPrevocationalServices`,
+    label: "Habilitation - Prevocational Services",
+  },
+  {
+    id: `${prefix}_habilitationSupportedEmploymentServices`,
+    label: "Habilitation - Supported Employment Services",
+  },
+  {
+    id: `${prefix}_habilitationEducationServices`,
+    label: "Habilitation - Education Services",
+  },
+  {
+    id: `${prefix}_otherHabilitationServices`,
+    label: "Other Habilitation Services",
+  },
+  {
+    id: `${prefix}_respiteServices`,
+    label: "Respite Services",
+  },
+  {
+    id: `${prefix}_liveInCaregiverServices`,
+    label: "Live-In Caregiver Services",
+  },
+  {
+    id: `${prefix}_supportsForParticipantDirection`,
+    label: "Supports for Participant Direction",
+  },
+  {
+    id: `${prefix}_capitatedPaymentsForLongTermCareServices`,
+    label: "Capitated Payments for Long Term Care Services",
+  },
 ];
 
 export const c1915WaiverServices = (prefix: string) => [
@@ -139,6 +203,30 @@ export const c1915WaiverServices = (prefix: string) => [
   {
     id: `${prefix}_capitatedPaymentsForLongTermCareServices`,
     label: "Capitated Payments for Long Term Care Services",
+  },
+  {
+    id: `${prefix}_personalCareServices`,
+    label: "Personal Care Services",
+  },
+  {
+    id: `${prefix}_communityIntegrationServices`,
+    label: "Community Integration Services",
+  },
+  {
+    id: `${prefix}_homeBasedHabilitationServices`,
+    label: "Home Based Habilitation Services",
+  },
+  {
+    id: `${prefix}_companionServices`,
+    label: "Companion Services",
+  },
+  {
+    id: `${prefix}_otherHabilitationServices`,
+    label: "Other Habilitation Services",
+  },
+  {
+    id: `${prefix}_supportsForParticipantDirection`,
+    label: "Supports for Participant Direction",
   },
 ];
 
