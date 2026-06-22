@@ -180,7 +180,7 @@ const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   },
   dynamicRowId: keyMetricsDynamicRowId,
   label: "Key Metrics",
-  required: true,
+  required: false,
   verbiage: {
     buttonText: "Add key metric",
     hint: "",
@@ -207,6 +207,13 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         tableType: FormTableType.ENTITY_MODAL,
         verbiage: {
           emptyTableMessage: "No Performance Indicators",
+          subtitle: [
+            {
+              type: "p",
+              content:
+                "If you are not measuring this initiative quantitatively, please detail the qualitative measures in the section below.",
+            },
+          ],
           title: "Key Metrics",
         },
       },
