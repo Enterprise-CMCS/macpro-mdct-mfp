@@ -666,6 +666,10 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
     enterEntityDetailsButtonText: "Edit",
     readOnlyEntityButtonText: "View name/topic",
     readOnlyEntityDetailsButtonText: "View",
-    tableHeader: "Initiative name <br/> MFP Work Plan topic",
+    tableHeaders: [
+      "Status",
+      "Initiative name <br/> MFP Work Plan topic",
+      "Actions",
+    ],
   },
 };

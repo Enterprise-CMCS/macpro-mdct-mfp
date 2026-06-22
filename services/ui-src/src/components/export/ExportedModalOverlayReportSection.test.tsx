@@ -70,7 +70,7 @@ const wpMockProps = {
       readOnlyEntityDetailsButtonText: "View",
       dashboardTitle: "Initiative total count:",
       countEntitiesInTitle: true,
-      tableHeader: "Initiative name <br/> MFP Work Plan topic",
+      tableHeaders: ["Initiative name <br/> MFP Work Plan topic"],
       addEditModalHint:
         "Provide the name of one initiative. You will be then be asked to complete details for this initiative including a description, evaluation plan and funding sources.",
     } as ModalOverlayReportPageVerbiage,
@@ -178,7 +178,7 @@ const sarMockProps = {
       readOnlyEntityDetailsButtonText: "View",
       dashboardTitle: "Initiative total count:",
       countEntitiesInTitle: true,
-      tableHeader: "Initiative name <br/> MFP Work Plan topic",
+      tableHeaders: ["Initiative name <br/> MFP Work Plan topic"],
       addEditModalHint:
         "Provide the name of one initiative. You will be then be asked to complete details for this initiative including a description, evaluation plan and funding sources.",
     } as ModalOverlayReportPageVerbiage,

@@ -44,6 +44,10 @@ const sx = {
       fontWeight: "600",
       fontSize: "sm",
       lineHeight: "1.125rem",
+      "&:last-of-type": {
+        textAlign: "right",
+        paddingRight: "spacer5",
+      },
       ".mobile &": {
         padding: "0.75rem 0rem",
       },
@@ -68,7 +72,7 @@ const sx = {
       },
       "&:last-of-type": {
         textAlign: "right",
-        paddingRight: "spacer1",
+        paddingRight: "spacer3",
       },
     },
   },

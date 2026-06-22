@@ -369,6 +369,10 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
       editEntityHint: `Select "Edit" to report data.`,
       enterEntityDetailsButtonText: "Edit",
       readOnlyEntityDetailsButtonText: "View",
-      tableHeader: "Initiative name <br/> MFP Work Plan topic",
+      tableHeaders: [
+        "Status",
+        "Initiative name <br/> MFP Work Plan topic",
+        "Actions",
+      ],
     },
   };
