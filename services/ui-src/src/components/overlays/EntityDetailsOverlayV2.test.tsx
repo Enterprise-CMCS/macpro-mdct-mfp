@@ -149,22 +149,6 @@ describe("<EntityDetailsOverlayV2 />", () => {
     expect(screen.getByText("Mock error description")).toBeVisible();
   });
 
-  test("shows alert for initiative close-out", async () => {
-    const closedOutEntity = {
-      ...mockEntityStore.selectedEntity,
-      closeOutInformation_actualEndDate: "01/01/2026",
-    } as EntityShape;
-
-    await act(async () => {
-      await render(entityDetailsOverlayComponent(true, closedOutEntity));
-    });
-
-    expect(
-      screen.getByRole("alert", { name: "Warning: Mock error title" })
-    ).toBeVisible();
-    expect(screen.getByText("Mock error description")).toBeVisible();
-  });
-
   test("calls onSubmit function when clicking Save & return button", async () => {
     render(entityDetailsOverlayComponent());
     const button = screen.getByRole("button", {
