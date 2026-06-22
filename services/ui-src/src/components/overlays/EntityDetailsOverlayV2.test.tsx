@@ -122,7 +122,7 @@ describe("<EntityDetailsOverlayV2 />", () => {
     expect(projectEndDate).toHaveValue("01/01/2026");
   });
 
-  test("does not show alert for open initiative", async () => {
+  test("shows alert for open initiative", async () => {
     render(entityDetailsOverlayComponent());
 
     expect(
@@ -133,14 +133,14 @@ describe("<EntityDetailsOverlayV2 />", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("shows alert for initiative close-out", async () => {
-    const closedOutEntity = {
+  test("shows alert for copied initiative", async () => {
+    const copiedEntity = {
       ...mockEntityStore.selectedEntity,
-      closeOutInformation_actualEndDate: "01/01/2026",
+      isCopied: true,
     } as EntityShape;
 
     await act(async () => {
-      await render(entityDetailsOverlayComponent(true, closedOutEntity));
+      await render(entityDetailsOverlayComponent(true, copiedEntity));
     });
 
     expect(
