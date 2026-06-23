@@ -43,7 +43,7 @@ const categoryDynamicBodyList = [
   },
 ];
 const categoryDynamicFieldsToReturn = [
-  ServiceFieldType.CATEGORY,
+  ServiceFieldType.NAME,
   ...categoryFieldsToReturn,
 ];
 const categoryDynamicRowsTemplate = serviceFieldDynamicRowsTemplateBuilder({
@@ -53,7 +53,7 @@ const categoryDynamicRowsTemplate = serviceFieldDynamicRowsTemplateBuilder({
   },
   dynamicFieldsToReturn: categoryDynamicFieldsToReturn,
   dynamicFieldValidations: {
-    category: ValidationType.TEXT_OPTIONAL,
+    name: ValidationType.TEXT_OPTIONAL,
     totalComputable: ValidationType.NUMBER_OPTIONAL,
     totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
     totalFederalShare: ValidationType.NUMBER_OPTIONAL,

@@ -61,7 +61,7 @@ const statePlanServicesDynamicBodyList = [
   },
 ];
 const statePlanServicesDynamicFieldsToReturn = [
-  ServiceFieldType.CATEGORY,
+  ServiceFieldType.NAME,
   ...statePlanServicesFieldsToReturn,
 ];
 
@@ -73,7 +73,7 @@ const statePlanServicesDynamicRowsTemplate =
     },
     dynamicFieldsToReturn: statePlanServicesDynamicFieldsToReturn,
     dynamicFieldValidations: {
-      category: ValidationType.TEXT_OPTIONAL,
+      name: ValidationType.TEXT_OPTIONAL,
       totalComputable: ValidationType.NUMBER_OPTIONAL,
       totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
       totalFederalShare: ValidationType.NUMBER_OPTIONAL,
@@ -95,7 +95,7 @@ const c1915WaiverServicesDynamicBodyList = [
   },
 ];
 const c1915WaiverServicesDynamicFieldsToReturn = [
-  ServiceFieldType.CATEGORY,
+  ServiceFieldType.NAME,
   ...c1915WaiverServicesFieldsToReturn,
 ];
 
@@ -107,7 +107,7 @@ const c1915WaiverServicesDynamicRowsTemplate =
     },
     dynamicFieldsToReturn: c1915WaiverServicesDynamicFieldsToReturn,
     dynamicFieldValidations: {
-      category: ValidationType.TEXT_OPTIONAL,
+      name: ValidationType.TEXT_OPTIONAL,
       totalComputable: ValidationType.NUMBER_OPTIONAL,
       totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
       totalFederalShare: ValidationType.NUMBER_OPTIONAL,

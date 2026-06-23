@@ -62,7 +62,7 @@ const budgetCategoryDynamicBodyList = [
   },
 ];
 const budgetCategoryDynamicFieldsToReturn = [
-  ServiceFieldType.CATEGORY,
+  ServiceFieldType.NAME,
   ...budgetCategoryFieldsToReturn,
 ];
 const budgetCategoryDynamicRowsTemplate =
@@ -73,7 +73,7 @@ const budgetCategoryDynamicRowsTemplate =
     },
     dynamicFieldsToReturn: budgetCategoryDynamicFieldsToReturn,
     dynamicFieldValidations: {
-      category: ValidationType.TEXT_OPTIONAL,
+      name: ValidationType.TEXT_OPTIONAL,
       totalComputable: ValidationType.NUMBER_OPTIONAL,
       percentageOverride: {
         type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
@@ -278,7 +278,7 @@ const personnelDynamicBodyList = [
   },
 ];
 const personnelDynamicFieldsToReturn = [
-  ServiceFieldType.TITLE,
+  ServiceFieldType.NAME,
   ...personnelFieldsToReturn,
 ];
 const personnelDynamicRowsTemplate = serviceFieldDynamicRowsTemplateBuilder({
@@ -286,7 +286,6 @@ const personnelDynamicRowsTemplate = serviceFieldDynamicRowsTemplateBuilder({
   dynamicFieldsToReturn: personnelDynamicFieldsToReturn,
   dynamicFieldValidations: {
     name: ValidationType.TEXT_OPTIONAL,
-    title: ValidationType.TEXT_OPTIONAL,
     budgetedFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
     filledFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
   },

@@ -48,30 +48,13 @@ export const buildServiceFields = (
 
   for (const fieldType of fieldsToReturn) {
     switch (fieldType) {
-      case ServiceFieldType.CATEGORY:
-        fields.push(
-          buildServiceField({
-            suffix: "category",
-            label: "Category",
-            props: {
-              dynamicLabel: settings?.dynamicLabel,
-              ...settings?.[ServiceFieldType.CATEGORY]?.props,
-            },
-            options: {
-              type: ReportFormFieldType.TEXT,
-              validation: ValidationType.TEXT_OPTIONAL,
-              ...settings?.[ServiceFieldType.CATEGORY]?.options,
-            },
-          })
-        );
-        break;
-
       case ServiceFieldType.NAME:
         fields.push(
           buildServiceField({
             suffix: "name",
             label: "Name",
             props: {
+              dynamicLabel: settings?.dynamicLabel,
               readOnly: service.readOnly,
               ...settings?.[ServiceFieldType.NAME]?.props,
             },
@@ -175,23 +158,6 @@ export const buildServiceFields = (
             },
             options: {
               ...settings?.[ServiceFieldType.TOTAL_FEDERAL_SHARE]?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.TITLE:
-        fields.push(
-          buildServiceField({
-            suffix: "title",
-            label: "Position Title",
-            props: {
-              ...settings?.[ServiceFieldType.TITLE]?.props,
-            },
-            options: {
-              type: ReportFormFieldType.TEXT,
-              validation: ValidationType.TEXT_OPTIONAL,
-              ...settings?.[ServiceFieldType.TITLE]?.options,
             },
           })
         );
