@@ -175,15 +175,6 @@ describe("utils/routes/tables", () => {
         },
         {
           forTableOnly: true,
-          id: "mockServiceId-category",
-          props: {
-            label: "Mock Service Category",
-          },
-          type: ReportFormFieldType.TEXT,
-          validation: ValidationType.TEXT_OPTIONAL,
-        },
-        {
-          forTableOnly: true,
           id: "mockServiceId-description",
           props: {
             label: "Mock Service Description",
@@ -228,15 +219,6 @@ describe("utils/routes/tables", () => {
             },
             type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
           },
-        },
-        {
-          forTableOnly: true,
-          id: "mockServiceId-title",
-          props: {
-            label: "Mock Service Position Title",
-          },
-          type: ReportFormFieldType.TEXT,
-          validation: ValidationType.TEXT_OPTIONAL,
         },
         {
           forTableOnly: true,
