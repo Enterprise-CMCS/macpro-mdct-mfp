@@ -31,11 +31,9 @@ export const DashboardTable = ({
   const useFlexStartStyle =
     isAdmin && (isFinancialReport || reportType === ReportType.WP);
   const actionCellSx = {
-    ...sxOverride.editReportButtonCell,
-    // width: "auto",
-    button: {
-      ...(sxOverride.editReportButtonCell as AnyObject).button,
-      // width: "auto",
+    "& .admin-action-button": {
+      width: "auto",
+      minWidth: "auto",
     },
   };
 
@@ -338,7 +336,7 @@ const AdminReleaseButton = ({
       className="admin-action-button"
       variant="transparent"
       disabled={isDisabled}
-      sx={sxOverride.adminActionButton}
+      sx={{ ...sxOverride.adminActionButton, fontSize: "md" }}
       onClick={() => releaseReport!(report)}
     >
       {releasing && reportId === report.id ? <Spinner size="md" /> : "Unlock"}
@@ -355,14 +353,20 @@ const AdminArchiveButton = ({
   return (
     <>
       {report?.archived ? (
-        <Text sx={{ ...sxOverride.adminActionButton, ...sx.archivedText }}>
+        <Text
+          className="admin-action-button"
+          sx={{
+            ...sxOverride.adminActionButton,
+            ...sx.archivedText,
+          }}
+        >
           Archived
         </Text>
       ) : (
         <Button
           className="admin-action-button"
           variant="transparent"
-          sx={sxOverride.adminActionButton}
+          sx={{ ...sxOverride.adminActionButton, fontSize: "md" }}
           onClick={() => archive(report)}
         >
           Archive
@@ -437,8 +441,7 @@ const sx = {
     justifyContent: "center",
     height: "1.75rem",
     lineHeight: "1.75rem",
-    minWidth: "4.5rem",
-    fontSize: "sm",
+    fontSize: "md",
     fontWeight: "normal",
   },
   submissionCountCell: {

@@ -636,7 +636,7 @@ const sxChildStyles = {
   wpSubmissionNameText: {
     fontSize: "md",
     fontWeight: "bold",
-    minWidth: "13rem",
+    minWidth: "8rem",
     ".tablet &, .mobile &": {
       width: "100%",
     },

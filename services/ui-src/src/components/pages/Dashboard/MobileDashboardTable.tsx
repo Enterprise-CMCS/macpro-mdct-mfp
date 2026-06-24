@@ -25,11 +25,13 @@ export const MobileDashboardTable = ({
       <Box data-testid="mobile-row" sx={sx.mobileTable} key={report.id}>
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>{"Submission name"}</Text>
-          <Flex alignContent="flex-start">
+          <Flex alignContent="flex-start" flexWrap="wrap">
             <Text sx={sxOverride.submissionNameText}>
               {report.submissionName}
             </Text>
-            {copyOverSubText(report, reportsByState)}
+            <Box sx={{ display: "block" }}>
+              {copyOverSubText(report, reportsByState)}
+            </Box>
           </Flex>
         </Box>
         {!isAdmin && reportType === ReportType.SAR && report?.populations && (
@@ -280,7 +282,7 @@ const sx = {
     marginRight: "spacer6",
   },
   archivedText: {
-    fontSize: "sm",
+    fontSize: "md",
     paddingLeft: 2,
     display: "flex",
     alignItems: "center",
@@ -288,7 +290,7 @@ const sx = {
   editReporting: {
     textDecoration: "underline",
     color: "primary",
-    fontSize: "sm",
+    fontSize: "md",
     fontWeight: "300",
   },
 };
