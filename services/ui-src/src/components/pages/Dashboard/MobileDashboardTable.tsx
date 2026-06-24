@@ -25,14 +25,12 @@ export const MobileDashboardTable = ({
       <Box data-testid="mobile-row" sx={sx.mobileTable} key={report.id}>
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>{"Submission name"}</Text>
-          <Flex alignContent="flex-start" flexWrap="wrap">
-            <Text sx={sxOverride.submissionNameText}>
-              {report.submissionName}
-            </Text>
-            <Box sx={{ display: "block" }}>
-              {copyOverSubText(report, reportsByState)}
-            </Box>
-          </Flex>
+          <Text sx={sxOverride.submissionNameText}>
+            {report.submissionName}
+          </Text>
+          <Box sx={{ display: "block" }}>
+            {copyOverSubText(report, reportsByState)}
+          </Box>
         </Box>
         {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Box sx={sx.labelGroup}>
