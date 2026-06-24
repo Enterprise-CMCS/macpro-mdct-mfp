@@ -28,9 +28,7 @@ export const MobileDashboardTable = ({
           <Text sx={sxOverride.submissionNameText}>
             {report.submissionName}
           </Text>
-          <Box sx={{ display: "block" }}>
-            {copyOverSubText(report, reportsByState)}
-          </Box>
+          {copyOverSubText(report, reportsByState)}
         </Box>
         {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Box sx={sx.labelGroup}>
