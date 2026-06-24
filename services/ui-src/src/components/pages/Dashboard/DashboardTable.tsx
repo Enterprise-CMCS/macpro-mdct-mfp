@@ -1,5 +1,5 @@
 // components
-import { Box, Button, HStack, Td, Tr, Spinner, Text } from "@chakra-ui/react";
+import { Button, HStack, Td, Tr, Spinner, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // types
 import {
@@ -85,14 +85,7 @@ export const DashboardTable = ({
             {/* Last Altered By */}
             <Td>{report?.lastAlteredBy || "-"}</Td>
             {/* Report Status */}
-            <Td>
-              {getStatus(
-                reportType as ReportType,
-                report.status,
-                report.archived,
-                report.submissionCount
-              )}
-            </Td>
+            <Td>{getStatus(report.status, report.archived)}</Td>
             {/* Admin: Submission count */}
             {isAdmin && (
               <Td
@@ -115,7 +108,6 @@ export const DashboardTable = ({
                   <EditReportButton
                     report={report}
                     openCreateReportModal={openCreateReportModal}
-                    sxOverride={sxOverride}
                   />
                 )}
                 <ActionButton
@@ -128,7 +120,6 @@ export const DashboardTable = ({
                 {showAdminReleaseButton && (
                   <AdminReleaseButton
                     report={report}
-                    reportType={reportType}
                     reportId={reportId}
                     releaseReport={releaseReport}
                     releasing={releasing}
@@ -138,20 +129,8 @@ export const DashboardTable = ({
                 {showAdminArchiveButton && (
                   <AdminArchiveButton
                     report={report}
-                    reportType={reportType}
-                    reportId={reportId}
                     archive={archive}
-                    releaseReport={releaseReport}
-                    releasing={releasing}
                     sxOverride={sxOverride}
-                  />
-                )}
-                {!showAdminArchiveButton && hasAdminArchiveColumn && (
-                  <Box
-                    sx={sxOverride.adminActionButton}
-                    visibility="hidden"
-                    pointerEvents="none"
-                    aria-hidden="true"
                   />
                 )}
               </HStack>
@@ -192,22 +171,9 @@ export interface DashboardTableProps {
   sxOverride: SxObject;
 }
 
-export const getStatus = (
-  reportType: ReportType,
-  status: string,
-  archived?: boolean,
-  submissionCount?: number
-) => {
+export const getStatus = (status: string, archived?: boolean) => {
   if (archived) {
     return `Archived`;
-  }
-  if (
-    reportType === "WP" &&
-    submissionCount &&
-    submissionCount >= 1 &&
-    !status.includes("Submitted")
-  ) {
-    return status;
   }
   return status;
 };
@@ -263,7 +229,6 @@ export const EditReportButton = ({
 interface EditReportProps {
   report: ReportMetadataShape;
   openCreateReportModal: Function;
-  sxOverride: SxObject;
 }
 
 export const ActionButton = ({
@@ -323,12 +288,7 @@ const AdminReleaseButton = ({
   sxOverride,
 }: AdminReleaseButtonProps) => {
   //unlock is enabled when status: approved and submitted, all other times, it is disabled
-  const reportStatus = getStatus(
-    report.reportType as ReportType,
-    report.status,
-    report.archived,
-    report.submissionCount
-  );
+  const reportStatus = getStatus(report.status, report.archived);
   const isDisabled = !(reportStatus === "Submitted");
 
   return (
@@ -378,17 +338,12 @@ const AdminArchiveButton = ({
 
 interface AdminArchiveButtonProps {
   report: ReportMetadataShape;
-  reportType: string;
-  reportId: string | undefined;
   archive: Function;
-  releasing?: boolean;
-  releaseReport?: Function;
   sxOverride: SxObject;
 }
 
 interface AdminReleaseButtonProps {
   report: ReportMetadataShape;
-  reportType: string;
   reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
@@ -460,8 +415,5 @@ const sx = {
     color: "primary",
     fontSize: "sm",
     fontWeight: "300",
-  },
-  ".admin-action-button": {
-    color: "red",
   },
 };
