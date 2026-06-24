@@ -87,7 +87,12 @@ export const MobileDashboardTable = ({
         )}
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>Actions</Text>
-          <Flex alignItems="center" gap={2} flexWrap="nowrap">
+          <Flex
+            alignItems="center"
+            gap={2}
+            flexWrap="nowrap"
+            marginTop="spacer_half"
+          >
             {reportType !== ReportType.WP && (
               <Box>
                 <Button
