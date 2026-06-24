@@ -848,7 +848,6 @@ export const mockDynamicRowsTemplate = {
     type: ValidationType.DYNAMIC_OPTIONAL,
     options: {
       dynamicFieldValidations: {
-        name: ValidationType.TEXT_OPTIONAL,
         percentageOverride: ValidationType.NUMBER_OPTIONAL,
         totalComputable: ValidationType.NUMBER_OPTIONAL,
       },
