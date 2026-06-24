@@ -191,6 +191,9 @@ export const qualifiedHcbsRoute: FormTablesRoute = {
         buildServiceFields(service)
       ),
       statePlanServicesDynamicRowsTemplate,
+      ...statePlanServicesDynamicBodyList.flatMap((service) =>
+        buildServiceFields(service, statePlanServicesFieldsToReturn)
+      ),
       ...c1915WaiverServicesBodyList.flatMap((service) =>
         buildServiceFields(service)
       ),
@@ -198,6 +201,9 @@ export const qualifiedHcbsRoute: FormTablesRoute = {
         buildServiceFields(service)
       ),
       c1915WaiverServicesDynamicRowsTemplate,
+      ...c1915WaiverServicesDynamicBodyList.flatMap((service) =>
+        buildServiceFields(service, c1915WaiverServicesFieldsToReturn)
+      ),
       {
         id: "qualifiedHcbs_narrative",
         type: ReportFormFieldType.TEXTAREA,
