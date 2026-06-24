@@ -35,6 +35,9 @@ export const DashboardTable = ({
       width: "auto",
       minWidth: "auto",
     },
+    "& .action-outline-button": {
+      minWidth: "6rem",
+    },
   };
 
   return (
@@ -458,7 +461,7 @@ const sx = {
     py: 0,
     textDecoration: "underline",
     color: "primary",
-    fontSize: "sm",
+    fontSize: "md",
     fontWeight: "300",
   },
   ".admin-action-button": {

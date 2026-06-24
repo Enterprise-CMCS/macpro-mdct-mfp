@@ -93,7 +93,7 @@ export const MobileDashboardTable = ({
             flexWrap="nowrap"
             marginTop="spacer_half"
           >
-            {reportType !== ReportType.WP && (
+            {reportType !== ReportType.WP && !isAdmin && (
               <Box>
                 <Button
                   onClick={() => openCreateReportModal(report)}
