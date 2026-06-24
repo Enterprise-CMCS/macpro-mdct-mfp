@@ -627,7 +627,7 @@ const sxChildStyles = {
   sarSubmissionNameText: {
     fontSize: "md",
     fontWeight: "bold",
-    width: "10rem",
+    minWidth: "10rem",
     ".tablet &, .mobile &": {
       width: "100%",
     },
@@ -636,7 +636,7 @@ const sxChildStyles = {
   wpSubmissionNameText: {
     fontSize: "md",
     fontWeight: "bold",
-    width: "13rem",
+    minWidth: "13rem",
     ".tablet &, .mobile &": {
       width: "100%",
     },
@@ -652,5 +652,6 @@ const sxChildStyles = {
     minWidth: "4.5rem",
     fontSize: "sm",
     fontWeight: "normal",
+    padding: 0,
   },
 };

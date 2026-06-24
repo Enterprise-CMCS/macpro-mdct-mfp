@@ -1,19 +1,12 @@
 import { render, screen } from "@testing-library/react";
 // types
-import { ReportMetadataShape, ReportType } from "types";
+import { ReportType } from "types";
 // components
-import {
-  DashboardTable,
-  getStatus,
-  tableBody,
-  ActionButton,
-} from "./DashboardTable";
+import { DashboardTable, getStatus, tableBody } from "./DashboardTable";
 import {
   mockSARFullReport,
-  mockWPFullReport,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { mockFinancialReportNotStartedReport } from "utils/testing/financial-report/mockFinancialReport";
 
 describe("<DashboardTable />", () => {
   describe("Edit reporting button label", () => {
@@ -147,113 +140,6 @@ describe("<DashboardTable />", () => {
       };
       const result = tableBody(withPreservedObject, false);
       expect(result.headRow).toEqual(withPreservedObject.headRow);
-    });
-  });
-
-  describe("<ActionButton /> conditional width", () => {
-    test("should not apply compact width by default", () => {
-      render(
-        <RouterWrappedComponent>
-          <ActionButton
-            report={mockWPFullReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
-          />
-        </RouterWrappedComponent>
-      );
-      const button = screen.getByTestId("enter-report");
-      expect(button).not.toHaveStyle("min-width: 3rem");
-    });
-
-    test("should render with 3rem min-width when compact is true (SAR)", () => {
-      render(
-        <RouterWrappedComponent>
-          <ActionButton
-            report={mockSARFullReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
-            compact={true}
-          />
-        </RouterWrappedComponent>
-      );
-      const button = screen.getByTestId("enter-report");
-      expect(button).toHaveStyle("min-width: 3rem");
-    });
-
-    test("should render with 3rem min-width when compact is true (Financial)", () => {
-      render(
-        <RouterWrappedComponent>
-          <ActionButton
-            report={mockFinancialReportNotStartedReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
-            compact={true}
-          />
-        </RouterWrappedComponent>
-      );
-      const button = screen.getByTestId("enter-report");
-      expect(button).toHaveStyle("min-width: 3rem");
-    });
-
-    test("should display Edit text for state level user", () => {
-      render(
-        <RouterWrappedComponent>
-          <ActionButton
-            report={mockSARFullReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
-          />
-        </RouterWrappedComponent>
-      );
-      expect(
-        screen.getByRole("button", { name: "Edit 2024 Period 1 report" })
-      ).toBeVisible();
-    });
-
-    test("should display View text for locked report", () => {
-      const lockedReport = {
-        ...mockSARFullReport,
-        locked: true,
-      } as ReportMetadataShape;
-      render(
-        <RouterWrappedComponent>
-          <ActionButton
-            report={lockedReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
-          />
-        </RouterWrappedComponent>
-      );
-      expect(
-        screen.getByRole("button", { name: "View 2024 Period 1 report" })
-      ).toBeVisible();
-    });
-
-    test("should display View text for non-state-level user", () => {
-      render(
-        <RouterWrappedComponent>
-          <ActionButton
-            report={mockSARFullReport}
-            reportId="test-id"
-            isStateLevelUser={false}
-            entering={false}
-            enterSelectedReport={() => {}}
-          />
-        </RouterWrappedComponent>
-      );
-      expect(
-        screen.getByRole("button", { name: "View 2024 Period 1 report" })
-      ).toBeVisible();
     });
   });
 });

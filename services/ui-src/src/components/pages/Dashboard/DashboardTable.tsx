@@ -1,5 +1,5 @@
 // components
-import { Button, HStack, Td, Tr, Spinner, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Td, Tr, Spinner, Text } from "@chakra-ui/react";
 import { Table } from "components";
 // types
 import {
@@ -27,18 +27,15 @@ export const DashboardTable = ({
   isStateLevelUser,
   isAdmin,
 }: DashboardTableProps) => {
-  const flexStartStyle =
-    isAdmin &&
-    (reportType === ReportType.FINANCIAL_REPORT ||
-      reportType === ReportType.WP);
+  const isFinancialReport = reportType === ReportType.FINANCIAL_REPORT;
+  const useFlexStartStyle =
+    isAdmin && (isFinancialReport || reportType === ReportType.WP);
   const actionCellSx = {
     ...sxOverride.editReportButtonCell,
-    width: "auto",
-    "& .admin-action-button": {
-      width: "auto",
-    },
-    "& .action-outline-button": {
-      width: "auto",
+    // width: "auto",
+    button: {
+      ...(sxOverride.editReportButtonCell as AnyObject).button,
+      // width: "auto",
     },
   };
 
@@ -50,8 +47,6 @@ export const DashboardTable = ({
         const hasAdminArchiveColumn = isAdmin && isArchivable(reportType);
         const showAdminArchiveButton =
           hasAdminArchiveColumn && !report?.associatedSar;
-        const useCompactAdminActions =
-          showAdminReleaseButton && hasAdminArchiveColumn;
 
         return (
           <Tr key={report.id}>
@@ -115,7 +110,7 @@ export const DashboardTable = ({
             <Td sx={actionCellSx}>
               <HStack
                 spacing={2}
-                justify={flexStartStyle ? "flex-start" : "center"}
+                justify={useFlexStartStyle ? "flex-start" : "center"}
                 width="100%"
               >
                 {showEditReportButton && (
@@ -131,7 +126,6 @@ export const DashboardTable = ({
                   isStateLevelUser={isStateLevelUser}
                   entering={entering}
                   enterSelectedReport={enterSelectedReport}
-                  compact={useCompactAdminActions}
                 />
                 {showAdminReleaseButton && (
                   <AdminReleaseButton
@@ -140,7 +134,6 @@ export const DashboardTable = ({
                     reportId={reportId}
                     releaseReport={releaseReport}
                     releasing={releasing}
-                    compact={useCompactAdminActions}
                     sxOverride={sxOverride}
                   />
                 )}
@@ -152,22 +145,15 @@ export const DashboardTable = ({
                     archive={archive}
                     releaseReport={releaseReport}
                     releasing={releasing}
-                    compact={useCompactAdminActions}
                     sxOverride={sxOverride}
                   />
                 )}
                 {!showAdminArchiveButton && hasAdminArchiveColumn && (
-                  <Button
-                    className="admin-action-button"
-                    variant="transparent"
-                    sx={getCompactButtonSx(
-                      useCompactAdminActions,
-                      sxOverride.adminActionButton
-                    )}
+                  <Box
+                    sx={sxOverride.adminActionButton}
                     visibility="hidden"
                     pointerEvents="none"
                     aria-hidden="true"
-                    tabIndex={-1}
                   />
                 )}
               </HStack>
@@ -282,27 +268,12 @@ interface EditReportProps {
   sxOverride: SxObject;
 }
 
-const getCompactButtonSx = (
-  compact?: boolean,
-  base: Record<string, unknown> = {}
-) => {
-  const buttonSx: Record<string, unknown> = { ...base };
-
-  if (compact) {
-    buttonSx.minWidth = "3rem";
-    buttonSx.px = 0;
-  }
-
-  return buttonSx;
-};
-
 export const ActionButton = ({
   report,
   reportId,
   isStateLevelUser,
   entering,
   enterSelectedReport,
-  compact,
 }: ActionButtonProps) => {
   const editOrView = isStateLevelUser && !report?.locked ? "Edit" : "View";
 
@@ -310,7 +281,6 @@ export const ActionButton = ({
     <Button
       className="action-outline-button"
       variant="outline"
-      sx={getCompactButtonSx(compact)}
       aria-label={`${editOrView} ${report.reportYear} Period ${report.reportPeriod} report`}
       onClick={() => enterSelectedReport(report)}
       data-testid="enter-report"
@@ -326,7 +296,6 @@ export interface ActionButtonProps {
   isStateLevelUser: boolean;
   entering: boolean;
   enterSelectedReport: Function;
-  compact?: boolean;
 }
 
 const DateFields = ({ report, reportType, isAdmin }: DateFieldProps) => {
@@ -353,7 +322,6 @@ const AdminReleaseButton = ({
   reportId,
   releasing,
   releaseReport,
-  compact,
   sxOverride,
 }: AdminReleaseButtonProps) => {
   //unlock is enabled when status: approved and submitted, all other times, it is disabled
@@ -370,7 +338,7 @@ const AdminReleaseButton = ({
       className="admin-action-button"
       variant="transparent"
       disabled={isDisabled}
-      sx={getCompactButtonSx(compact, sxOverride.adminActionButton)}
+      sx={sxOverride.adminActionButton}
       onClick={() => releaseReport!(report)}
     >
       {releasing && reportId === report.id ? <Spinner size="md" /> : "Unlock"}
@@ -382,25 +350,19 @@ const AdminReleaseButton = ({
 const AdminArchiveButton = ({
   report,
   archive,
-  compact,
   sxOverride,
 }: AdminArchiveButtonProps) => {
   return (
     <>
       {report?.archived ? (
-        <Text
-          sx={getCompactButtonSx(compact, {
-            ...sxOverride.adminActionButton,
-            ...sx.archivedText,
-          })}
-        >
+        <Text sx={{ ...sxOverride.adminActionButton, ...sx.archivedText }}>
           Archived
         </Text>
       ) : (
         <Button
           className="admin-action-button"
           variant="transparent"
-          sx={getCompactButtonSx(compact, sxOverride.adminActionButton)}
+          sx={sxOverride.adminActionButton}
           onClick={() => archive(report)}
         >
           Archive
@@ -415,7 +377,6 @@ interface AdminArchiveButtonProps {
   reportType: string;
   reportId: string | undefined;
   archive: Function;
-  compact?: boolean;
   releasing?: boolean;
   releaseReport?: Function;
   sxOverride: SxObject;
@@ -425,7 +386,6 @@ interface AdminReleaseButtonProps {
   report: ReportMetadataShape;
   reportType: string;
   reportId: string | undefined;
-  compact?: boolean;
   releasing?: boolean;
   releaseReport?: Function;
   sxOverride: SxObject;
@@ -460,6 +420,11 @@ const sx = {
         minWidth: "2rem",
       },
     },
+    "td[data-testid='dashboard-submission-count']": {
+      minWidth: "2rem",
+      width: "2rem",
+      maxWidth: "2rem",
+    },
   },
   copyOverText: {
     fontSize: "xs",
@@ -492,5 +457,8 @@ const sx = {
     color: "primary",
     fontSize: "sm",
     fontWeight: "300",
+  },
+  ".admin-action-button": {
+    color: "red",
   },
 };
