@@ -649,7 +649,7 @@ const sxChildStyles = {
   adminActionButton: {
     minWidth: "4.5rem",
     fontSize: "sm",
-    fontWeight: "normal",
+    fontWeight: 700,
     padding: 0,
   },
 };

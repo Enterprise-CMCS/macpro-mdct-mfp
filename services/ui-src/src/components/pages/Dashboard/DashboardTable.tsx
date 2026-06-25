@@ -417,6 +417,6 @@ const sx = {
     textDecoration: "underline",
     color: "primary",
     fontSize: "md",
-    fontWeight: "300",
+    fontWeight: 700,
   },
 };
