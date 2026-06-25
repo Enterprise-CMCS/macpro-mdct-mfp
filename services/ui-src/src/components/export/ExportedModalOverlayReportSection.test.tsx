@@ -18,6 +18,7 @@ import {
   PageTypes,
   ReportFormFieldType,
   ValidationType,
+  AnyObject,
 } from "types";
 import {
   ExportedModalOverlayReportSection,
@@ -685,6 +686,10 @@ describe("<ExportedModalOverlayReportSection />", () => {
     });
     render(testComponent(propsWithTitleSubtitle));
     expect(screen.getAllByText("Unique Field Title").length).toBe(2);
+    // Non-close-out fields promote the label to an h5 subsection heading
+    expect(
+      screen.getAllByRole("heading", { level: 5, name: "Field Label" }).length
+    ).toBe(2);
   });
 
   test("should render field with sectionTitle", () => {
@@ -886,6 +891,147 @@ describe("<ExportedModalOverlayReportSection />", () => {
     });
     render(testComponent(propsWithDynamicObjectNoTable));
     expect(screen.getByTestId("exportTable")).toBeVisible();
+  });
+
+  // Renders a single initiative so text assertions are unambiguous.
+  const singleInitiativeReport = (overrides: AnyObject) => ({
+    ...mockWPReportWithOverlays,
+    fieldData: {
+      ...mockWPReportWithOverlays.fieldData,
+      initiative: [
+        {
+          ...mockWPReportWithOverlays.fieldData.initiative[0],
+          ...overrides,
+        },
+      ],
+    },
+  });
+
+  test("should substitute {{initiativeName}} placeholder in field title", () => {
+    const propsWithPlaceholderTitle = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "field_with_placeholder",
+              type: "text",
+              validation: "text",
+              props: {
+                title: "Close-out {{initiativeName}}",
+                subtitle: "Field subtitle text",
+                label: "Field Label",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: singleInitiativeReport({ initiative_name: "Test Initiative" }),
+    });
+    render(testComponent(propsWithPlaceholderTitle));
+    expect(screen.getByText("Close-out Test Initiative")).toBeVisible();
+    expect(
+      screen.queryByText("Close-out {{initiativeName}}")
+    ).not.toBeInTheDocument();
+  });
+
+  test("should hide close-out fields when initiative is not closed", () => {
+    const propsWithCloseOutField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "closeOutInformation_projectedEndDate",
+              type: "date",
+              validation: "dateOptional",
+              forCopyoverOnly: true,
+              props: { label: "Projected end date" },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: singleInitiativeReport({ isInitiativeClosed: false }),
+    });
+    render(testComponent(propsWithCloseOutField));
+    expect(screen.queryByText("Projected end date")).not.toBeInTheDocument();
+  });
+
+  test("should show close-out fields when initiative is closed", () => {
+    const propsWithCloseOutField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "closeOutInformation_projectedEndDate",
+              type: "date",
+              validation: "dateOptional",
+              forCopyoverOnly: true,
+              props: {
+                title: "Close-out {{initiativeName}}",
+                subtitle: "Complete for initiatives that end soon.",
+                label: "Projected end date",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: singleInitiativeReport({
+        isInitiativeClosed: true,
+        initiative_name: "Test Initiative",
+      }),
+    });
+    render(testComponent(propsWithCloseOutField));
+    // Title renders as the section header with the substituted initiative name
+    expect(screen.getByText("Close-out Test Initiative")).toBeVisible();
+    // Label renders in the Indicators column, not as an h5 subsection heading
+    expect(screen.getByText("Projected end date")).toBeVisible();
+    expect(
+      screen.queryByRole("heading", { level: 5, name: "Projected end date" })
+    ).not.toBeInTheDocument();
+  });
+
+  test("should keep non-close-out forCopyoverOnly fields hidden when closed", () => {
+    const propsWithCopyoverField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "regular_copyover_field",
+              type: "text",
+              validation: "text",
+              forCopyoverOnly: true,
+              props: { label: "Hidden Copyover Field" },
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue({
+      ...mockReportStore,
+      report: singleInitiativeReport({ isInitiativeClosed: true }),
+    });
+    render(testComponent(propsWithCopyoverField));
+    expect(screen.queryByText("Hidden Copyover Field")).not.toBeInTheDocument();
   });
 
   testA11yAct(testComponent(wpMockProps), () => {

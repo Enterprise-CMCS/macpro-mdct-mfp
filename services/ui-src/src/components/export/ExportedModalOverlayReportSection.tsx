@@ -7,6 +7,7 @@ import {
   updateRenderFields,
   isFieldElement,
   parseFormFieldInfo,
+  translate,
 } from "utils";
 // components
 import {
@@ -431,6 +432,7 @@ const EntityFieldsTable = ({
   const tableRows: React.ReactElement[] = [];
   const entityType = entity.type;
   const entityId = entity.id;
+  const initiativeName = entity.initiative_name;
 
   const renderFieldRow = (formField: FormField | FormLayoutElement) => {
     const isDynamicRowsTemplate =
@@ -562,11 +564,15 @@ const EntityFieldsTable = ({
       const fieldSubtitle = (formField as any).props.subtitle;
       const fieldLabel = (formField as any).props.label;
 
+      // Close-out fields carry a title/subtitle as a section header, but their
+      // label should stay in the Indicators column rather than become a heading.
+      const isCloseOutField = formField.id?.startsWith("closeOutInformation_");
+
       const modifiedField = {
         ...formField,
         props: {
           ...formField.props,
-          label: "",
+          label: isCloseOutField ? formField.props?.label : "",
         },
       };
 
@@ -582,12 +588,14 @@ const EntityFieldsTable = ({
           >
             <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
               <Heading as="h4" sx={sx.sectionHeading}>
-                {fieldTitle}
+                {translate(fieldTitle, { initiativeName })}
               </Heading>
               <Text sx={sx.helperText}>{parseCustomHtml(fieldSubtitle)}</Text>
-              <Heading as="h5" sx={sx.subsectionHeading}>
-                {fieldLabel}
-              </Heading>
+              {!isCloseOutField && (
+                <Heading as="h5" sx={sx.subsectionHeading}>
+                  {fieldLabel}
+                </Heading>
+              )}
               <Table
                 content={{
                   headRow: [tableHeaders.indicator, tableHeaders.response],
@@ -634,7 +642,7 @@ const EntityFieldsTable = ({
           >
             <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
               <Heading as="h4" sx={sx.sectionHeading}>
-                {fieldOrSectionTitle}
+                {translate(fieldOrSectionTitle, { initiativeName })}
               </Heading>
               {helperText && <Text sx={sx.helperText}>{helperText}</Text>}
               <Table
@@ -675,7 +683,7 @@ const EntityFieldsTable = ({
           >
             <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
               <Heading as="h5" sx={sx.subsectionHeading}>
-                {subsectionTitle}
+                {translate(subsectionTitle, { initiativeName })}
               </Heading>
               <Table
                 content={{
@@ -716,7 +724,11 @@ const EntityFieldsTable = ({
   };
 
   flattenedFields.forEach((field: FormField | FormLayoutElement) => {
-    if ((field as any).forCopyoverOnly) {
+    // Close-out fields are flagged forCopyoverOnly, but should be shown in the
+    // export once the initiative has been closed out.
+    const isCloseOutField = field.id?.startsWith("closeOutInformation_");
+    const showClosedOutField = isCloseOutField && entity.isInitiativeClosed;
+    if ((field as any).forCopyoverOnly && !showClosedOutField) {
       return;
     }
 
