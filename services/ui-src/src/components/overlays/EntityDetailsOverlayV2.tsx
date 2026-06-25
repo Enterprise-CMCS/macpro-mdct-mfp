@@ -61,7 +61,7 @@ export const EntityDetailsOverlayV2 = ({
       const fields = getFields(entity);
 
       setAutosave(!isClosed);
-      setShowAlert(isClosed);
+      setShowAlert(Boolean(entity.isCopied));
       setFormJson(toggleOptional({ ...form, fields }, isClosed));
     },
     [form]
