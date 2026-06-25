@@ -1,246 +1,3 @@
-import {
-  AnyObject,
-  BuildServiceField,
-  NumberMask,
-  ReportFormFieldType,
-  ServiceField,
-  ServiceFieldType,
-  ValidationComparator,
-  ValidationType,
-} from "../../../../../../utils/types";
-
-export const buildServiceFields = (
-  service: ServiceField,
-  fieldsToReturn: ServiceFieldType[] = [
-    ServiceFieldType.TOTAL_COMPUTABLE,
-    ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
-    ServiceFieldType.TOTAL_FEDERAL_SHARE,
-  ],
-  settings?: AnyObject
-) => {
-  const buildServiceField = ({
-    suffix,
-    label,
-    props,
-    options,
-  }: BuildServiceField) => ({
-    forTableOnly: true,
-    id: `${service.id}-${suffix}`,
-    type: ReportFormFieldType.NUMBER,
-    validation: ValidationType.NUMBER_OPTIONAL,
-    ...options,
-    props: {
-      label: `${service.label} ${label}`,
-      ...props,
-    },
-  });
-
-  const currencyProps = {
-    decimalPlacesToRoundTo: 2,
-    initialValue: "0",
-    mask: NumberMask.CURRENCY,
-    readOnly: true,
-  };
-
-  const fields = [];
-
-  for (const fieldType of fieldsToReturn) {
-    switch (fieldType) {
-      case ServiceFieldType.CATEGORY:
-        fields.push(
-          buildServiceField({
-            suffix: "category",
-            label: "Category",
-            props: {
-              dynamicLabel: settings?.dynamicLabel,
-              ...settings?.[ServiceFieldType.CATEGORY]?.props,
-            },
-            options: {
-              type: ReportFormFieldType.TEXT,
-              validation: ValidationType.TEXT_OPTIONAL,
-              ...settings?.[ServiceFieldType.CATEGORY]?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.NAME:
-        fields.push(
-          buildServiceField({
-            suffix: "name",
-            label: "Name",
-            props: {
-              readOnly: service.readOnly,
-              ...settings?.[ServiceFieldType.NAME]?.props,
-            },
-            options: {
-              type: ReportFormFieldType.TEXT,
-              validation: ValidationType.TEXT,
-              ...settings?.[ServiceFieldType.NAME]?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.DESCRIPTION:
-        fields.push(
-          buildServiceField({
-            suffix: "description",
-            label: "Description",
-            props: {
-              readOnly: service.readOnly,
-              ...settings?.[ServiceFieldType.DESCRIPTION]?.props,
-            },
-            options: {
-              type: ReportFormFieldType.TEXTAREA,
-              validation: ValidationType.TEXT,
-              ...settings?.[ServiceFieldType.DESCRIPTION]?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.TOTAL_COMPUTABLE:
-        fields.push(
-          buildServiceField({
-            suffix: "totalComputable",
-            label: "Total Computable",
-            props: {
-              ...currencyProps,
-              initialValue: service.readOnly ? "0" : "",
-              readOnly: service.readOnly,
-              ...settings?.[ServiceFieldType.TOTAL_COMPUTABLE]?.props,
-            },
-            options: {
-              ...settings?.[ServiceFieldType.TOTAL_COMPUTABLE]?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.PERCENTAGE_OVERRIDE:
-        fields.push(
-          buildServiceField({
-            suffix: "percentageOverride",
-            label: "Override %",
-            props: {
-              decimalPlacesToRoundTo: 0,
-              mask: NumberMask.PERCENTAGE,
-              readOnly: service.readOnly,
-              ...settings?.[ServiceFieldType.PERCENTAGE_OVERRIDE]?.props,
-            },
-            options: {
-              validation: {
-                type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
-                options: {
-                  boundary: 100,
-                  comparator:
-                    ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
-                },
-              },
-              ...settings?.[ServiceFieldType.PERCENTAGE_OVERRIDE]?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE:
-        fields.push(
-          buildServiceField({
-            suffix: "totalStateTerritoryShare",
-            label: "Total State / Territory Share",
-            props: {
-              ...currencyProps,
-              ...settings?.[ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE]
-                ?.props,
-            },
-            options: {
-              ...settings?.[ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE]
-                ?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.TOTAL_FEDERAL_SHARE:
-        fields.push(
-          buildServiceField({
-            suffix: "totalFederalShare",
-            label: "Total Federal Share",
-            props: {
-              ...currencyProps,
-              ...settings?.[ServiceFieldType.TOTAL_FEDERAL_SHARE]?.props,
-            },
-            options: {
-              ...settings?.[ServiceFieldType.TOTAL_FEDERAL_SHARE]?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.TITLE:
-        fields.push(
-          buildServiceField({
-            suffix: "title",
-            label: "Position Title",
-            props: {
-              ...settings?.[ServiceFieldType.TITLE]?.props,
-            },
-            options: {
-              type: ReportFormFieldType.TEXT,
-              validation: ValidationType.TEXT_OPTIONAL,
-              ...settings?.[ServiceFieldType.TITLE]?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.BUDGETED_FTES:
-        fields.push(
-          buildServiceField({
-            suffix: "budgetedFullTimeEmployees",
-            label: "# of Budgeted FTEs",
-            props: {
-              decimalPlacesToRoundTo: 2,
-              initialValue: service.readOnly ? "0" : "",
-              mask: NumberMask.FLOAT_OR_INTEGER,
-              readOnly: service.readOnly,
-              ...settings?.[ServiceFieldType.BUDGETED_FTES]?.props,
-            },
-            options: {
-              ...settings?.[ServiceFieldType.BUDGETED_FTES]?.options,
-            },
-          })
-        );
-        break;
-
-      case ServiceFieldType.FILLED_FTES:
-        fields.push(
-          buildServiceField({
-            suffix: "filledFullTimeEmployees",
-            label: "# of Filled FTEs",
-            props: {
-              decimalPlacesToRoundTo: 2,
-              initialValue: service.readOnly ? "0" : "",
-              mask: NumberMask.FLOAT_OR_INTEGER,
-              readOnly: service.readOnly,
-              ...settings?.[ServiceFieldType.FILLED_FTES]?.props,
-            },
-            options: {
-              ...settings?.[ServiceFieldType.FILLED_FTES]?.options,
-            },
-          })
-        );
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  return fields;
-};
-
 // Qualified HCBS & Demonstration Services pages
 export const statePlanServicesHeaders = [
   "Service",
@@ -314,6 +71,70 @@ export const statePlanServices = (prefix: string) => [
     id: `${prefix}_healthHomeForEnrolleesWithSubstanceUseDisorder`,
     label: "Health Home for Enrollees with Substance Use Disorder",
   },
+  {
+    id: `${prefix}_caseManagementServices`,
+    label: "Case Management Services",
+  },
+  {
+    id: `${prefix}_homemakerServices`,
+    label: "Homemaker Services",
+  },
+  {
+    id: `${prefix}_companionServices`,
+    label: "Companion Services",
+  },
+  {
+    id: `${prefix}_adultDayHealthServices`,
+    label: "Adult Day Health Services",
+  },
+  {
+    id: `${prefix}_communityIntegrationServices`,
+    label: "Community Integration Services",
+  },
+  {
+    id: `${prefix}_homeBasedHabilitationServices`,
+    label: "Home Based Habilitation Services",
+  },
+  {
+    id: `${prefix}_residentialHabilitationServices`,
+    label: "Residential Habilitation Services",
+  },
+  {
+    id: `${prefix}_dayHabilitationServices`,
+    label: "Day Habilitation Services",
+  },
+  {
+    id: `${prefix}_habilitationPrevocationalServices`,
+    label: "Habilitation - Prevocational Services",
+  },
+  {
+    id: `${prefix}_habilitationSupportedEmploymentServices`,
+    label: "Habilitation - Supported Employment Services",
+  },
+  {
+    id: `${prefix}_habilitationEducationServices`,
+    label: "Habilitation - Education Services",
+  },
+  {
+    id: `${prefix}_otherHabilitationServices`,
+    label: "Other Habilitation Services",
+  },
+  {
+    id: `${prefix}_respiteServices`,
+    label: "Respite Services",
+  },
+  {
+    id: `${prefix}_liveInCaregiverServices`,
+    label: "Live-In Caregiver Services",
+  },
+  {
+    id: `${prefix}_supportsForParticipantDirection`,
+    label: "Supports for Participant Direction",
+  },
+  {
+    id: `${prefix}_capitatedPaymentsForLongTermCareServices`,
+    label: "Capitated Payments for Long Term Care Services",
+  },
 ];
 
 export const c1915WaiverServices = (prefix: string) => [
@@ -382,6 +203,30 @@ export const c1915WaiverServices = (prefix: string) => [
   {
     id: `${prefix}_capitatedPaymentsForLongTermCareServices`,
     label: "Capitated Payments for Long Term Care Services",
+  },
+  {
+    id: `${prefix}_personalCareServices`,
+    label: "Personal Care Services",
+  },
+  {
+    id: `${prefix}_communityIntegrationServices`,
+    label: "Community Integration Services",
+  },
+  {
+    id: `${prefix}_homeBasedHabilitationServices`,
+    label: "Home Based Habilitation Services",
+  },
+  {
+    id: `${prefix}_companionServices`,
+    label: "Companion Services",
+  },
+  {
+    id: `${prefix}_otherHabilitationServices`,
+    label: "Other Habilitation Services",
+  },
+  {
+    id: `${prefix}_supportsForParticipantDirection`,
+    label: "Supports for Participant Direction",
   },
 ];
 

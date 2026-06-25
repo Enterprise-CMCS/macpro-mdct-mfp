@@ -5,11 +5,8 @@ import {
   PageTypes,
 } from "../../../../../utils/types";
 // utils
-import {
-  buildServiceFields,
-  totalsSummary,
-  totalsSummaryHeaders,
-} from "./utils";
+import { buildServiceFields } from "../../../../../utils/routes/tables";
+import { totalsSummary, totalsSummaryHeaders } from "./utils";
 
 const totalsSummaryTableId = "totals_totalsSummary";
 const totalsSummaryServicesList = totalsSummary(totalsSummaryTableId);
