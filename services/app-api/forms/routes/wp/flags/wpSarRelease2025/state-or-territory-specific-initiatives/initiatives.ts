@@ -15,10 +15,10 @@ export const keyMetricsTableId = "defineInitiative_keyMetrics";
 export const keyMetricsHeaders = [
   "Performance Indicator",
   "Data Source",
-  "Baseline",
+  "Baseline Value",
   "Baseline Period",
-  "Target/Benchmark",
-  "Projected Date to Achieve Benchmark",
+  "Target/Benchmark Value",
+  "Projected Date to Achieve Benchmark Value",
 ];
 
 // Key Metrics table - dynamic rows
@@ -180,7 +180,7 @@ const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   },
   dynamicRowId: keyMetricsDynamicRowId,
   label: "Key Metrics",
-  required: true,
+  required: false,
   verbiage: {
     buttonText: "Add key metric",
     hint: "",
@@ -207,6 +207,13 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         tableType: FormTableType.ENTITY_MODAL,
         verbiage: {
           emptyTableMessage: "No Performance Indicators",
+          subtitle: [
+            {
+              type: "p",
+              content:
+                "If you are not measuring this initiative quantitatively, please detail the qualitative measures in the section below.",
+            },
+          ],
           title: "Key Metrics",
         },
       },
@@ -444,10 +451,9 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
       {
         forCopyoverOnly: true,
         id: "closeOutInformation_initiativeStatus",
-        type: ReportFormFieldType.CHECKBOX,
-        validation: ValidationType.CHECKBOX_OPTIONAL,
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO_OPTIONAL,
         props: {
-          hint: "Select all that apply.",
           label:
             "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, indicate the status below:",
           styleAsOptional: true,
@@ -660,6 +666,10 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
     enterEntityDetailsButtonText: "Edit",
     readOnlyEntityButtonText: "View name/topic",
     readOnlyEntityDetailsButtonText: "View",
-    tableHeader: "Initiative name <br/> MFP Work Plan topic",
+    tableHeaders: [
+      "Status",
+      "Initiative name <br/> MFP Work Plan topic",
+      "Actions",
+    ],
   },
 };

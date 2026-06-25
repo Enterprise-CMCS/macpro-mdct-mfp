@@ -80,7 +80,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
     mockedUseStore.mockReturnValue(mockUseEntityStore);
     render(modalOverlayReportPageComponent());
 
-    expect(screen.getAllByRole("columnheader")).toHaveLength(2);
+    expect(screen.getAllByRole("columnheader")).toHaveLength(1);
     expect(
       screen.getByRole("columnheader", { name: "Mock table header" })
     ).toBeVisible();
@@ -134,7 +134,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
     mockedUseStore.mockReturnValue(sarStore);
     render(modalOverlayReportPageComponent());
 
-    expect(screen.getAllByRole("columnheader")).toHaveLength(2);
+    expect(screen.getAllByRole("columnheader")).toHaveLength(1);
     const editButton = screen.queryByRole("button", {
       name: editEntityButtonText,
     });

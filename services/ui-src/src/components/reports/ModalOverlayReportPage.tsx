@@ -68,7 +68,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   const dashSubTitle = (verbiage as AnyObject)?.dashboardSubtitle;
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
-    return { headRow: ["", verbiage.tableHeader] };
+    return { headRow: verbiage.tableHeaders };
   };
 
   // Add/edit entity modal disclosure and methods
@@ -263,10 +263,10 @@ const sx = {
         border: "none",
       },
       "&:nth-of-type(1)": {
-        width: "2.5rem",
+        width: "4rem",
       },
-      "&:nth-of-type(3)": {
-        width: "260px",
+      "&:nth-of-type(2)": {
+        width: "280px",
       },
     },
     tr: {

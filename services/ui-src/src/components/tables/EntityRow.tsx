@@ -250,6 +250,7 @@ const sx = {
       padding: 0,
       listStyleType: "none",
       lineHeight: "1.3rem",
+      width: "15rem",
       ".mobile &": {
         margin: "auto",
       },

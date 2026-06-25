@@ -62,6 +62,7 @@ import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
 import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
+  const wpSarRelease2025 = Boolean(useFlags()?.wpSarRelease2025);
   const {
     errorMessage,
     fetchReportsByState,
@@ -283,7 +284,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
     }
   };
 
-  const isAddSubmissionDisabled = (): boolean => {
+  const isAddSubmissionDisabled = (enableButton: boolean): boolean => {
     switch (reportType) {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
@@ -296,7 +297,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
             previousReport.reportPeriod === 1 &&
             previousReport.reportYear === 2026 &&
             previousReport.status === ReportStatus.APPROVED &&
-            Boolean(useFlags()?.wpSarRelease2025) === false
+            !enableButton
           )
             return true;
           // Allow creating a new WP only if the previous WP is approved
@@ -432,7 +433,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
             <Button
               type="submit"
               variant="primary"
-              disabled={isAddSubmissionDisabled()}
+              disabled={isAddSubmissionDisabled(wpSarRelease2025)}
               onClick={() =>
                 reportType === ReportType.FINANCIAL_REPORT
                   ? modal?.setModalReport(undefined)
