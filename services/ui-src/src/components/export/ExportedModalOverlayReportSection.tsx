@@ -652,7 +652,7 @@ const EntityFieldsTable = ({
           >
             <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
               <Heading as="h4" sx={sx.sectionHeading}>
-                {translate(fieldOrSectionTitle, { initiativeName })}
+                {fieldOrSectionTitle}
               </Heading>
               {helperText && <Text sx={sx.helperText}>{helperText}</Text>}
               <Table
@@ -693,7 +693,7 @@ const EntityFieldsTable = ({
           >
             <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
               <Heading as="h5" sx={sx.subsectionHeading}>
-                {translate(subsectionTitle, { initiativeName })}
+                {subsectionTitle}
               </Heading>
               <Table
                 content={{
