@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 // types
 import { ReportType } from "types";
 // components
@@ -206,14 +207,14 @@ describe("<DashboardTable />", () => {
       expect(screen.queryByText("Edit")).not.toBeInTheDocument();
     });
 
-    test("should call enterSelectedReport when clicked", () => {
+    test("should call enterSelectedReport when clicked", async () => {
       const enterSelectedReport = jest.fn();
       render(
         <RouterWrappedComponent>
           <ActionButton {...createActionButtonProps({ enterSelectedReport })} />
         </RouterWrappedComponent>
       );
-      fireEvent.click(screen.getByTestId("enter-report"));
+      await userEvent.click(screen.getByTestId("enter-report"));
       expect(enterSelectedReport).toHaveBeenCalledWith(mockWPFullReport);
     });
   });
@@ -253,7 +254,7 @@ describe("<DashboardTable />", () => {
       expect(screen.getByRole("button", { name: "Unlock" })).toBeDisabled();
     });
 
-    test("should enable the Unlock button when report is submitted", () => {
+    test("should enable the Unlock button when report is submitted", async () => {
       const releaseReport = jest.fn();
       render(
         <RouterWrappedComponent>
@@ -267,11 +268,11 @@ describe("<DashboardTable />", () => {
       );
       const unlockButton = screen.getByRole("button", { name: "Unlock" });
       expect(unlockButton).toBeEnabled();
-      fireEvent.click(unlockButton);
+      await userEvent.click(unlockButton);
       expect(releaseReport).toHaveBeenCalledWith(mockWPSubmittedReport);
     });
 
-    test("should render the Archive button and call archive when clicked", () => {
+    test("should render the Archive button and call archive when clicked", async () => {
       const archive = jest.fn();
       render(
         <RouterWrappedComponent>
@@ -285,7 +286,7 @@ describe("<DashboardTable />", () => {
       );
       const archiveButton = screen.getByRole("button", { name: "Archive" });
       expect(archiveButton).toBeVisible();
-      fireEvent.click(archiveButton);
+      await userEvent.click(archiveButton);
       expect(archive).toHaveBeenCalledWith(mockWPFullReport);
     });
 
