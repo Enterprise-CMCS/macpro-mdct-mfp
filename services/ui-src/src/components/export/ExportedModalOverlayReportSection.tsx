@@ -596,6 +596,16 @@ const EntityFieldsTable = ({
                   {fieldLabel}
                 </Heading>
               )}
+              {isCloseOutField &&
+                report?.reportType === ReportType.WP &&
+                entity.isInitiativeClosed && (
+                  <Text sx={sx.helperText} data-testid="exportRow">
+                    <Text as="span" sx={{ fontWeight: "bold" }}>
+                      Closed by
+                    </Text>
+                    <Text>{entity.closedBy}</Text>
+                  </Text>
+                )}
               <Table
                 content={{
                   headRow: [tableHeaders.indicator, tableHeaders.response],
@@ -724,11 +734,11 @@ const EntityFieldsTable = ({
   };
 
   flattenedFields.forEach((field: FormField | FormLayoutElement) => {
-    // Close-out fields are flagged forCopyoverOnly, but should be shown in the
-    // export once the initiative has been closed out.
+    // Close-out fields should be shown in the
+    // export only for copied-over reports.
     const isCloseOutField = field.id?.startsWith("closeOutInformation_");
-    const showClosedOutField = isCloseOutField && entity.isInitiativeClosed;
-    if ((field as any).forCopyoverOnly && !showClosedOutField) {
+    const showCloseOutField = isCloseOutField && report?.isCopied;
+    if ((field as any).forCopyoverOnly && !showCloseOutField) {
       return;
     }
 
