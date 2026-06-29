@@ -18,6 +18,7 @@ import {
   PageTypes,
   ReportFormFieldType,
   ValidationType,
+  AnyObject,
 } from "types";
 import {
   ExportedModalOverlayReportSection,
@@ -318,36 +319,44 @@ const testComponent = (props: Props) => (
   </RouterWrappedComponent>
 );
 
+// Builds a report with a single initiative so text assertions are unambiguous.
+const singleInitiativeReport = (overrides: AnyObject = {}) => ({
+  ...mockWPReportWithOverlays,
+  fieldData: {
+    ...mockWPReportWithOverlays.fieldData,
+    initiative: [
+      { ...mockWPReportWithOverlays.fieldData.initiative[0], ...overrides },
+    ],
+  },
+});
+
+// Mocks the store with the given report and renders the component.
+const renderWithReport = (
+  props: Props,
+  report: AnyObject = mockWPReportWithOverlays
+) => {
+  mockedUseStore.mockReturnValue({ ...mockReportStore, report });
+  return render(testComponent(props));
+};
+
 describe("<ExportedModalOverlayReportSection />", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   test("should render modal overlay report section", () => {
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(wpMockProps));
+    renderWithReport(wpMockProps);
     expect(screen.getAllByTestId("exportedOverlayModalPage")[0]).toBeVisible();
   });
 
   test("should render correct initiative topic", () => {
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(wpMockProps));
+    renderWithReport(wpMockProps);
     expect(screen.getByText("mock WP topic")).toBeVisible();
     expect(screen.getByText("Unique initiative type")).toBeVisible();
   });
 
   test("should render for SAR", () => {
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockSARReportWithOverlays,
-    });
-    render(testComponent(sarMockProps));
+    renderWithReport(sarMockProps, mockSARReportWithOverlays);
     expect(screen.getByText("% of total projected spending")).toBeVisible();
     expect(screen.getByText("42.86%")).toBeVisible(); // (5+10)/(15+20)
   });
@@ -377,11 +386,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(propsWithCopyoverField));
+    renderWithReport(propsWithCopyoverField);
     expect(screen.queryByText("Should be skipped")).not.toBeInTheDocument();
     expect(screen.getAllByText("Regular Field").length).toBe(2);
   });
@@ -434,11 +439,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: reportWithNestedField,
-    });
-    render(testComponent(propsWithNestedField));
+    renderWithReport(propsWithNestedField, reportWithNestedField);
     expect(screen.getByText("Please describe:")).toBeVisible();
     expect(screen.getByText("Test description")).toBeVisible();
   });
@@ -491,11 +492,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: reportWithNestedField,
-    });
-    render(testComponent(propsWithNestedField));
+    renderWithReport(propsWithNestedField, reportWithNestedField);
     expect(screen.getByText("Nested Field Label")).toBeVisible();
     expect(screen.getByText("Nested value")).toBeVisible();
   });
@@ -548,11 +545,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: reportWithUnselectedParent,
-    });
-    render(testComponent(propsWithNestedField));
+    renderWithReport(propsWithNestedField, reportWithUnselectedParent);
     expect(screen.queryByText("Should not render")).not.toBeInTheDocument();
   });
 
@@ -590,11 +583,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(propsWithChoicesChildren));
+    renderWithReport(propsWithChoicesChildren);
     expect(screen.getAllByText("Parent Choice Field").length).toBe(2);
   });
 
@@ -649,11 +638,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: reportWithStartDate,
-    });
-    render(testComponent(propsWithStartDate));
+    renderWithReport(propsWithStartDate, reportWithStartDate);
     expect(screen.getAllByText("Expected start date").length).toBe(2);
   });
 
@@ -679,12 +664,12 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(propsWithTitleSubtitle));
+    renderWithReport(propsWithTitleSubtitle);
     expect(screen.getAllByText("Unique Field Title").length).toBe(2);
+    // Non-close-out fields promote the label to an h5 subsection heading
+    expect(
+      screen.getAllByRole("heading", { level: 5, name: "Field Label" }).length
+    ).toBe(2);
   });
 
   test("should render field with sectionTitle", () => {
@@ -708,11 +693,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(propsWithSectionTitle));
+    renderWithReport(propsWithSectionTitle);
     expect(screen.getAllByText("Unique Section Title Test").length).toBe(2);
   });
 
@@ -737,11 +718,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(propsWithSubsectionTitle));
+    renderWithReport(propsWithSubsectionTitle);
     expect(screen.getAllByText("Unique Subsection Title Test").length).toBe(2);
   });
 
@@ -766,11 +743,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(propsWithDescribeInitiative));
+    renderWithReport(propsWithDescribeInitiative);
     expect(screen.getAllByText("Unique Describe Initiative").length).toBe(2);
     expect(
       screen.getAllByText(
@@ -827,11 +800,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(propsWithDynamicObject));
+    renderWithReport(propsWithDynamicObject);
     expect(screen.getAllByText("Unique Test Table").length).toBe(2);
   });
 
@@ -880,12 +849,197 @@ describe("<ExportedModalOverlayReportSection />", () => {
       },
     };
 
-    mockedUseStore.mockReturnValue({
-      ...mockReportStore,
-      report: mockWPReportWithOverlays,
-    });
-    render(testComponent(propsWithDynamicObjectNoTable));
+    renderWithReport(propsWithDynamicObjectNoTable);
     expect(screen.getByTestId("exportTable")).toBeVisible();
+  });
+
+  test("should substitute {{initiativeName}} placeholder in field title", () => {
+    const propsWithPlaceholderTitle = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "field_with_placeholder",
+              type: "text",
+              validation: "text",
+              props: {
+                title: "Close-out {{initiativeName}}",
+                subtitle: "Field subtitle text",
+                label: "Field Label",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    renderWithReport(
+      propsWithPlaceholderTitle,
+      singleInitiativeReport({ initiative_name: "Test Initiative" })
+    );
+    expect(screen.getByText("Close-out Test Initiative")).toBeVisible();
+    expect(
+      screen.queryByText("Close-out {{initiativeName}}")
+    ).not.toBeInTheDocument();
+  });
+
+  test("should hide close-out fields for non-copied reports", () => {
+    const propsWithCloseOutField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "closeOutInformation_projectedEndDate",
+              type: "date",
+              validation: "dateOptional",
+              forCopyoverOnly: true,
+              props: { label: "Projected end date" },
+            },
+          ],
+        },
+      },
+    };
+
+    renderWithReport(propsWithCloseOutField, {
+      ...singleInitiativeReport({}),
+      isCopied: false,
+    });
+    expect(screen.queryByText("Projected end date")).not.toBeInTheDocument();
+  });
+
+  test("should show close-out fields for copied reports", () => {
+    const propsWithCloseOutField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "closeOutInformation_projectedEndDate",
+              type: "date",
+              validation: "dateOptional",
+              forCopyoverOnly: true,
+              props: {
+                title: "Close-out {{initiativeName}}",
+                subtitle: "Complete for initiatives that end soon.",
+                label: "Projected end date",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    renderWithReport(propsWithCloseOutField, {
+      ...singleInitiativeReport({ initiative_name: "Test Initiative" }),
+      isCopied: true,
+    });
+    // Title renders as the section header with the substituted initiative name
+    expect(screen.getByText("Close-out Test Initiative")).toBeVisible();
+    // Label renders in the Indicators column, not as an h5 subsection heading
+    expect(screen.getByText("Projected end date")).toBeVisible();
+    expect(
+      screen.queryByRole("heading", { level: 5, name: "Projected end date" })
+    ).not.toBeInTheDocument();
+  });
+
+  test("should show 'Closed by' in the close-out section for a closed WP initiative", () => {
+    const propsWithCloseOutField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "closeOutInformation_projectedEndDate",
+              type: "date",
+              validation: "dateOptional",
+              forCopyoverOnly: true,
+              props: {
+                title: "Close-out {{initiativeName}}",
+                subtitle: "Complete for initiatives that end soon.",
+                label: "Projected end date",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    renderWithReport(propsWithCloseOutField, {
+      ...singleInitiativeReport({
+        initiative_name: "Test Initiative",
+        isInitiativeClosed: true,
+        closedBy: "Jane Doe",
+      }),
+      isCopied: true,
+    });
+    expect(screen.getByText("Closed by")).toBeVisible();
+    expect(screen.getByText("Jane Doe")).toBeVisible();
+  });
+
+  test("should not show 'Closed by' when the WP initiative is not closed", () => {
+    const propsWithCloseOutField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "closeOutInformation_projectedEndDate",
+              type: "date",
+              validation: "dateOptional",
+              forCopyoverOnly: true,
+              props: {
+                title: "Close-out {{initiativeName}}",
+                subtitle: "Complete for initiatives that end soon.",
+                label: "Projected end date",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    renderWithReport(propsWithCloseOutField, {
+      ...singleInitiativeReport({
+        initiative_name: "Test Initiative",
+        isInitiativeClosed: false,
+        closedBy: "Jane Doe",
+      }),
+      isCopied: true,
+    });
+    expect(screen.queryByText("Closed by")).not.toBeInTheDocument();
+  });
+
+  test("should keep non-close-out forCopyoverOnly fields hidden for copied reports", () => {
+    const propsWithCopyoverField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "regular_copyover_field",
+              type: "text",
+              validation: "text",
+              forCopyoverOnly: true,
+              props: { label: "Hidden Copyover Field" },
+            },
+          ],
+        },
+      },
+    };
+
+    renderWithReport(propsWithCopyoverField, {
+      ...singleInitiativeReport({}),
+      isCopied: true,
+    });
+    expect(screen.queryByText("Hidden Copyover Field")).not.toBeInTheDocument();
   });
 
   testA11yAct(testComponent(wpMockProps), () => {
