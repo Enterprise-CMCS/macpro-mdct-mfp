@@ -136,7 +136,7 @@ describe("<EntityDetailsOverlayV2 />", () => {
   test("shows alert for initiative close-out", async () => {
     const closedOutEntity = {
       ...mockEntityStore.selectedEntity,
-      closeOutInformation_actualEndDate: "01/01/2026",
+      isCopied: true,
     } as EntityShape;
 
     await act(async () => {

@@ -65,7 +65,7 @@ describe("<DynamicModalOverlayReportPage />", () => {
     mockedUseStore.mockReturnValue(mockUseEntityStore);
     render(dynamicModalOverlayReportPageComponent);
 
-    expect(screen.getAllByRole("columnheader")).toHaveLength(2);
+    expect(screen.getAllByRole("columnheader")).toHaveLength(1);
     expect(
       screen.getByRole("columnheader", { name: "Mock table header" })
     ).toBeVisible();

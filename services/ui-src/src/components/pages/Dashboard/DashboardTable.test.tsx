@@ -1,45 +1,54 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 // types
-import { ReportMetadataShape, ReportType } from "types";
+import { ReportType } from "types";
 // components
 import {
+  ActionButton,
   DashboardTable,
   getStatus,
   tableBody,
-  ActionButton,
 } from "./DashboardTable";
 import {
   mockSARFullReport,
+  mockWPArchivedReport,
   mockWPFullReport,
+  mockWPSubmittedReport,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { mockFinancialReportNotStartedReport } from "utils/testing/financial-report/mockFinancialReport";
+import { testA11yAct } from "utils/testing/commonTests";
+
+const createProps = (overrides = {}) => ({
+  reportsByState: [mockSARFullReport],
+  reportType: ReportType.SAR,
+  reportId: undefined,
+  body: {
+    table: {
+      caption: "test",
+      headRow: ["Submission name", "Status", "Actions"],
+      bodyRows: [],
+    },
+  },
+  openCreateReportModal: jest.fn(),
+  enterSelectedReport: jest.fn(),
+  archive: jest.fn(),
+  entering: false,
+  releaseReport: jest.fn(),
+  releasing: false,
+  isStateLevelUser: true,
+  isAdmin: false,
+  sxOverride: {},
+  ...overrides,
+});
+
+const dashboardTable = (
+  <RouterWrappedComponent>
+    <DashboardTable {...createProps()} />
+  </RouterWrappedComponent>
+);
 
 describe("<DashboardTable />", () => {
   describe("Edit reporting button label", () => {
-    const createProps = (overrides = {}) => ({
-      reportsByState: [mockSARFullReport],
-      reportType: ReportType.SAR,
-      reportId: undefined,
-      body: {
-        table: {
-          caption: "test",
-          headRow: ["Submission name", "Status", "Actions"],
-          bodyRows: [],
-        },
-      },
-      openCreateReportModal: jest.fn(),
-      enterSelectedReport: jest.fn(),
-      archive: jest.fn(),
-      entering: false,
-      releaseReport: jest.fn(),
-      releasing: false,
-      isStateLevelUser: true,
-      isAdmin: false,
-      sxOverride: {},
-      ...overrides,
-    });
-
     test("should not show Edit reporting button when user is admin", () => {
       render(
         <RouterWrappedComponent>
@@ -55,11 +64,7 @@ describe("<DashboardTable />", () => {
     });
 
     test("should show Edit reporting when user is not admin", () => {
-      render(
-        <RouterWrappedComponent>
-          <DashboardTable {...createProps({ isAdmin: false })} />
-        </RouterWrappedComponent>
-      );
+      render(dashboardTable);
 
       expect(
         screen.getByRole("button", {
@@ -71,41 +76,31 @@ describe("<DashboardTable />", () => {
 
   describe("getStatus()", () => {
     test("should render the correct status if report has been unlocked", () => {
-      expect(getStatus(ReportType.WP, "In revision", false, 1)).toBe(
-        "In revision"
-      );
+      expect(getStatus("In revision", false)).toBe("In revision");
     });
 
     test("should render the correct status if report been started", () => {
-      expect(getStatus(ReportType.WP, "In progress", false, 0)).toBe(
-        "In progress"
-      );
+      expect(getStatus("In progress", false)).toBe("In progress");
     });
 
     test("should render the correct status if report has been archived", () => {
-      expect(getStatus(ReportType.WP, "In progress", true, 1)).toBe("Archived");
+      expect(getStatus("In progress", true)).toBe("Archived");
     });
 
     test("should render the correct status if report has been submitted", () => {
-      expect(getStatus(ReportType.WP, "Submitted", false, 1)).toBe("Submitted");
+      expect(getStatus("Submitted", false)).toBe("Submitted");
     });
 
     test("should render the correct status if report has not started", () => {
-      expect(getStatus(ReportType.WP, "Not started", false, 1)).toBe(
-        "Not started"
-      );
+      expect(getStatus("Not started", false)).toBe("Not started");
     });
 
     test("should render the correct status for SAR reports", () => {
-      expect(getStatus(ReportType.SAR, "In progress", false, 1)).toBe(
-        "In progress"
-      );
+      expect(getStatus("In progress", false)).toBe("In progress");
     });
 
     test("should render the correct status for SAR reports", () => {
-      expect(getStatus(ReportType.SAR, "Not started", false, 1)).toBe(
-        "Not started"
-      );
+      expect(getStatus("Not started", false)).toBe("Not started");
     });
   });
 
@@ -150,110 +145,165 @@ describe("<DashboardTable />", () => {
     });
   });
 
-  describe("<ActionButton /> conditional width", () => {
-    test("should not apply compact width by default", () => {
-      render(
-        <RouterWrappedComponent>
-          <ActionButton
-            report={mockWPFullReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
-          />
-        </RouterWrappedComponent>
-      );
-      const button = screen.getByTestId("enter-report");
-      expect(button).not.toHaveStyle("min-width: 3rem");
+  describe("<ActionButton />", () => {
+    const createActionButtonProps = (overrides = {}) => ({
+      report: mockWPFullReport,
+      reportId: undefined,
+      isStateLevelUser: true,
+      entering: false,
+      enterSelectedReport: jest.fn(),
+      ...overrides,
     });
 
-    test("should render with 3rem min-width when compact is true (SAR)", () => {
+    test("should render 'Edit' for a state user when report is not locked", () => {
       render(
         <RouterWrappedComponent>
           <ActionButton
-            report={mockSARFullReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
-            compact={true}
+            {...createActionButtonProps({
+              report: { ...mockWPFullReport, locked: false },
+            })}
           />
         </RouterWrappedComponent>
       );
-      const button = screen.getByTestId("enter-report");
-      expect(button).toHaveStyle("min-width: 3rem");
+      expect(screen.getByText("Edit")).toBeVisible();
     });
 
-    test("should render with 3rem min-width when compact is true (Financial)", () => {
+    test("should render 'View' for a non-state user", () => {
       render(
         <RouterWrappedComponent>
           <ActionButton
-            report={mockFinancialReportNotStartedReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
-            compact={true}
+            {...createActionButtonProps({ isStateLevelUser: false })}
           />
         </RouterWrappedComponent>
       );
-      const button = screen.getByTestId("enter-report");
-      expect(button).toHaveStyle("min-width: 3rem");
+      expect(screen.getByText("View")).toBeVisible();
     });
 
-    test("should display Edit text for state level user", () => {
+    test("should render 'View' for a state user when report is locked", () => {
       render(
         <RouterWrappedComponent>
           <ActionButton
-            report={mockSARFullReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
+            {...createActionButtonProps({
+              report: { ...mockWPFullReport, locked: true },
+            })}
           />
         </RouterWrappedComponent>
       );
-      expect(
-        screen.getByRole("button", { name: "Edit 2024 Period 1 report" })
-      ).toBeVisible();
+      expect(screen.getByText("View")).toBeVisible();
     });
 
-    test("should display View text for locked report", () => {
-      const lockedReport = {
-        ...mockSARFullReport,
-        locked: true,
-      } as ReportMetadataShape;
-      render(
+    test("should render a spinner while entering the selected report", () => {
+      const { container } = render(
         <RouterWrappedComponent>
           <ActionButton
-            report={lockedReport}
-            reportId="test-id"
-            isStateLevelUser={true}
-            entering={false}
-            enterSelectedReport={() => {}}
+            {...createActionButtonProps({
+              entering: true,
+              reportId: mockWPFullReport.id,
+            })}
           />
         </RouterWrappedComponent>
       );
-      expect(
-        screen.getByRole("button", { name: "View 2024 Period 1 report" })
-      ).toBeVisible();
+      expect(container.querySelector(".chakra-spinner")).toBeInTheDocument();
+      expect(screen.queryByText("Edit")).not.toBeInTheDocument();
     });
 
-    test("should display View text for non-state-level user", () => {
+    test("should call enterSelectedReport when clicked", async () => {
+      const enterSelectedReport = jest.fn();
       render(
         <RouterWrappedComponent>
-          <ActionButton
-            report={mockSARFullReport}
-            reportId="test-id"
-            isStateLevelUser={false}
-            entering={false}
-            enterSelectedReport={() => {}}
-          />
+          <ActionButton {...createActionButtonProps({ enterSelectedReport })} />
         </RouterWrappedComponent>
       );
-      expect(
-        screen.getByRole("button", { name: "View 2024 Period 1 report" })
-      ).toBeVisible();
+      await userEvent.click(screen.getByTestId("enter-report"));
+      expect(enterSelectedReport).toHaveBeenCalledWith(mockWPFullReport);
     });
   });
+
+  describe("Admin action buttons", () => {
+    const createAdminProps = (overrides = {}) => ({
+      reportsByState: [mockWPFullReport],
+      reportType: ReportType.WP,
+      reportId: undefined,
+      body: {
+        table: {
+          caption: "test",
+          headRow: ["Submission name", "Status", "#", "Actions"],
+          bodyRows: [],
+        },
+      },
+      openCreateReportModal: jest.fn(),
+      enterSelectedReport: jest.fn(),
+      archive: jest.fn(),
+      entering: false,
+      releaseReport: jest.fn(),
+      releasing: false,
+      isStateLevelUser: false,
+      isAdmin: true,
+      sxOverride: {},
+      ...overrides,
+    });
+
+    test("should disable the Unlock button when report is not submitted", () => {
+      render(
+        <RouterWrappedComponent>
+          <DashboardTable
+            {...createAdminProps({ reportsByState: [mockWPFullReport] })}
+          />
+        </RouterWrappedComponent>
+      );
+      expect(screen.getByRole("button", { name: "Unlock" })).toBeDisabled();
+    });
+
+    test("should enable the Unlock button when report is submitted", async () => {
+      const releaseReport = jest.fn();
+      render(
+        <RouterWrappedComponent>
+          <DashboardTable
+            {...createAdminProps({
+              reportsByState: [mockWPSubmittedReport],
+              releaseReport,
+            })}
+          />
+        </RouterWrappedComponent>
+      );
+      const unlockButton = screen.getByRole("button", { name: "Unlock" });
+      expect(unlockButton).toBeEnabled();
+      await userEvent.click(unlockButton);
+      expect(releaseReport).toHaveBeenCalledWith(mockWPSubmittedReport);
+    });
+
+    test("should render the Archive button and call archive when clicked", async () => {
+      const archive = jest.fn();
+      render(
+        <RouterWrappedComponent>
+          <DashboardTable
+            {...createAdminProps({
+              reportsByState: [mockWPFullReport],
+              archive,
+            })}
+          />
+        </RouterWrappedComponent>
+      );
+      const archiveButton = screen.getByRole("button", { name: "Archive" });
+      expect(archiveButton).toBeVisible();
+      await userEvent.click(archiveButton);
+      expect(archive).toHaveBeenCalledWith(mockWPFullReport);
+    });
+
+    test("should render 'Archived' text instead of a button for archived reports", () => {
+      render(
+        <RouterWrappedComponent>
+          <DashboardTable
+            {...createAdminProps({ reportsByState: [mockWPArchivedReport] })}
+          />
+        </RouterWrappedComponent>
+      );
+      // "Archived" appears in both the status column and the action cell
+      expect(screen.getAllByText("Archived").length).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.queryByRole("button", { name: "Archive" })
+      ).not.toBeInTheDocument();
+    });
+  });
+  testA11yAct(dashboardTable);
 });

@@ -4,12 +4,16 @@ import {
   FormTablesRoute,
   PageTypes,
   ReportFormFieldType,
+  ServiceFieldType,
   ValidationType,
 } from "../../../../../utils/types";
 // utils
 import {
-  accordionWithFmapLink,
   buildServiceFields,
+  serviceFieldDynamicRowsTemplateBuilder,
+} from "../../../../../utils/routes/tables";
+import {
+  accordionWithFmapLink,
   c1915WaiverServices,
   errorMessageWithFmapLink,
   statePlanServices,
@@ -41,6 +45,80 @@ const c1915WaiverServicesFootList = [
     readOnly: true,
   },
 ];
+const statePlanServicesFieldsToReturn = [
+  ServiceFieldType.TOTAL_COMPUTABLE,
+  ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
+  ServiceFieldType.TOTAL_FEDERAL_SHARE,
+];
+const c1915WaiverServicesFieldsToReturn = [...statePlanServicesFieldsToReturn];
+
+// State Plan Services table dynamic rows
+const statePlanServicesDynamicRowId = `${statePlanServicesTableId}_otherServices`;
+const statePlanServicesDynamicBodyList = [
+  {
+    id: statePlanServicesDynamicRowId,
+    label: "Other Services",
+  },
+];
+const statePlanServicesDynamicFieldsToReturn = [
+  ServiceFieldType.NAME,
+  ...statePlanServicesFieldsToReturn,
+];
+
+const statePlanServicesDynamicRowsTemplate =
+  serviceFieldDynamicRowsTemplateBuilder({
+    dynamicFieldsBodyList: statePlanServicesDynamicBodyList,
+    dynamicFieldsSettings: {
+      dynamicLabel: "Other:",
+    },
+    dynamicFieldsToReturn: statePlanServicesDynamicFieldsToReturn,
+    dynamicFieldValidations: {
+      name: ValidationType.TEXT_OPTIONAL,
+      totalComputable: ValidationType.NUMBER_OPTIONAL,
+      totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+      totalFederalShare: ValidationType.NUMBER_OPTIONAL,
+    },
+    dynamicRowId: statePlanServicesDynamicRowId,
+    label: "Other Services",
+    verbiage: {
+      buttonText: "Add other service",
+      hint: "To add an additional service, click the “Add other service” button below.",
+    },
+  });
+
+// 1915(c) Waiver Services table dynamic rows
+const c1915WaiverServicesDynamicRowId = `${c1915WaiverServicesTableId}_otherServices`;
+const c1915WaiverServicesDynamicBodyList = [
+  {
+    id: c1915WaiverServicesDynamicRowId,
+    label: "Other Services",
+  },
+];
+const c1915WaiverServicesDynamicFieldsToReturn = [
+  ServiceFieldType.NAME,
+  ...c1915WaiverServicesFieldsToReturn,
+];
+
+const c1915WaiverServicesDynamicRowsTemplate =
+  serviceFieldDynamicRowsTemplateBuilder({
+    dynamicFieldsBodyList: c1915WaiverServicesDynamicBodyList,
+    dynamicFieldsSettings: {
+      dynamicLabel: "Other:",
+    },
+    dynamicFieldsToReturn: c1915WaiverServicesDynamicFieldsToReturn,
+    dynamicFieldValidations: {
+      name: ValidationType.TEXT_OPTIONAL,
+      totalComputable: ValidationType.NUMBER_OPTIONAL,
+      totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+      totalFederalShare: ValidationType.NUMBER_OPTIONAL,
+    },
+    dynamicRowId: c1915WaiverServicesDynamicRowId,
+    label: "Other Services",
+    verbiage: {
+      buttonText: "Add other service",
+      hint: "To add an additional service, click the “Add other service” button below.",
+    },
+  });
 
 export const demonstrationServicesRoute: FormTablesRoute = {
   name: "Demonstration Services",
@@ -70,6 +148,7 @@ export const demonstrationServicesRoute: FormTablesRoute = {
           const bodyFields = buildServiceFields(service);
           return [service.label, ...bodyFields];
         }),
+        dynamicRowsTemplate: statePlanServicesDynamicRowsTemplate,
         footRows: statePlanServicesFootList.map((service) => {
           const footFields = buildServiceFields(service);
           return ["Totals", ...footFields];
@@ -93,6 +172,7 @@ export const demonstrationServicesRoute: FormTablesRoute = {
           const bodyFields = buildServiceFields(service);
           return [service.label, ...bodyFields];
         }),
+        dynamicRowsTemplate: c1915WaiverServicesDynamicRowsTemplate,
         footRows: c1915WaiverServicesFootList.map((service) => {
           const footFields = buildServiceFields(service);
           return ["Totals", ...footFields];
@@ -118,11 +198,19 @@ export const demonstrationServicesRoute: FormTablesRoute = {
       ...statePlanServicesFootList.flatMap((service) =>
         buildServiceFields(service)
       ),
+      statePlanServicesDynamicRowsTemplate,
+      ...statePlanServicesDynamicBodyList.flatMap((service) =>
+        buildServiceFields(service, statePlanServicesFieldsToReturn)
+      ),
       ...c1915WaiverServicesBodyList.flatMap((service) =>
         buildServiceFields(service)
       ),
       ...c1915WaiverServicesFootList.flatMap((service) =>
         buildServiceFields(service)
+      ),
+      c1915WaiverServicesDynamicRowsTemplate,
+      ...c1915WaiverServicesDynamicBodyList.flatMap((service) =>
+        buildServiceFields(service, c1915WaiverServicesFieldsToReturn)
       ),
       {
         id: "demonstrationServices_narrative",

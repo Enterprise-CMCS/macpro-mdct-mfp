@@ -25,12 +25,10 @@ export const MobileDashboardTable = ({
       <Box data-testid="mobile-row" sx={sx.mobileTable} key={report.id}>
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>{"Submission name"}</Text>
-          <Flex alignContent="flex-start">
-            <Text sx={sxOverride.submissionNameText}>
-              {report.submissionName}
-            </Text>
-            {copyOverSubText(report, reportsByState)}
-          </Flex>
+          <Text sx={sxOverride.submissionNameText}>
+            {report.submissionName}
+          </Text>
+          {copyOverSubText(report, reportsByState)}
         </Box>
         {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Box sx={sx.labelGroup}>
@@ -67,14 +65,7 @@ export const MobileDashboardTable = ({
         </Box>
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>Status</Text>
-          <Text>
-            {getStatus(
-              reportType as ReportType,
-              report.status,
-              report.archived,
-              report.submissionCount
-            )}
-          </Text>
+          <Text>{getStatus(report.status, report.archived)}</Text>
         </Box>
         {/* Admin: Submission count */}
         {isAdmin && (
@@ -89,8 +80,13 @@ export const MobileDashboardTable = ({
         )}
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>Actions</Text>
-          <Flex alignItems="center" gap={2} flexWrap="nowrap">
-            {reportType !== ReportType.WP && (
+          <Flex
+            alignItems="center"
+            gap={2}
+            flexWrap="nowrap"
+            marginTop="spacer_half"
+          >
+            {reportType !== ReportType.WP && !isAdmin && (
               <Box>
                 <Button
                   onClick={() => openCreateReportModal(report)}
@@ -122,7 +118,6 @@ export const MobileDashboardTable = ({
                 <>
                   <AdminReleaseButton
                     report={report}
-                    reportType={reportType}
                     reportId={reportId}
                     releaseReport={releaseReport}
                     releasing={releasing}
@@ -131,11 +126,7 @@ export const MobileDashboardTable = ({
                   {isArchivable(reportType) && !report?.associatedSar && (
                     <AdminArchiveButton
                       report={report}
-                      reportType={reportType}
-                      reportId={reportId}
                       archive={archive}
-                      releaseReport={releaseReport}
-                      releasing={releasing}
                       sxOverride={sxOverride}
                     />
                   )}
@@ -198,12 +189,7 @@ const AdminReleaseButton = ({
   sxOverride,
 }: AdminReleaseButtonProps) => {
   //unlock is enabled when status: approved and submitted, all other times, it is disabled
-  const reportStatus = getStatus(
-    report.reportType as ReportType,
-    report.status,
-    report.archived,
-    report.submissionCount
-  );
+  const reportStatus = getStatus(report.status, report.archived);
   const isDisabled = !(reportStatus === "Submitted");
 
   return (
@@ -245,17 +231,12 @@ const AdminArchiveButton = ({
 
 interface AdminArchiveButtonProps {
   report: ReportMetadataShape;
-  reportType: string;
-  reportId: string | undefined;
   archive: Function;
-  releasing?: boolean;
-  releaseReport?: Function;
   sxOverride: SxObject;
 }
 
 interface AdminReleaseButtonProps {
   report: ReportMetadataShape;
-  reportType: string;
   reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
@@ -280,7 +261,7 @@ const sx = {
     marginRight: "spacer6",
   },
   archivedText: {
-    fontSize: "sm",
+    fontSize: "md",
     paddingLeft: 2,
     display: "flex",
     alignItems: "center",
@@ -288,7 +269,7 @@ const sx = {
   editReporting: {
     textDecoration: "underline",
     color: "primary",
-    fontSize: "sm",
+    fontSize: "md",
     fontWeight: "300",
   },
 };

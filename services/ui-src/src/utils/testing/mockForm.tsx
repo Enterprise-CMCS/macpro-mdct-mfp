@@ -552,7 +552,7 @@ export const mockModalOverlayReportPageVerbiage = {
   dashboardSubtitle: "Mock dashboard subtitle",
   addEditModalHint: "Mock modal hint",
   countEntitiesInTitle: true,
-  tableHeader: "Mock table header",
+  tableHeaders: ["Mock table header"],
   addEntityButtonText: "Mock add entity button text",
   emptyDashboardText: "Mock empty dashboard text",
   editEntityButtonText: "Mock edit entity button text",
@@ -848,7 +848,6 @@ export const mockDynamicRowsTemplate = {
     type: ValidationType.DYNAMIC_OPTIONAL,
     options: {
       dynamicFieldValidations: {
-        category: ValidationType.TEXT_OPTIONAL,
         percentageOverride: ValidationType.NUMBER_OPTIONAL,
         totalComputable: ValidationType.NUMBER_OPTIONAL,
       },
