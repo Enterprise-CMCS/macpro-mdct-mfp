@@ -39,7 +39,6 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
       display={isHidden ? "none" : "block"}
       className={isOpen ? "open" : "closed"}
       role="navigation"
-      aria-label="Sidebar menu"
     >
       <Box
         as="button"
