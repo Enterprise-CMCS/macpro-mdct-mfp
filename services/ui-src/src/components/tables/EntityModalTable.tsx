@@ -125,7 +125,25 @@ export const EntityModalTable = ({
   };
 
   // Dynamic rows
-  const { generateRows } = useContext(DynamicTableContext);
+  const { generateRows, localFieldData } = useContext(DynamicTableContext);
+
+  // Determine if the user has added any dynamic rows.
+  // Only ENTITY_MODAL tables use this component, which currently is just Key Metrics.
+  const getDynamicRowEntries = (): AnyObject[] => {
+    if (!dynamicRowsTemplate) return [];
+    // For entity-scoped tables, rows live on the matching entity; otherwise at the top level.
+    const source = formData?.type
+      ? localFieldData?.[formData.type]?.find(
+          (entity: AnyObject) => entity.id === formData?.id
+        )
+      : localFieldData;
+    return source?.[dynamicRowsTemplate.id] || [];
+  };
+  const dynamicRowEntries = getDynamicRowEntries();
+
+  // Hide headers for a dynamic-rows table until at least one row is added
+  const showHeadRows =
+    !dynamicRowsTemplate || bodyRows.length > 0 || dynamicRowEntries.length > 0;
 
   const sharedCellProps = {
     columnCount: headRows?.[0].length || 0,
@@ -170,16 +188,17 @@ export const EntityModalTable = ({
           <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
         </TableCaption>
         <Thead>
-          {headRows.map((row, rowIndex: number) =>
-            generateRows({
-              row,
-              rowIndex,
-              section: "thead",
-              showEditHeader: true,
-              styleAsOptionalHeadRows: styleAsOptionalHeadRows,
-              ...sharedCellProps,
-            })
-          )}
+          {showHeadRows &&
+            headRows.map((row, rowIndex: number) =>
+              generateRows({
+                row,
+                rowIndex,
+                section: "thead",
+                showEditHeader: true,
+                styleAsOptionalHeadRows: styleAsOptionalHeadRows,
+                ...sharedCellProps,
+              })
+            )}
         </Thead>
         <Tbody>
           {bodyRows.map((row, rowIndex: number) =>
@@ -195,6 +214,7 @@ export const EntityModalTable = ({
               disabled={disabled}
               dynamicRowsTemplate={dynamicRowsTemplate}
               emptyTableMessage={verbiage?.emptyTableMessage}
+              emptyTableMessageAlign="left"
               entityType={formData?.type}
               formData={formData}
               formPercentage={0}
@@ -333,6 +353,9 @@ export const sx = {
         paddingInlineEnd: "spacer2",
         paddingInlineStart: "spacer2",
         paddingTop: "spacer1",
+      },
+      "td.empty-table-message-cell": {
+        paddingInlineStart: 0,
       },
       label: {
         margin: 0,
