@@ -367,7 +367,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
         <title>{`${reportTitle} - ${APP_TITLE}`}</title>
       </Helmet>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
-        <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
+        <Image src={arrowLeftIcon} alt="" className="returnIcon" />
         Return home
       </Link>
       {errorMessage && <ErrorAlert error={errorMessage} />}
