@@ -141,8 +141,8 @@ export const EntityModalTable = ({
   };
   const dynamicRowEntries = getDynamicRowEntries();
 
-  // Hide headers for a dynamic-rows table until at least one row is added
-  const showHeadRows =
+  // Hide the table for a dynamic-rows table until at least one row is added
+  const showTable =
     !dynamicRowsTemplate || bodyRows.length > 0 || dynamicRowEntries.length > 0;
 
   const sharedCellProps = {
@@ -183,13 +183,16 @@ export const EntityModalTable = ({
         <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
       )}
       <InlineErrorShim id={errorId}>{errorMessage}</InlineErrorShim>
-      <Table id={tableId} sx={sx.table} {...ariaProps}>
-        <TableCaption placement="top" sx={sx.captionBox}>
-          <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
-        </TableCaption>
-        <Thead>
-          {showHeadRows &&
-            headRows.map((row, rowIndex: number) =>
+      {!showTable && (
+        <Text sx={sx.emptyTableMessage}>{verbiage?.emptyTableMessage}</Text>
+      )}
+      {showTable && (
+        <Table id={tableId} sx={sx.table} {...ariaProps}>
+          <TableCaption placement="top" sx={sx.captionBox}>
+            <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
+          </TableCaption>
+          <Thead>
+            {headRows.map((row, rowIndex: number) =>
               generateRows({
                 row,
                 rowIndex,
@@ -199,48 +202,48 @@ export const EntityModalTable = ({
                 ...sharedCellProps,
               })
             )}
-        </Thead>
-        <Tbody>
-          {bodyRows.map((row, rowIndex: number) =>
-            generateRows({
-              row,
-              rowIndex,
-              section: "tbody",
-              ...sharedCellProps,
-            })
-          )}
-          {dynamicRowsTemplate && (
-            <DynamicTableRows
-              disabled={disabled}
-              dynamicRowsTemplate={dynamicRowsTemplate}
-              emptyTableMessage={verbiage?.emptyTableMessage}
-              emptyTableMessageAlign="left"
-              entityType={formData?.type}
-              formData={formData}
-              formPercentage={0}
-              hasDynamicModalForm={hasDynamicModalForm}
-              hasStaticRows={bodyRows.length > 0}
-              openDeleteEntityModal={openDeleteEntityModal}
-              openModal={openModal}
-              showEditColumn={hasDynamicModalForm}
-              tableId={tableId}
-              updatedFieldsCallback={updatedFieldsCallback}
-            />
-          )}
-        </Tbody>
-        {footRows.length > 0 && (
-          <Tfoot>
-            {footRows.map((row, rowIndex: number) =>
+          </Thead>
+          <Tbody>
+            {bodyRows.map((row, rowIndex: number) =>
               generateRows({
                 row,
                 rowIndex,
-                section: "tfoot",
+                section: "tbody",
                 ...sharedCellProps,
               })
             )}
-          </Tfoot>
-        )}
-      </Table>
+            {dynamicRowsTemplate && (
+              <DynamicTableRows
+                disabled={disabled}
+                dynamicRowsTemplate={dynamicRowsTemplate}
+                emptyTableMessage={verbiage?.emptyTableMessage}
+                entityType={formData?.type}
+                formData={formData}
+                formPercentage={0}
+                hasDynamicModalForm={hasDynamicModalForm}
+                hasStaticRows={bodyRows.length > 0}
+                openDeleteEntityModal={openDeleteEntityModal}
+                openModal={openModal}
+                showEditColumn={hasDynamicModalForm}
+                tableId={tableId}
+                updatedFieldsCallback={updatedFieldsCallback}
+              />
+            )}
+          </Tbody>
+          {footRows.length > 0 && (
+            <Tfoot>
+              {footRows.map((row, rowIndex: number) =>
+                generateRows({
+                  row,
+                  rowIndex,
+                  section: "tfoot",
+                  ...sharedCellProps,
+                })
+              )}
+            </Tfoot>
+          )}
+        </Table>
+      )}
 
       {dynamicRowsTemplate && hasDynamicModalForm && (
         <>
@@ -337,6 +340,11 @@ export const sx = {
     padding: 0,
     height: 0,
   },
+  emptyTableMessage: {
+    fontWeight: "bold",
+    marginBottom: "spacer5",
+    marginTop: "spacer1",
+  },
   table: {
     marginBottom: "spacer5",
     marginTop: "spacer1",
@@ -353,9 +361,6 @@ export const sx = {
         paddingInlineEnd: "spacer2",
         paddingInlineStart: "spacer2",
         paddingTop: "spacer1",
-      },
-      "td.empty-table-message-cell": {
-        paddingInlineStart: 0,
       },
       label: {
         margin: 0,

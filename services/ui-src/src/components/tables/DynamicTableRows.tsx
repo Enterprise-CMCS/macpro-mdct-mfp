@@ -17,7 +17,6 @@ export const DynamicTableRows = ({
   disabled,
   dynamicRowsTemplate,
   emptyTableMessage,
-  emptyTableMessageAlign = "center",
   entityType,
   formData,
   formPercentage,
@@ -91,15 +90,8 @@ export const DynamicTableRows = ({
     <>
       {showEmptyRows && (
         <Tr>
-          <Td className="empty-table-message-cell" colSpan={emptyRowsColspan}>
-            <Text
-              sx={{
-                ...sx.emptyTableMessage,
-                textAlign: emptyTableMessageAlign,
-              }}
-            >
-              {emptyTableMessage}
-            </Text>
+          <Td colSpan={emptyRowsColspan}>
+            <Text sx={sx.emptyTableMessage}>{emptyTableMessage}</Text>
           </Td>
         </Tr>
       )}
@@ -200,7 +192,6 @@ interface Props {
   disabled: boolean;
   dynamicRowsTemplate: DynamicRowsTemplate;
   emptyTableMessage?: string;
-  emptyTableMessageAlign?: "left" | "center" | "right";
   entityType?: EntityType;
   formData?: AnyObject;
   formPercentage: number;
