@@ -427,6 +427,65 @@ describe("<EntityModalTable />", () => {
     });
   });
 
+  describe("conditional table display", () => {
+    test("hides the table and shows the empty message when there are no entries", () => {
+      const report = { fieldData: {} };
+      mockedUseStore.mockReturnValue({ report });
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        bodyRows: [],
+        footRows: [],
+        report,
+        verbiage: {
+          ...mockProps.verbiage,
+          emptyTableMessage: "No Performance Indicators",
+        },
+        dynamicRowsTemplate:
+          mockDynamicRowsTemplateForKeyMetricsTableWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      expect(screen.queryByText("Heading 1")).not.toBeInTheDocument();
+      expect(screen.getByText("No Performance Indicators")).toBeVisible();
+    });
+
+    test("shows the table once a dynamic row has been added", () => {
+      const report = {
+        fieldData: {
+          [mockDynamicTemplateId]: [
+            {
+              id: mockDynamicFieldId,
+              name: "Mock metric",
+            },
+          ],
+        },
+      };
+      mockedUseStore.mockReturnValue({ report });
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        bodyRows: [],
+        footRows: [],
+        report,
+        verbiage: {
+          ...mockProps.verbiage,
+          emptyTableMessage: "No Performance Indicators",
+        },
+        dynamicRowsTemplate:
+          mockDynamicRowsTemplateForKeyMetricsTableWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      expect(screen.getByText("Heading 1")).toBeVisible();
+      expect(
+        screen.queryByText("No Performance Indicators")
+      ).not.toBeInTheDocument();
+    });
+  });
+
   describe("error message", () => {
     test("table shows error message", () => {
       mockedUseStore.mockReturnValue(mockStateUserStore);

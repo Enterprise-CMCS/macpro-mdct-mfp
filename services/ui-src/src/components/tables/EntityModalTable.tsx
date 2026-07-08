@@ -125,7 +125,25 @@ export const EntityModalTable = ({
   };
 
   // Dynamic rows
-  const { generateRows } = useContext(DynamicTableContext);
+  const { generateRows, localFieldData } = useContext(DynamicTableContext);
+
+  // Determine if the user has added any dynamic rows.
+  // Only ENTITY_MODAL tables use this component, which currently is just Key Metrics.
+  const getDynamicRowEntries = (): AnyObject[] => {
+    if (!dynamicRowsTemplate) return [];
+    // For entity-scoped tables, rows live on the matching entity; otherwise at the top level.
+    const source = formData?.type
+      ? localFieldData?.[formData.type]?.find(
+          (entity: AnyObject) => entity.id === formData?.id
+        )
+      : localFieldData;
+    return source?.[dynamicRowsTemplate.id] || [];
+  };
+  const dynamicRowEntries = getDynamicRowEntries();
+
+  // Hide the table for a dynamic-rows table until at least one row is added
+  const showTable =
+    !dynamicRowsTemplate || bodyRows.length > 0 || dynamicRowEntries.length > 0;
 
   const sharedCellProps = {
     columnCount: headRows?.[0].length || 0,
@@ -165,62 +183,67 @@ export const EntityModalTable = ({
         <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
       )}
       <InlineErrorShim id={errorId}>{errorMessage}</InlineErrorShim>
-      <Table id={tableId} sx={sx.table} {...ariaProps}>
-        <TableCaption placement="top" sx={sx.captionBox}>
-          <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
-        </TableCaption>
-        <Thead>
-          {headRows.map((row, rowIndex: number) =>
-            generateRows({
-              row,
-              rowIndex,
-              section: "thead",
-              showEditHeader: true,
-              styleAsOptionalHeadRows: styleAsOptionalHeadRows,
-              ...sharedCellProps,
-            })
-          )}
-        </Thead>
-        <Tbody>
-          {bodyRows.map((row, rowIndex: number) =>
-            generateRows({
-              row,
-              rowIndex,
-              section: "tbody",
-              ...sharedCellProps,
-            })
-          )}
-          {dynamicRowsTemplate && (
-            <DynamicTableRows
-              disabled={disabled}
-              dynamicRowsTemplate={dynamicRowsTemplate}
-              emptyTableMessage={verbiage?.emptyTableMessage}
-              entityType={formData?.type}
-              formData={formData}
-              formPercentage={0}
-              hasDynamicModalForm={hasDynamicModalForm}
-              hasStaticRows={bodyRows.length > 0}
-              openDeleteEntityModal={openDeleteEntityModal}
-              openModal={openModal}
-              showEditColumn={hasDynamicModalForm}
-              tableId={tableId}
-              updatedFieldsCallback={updatedFieldsCallback}
-            />
-          )}
-        </Tbody>
-        {footRows.length > 0 && (
-          <Tfoot>
-            {footRows.map((row, rowIndex: number) =>
+      {!showTable && (
+        <Text sx={sx.emptyTableMessage}>{verbiage?.emptyTableMessage}</Text>
+      )}
+      {showTable && (
+        <Table id={tableId} sx={sx.table} {...ariaProps}>
+          <TableCaption placement="top" sx={sx.captionBox}>
+            <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
+          </TableCaption>
+          <Thead>
+            {headRows.map((row, rowIndex: number) =>
               generateRows({
                 row,
                 rowIndex,
-                section: "tfoot",
+                section: "thead",
+                showEditHeader: true,
+                styleAsOptionalHeadRows: styleAsOptionalHeadRows,
                 ...sharedCellProps,
               })
             )}
-          </Tfoot>
-        )}
-      </Table>
+          </Thead>
+          <Tbody>
+            {bodyRows.map((row, rowIndex: number) =>
+              generateRows({
+                row,
+                rowIndex,
+                section: "tbody",
+                ...sharedCellProps,
+              })
+            )}
+            {dynamicRowsTemplate && (
+              <DynamicTableRows
+                disabled={disabled}
+                dynamicRowsTemplate={dynamicRowsTemplate}
+                emptyTableMessage={verbiage?.emptyTableMessage}
+                entityType={formData?.type}
+                formData={formData}
+                formPercentage={0}
+                hasDynamicModalForm={hasDynamicModalForm}
+                hasStaticRows={bodyRows.length > 0}
+                openDeleteEntityModal={openDeleteEntityModal}
+                openModal={openModal}
+                showEditColumn={hasDynamicModalForm}
+                tableId={tableId}
+                updatedFieldsCallback={updatedFieldsCallback}
+              />
+            )}
+          </Tbody>
+          {footRows.length > 0 && (
+            <Tfoot>
+              {footRows.map((row, rowIndex: number) =>
+                generateRows({
+                  row,
+                  rowIndex,
+                  section: "tfoot",
+                  ...sharedCellProps,
+                })
+              )}
+            </Tfoot>
+          )}
+        </Table>
+      )}
 
       {dynamicRowsTemplate && hasDynamicModalForm && (
         <>
@@ -316,6 +339,11 @@ export const sx = {
     margin: 0,
     padding: 0,
     height: 0,
+  },
+  emptyTableMessage: {
+    fontWeight: "bold",
+    marginBottom: "spacer5",
+    marginTop: "spacer1",
   },
   table: {
     marginBottom: "spacer5",
