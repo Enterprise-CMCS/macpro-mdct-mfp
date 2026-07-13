@@ -3,6 +3,7 @@ import {
   queryReportMetadatasForState,
 } from "../../storage/reports";
 import { reportNames, States } from "../constants/constants";
+import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 import {
   AnyObject,
   ReportFieldData,
@@ -111,4 +112,24 @@ export const financialReportPeriodsMap = {
   2: "Q2 (Quarter 2): April 1st to June 30th",
   3: "Q3 (Quarter 3): July 1st to September 30th",
   4: "Q4 (Quarter 4): October 1st to December 31st",
+};
+
+export const testOther = async () => {
+  const abcdReport = await isFeatureFlagEnabled("abcdReport");
+  if (abcdReport) {
+    // TODO: remove after test
+  }
+  const testFeatureFlag = await isFeatureFlagEnabled("testFeatureFlag");
+  if (testFeatureFlag) {
+    // TODO: remove after test
+  }
+  const wpSarRelease2025 = await isFeatureFlagEnabled("wpSarRelease2025");
+  if (wpSarRelease2025) {
+    // TODO: remove after test
+  }
+  const fakeFeatureFlag = await isFeatureFlagEnabled("fakeFeatureFlag");
+  if (fakeFeatureFlag) {
+    // TODO: remove after test
+  }
+  return;
 };

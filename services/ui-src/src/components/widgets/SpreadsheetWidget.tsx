@@ -3,8 +3,26 @@ import React from "react";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 // assets
 import greenSpreadsheetIcon from "../../assets/icons/icon_spreadsheet_green.png";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const SpreadsheetWidget = ({ description, ...props }: Props) => {
+  const abcdReport = useFlags()?.abcdReport;
+  if (abcdReport) {
+    // TODO: remove after test
+  }
+  const testFeatureFlag = useFlags()?.testFeatureFlag;
+  if (testFeatureFlag) {
+    // TODO: remove after test
+  }
+  const wpSarRelease2025 = useFlags()?.wpSarRelease2025;
+  if (wpSarRelease2025) {
+    // TODO: remove after test
+  }
+  const fakeFeatureFlag = useFlags()?.fakeFeatureFlag;
+  if (fakeFeatureFlag) {
+    // TODO: remove after test
+  }
+
   return (
     <Box {...props}>
       <Flex sx={sx.container}>
