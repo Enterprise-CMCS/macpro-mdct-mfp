@@ -75,6 +75,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
           tableType: FormTableType.ENTITY_MODAL,
           verbiage: {
             sectionTitle: "Initiative Evaluation",
+            emptyTableMessage: "No Performance Indicators",
             subtitle: [
               {
                 type: "p",
@@ -129,7 +130,7 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
         // Initiative Evaluation
         // Key Metrics table
         sarKeyMetricsDynamicRowsTemplate,
-        // Findings and Sustainability
+        // Qualitative Findings
         {
           id: "initiativeEvaluation_describeQualitativeDetail",
           type: ReportFormFieldType.TEXTAREA,
@@ -143,8 +144,10 @@ export const stateOrTerritorySpecificInitiativesRoute: SARStateOrTerritorySpecif
             label:
               "Describe any qualitative findings that were recorded during this reporting period.",
             maxLength: 1800,
+            subsectionTitle: "Qualitative Findings",
           },
         },
+        // Findings and Sustainability
         {
           id: "initiativeEvaluation_achievedExpectedResults",
           type: ReportFormFieldType.RADIO,
