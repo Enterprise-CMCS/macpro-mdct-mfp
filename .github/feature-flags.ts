@@ -74,7 +74,7 @@ export const fixedMessage = [
   commentTag,
   "### Feature Flag Leaks",
   "",
-  "✅ No feature flag leaks found.",
+  "No feature flag leaks found ✅ ",
 ].join("\n");
 
 export const formatPrComment = (featureFlagNames: string[]) => {
