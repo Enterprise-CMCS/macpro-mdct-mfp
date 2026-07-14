@@ -19,12 +19,12 @@ export const numberOfPeopleDisenrolledFromProgramRoute: FormRoute = {
         {
           type: ReportFormFieldType.TEXT,
           content:
-            "In this section, provide information for the specified period.",
+            "Disenrolled MFP participants include individuals who have been institutionalized for 30 days or more, have died, voluntarily disenrolled from the MFP program, or have other reasons (moved out of MFP jurisdiction/state/territory, incarceration, moved to an unqualified setting, or other).",
         },
         {
           type: ReportFormFieldType.TEXT,
           content:
-            "Provide the number of MFP participants for each target population (if applicable for this reporting period), by reason for disenrollment. If more than one reason applies to an individual’s disenrollment, include the individual in the total for one reason only. Include the individual under the primary reason or, if indeterminate, the first reason listed. Enter the number of participants disenrolled for the selected “other” cause in the new fields. An additional “other” reason may be specified, if one or more participants disenrolled for reasons other than those listed.",
+            "Provide the number of MFP participants who disenrolled for each target population by reason of disenrollment. If more than one reason applies to an individual's disenrollment, provide only one reason. If one or more MFP participants disenrolled for a reason not specified, report those individuals in the 'other' reason.",
         },
       ],
     },

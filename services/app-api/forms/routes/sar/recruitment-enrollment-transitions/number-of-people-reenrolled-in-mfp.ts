@@ -18,13 +18,22 @@ export const numberOfPeopleReenrolledInMfpRoute: FormRoute = {
       info: [
         {
           type: ReportFormFieldType.TEXT,
-          content:
-            "In this section, provide information for the specified period.",
+          content: "Reenrolled MFP participants may include:",
         },
         {
           type: ReportFormFieldType.TEXT,
           content:
-            "Number of people who were disenrolled from the MFP program at any point (during this reporting period or a prior period) and re-enrolled during this reporting period.",
+            "1. Individuals who were previously enrolled in the MFP program, had an institutional stay of 30 days or more, complete the step of re-enrollment, and continue to be eligible for 365 days of MFP-covered HCBS during the current reporting period.",
+        },
+        {
+          type: ReportFormFieldType.TEXT,
+          content:
+            "2. Former MFP participants who disenrolled prior to the completion of 365 days in the demonstration for any reason. These individuals may re-enroll in MFP without meeting the requirement of 60 consecutive days in an institutional residency, provided they meet any applicable state-or territory-specific requirements for re-enrollment.",
+        },
+        {
+          type: ReportFormFieldType.TEXT,
+          content:
+            "These individuals are eligible to continue to receive MFP services for any remaining days up to the maximum 365 days of demonstration participation. Note that the period for which the individual was institutionalized should not be included in the 365 days of MFP-covered HCBS.",
         },
       ],
     },
