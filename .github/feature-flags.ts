@@ -91,7 +91,7 @@ export const formatPrComment = (featureFlagNames: string[]) => {
       commentTag,
       "### Feature Flag Leaks",
       "",
-      "⚠️ This code references feature flags that do not exist in Production. Check if code should be removed.\n",
+      "⚠️ This app references feature flags that do not exist in Production. Verify whether code is valid or if flag needs to be created.\n",
       "",
       "|File|Line|Flag|",
       "|----|----|----|",
@@ -113,7 +113,7 @@ export const formatSlackMessage = (featureFlagNames: string[]) => {
     );
 
     return [
-      ":warning: This code references feature flags that do not exist in Production. Check if code should be removed.\n",
+      ":warning: This app references feature flags that do not exist in Production. Verify whether code is valid or if flag needs to be created.\n",
       ...formattedLines,
     ].join("\n");
   }
