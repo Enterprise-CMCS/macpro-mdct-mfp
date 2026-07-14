@@ -24,7 +24,7 @@ jobs:
       - name: Create temporary package.json
         run: echo '{"type":"module"}' > package.json
       - name: Install LaunchDarkly SDK
-        run: npm install @launchdarkly/node-server-sdk
+        run: npm install @launchdarkly/node-server-sdk@9.11.3
       - name: Create leaks report
         run: |
           echo "status<<EOF" >> $GITHUB_ENV
@@ -33,7 +33,7 @@ jobs:
         env:
           LD_SDK_KEY_PROD: ${{ secrets.LD_SDK_KEY_PROD }}
       - name: Slack notification
-        if: env.hasKey == 'true' && env.SLACK_MESSAGE
+        if: env.hasKey == 'true' && env.SLACK_MESSAGE != ''
         uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2
         env:
           hasKey: ${{ secrets.LD_SDK_KEY_PROD != '' }}
