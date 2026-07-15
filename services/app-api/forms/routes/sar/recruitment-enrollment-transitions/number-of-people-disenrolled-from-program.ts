@@ -24,7 +24,7 @@ export const numberOfPeopleDisenrolledFromProgramRoute: FormRoute = {
         {
           type: ReportFormFieldType.TEXT,
           content:
-            "Provide the number of MFP participants who disenrolled for each target population by reason of disenrollment. If more than one reason applies to an individual's disenrollment, provide only one reason. If one or more MFP participants disenrolled for a reason not specified, report those individuals in the 'other' reason.",
+            'Provide the number of MFP participants who disenrolled for each target population by reason of disenrollment. If more than one reason applies to an individual\'s disenrollment, provide only one reason. If one or more MFP participants disenrolled for a reason not specified, report those individuals in the "other" reason.',
         },
       ],
     },

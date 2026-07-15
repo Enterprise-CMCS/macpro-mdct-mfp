@@ -28,7 +28,7 @@ export const numberOfPeopleReenrolledInMfpRoute: FormRoute = {
         {
           type: ReportFormFieldType.TEXT,
           content:
-            "2. Former MFP participants who disenrolled prior to the completion of 365 days in the demonstration for any reason. These individuals may re-enroll in MFP without meeting the requirement of 60 consecutive days in an institutional residency, provided they meet any applicable state-or territory-specific requirements for re-enrollment.",
+            "2. Former MFP participants who disenrolled prior to the completion of 365 days in the demonstration for any reason. These individuals may re-enroll in MFP without meeting the requirement of 60 consecutive days in an institutional residency, provided they meet any applicable state- or territory-specific requirements for re-enrollment.",
         },
         {
           type: ReportFormFieldType.TEXT,
