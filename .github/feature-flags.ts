@@ -1,8 +1,7 @@
-#!/usr/bin/env node
 import * as LD from "@launchdarkly/node-server-sdk";
 import { execFileSync } from "node:child_process";
 
-const getLinesWithFlags = (featureFlagNames: string[]) => {
+function getLinesWithFlags(featureFlagNames: string[]) {
   const commitSha = process.env.GITHUB_SHA || "main";
   const serverUrl = process.env.GITHUB_SERVER_URL || "https://github.com";
   const repoName = process.env.GITHUB_REPOSITORY;
@@ -39,7 +38,7 @@ const getLinesWithFlags = (featureFlagNames: string[]) => {
     const matches = line.match(/^([^:]+):([^:]+):(.*)$/);
     if (!matches) return;
 
-    const [, fileName, lineNumber, matchingCode] = matches;
+    const [_, fileName, lineNumber, matchingCode] = matches;
 
     const trimmedCode = matchingCode.trim();
 
@@ -66,7 +65,7 @@ const getLinesWithFlags = (featureFlagNames: string[]) => {
   });
 
   return lines;
-};
+}
 
 export const commentTag = "<!-- pr-feature-flag-leaks -->";
 
@@ -77,7 +76,7 @@ export const fixedMessage = [
   "No feature flag leaks found ✅ ",
 ].join("\n");
 
-export const formatPrComment = (featureFlagNames: string[]) => {
+export function formatPrComment(featureFlagNames: string[]) {
   const lines = getLinesWithFlags(featureFlagNames);
 
   if (lines.length > 0) {
@@ -100,9 +99,9 @@ export const formatPrComment = (featureFlagNames: string[]) => {
   }
 
   return null;
-};
+}
 
-export const formatSlackMessage = (featureFlagNames: string[]) => {
+export function formatSlackMessage(featureFlagNames: string[]) {
   const lines = getLinesWithFlags(featureFlagNames);
 
   if (lines.length > 0) {
@@ -119,9 +118,9 @@ export const formatSlackMessage = (featureFlagNames: string[]) => {
   }
 
   return "";
-};
+}
 
-export const getLaunchDarklyClient = async () => {
+export async function getLaunchDarklyClient() {
   const sdkKey = process.env.LD_SDK_KEY_PROD;
 
   if (!sdkKey) {
@@ -143,4 +142,4 @@ export const getLaunchDarklyClient = async () => {
     console.log("Error connecting to LaunchDarkly.");
     return;
   }
-};
+}
