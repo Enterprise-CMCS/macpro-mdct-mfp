@@ -131,5 +131,10 @@ export const testOther = async () => {
   if (fakeFeatureFlag) {
     // TODO: remove after test
   }
+
+  const fakeFeatureFlag2 = await isFeatureFlagEnabled("fakeFeatureFlag2");
+  if (fakeFeatureFlag2) {
+    // TODO: remove after test
+  }
   return;
 };
