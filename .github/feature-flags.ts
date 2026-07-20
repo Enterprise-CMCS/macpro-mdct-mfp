@@ -143,7 +143,8 @@ export function formatLeaksMessage(featureFlagNames: string[]) {
     return [`:warning: ${warningMessage}`, "", ...formattedLines].join("\n");
   }
 
-  return null;
+  // GitHub Actions uses empty strings for falsy
+  return "";
 }
 
 export async function getLaunchDarklyClient() {
