@@ -76,7 +76,8 @@ function getLinesWithFlags(featureFlagNames: string[]) {
     });
 
     return lines;
-  } catch {
+  } catch (error) {
+    console.error(error);
     return [];
   }
 }
@@ -142,7 +143,7 @@ export function formatLeaksMessage(featureFlagNames: string[]) {
     return [`:warning: ${warningMessage}`, "", ...formattedLines].join("\n");
   }
 
-  return "";
+  return null;
 }
 
 export async function getLaunchDarklyClient() {
