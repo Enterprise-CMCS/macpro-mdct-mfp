@@ -155,7 +155,7 @@ const keyMetricsModalFieldsToReturn = keyMetricsDynamicFieldsToReturn.map(
         forTableOnly: false,
       },
     };
-  },
+  }
 );
 
 export const keyMetricsDynamicFieldValidations = {

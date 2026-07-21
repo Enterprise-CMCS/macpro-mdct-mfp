@@ -15,7 +15,12 @@ import {
   ReportStatus,
 } from "types";
 // utils
-import { autosaveFieldData, getAutosaveFields, useStore } from "utils";
+import {
+  autosaveFieldData,
+  getAutosaveFields,
+  trackAutosave,
+  useStore,
+} from "utils";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
@@ -33,7 +38,7 @@ export const DynamicField = ({
   rows = 3,
 }: Props) => {
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
-  const { report, selectedEntity, setAutosaveState } = useStore();
+  const { report, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
   const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>([]);
@@ -104,7 +109,6 @@ export const DynamicField = ({
     form.trigger(name);
 
     if (autosave) {
-      setAutosaveState(true);
       const fields = getAutosaveFields({
         name,
         type: ReportFormFieldType.DYNAMIC,
@@ -123,18 +127,18 @@ export const DynamicField = ({
         fieldData,
       };
       const user = { userName: full_name, state };
-      await autosaveFieldData({
-        form,
-        fields,
-        report: reportArgs,
-        user,
-        entityContext: {
-          selectedEntity,
-          prepareEntityPayload,
-        },
-      }).finally(() => {
-        setAutosaveState(false);
-      });
+      await trackAutosave(
+        autosaveFieldData({
+          form,
+          fields,
+          report: reportArgs,
+          user,
+          entityContext: {
+            selectedEntity,
+            prepareEntityPayload,
+          },
+        })
+      );
     }
   };
 

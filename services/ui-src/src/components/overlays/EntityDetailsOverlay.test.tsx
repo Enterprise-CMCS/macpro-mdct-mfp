@@ -37,6 +37,7 @@ jest.mock("utils/autosave/autosave", () => ({
     ];
   }),
   autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
+  trackAutosave: jest.fn().mockImplementation((promise) => promise),
 }));
 
 //mock closeout status to enable closeout button

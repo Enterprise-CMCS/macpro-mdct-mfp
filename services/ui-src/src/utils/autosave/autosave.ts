@@ -1,5 +1,6 @@
 import { FieldValues, UseFormReturn } from "react-hook-form";
-import { AutosaveField, EntityShape, ReportStatus } from "types";
+import { AutosaveField, EntityShape, ReportShape, ReportStatus } from "types";
+import { useStore } from "utils/state/useStore";
 
 type FieldValue = any;
 
@@ -136,4 +137,44 @@ export const autosaveFieldData = async ({
 export const isFieldChanged = (field: FieldInfo) => {
   const { value, hydrationValue } = field;
   return value !== hydrationValue;
+};
+
+/*
+ * Field autosaves and explicit saves (such as the "Save & return" button)
+ * each PUT the full entity array, and the last write wins. A save that
+ * overlaps another can silently erase its changes. To prevent that,
+ * every autosave is registered here and explicit saves wait for all
+ * of them to finish.
+ */
+const inFlightAutosaves = new Set<Promise<void>>();
+
+const updateSavingIndicator = () => {
+  useStore.getState?.()?.setAutosaveState(inFlightAutosaves.size > 0);
+};
+
+// Registers an autosave as in-flight until it settles.
+export const trackAutosave = async (autosave: Promise<void>): Promise<void> => {
+  inFlightAutosaves.add(autosave);
+  updateSavingIndicator();
+  try {
+    await autosave;
+  } finally {
+    inFlightAutosaves.delete(autosave);
+    updateSavingIndicator();
+  }
+};
+
+// Waits until no autosaves are in flight (new ones may start mid-wait).
+export const waitForAutosaves = async (): Promise<void> => {
+  while (inFlightAutosaves.size > 0) {
+    await Promise.allSettled(inFlightAutosaves);
+  }
+};
+
+// Waits for in-flight autosaves, then returns the store's newest report
+export const waitForAutosavesAndGetReport = async (
+  fallbackReport: ReportShape
+): Promise<ReportShape> => {
+  await waitForAutosaves();
+  return useStore.getState?.()?.report ?? fallbackReport;
 };

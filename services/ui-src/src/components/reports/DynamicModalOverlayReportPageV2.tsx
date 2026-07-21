@@ -32,6 +32,7 @@ import {
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
+  waitForAutosavesAndGetReport,
 } from "utils";
 
 export const DynamicModalOverlayReportPageV2 = ({
@@ -90,13 +91,14 @@ export const DynamicModalOverlayReportPageV2 = ({
   const onSubmit = async (enteredData: AnyObject) => {
     if (userIsEndUser) {
       setSubmitting(true);
+      const latestReport = await waitForAutosavesAndGetReport(report);
       const reportKeys = {
-        reportType: report.reportType,
+        reportType: latestReport.reportType,
         state,
-        id: report.id,
+        id: latestReport.id,
       };
-      const currentEntities = [...(report.fieldData[entityType] || [])];
-      const selectedEntityIndex = report.fieldData[entityType].findIndex(
+      const currentEntities = [...(latestReport.fieldData[entityType] || [])];
+      const selectedEntityIndex = currentEntities.findIndex(
         (entity: EntityShape) => entity.id === selectedEntity?.id
       );
       const nonTableFields = form.fields
@@ -108,14 +110,14 @@ export const DynamicModalOverlayReportPageV2 = ({
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
-      const newEntities = currentEntities;
+      const newEntities = [...currentEntities];
       newEntities[selectedEntityIndex] = newEntity;
       newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
         newEntities[selectedEntityIndex],
         entriesToClear
       );
       const shouldSave = entityWasUpdated(
-        reportFieldDataEntities[selectedEntityIndex],
+        currentEntities[selectedEntityIndex],
         newEntity
       );
       if (shouldSave) {
