@@ -9,7 +9,7 @@ export const isClosedInitiative = (data?: AnyObject) => {
   return Boolean(
     closeOutSelected ||
     data?.closeOutInformation_actualEndDate ||
-    data?.closeOutInformation_initiativeStatus?.length > 0,
+    data?.closeOutInformation_initiativeStatus?.length > 0
   );
 };
 

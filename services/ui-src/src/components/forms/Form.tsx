@@ -69,7 +69,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     validateOnRender,
     ...props
   },
-  ref?,
+  ref?
 ) {
   const { editableByAdmins, fields, options, tables = [] } = formJson;
 
@@ -107,7 +107,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
 
   // will run if any validation errors exist on form submission
   const onErrorHandler: SubmitErrorHandler<FieldValues> = (
-    errors: AnyObject,
+    errors: AnyObject
   ) => {
     // sort errors in order of registration/page display
     const sortedErrors: string[] = sortFormErrors(formValidationSchema, errors);
@@ -116,7 +116,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
 
     // Get input with aria-invalid
     const elementByNameAndAria = document.querySelector(
-      `[name^='${firstError}'][aria-invalid="true"]`,
+      `[name^='${firstError}'][aria-invalid="true"]`
     );
     // Choice lists don't use aria-invalid
     const elementByName = document.querySelector(`[name^='${firstError}']`);
@@ -136,13 +136,13 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
       updateRenderFields(report!, fields, formData),
-      formData,
+      formData
     );
     const updateFieldsToRenderWithAriaLabels = (
-      fieldsToRender: FormField | FormLayoutElement[],
+      fieldsToRender: FormField | FormLayoutElement[]
     ) => {
       const fieldsToRenderWithAriaLabels = JSON.parse(
-        JSON.stringify(fieldsToRender),
+        JSON.stringify(fieldsToRender)
       );
       let choiceList: [] =
         fieldsToRenderWithAriaLabels[1] &&
@@ -151,7 +151,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
       //add aria label to hint hint
       sanitizeAndParseHtml(
         fieldsToRenderWithAriaLabels[1] &&
-          fieldsToRenderWithAriaLabels[1].props.hint,
+          fieldsToRenderWithAriaLabels[1].props.hint
       );
 
       // add aria label to choicelist
@@ -164,10 +164,10 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
             let newOption = sanitizeAndParseHtml(
               `${choice?.label.slice(
                 0,
-                asteriskIndex,
+                asteriskIndex
               )} <span aria-label="(required topic at least once across all initiatives)"> ${choice?.label.charAt(
-                asteriskIndex,
-              )}</span>${choice?.label.slice(asteriskIndex + 1)}`,
+                asteriskIndex
+              )}</span>${choice?.label.slice(asteriskIndex + 1)}`
             );
             choice.label = newOption;
           }
@@ -182,7 +182,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
         disabled: fieldInputDisabled,
         autosave,
         validateOnRender,
-      },
+      }
     );
   };
 
@@ -258,7 +258,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
 
   const renderFieldOrTable = (
     fields: (FormField | FormLayoutElement)[],
-    tables: FormTable[],
+    tables: FormTable[]
   ) => {
     const renderedTableIds = new Set<string>();
     let tableIndex = 0;
@@ -323,7 +323,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
       (errors: AnyObject) => {
         const formErrors = Object.keys(errors).filter((key) => {
           const currentFormData = report?.fieldData?.[formData.type]?.find(
-            (t: AnyObject) => t.id === formData.id,
+            (t: AnyObject) => t.id === formData.id
           );
           const hasTableError = tableFieldIds.includes(key);
           const hasTableData = currentFormData?.[key]?.length > 0;
@@ -343,7 +343,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
         }
 
         onError ? onError(errors) : onErrorHandler(errors);
-      },
+      }
     )(e);
   };
 
@@ -353,7 +353,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     () =>
       ({
         requestSubmit: submit,
-      }) as any,
+      }) as any
   );
 
   return (
