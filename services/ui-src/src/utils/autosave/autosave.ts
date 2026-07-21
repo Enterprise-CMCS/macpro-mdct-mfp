@@ -1,5 +1,6 @@
 import { FieldValues, UseFormReturn } from "react-hook-form";
-import { AutosaveField, EntityShape, ReportStatus } from "types";
+import { AutosaveField, EntityShape, ReportShape, ReportStatus } from "types";
+import { useStore } from "utils/state/useStore";
 
 type FieldValue = any;
 
@@ -136,4 +137,57 @@ export const autosaveFieldData = async ({
 export const isFieldChanged = (field: FieldInfo) => {
   const { value, hydrationValue } = field;
   return value !== hydrationValue;
+};
+
+/*
+ * Field autosaves and explicit saves (such as the "Save & return" button)
+ * each PUT the full entity array, and the last write wins. Running two
+ * writes concurrently lets one silently erase the other's changes.
+ *
+ * To prevent that, every write is serialized through this queue. Each write
+ * is passed as a thunk and is not invoked until it reaches the front of the
+ * queue, so it always builds its payload from the result of the write before
+ * it. Explicit saves simply wait for the queue to drain.
+ */
+let writeQueue: Promise<unknown> = Promise.resolve();
+let pendingWrites = 0;
+
+const updateSavingIndicator = () => {
+  useStore.getState?.()?.setAutosaveState(pendingWrites > 0);
+};
+
+/*
+ * Serializes a write behind any in-flight writes. Because `work` is a thunk
+ * invoked only when it reaches the front of the queue, it can read the newest
+ * store state when building its payload. Returns the write's own result so the
+ * caller can await it; queue progression is unaffected by its rejection.
+ */
+export const enqueueWrite = <T>(work: () => Promise<T>): Promise<T> => {
+  pendingWrites++;
+  updateSavingIndicator();
+  const run = writeQueue.then(work, work);
+  writeQueue = run
+    .catch(() => {})
+    .finally(() => {
+      pendingWrites--;
+      updateSavingIndicator();
+    });
+  return run;
+};
+
+// Waits for the queue to fully drain, including writes enqueued mid-wait.
+export const waitForAutosaves = async (): Promise<void> => {
+  let current;
+  do {
+    current = writeQueue;
+    await current;
+  } while (current !== writeQueue);
+};
+
+// Waits for in-flight writes, then returns the store's newest report
+export const waitForAutosavesAndGetReport = async (
+  fallbackReport: ReportShape
+): Promise<ReportShape> => {
+  await waitForAutosaves();
+  return useStore.getState?.()?.report ?? fallbackReport;
 };

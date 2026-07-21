@@ -37,6 +37,7 @@ jest.mock("utils/autosave/autosave", () => ({
     ];
   }),
   autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
+  enqueueWrite: jest.fn().mockImplementation((work) => work()),
 }));
 
 const entityDetailsOverlayComponent = (
