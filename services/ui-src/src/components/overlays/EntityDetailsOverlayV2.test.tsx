@@ -14,7 +14,7 @@ import {
 } from "utils/testing/setupJest";
 import { useStore } from "utils";
 import { ReportContext } from "components";
-import { EntityShape } from "types";
+import { EntityShape, ReportType } from "types";
 
 const mockCloseEntityDetailsOverlay = jest.fn();
 const mockOnSubmit = jest.fn();
@@ -67,6 +67,11 @@ const entityDetailsOverlayComponent = (
 describe("<EntityDetailsOverlayV2 />", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockedUseStore.mockReturnValue({
+      ...mockStateUserStore,
+      ...mockEntityStore,
+      setAutosaveState: jest.fn(),
+    });
   });
 
   test("renders form", () => {
@@ -176,6 +181,46 @@ describe("<EntityDetailsOverlayV2 />", () => {
       name: "Return",
     });
     expect(button).toBeVisible();
+  });
+
+  test("keeps a closed initiative editable in the SAR", async () => {
+    mockedUseStore.mockReturnValue({
+      ...mockStateUserStore,
+      ...mockEntityStore,
+      report: { reportType: ReportType.SAR } as any,
+      setAutosaveState: jest.fn(),
+    });
+    const closedEntity = {
+      ...mockEntityStore.selectedEntity,
+      isCopied: true,
+      isInitiativeClosed: true,
+    } as EntityShape;
+
+    await act(async () => {
+      await render(entityDetailsOverlayComponent(true, closedEntity));
+    });
+
+    expect(screen.getByRole("button", { name: "Save & return" })).toBeVisible();
+  });
+
+  test("locks a closed initiative in the Work Plan", async () => {
+    mockedUseStore.mockReturnValue({
+      ...mockStateUserStore,
+      ...mockEntityStore,
+      report: { reportType: ReportType.WP } as any,
+      setAutosaveState: jest.fn(),
+    });
+    const closedEntity = {
+      ...mockEntityStore.selectedEntity,
+      isCopied: true,
+      isInitiativeClosed: true,
+    } as EntityShape;
+
+    await act(async () => {
+      await render(entityDetailsOverlayComponent(true, closedEntity));
+    });
+
+    expect(screen.getByRole("button", { name: "Return" })).toBeVisible();
   });
 
   test("calls close overlay function when clicking back button", async () => {
