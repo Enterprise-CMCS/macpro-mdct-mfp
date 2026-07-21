@@ -132,7 +132,7 @@ export const DynamicField = ({
           selectedEntity,
           prepareEntityPayload,
         },
-      }).then(() => {
+      }).finally(() => {
         setAutosaveState(false);
       });
     }

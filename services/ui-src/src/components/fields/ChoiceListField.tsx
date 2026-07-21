@@ -231,7 +231,7 @@ export const ChoiceListField = ({
             selectedEntity,
             prepareEntityPayload,
           },
-        }).then(() => {
+        }).finally(() => {
           setAutosaveState(false);
         });
       }, timeInMs);

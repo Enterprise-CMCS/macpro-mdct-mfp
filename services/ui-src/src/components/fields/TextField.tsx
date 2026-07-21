@@ -133,7 +133,7 @@ export const TextField = ({
           selectedEntity,
           prepareEntityPayload,
         },
-      }).then(() => {
+      }).finally(() => {
         setAutosaveState(false);
       });
     }

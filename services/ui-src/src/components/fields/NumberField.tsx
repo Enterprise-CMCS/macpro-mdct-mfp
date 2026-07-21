@@ -165,7 +165,7 @@ export const NumberField = ({
           selectedEntity,
           prepareEntityPayload,
         },
-      }).then(() => {
+      }).finally(() => {
         setAutosaveState(false);
       });
     }

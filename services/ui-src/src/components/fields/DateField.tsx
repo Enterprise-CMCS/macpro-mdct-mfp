@@ -110,7 +110,7 @@ export const DateField = ({
           selectedEntity,
           prepareEntityPayload,
         },
-      }).then(() => {
+      }).finally(() => {
         setAutosaveState(false);
       });
     }
