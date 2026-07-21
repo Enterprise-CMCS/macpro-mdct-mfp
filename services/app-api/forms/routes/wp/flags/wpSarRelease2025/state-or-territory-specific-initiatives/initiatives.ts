@@ -503,6 +503,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
                               nested: true,
                               parentFieldName:
                                 "closeOutInformation_initiativeStatus",
+                              parentOptionId: "GUcwKDPBs8K6LY4yT1hPGD",
                             },
                           },
                         ],
@@ -523,6 +524,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
                               nested: true,
                               parentFieldName:
                                 "closeOutInformation_initiativeStatus",
+                              parentOptionId: "86SG3qhFfsZ0CAu3G4SxM5",
                             },
                           },
                         ],

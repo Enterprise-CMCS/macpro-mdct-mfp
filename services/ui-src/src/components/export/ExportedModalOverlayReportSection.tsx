@@ -98,7 +98,7 @@ export interface Props {
  * @returns array of arrays containing form field elements representing an entity step
  */
 export function getEntityStepFields(
-  entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[]
+  entitySteps: (EntityDetailsOverlayShape | OverlayModalPageShape)[],
 ) {
   const entityStepFields: (string | FormLayoutElement | FormField)[][] = [];
 
@@ -132,7 +132,7 @@ export function renderModalOverlayTableBody(
   section: ModalOverlayReportPageShape | OverlayModalPageShape,
   report: ReportShape,
   entities: EntityShape[],
-  headingLevel: HeadingLevel
+  headingLevel: HeadingLevel,
 ) {
   const reportType = report.reportType as ReportType;
   const entitySteps = getEntityStepFields(section.entitySteps ?? []);
@@ -169,7 +169,7 @@ export function renderModalOverlayTableBody(
         const overlayFormFields = updateRenderFields(
           report,
           rawOverlayFormFields,
-          entity
+          entity,
         );
 
         return (
@@ -248,7 +248,7 @@ export function renderModalOverlayTableBody(
                     //clean up title
                     step[1] = (step[1] as string).replace(
                       " (if applicable)",
-                      ""
+                      "",
                     );
                     return (
                       entity?.isInitiativeClosed && (
@@ -388,7 +388,7 @@ export function renderModalOverlayTableBody(
                         <Box key={`${step.stepType}${idx}${stepIdx}`}></Box>
                       );
                   }
-                }
+                },
               )}
           </Box>
         );
@@ -396,7 +396,7 @@ export function renderModalOverlayTableBody(
     default:
       assertExhaustive(reportType as never);
       throw new Error(
-        `The modal overlay table headers for report type '${reportType}' have not been implemented.`
+        `The modal overlay table headers for report type '${reportType}' have not been implemented.`,
       );
   }
 }
@@ -415,19 +415,28 @@ const EntityFieldsTable = ({
   const { exportVerbiage } = getReportVerbiage(report?.reportType);
   const { tableHeaders } = exportVerbiage;
 
-  // Flatten nested fields from choices.children into main fields array
-  const flattenedFields: (FormField | FormLayoutElement)[] = [];
-  fields.forEach((field) => {
-    flattenedFields.push(field);
-    const choices = field.props?.choices;
-    if (Array.isArray(choices)) {
-      choices.forEach((choice: any) => {
-        if (Array.isArray(choice.children)) {
-          flattenedFields.push(...choice.children);
-        }
-      });
-    }
-  });
+  // Flatten nested fields from choices.children into main fields array.
+  // Recurse so that fields nested more than one level deep (e.g. the close-out
+  // termination reason / alternate funding text fields, which live under a
+  // choice of closeOutInformation_initiativeStatus) are also included.
+  const flattenFields = (
+    fieldList: (FormField | FormLayoutElement)[],
+  ): (FormField | FormLayoutElement)[] => {
+    const result: (FormField | FormLayoutElement)[] = [];
+    fieldList.forEach((field) => {
+      result.push(field);
+      const choices = field.props?.choices;
+      if (Array.isArray(choices)) {
+        choices.forEach((choice: any) => {
+          if (Array.isArray(choice.children)) {
+            result.push(...flattenFields(choice.children));
+          }
+        });
+      }
+    });
+    return result;
+  };
+  const flattenedFields = flattenFields(fields);
 
   const tableRows: React.ReactElement[] = [];
   const entityType = entity.type;
@@ -461,7 +470,7 @@ const EntityFieldsTable = ({
                 {renderEntityTables([table], entity, "h5", true)}
               </Box>
             </Td>
-          </Tr>
+          </Tr>,
         );
       }
       return;
@@ -490,7 +499,7 @@ const EntityFieldsTable = ({
 
         // Find the choice definition that matches the selected ID and has children
         const choiceWithChildren = formField.props.choices.find(
-          (choice: any) => choice.id === selectedChoiceId && choice.children
+          (choice: any) => choice.id === selectedChoiceId && choice.children,
         );
 
         if (choiceWithChildren?.children?.length > 0) {
@@ -523,7 +532,7 @@ const EntityFieldsTable = ({
               <Td>
                 <Text>{choiceWithChildren.label}</Text>
               </Td>
-            </Tr>
+            </Tr>,
           );
 
           // Second row: show the selected choice label with the child value
@@ -537,7 +546,7 @@ const EntityFieldsTable = ({
               <Td>
                 <Text>{childValue || "Not answered"}</Text>
               </Td>
-            </Tr>
+            </Tr>,
           );
           return;
         }
@@ -626,7 +635,7 @@ const EntityFieldsTable = ({
               </Table>
             </Box>
           </Td>
-        </Tr>
+        </Tr>,
       );
       return;
     }
@@ -675,7 +684,7 @@ const EntityFieldsTable = ({
               </Table>
             </Box>
           </Td>
-        </Tr>
+        </Tr>,
       );
       return;
     }
@@ -715,7 +724,7 @@ const EntityFieldsTable = ({
               </Table>
             </Box>
           </Td>
-        </Tr>
+        </Tr>,
       );
       return;
     }
@@ -729,7 +738,7 @@ const EntityFieldsTable = ({
         entityType={entityType}
         entityId={entityId}
         showHintText={true}
-      />
+      />,
     );
   };
 
@@ -775,7 +784,7 @@ const EntityFieldsTable = ({
                 <Td>
                   <Text>{fieldValue || "Not answered"}</Text>
                 </Td>
-              </Tr>
+              </Tr>,
             );
           } else {
             renderFieldRow(field);

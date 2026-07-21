@@ -27,6 +27,34 @@ describe("utils/reports/initiatives", () => {
       expect(result).toBe(true);
     });
 
+    test("returns true when close-out question is answered Yes", () => {
+      const entity = {
+        closeOutInformation_closeOut: [
+          {
+            key: "closeOutInformation_closeOut-closeOutInitiativeYes",
+            value: "Yes",
+          },
+        ],
+      };
+
+      const result = isClosedInitiative(entity);
+      expect(result).toBe(true);
+    });
+
+    test("returns false when close-out question is answered No", () => {
+      const entity = {
+        closeOutInformation_closeOut: [
+          {
+            key: "closeOutInformation_closeOut-closeOutInitiativeNo",
+            value: "No",
+          },
+        ],
+      };
+
+      const result = isClosedInitiative(entity);
+      expect(result).toBe(false);
+    });
+
     test("returns false", () => {
       const result = isClosedInitiative({});
       expect(result).toBe(false);
