@@ -239,6 +239,81 @@ describe("tables/getEntityStatus", () => {
       expect(result).toBe(EntityStatuses.INCOMPLETE);
     });
 
+    test("ignores unanswered copyover-only fields for non-copied entities", () => {
+      const report = {
+        formTemplate: {
+          flatRoutes: [
+            {
+              entityType: "mockEntityType",
+              form: {
+                fields: [
+                  {
+                    id: "field1",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
+                  },
+                  {
+                    id: "closeOutField",
+                    forCopyoverOnly: true,
+                    type: ReportFormFieldType.RADIO,
+                    validation: ValidationType.RADIO,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      } as ReportShape;
+      const entity = {
+        id: "mockEntityId",
+        type: EntityType.INITIATIVE,
+        field1: "mock text data",
+      };
+      const entityType = "mockEntityType";
+
+      const result = getEntityStatus(report, entity, entityType);
+
+      expect(result).toBe(EntityStatuses.COMPLETE);
+    });
+
+    test("requires copyover-only fields for copied entities", () => {
+      const report = {
+        formTemplate: {
+          flatRoutes: [
+            {
+              entityType: "mockEntityType",
+              form: {
+                fields: [
+                  {
+                    id: "field1",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
+                  },
+                  {
+                    id: "closeOutField",
+                    forCopyoverOnly: true,
+                    type: ReportFormFieldType.RADIO,
+                    validation: ValidationType.RADIO,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      } as ReportShape;
+      const entity = {
+        id: "mockEntityId",
+        type: EntityType.INITIATIVE,
+        isCopied: true,
+        field1: "mock text data",
+      };
+      const entityType = "mockEntityType";
+
+      const result = getEntityStatus(report, entity, entityType);
+
+      expect(result).toBe(EntityStatuses.INCOMPLETE);
+    });
+
     test("returns complete status, ignoring non-matching entityType route", () => {
       const report = {
         formTemplate: {

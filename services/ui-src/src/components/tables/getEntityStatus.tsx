@@ -85,6 +85,7 @@ export const getEntityStatus = (
   const nonOptionalFields = routes.flatMap((route) =>
     formTypes
       .flatMap((formType) => route[formType]?.fields || [])
+      .filter((field) => !(field.forCopyoverOnly && !entity.isCopied))
       .filter((field) => !isFieldValidationOptional(field))
   );
 
