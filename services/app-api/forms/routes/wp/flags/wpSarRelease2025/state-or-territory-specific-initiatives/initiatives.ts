@@ -177,6 +177,8 @@ const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   dynamicModalVerbiage: {
     add: "Add Key Metric",
     edit: "Edit Key Metric",
+    subheading:
+      "Describe the metric your state or territory will use to measure progress and performance for this initiative.",
   },
   dynamicRowId: keyMetricsDynamicRowId,
   label: "Key Metrics",
