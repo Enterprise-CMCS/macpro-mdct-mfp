@@ -4,29 +4,6 @@ import { ReportFormFieldType, ValidationType } from "types";
 
 describe("utils/reports/initiatives", () => {
   describe("isClosedInitiative()", () => {
-    test("returns true for actualEndDate", () => {
-      const entity = {
-        closeOutInformation_actualEndDate: "01/01/2026",
-      };
-
-      const result = isClosedInitiative(entity);
-      expect(result).toBe(true);
-    });
-
-    test("returns true for initiativeStatus", () => {
-      const entity = {
-        closeOutInformation_initiativeStatus: [
-          {
-            key: "mockId",
-            value: "mock value",
-          },
-        ],
-      };
-
-      const result = isClosedInitiative(entity);
-      expect(result).toBe(true);
-    });
-
     test("returns true when close-out question is answered Yes", () => {
       const entity = {
         closeOutInformation_closeOut: [
@@ -55,8 +32,13 @@ describe("utils/reports/initiatives", () => {
       expect(result).toBe(false);
     });
 
-    test("returns false", () => {
+    test("returns false when the close-out question is unanswered", () => {
       const result = isClosedInitiative({});
+      expect(result).toBe(false);
+    });
+
+    test("returns false when there is no entity", () => {
+      const result = isClosedInitiative();
       expect(result).toBe(false);
     });
   });
