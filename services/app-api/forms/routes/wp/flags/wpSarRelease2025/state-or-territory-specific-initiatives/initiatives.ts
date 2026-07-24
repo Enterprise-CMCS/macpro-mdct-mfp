@@ -264,6 +264,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
               content: "Transition Benchmarks",
               props: {
                 to: "/wp/transition-benchmarks",
+                className: "ds-c-link",
               },
             },
             {
