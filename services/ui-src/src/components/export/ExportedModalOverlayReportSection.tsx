@@ -422,19 +422,16 @@ const EntityFieldsTable = ({
   const flattenFields = (
     fieldList: (FormField | FormLayoutElement)[]
   ): (FormField | FormLayoutElement)[] => {
-    const result: (FormField | FormLayoutElement)[] = [];
-    fieldList.forEach((field) => {
-      result.push(field);
-      const choices = field.props?.choices;
-      if (Array.isArray(choices)) {
-        choices.forEach((choice: any) => {
-          if (Array.isArray(choice.children)) {
-            result.push(...flattenFields(choice.children));
-          }
-        });
-      }
+    return fieldList.flatMap((field) => {
+      const choices = field.props?.choices ?? [];
+      const childFields = choices.flatMap((choice: any) => {
+        return Array.isArray(choice.children)
+          ? flattenFields(choice.children)
+          : [];
+      });
+
+      return [field, ...childFields];
     });
-    return result;
   };
   const flattenedFields = flattenFields(fields);
 
