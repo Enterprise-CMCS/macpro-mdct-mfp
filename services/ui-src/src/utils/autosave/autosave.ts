@@ -152,8 +152,8 @@ export const isFieldChanged = (field: FieldInfo) => {
 let writeQueue: Promise<unknown> = Promise.resolve();
 let pendingWrites = 0;
 
-const updateSavingIndicator = () => {
-  useStore.getState?.()?.setAutosaveState(pendingWrites > 0);
+const updateSavingIndicator = (isAutosaving: boolean) => {
+  useStore.getState?.()?.setAutosaveState(isAutosaving);
 };
 
 /*
@@ -164,13 +164,13 @@ const updateSavingIndicator = () => {
  */
 export const enqueueWrite = <T>(work: () => Promise<T>): Promise<T> => {
   pendingWrites++;
-  updateSavingIndicator();
+  updateSavingIndicator(true);
   const run = writeQueue.then(work, work);
   writeQueue = run
     .catch(() => {})
     .finally(() => {
       pendingWrites--;
-      updateSavingIndicator();
+      updateSavingIndicator(pendingWrites > 0);
     });
   return run;
 };

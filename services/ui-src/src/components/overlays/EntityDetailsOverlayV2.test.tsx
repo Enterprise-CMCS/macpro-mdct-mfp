@@ -70,7 +70,6 @@ describe("<EntityDetailsOverlayV2 />", () => {
     mockedUseStore.mockReturnValue({
       ...mockStateUserStore,
       ...mockEntityStore,
-      setAutosaveState: jest.fn(),
     });
   });
 
@@ -188,7 +187,6 @@ describe("<EntityDetailsOverlayV2 />", () => {
       ...mockStateUserStore,
       ...mockEntityStore,
       report: { reportType: ReportType.SAR } as any,
-      setAutosaveState: jest.fn(),
     });
     const closedEntity = {
       ...mockEntityStore.selectedEntity,
@@ -208,7 +206,6 @@ describe("<EntityDetailsOverlayV2 />", () => {
       ...mockStateUserStore,
       ...mockEntityStore,
       report: { reportType: ReportType.WP } as any,
-      setAutosaveState: jest.fn(),
     });
     const closedEntity = {
       ...mockEntityStore.selectedEntity,
