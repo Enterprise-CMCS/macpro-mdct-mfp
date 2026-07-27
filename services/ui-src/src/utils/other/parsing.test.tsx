@@ -8,10 +8,6 @@ import {
   parseCustomHtml,
 } from "utils";
 
-jest.mock("dompurify", () => ({
-  sanitize: jest.fn((el) => el),
-}));
-
 const mockHtmlString = "<span><em>whatever</em></span>";
 const testElementArray = [
   {

@@ -53,5 +53,13 @@ const sx = {
     ul: {
       paddingLeft: "spacer2",
     },
+    a: {
+      textDecoration: "underline",
+      color: "primary",
+      ":hover": {
+        color: "primary_darker",
+        textDecorationColor: "primary_darker",
+      },
+    },
   },
 };
