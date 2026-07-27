@@ -25,6 +25,7 @@ import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+(mockedUseStore as any).getState = jest.fn(() => mockedUseStore());
 
 jest.mock("utils/other/useBreakpoint");
 const mockUseBreakpoint = useBreakpoint as jest.MockedFunction<

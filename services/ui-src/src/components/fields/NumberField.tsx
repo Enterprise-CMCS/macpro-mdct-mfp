@@ -13,6 +13,7 @@ import {
   applyMask,
   autosaveFieldData,
   cleanAndMaskNumberValues,
+  enqueueWrite,
   getAutosaveFields,
   labelTextWithOptional,
   makeStringParseableForDatabase,
@@ -57,7 +58,7 @@ export const NumberField = ({
   const form = useFormContext();
   const fieldIsRegistered = name in form.getValues();
   const { full_name, state } = useStore().user ?? {};
-  const { report, selectedEntity, setAutosaveState } = useStore();
+  const { report, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
@@ -133,8 +134,6 @@ export const NumberField = ({
 
     // submit field data to database (inline validation is run prior to API call)
     if (autosave) {
-      // track the state of autosave in state management
-      setAutosaveState(true);
       const fields = getAutosaveFields({
         name,
         type: ReportFormFieldType.NUMBER,
@@ -156,18 +155,18 @@ export const NumberField = ({
       };
       const user = { userName: full_name, state };
 
-      await autosaveFieldData({
-        form,
-        fields: fieldsToSave,
-        report: reportArgs,
-        user,
-        entityContext: {
-          selectedEntity,
-          prepareEntityPayload,
-        },
-      }).then(() => {
-        setAutosaveState(false);
-      });
+      await enqueueWrite(() =>
+        autosaveFieldData({
+          form,
+          fields: fieldsToSave,
+          report: reportArgs,
+          user,
+          entityContext: {
+            selectedEntity,
+            prepareEntityPayload,
+          },
+        })
+      );
     }
   };
 
