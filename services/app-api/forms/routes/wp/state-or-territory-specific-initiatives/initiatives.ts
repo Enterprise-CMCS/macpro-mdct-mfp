@@ -29,9 +29,6 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           content: "previous page",
           props: {
             to: "/wp/state-or-territory-specific-initiatives/instructions",
-            style: {
-              textDecoration: "underline",
-            },
           },
         },
         {
@@ -238,7 +235,6 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                   content: "Transition Benchmarks",
                   props: {
                     to: "/wp/transition-benchmarks",
-                    className: "ds-c-link",
                   },
                 },
                 {

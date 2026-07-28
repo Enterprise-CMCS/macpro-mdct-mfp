@@ -58,9 +58,6 @@ export const errorMessageWithFmapLink = [
     content: "add FMAP Percentages",
     props: {
       to: "/financial-report/fmap-percentages",
-      style: {
-        textDecoration: "underline",
-      },
     },
   },
   {

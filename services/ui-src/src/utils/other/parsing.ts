@@ -87,6 +87,7 @@ export function createElementWithChildren(
   const elementProps = {
     key: type + uuid(),
     as,
+    className: type === "internalLink" ? "ds-c-link" : "",
     ...props,
   };
   if (element.children) {
