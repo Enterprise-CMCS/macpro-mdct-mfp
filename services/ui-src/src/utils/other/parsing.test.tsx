@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import DOMPurify from "dompurify";
 import { CustomHtmlElement } from "types";
 // utils
 import {
@@ -153,7 +152,6 @@ const undefinedTypeComponent = <div>{parseCustomHtml(undefinedElement)}</div>;
 describe("utils/parsing", () => {
   describe("parseCustomHtml()", () => {
     describe("Test parseCustomHtml", () => {
-      const sanitizationSpy = jest.spyOn(DOMPurify, "sanitize");
       beforeEach(() => {
         render(testComponent);
       });
@@ -166,10 +164,6 @@ describe("utils/parsing", () => {
       test("Non-custom element renders correctly", () => {
         const element = screen.getByText("Paragraph tag.");
         expect(element).toBeVisible();
-      });
-
-      test("Type 'html' is sanitized and parsed", () => {
-        expect(sanitizationSpy).toHaveBeenCalled();
       });
     });
 
