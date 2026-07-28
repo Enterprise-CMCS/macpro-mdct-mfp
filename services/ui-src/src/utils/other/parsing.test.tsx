@@ -1,12 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import DOMPurify from "dompurify";
 import { CustomHtmlElement } from "types";
 // utils
-import { labelTextWithOptional, parseCustomHtml } from "utils";
-
-jest.mock("dompurify", () => ({
-  sanitize: jest.fn((el) => el),
-}));
+import {
+  labelTextWithOptional,
+  parseAllowedHtml,
+  parseCustomHtml,
+} from "utils";
 
 const mockHtmlString = "<span><em>whatever</em></span>";
 const testElementArray = [
@@ -153,7 +152,6 @@ const undefinedTypeComponent = <div>{parseCustomHtml(undefinedElement)}</div>;
 describe("utils/parsing", () => {
   describe("parseCustomHtml()", () => {
     describe("Test parseCustomHtml", () => {
-      const sanitizationSpy = jest.spyOn(DOMPurify, "sanitize");
       beforeEach(() => {
         render(testComponent);
       });
@@ -166,10 +164,6 @@ describe("utils/parsing", () => {
       test("Non-custom element renders correctly", () => {
         const element = screen.getByText("Paragraph tag.");
         expect(element).toBeVisible();
-      });
-
-      test("Type 'html' is sanitized and parsed", () => {
-        expect(sanitizationSpy).toHaveBeenCalled();
       });
     });
 
@@ -239,5 +233,38 @@ describe("utils/parsing", () => {
       const optionalText = screen.getByText("(optional):");
       expect(optionalText).toBeVisible();
     });
+  });
+});
+
+describe("Test parseAllowedHtml", () => {
+  test("Should render allowed HTML tags", () => {
+    const text = `<strong>strong</strong>
+    <em>em</em>
+    <a href="https://mock.com/" target="_blank" title="notAllowed">Link</a>
+    <img src="mock.jpg" class="mock" alt="mock image" id="notAllowed">
+    <input type="text" name="notAllowed">
+    <div>Not Allowed</div>"`;
+    const sanitized = parseAllowedHtml(text);
+    render(sanitized);
+
+    const strong = screen.getByText("strong");
+    expect(strong.tagName).toBe("STRONG");
+
+    const em = screen.getByText("em");
+    expect(em.tagName).toBe("EM");
+
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("href", "https://mock.com/");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).not.toHaveAttribute("title");
+
+    const img = screen.queryByRole("img");
+    expect(img).not.toBeInTheDocument();
+
+    const input = screen.queryByRole("textbox");
+    expect(input).not.toBeInTheDocument();
+
+    const divText = screen.queryByText("Not Allowed");
+    expect(divText).not.toBeInTheDocument();
   });
 });
