@@ -61,24 +61,41 @@ export interface ReportFormField {
   validation?: ValidationType | CustomValidation | DependentFieldValidation;
 }
 
+/**
+ * A field nested under a parent choice's `children`. Supports arbitrary depth
+ * (a nested field may itself have choices with their own nested children).
+ */
+export interface NestedFormField {
+  forCopyoverOnly?: boolean;
+  id: string;
+  transformation?: Transformation;
+  props?: NestedFormFieldProps;
+  type: ReportFormFieldType;
+  validation?: NestedValidation;
+}
+
+export interface NestedFormFieldChoice {
+  id: string;
+  label: string;
+  children?: NestedFormField[];
+}
+
+export interface NestedFormFieldProps {
+  choices?: NestedFormFieldChoice[];
+  className?: string;
+  decimalPlacesToRoundTo?: number;
+  disabled?: boolean;
+  hint?: string;
+  label?: string;
+  maxLength?: number;
+  styleAsOptional?: boolean;
+  styleTitleAsOptional?: boolean;
+  subtitle?: string | CustomHtmlElement[];
+  title?: string;
+}
+
 export interface ReportFormFieldProps {
-  choices?: {
-    id: string;
-    label: string;
-    children?: {
-      id: string;
-      transformation?: Transformation;
-      props?: {
-        className?: string;
-        decimalPlacesToRoundTo?: number;
-        hint?: string;
-        label?: string;
-        maxLength?: number;
-      };
-      type: ReportFormFieldType;
-      validation?: NestedValidation;
-    }[];
-  }[];
+  choices?: NestedFormFieldChoice[];
   className?: string;
   content?: string;
   decimalPlacesToRoundTo?: number;

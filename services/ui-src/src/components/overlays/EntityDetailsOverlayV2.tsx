@@ -11,9 +11,10 @@ import {
   ErrorVerbiage,
   FormJson,
   ModalOverlayReportPageShape,
+  ReportType,
 } from "types";
 // utils
-import { isClosedInitiative, toggleOptional } from "utils";
+import { isClosedInitiative, toggleOptional, useStore } from "utils";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
@@ -39,7 +40,13 @@ export const EntityDetailsOverlayV2 = ({
     selectedEntity as EntityShape
   );
 
-  const isDisabled = disabled || Boolean(currentEntity?.isInitiativeClosed);
+  const { report } = useStore();
+  // Closed initiatives are locked in the Work Plan, but stay editable in the
+  // SAR so state users can continue reporting on them.
+  const isWP = report?.reportType === ReportType.WP;
+
+  const isDisabled =
+    disabled || Boolean(currentEntity?.isInitiativeClosed && isWP);
   const viewOnly = !editable || isDisabled;
   const getSaveButtonText = () => {
     return viewOnly ? "Return" : "Save & return";
@@ -60,11 +67,12 @@ export const EntityDetailsOverlayV2 = ({
       const isClosed = isClosedInitiative(entity);
       const fields = getFields(entity);
 
-      setAutosave(!isClosed);
+      // keep autosave on in the SAR so edits to closed initiatives persist
+      setAutosave(!isClosed || !isWP);
       setShowAlert(Boolean(entity.isCopied));
       setFormJson(toggleOptional({ ...form, fields }, isClosed));
     },
-    [form]
+    [form, isWP]
   );
 
   const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {

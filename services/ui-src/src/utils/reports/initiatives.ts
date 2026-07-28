@@ -4,10 +4,9 @@ import { AnyObject, FormJson } from "types";
 import { isFieldElement } from "utils";
 
 export const isClosedInitiative = (data?: AnyObject) => {
-  return Boolean(
-    data?.closeOutInformation_actualEndDate ||
-    data?.closeOutInformation_initiativeStatus?.length > 0
-  );
+  const closeOutSelected =
+    data?.closeOutInformation_closeOut?.[0]?.value === "Yes";
+  return Boolean(closeOutSelected);
 };
 
 export const toggleOptional = (form: FormJson, updateAlert: boolean) => {
