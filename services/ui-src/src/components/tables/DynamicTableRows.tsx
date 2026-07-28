@@ -69,14 +69,24 @@ export const DynamicTableRows = ({
     }
   }, [localFieldData]);
 
-  // Scroll to newly added row
+  // Scroll to newly added row and focus first interactive element
   useEffect(() => {
     if (focusedRowIndex === null) return;
 
-    rowRefs.current[focusedRowIndex]?.scrollIntoView({
+    const rowElement = rowRefs.current[focusedRowIndex];
+    if (!rowElement) return;
+
+    rowElement.scrollIntoView({
       behavior: "smooth",
       block: "center",
     });
+
+    setTimeout(() => {
+      const firstInput = rowElement.querySelector<HTMLElement>(
+        'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])'
+      );
+      firstInput?.focus();
+    }, 100);
   }, [focusedRowIndex, localDynamicRows]);
 
   useEffect(() => {
