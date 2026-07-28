@@ -112,6 +112,7 @@ export const SummationTable = ({
               row,
               rowIndex,
               section: "thead",
+              showEditHeader: true,
               ...sharedCellProps,
             })
           )}

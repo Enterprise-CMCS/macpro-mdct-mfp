@@ -192,6 +192,7 @@ export const CalculationTable = ({
               row,
               rowIndex,
               section: "thead",
+              showEditHeader: true,
               ...sharedCellProps,
             })
           )}

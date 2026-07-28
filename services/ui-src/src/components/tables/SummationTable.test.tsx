@@ -214,6 +214,21 @@ describe("<SummationTable />", () => {
       const updatedRows = tbody?.querySelectorAll("tr");
       expect(updatedRows).toHaveLength(1);
     });
+
+    test("renders a visible Actions column header", () => {
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        dynamicRowsTemplate: mockDynamicRowsTemplate,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const actionsHeader = screen.getByRole("columnheader", {
+        name: "Actions",
+      });
+      expect(actionsHeader).toBeVisible();
+    });
   });
 
   testA11yAct(tableComponent());
