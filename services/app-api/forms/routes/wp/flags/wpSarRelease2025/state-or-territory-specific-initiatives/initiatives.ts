@@ -663,9 +663,6 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
           content: "previous page",
           props: {
             to: "/wp/state-or-territory-specific-initiatives/instructions",
-            style: {
-              textDecoration: "underline",
-            },
           },
         },
         {

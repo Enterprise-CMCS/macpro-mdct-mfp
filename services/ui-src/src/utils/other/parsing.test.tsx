@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import { CustomHtmlElement } from "types";
 // utils
 import {
@@ -16,9 +17,16 @@ const testElementArray = [
   },
   {
     type: "externalLink",
-    content: "with link",
+    content: "with external link",
     props: {
       href: "mockURL.com",
+    },
+  },
+  {
+    type: "internalLink",
+    content: "with internal link",
+    props: {
+      to: "/mock-path",
     },
   },
   {
@@ -153,12 +161,22 @@ describe("utils/parsing", () => {
   describe("parseCustomHtml()", () => {
     describe("Test parseCustomHtml", () => {
       beforeEach(() => {
-        render(testComponent);
+        render(<MemoryRouter>{testComponent}</MemoryRouter>);
       });
 
       test("Custom element renders correctly", () => {
-        const link = screen.getByText("with link");
+        const link = screen.getByRole("link", { name: "with external link" });
         expect(link).toBeVisible();
+      });
+
+      test("internalLink type renders with ds-c-link className by default", () => {
+        const link = screen.getByRole("link", { name: "with internal link" });
+        expect(link).toHaveClass("ds-c-link");
+      });
+
+      test("externalLink type does not get ds-c-link className by default", () => {
+        const link = screen.getByRole("link", { name: "with external link" });
+        expect(link).not.toHaveClass("ds-c-link");
       });
 
       test("Non-custom element renders correctly", () => {
@@ -205,6 +223,30 @@ describe("utils/parsing", () => {
       test("Should handle and convert undefined element type to text", () => {
         const element = screen.getByText("Undefined element");
         expect(element).toBeVisible();
+      });
+    });
+
+    describe("internalLink className override", () => {
+      test("explicit className in props overrides default ds-c-link for internalLink", () => {
+        const overrideElement = [
+          {
+            type: "internalLink",
+            content: "custom styled link",
+            props: {
+              to: "/mock-path",
+              className: "custom-class",
+            },
+          },
+        ];
+        render(
+          <MemoryRouter>
+            <div>{parseCustomHtml(overrideElement)}</div>
+          </MemoryRouter>
+        );
+
+        const link = screen.getByRole("link", { name: "custom styled link" });
+        expect(link).toHaveClass("custom-class");
+        expect(link).not.toHaveClass("ds-c-link");
       });
     });
   });
