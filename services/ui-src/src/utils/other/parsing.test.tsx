@@ -267,7 +267,7 @@ describe("Test parseAllowedHtml", () => {
     const img = screen.queryByRole("img");
     expect(img).not.toBeInTheDocument();
 
-    const input = screen.queryByRole("input");
+    const input = screen.queryByRole("textbox");
     expect(input).not.toBeInTheDocument();
 
     const divText = screen.queryByText("Not Allowed");
