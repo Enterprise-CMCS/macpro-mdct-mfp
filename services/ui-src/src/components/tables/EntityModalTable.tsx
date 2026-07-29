@@ -197,7 +197,6 @@ export const EntityModalTable = ({
                 row,
                 rowIndex,
                 section: "thead",
-                showEditHeader: true,
                 styleAsOptionalHeadRows: styleAsOptionalHeadRows,
                 ...sharedCellProps,
               })

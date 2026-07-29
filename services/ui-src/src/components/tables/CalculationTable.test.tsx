@@ -448,21 +448,6 @@ describe("<CalculationTable />", () => {
         });
       });
     });
-
-    test("renders a visible Actions column header", () => {
-      mockGetValues(undefined);
-      const updatedProps = {
-        ...mockProps,
-        dynamicRowsTemplate: mockDynamicRowsTemplate,
-      };
-
-      render(tableComponent(updatedProps));
-
-      const actionsHeader = screen.getByRole("columnheader", {
-        name: "Actions",
-      });
-      expect(actionsHeader).toBeVisible();
-    });
   });
 
   testA11yAct(tableComponent());

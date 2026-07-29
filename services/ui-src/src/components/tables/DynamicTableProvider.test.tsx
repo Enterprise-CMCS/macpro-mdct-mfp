@@ -405,6 +405,7 @@ const TestComponent = () => {
         <Thead>
           {generateRows({
             columnCount: 3,
+            dynamicRowsTemplate,
             row: [
               "Total Computable",
               "Total State / Territory Share",
@@ -425,6 +426,19 @@ const TestComponent = () => {
             section: "tbody",
           })}
         </Tbody>
+      </Table>
+
+      <Table aria-label="Table 3">
+        <Thead>
+          {generateRows({
+            columnCount: 3,
+            dynamicRowsTemplate,
+            row: ["Heading A", "Heading B", "Heading C"],
+            rowIndex: 0,
+            section: "thead",
+            showEditHeader: false,
+          })}
+        </Thead>
       </Table>
     </div>
   );
@@ -630,7 +644,7 @@ describe("<DynamicTableProvider />", () => {
   test("generateRows() - thead", async () => {
     const table = screen.getByRole("table", { name: "Table 1" });
     const row = within(table).getByRole("row", {
-      name: "Total Computable Total State / Territory Share Total Federal Share",
+      name: "Total Computable Total State / Territory Share Total Federal Share Actions",
     });
     expect(row).toBeVisible();
 
@@ -644,6 +658,28 @@ describe("<DynamicTableProvider />", () => {
     });
     const styles = getComputedStyle(rightAligned);
     expect(styles.textAlign).toBe("right");
+  });
+
+  test("generateRows() - thead renders a visible Actions header by default", async () => {
+    const table = screen.getByRole("table", { name: "Table 1" });
+    const actionsHeader = within(table).getByRole("columnheader", {
+      name: "Actions",
+    });
+    expect(actionsHeader.tagName).toBe("TH");
+    // Rendered as plain text, not visually hidden
+    expect(actionsHeader.querySelector("span")).toBeNull();
+    expect(actionsHeader).toHaveTextContent("Actions");
+  });
+
+  test("generateRows() - thead hides the Actions header when showEditHeader is false", async () => {
+    const table = screen.getByRole("table", { name: "Table 3" });
+    const actionsHeader = within(table).getByRole("columnheader", {
+      name: "Actions",
+    });
+    expect(actionsHeader.tagName).toBe("TH");
+    // Rendered inside a visually hidden wrapper for assistive technology
+    expect(actionsHeader.querySelector("span")).not.toBeNull();
+    expect(actionsHeader).toHaveTextContent("Actions");
   });
 
   test("generateRows() - tbody", async () => {
