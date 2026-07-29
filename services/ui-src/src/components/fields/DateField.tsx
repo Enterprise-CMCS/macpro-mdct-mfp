@@ -13,6 +13,7 @@ import {
   parseCustomHtml,
   getAutosaveFields,
   autosaveFieldData,
+  enqueueWrite,
   useStore,
 } from "utils";
 
@@ -31,7 +32,7 @@ export const DateField = ({
   const defaultValue = "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
-  const { report, selectedEntity, setAutosaveState } = useStore();
+  const { report, selectedEntity } = useStore();
   const { full_name, state } = useStore().user ?? {};
 
   const { updateReport } = useContext(ReportContext);
@@ -86,8 +87,6 @@ export const DateField = ({
 
     //submit field data to database
     if (autosave) {
-      //track the state of autosave in state management
-      setAutosaveState(true);
       const fields = getAutosaveFields({
         name,
         type: "date",
@@ -101,18 +100,18 @@ export const DateField = ({
         updateReport,
       };
       const user = { userName: full_name, state };
-      await autosaveFieldData({
-        form,
-        fields,
-        report: reportArgs,
-        user,
-        entityContext: {
-          selectedEntity,
-          prepareEntityPayload,
-        },
-      }).then(() => {
-        setAutosaveState(false);
-      });
+      await enqueueWrite(() =>
+        autosaveFieldData({
+          form,
+          fields,
+          report: reportArgs,
+          user,
+          entityContext: {
+            selectedEntity,
+            prepareEntityPayload,
+          },
+        })
+      );
     }
   };
 

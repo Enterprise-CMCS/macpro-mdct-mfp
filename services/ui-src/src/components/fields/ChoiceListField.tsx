@@ -6,6 +6,7 @@ import { Box, SystemStyleObject } from "@chakra-ui/react";
 // utils
 import {
   autosaveFieldData,
+  enqueueWrite,
   formFieldFactory,
   getAutosaveFields,
   labelTextWithOptional,
@@ -42,7 +43,7 @@ export const ChoiceListField = ({
 
   const { state, full_name } = useStore().user ?? {};
 
-  const { report, selectedEntity, setAutosaveState, editable } = useStore();
+  const { report, selectedEntity, editable } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
@@ -187,11 +188,10 @@ export const ChoiceListField = ({
   // if should autosave, submit field data to database on component blur
   const onComponentBlurHandler = () => {
     if (autosave) {
-      //track the state of autosave in state management
-      setAutosaveState(true);
       const timeInMs = 200;
-      // Timeout because the CMSDS ChoiceList component relies on timeouts to assert its own focus, and we're stuck behind its update
-      setTimeout(async () => {
+      // Delay because the CMSDS ChoiceList component relies on timeouts to assert its own focus, and we're stuck behind its update
+      const debouncedAutosave = async () => {
+        await new Promise((resolve) => setTimeout(resolve, timeInMs));
         const fields = getAutosaveFields({
           name,
           type,
@@ -231,10 +231,11 @@ export const ChoiceListField = ({
             selectedEntity,
             prepareEntityPayload,
           },
-        }).then(() => {
-          setAutosaveState(false);
         });
-      }, timeInMs);
+      };
+      // enqueued as a thunk so the debounce runs inside the serialized write
+      // and explicit saves wait out the delay too
+      enqueueWrite(debouncedAutosave);
     }
   };
 

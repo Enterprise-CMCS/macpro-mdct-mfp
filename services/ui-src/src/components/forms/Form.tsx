@@ -457,6 +457,10 @@ const sx = {
     ".ds-c-fieldset, label": {
       marginTop: "spacer2",
     },
+    // choice labels align with their own input, not the nested field offset
+    ".ds-c-choice-wrapper label": {
+      marginTop: "var(--choice-label__top-offset)",
+    },
   },
   // optional text
   ".optional-text": {

@@ -177,6 +177,8 @@ const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   dynamicModalVerbiage: {
     add: "Add Key Metric",
     edit: "Edit Key Metric",
+    subheading:
+      "Describe the metric your state or territory will use to measure progress and performance for this initiative.",
   },
   dynamicRowId: keyMetricsDynamicRowId,
   label: "Key Metrics",
@@ -424,79 +426,119 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
       // Close-out
       {
         forCopyoverOnly: true,
-        id: "closeOutInformation_projectedEndDate",
-        type: ReportFormFieldType.DATE,
-        validation: ValidationType.DATE_OPTIONAL,
+        id: "closeOutInformation_closeOut",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
-          disabled: true,
-          hint: "Auto-populates from “I. Define initiative”.",
-          label: "Projected end date",
-          styleAsOptional: true,
-          styleTitleAsOptional: true,
+          label: "Do you want to close out this initiative?",
           subtitle:
             "Complete for initiatives that end during the upcoming semi-annual reporting period.",
           title: "Close-out {{initiativeName}}",
-        },
-      },
-      {
-        forCopyoverOnly: true,
-        id: "closeOutInformation_actualEndDate",
-        type: ReportFormFieldType.DATE,
-        validation: ValidationType.DATE_OPTIONAL,
-        props: {
-          label: "Actual end date",
-          styleAsOptional: true,
-        },
-      },
-      {
-        forCopyoverOnly: true,
-        id: "closeOutInformation_initiativeStatus",
-        type: ReportFormFieldType.RADIO,
-        validation: ValidationType.RADIO_OPTIONAL,
-        props: {
-          label:
-            "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, indicate the status below:",
-          styleAsOptional: true,
           choices: [
             {
-              id: "FhAF0lzeuB4wLalyXv2BeG",
-              label: "Completed initiative",
-            },
-            {
-              id: "GUcwKDPBs8K6LY4yT1hPGD",
-              label: "Discontinued initiative",
+              id: "closeOutInitiativeYes",
+              label: "Yes",
               children: [
                 {
-                  id: "closeOutInformation_initiativeStatus-terminationReason",
-                  props: {
-                    label: "Indicate reason for termination",
-                  },
-                  type: ReportFormFieldType.TEXTAREA,
+                  forCopyoverOnly: true,
+                  id: "closeOutInformation_projectedEndDate",
+                  type: ReportFormFieldType.DATE,
                   validation: {
-                    type: ValidationType.TEXT,
+                    type: ValidationType.DATE_OPTIONAL,
                     nested: true,
-                    parentFieldName: "closeOutInformation_initiativeStatus",
+                    parentFieldName: "closeOutInformation_closeOut",
+                    parentOptionId: "closeOutInitiativeYes",
+                  },
+                  props: {
+                    disabled: true,
+                    hint: "Auto-populates from “I. Define initiative”.",
+                    label: "Projected end date",
+                    styleAsOptional: true,
+                  },
+                },
+                {
+                  forCopyoverOnly: true,
+                  id: "closeOutInformation_actualEndDate",
+                  type: ReportFormFieldType.DATE,
+                  validation: {
+                    type: ValidationType.DATE_OPTIONAL,
+                    nested: true,
+                    parentFieldName: "closeOutInformation_closeOut",
+                    parentOptionId: "closeOutInitiativeYes",
+                  },
+                  props: {
+                    label: "Actual end date",
+                    styleAsOptional: true,
+                  },
+                },
+                {
+                  forCopyoverOnly: true,
+                  id: "closeOutInformation_initiativeStatus",
+                  type: ReportFormFieldType.RADIO,
+                  validation: {
+                    type: ValidationType.RADIO_OPTIONAL,
+                    nested: true,
+                    parentFieldName: "closeOutInformation_closeOut",
+                    parentOptionId: "closeOutInitiativeYes",
+                  },
+                  props: {
+                    label:
+                      "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, indicate the status below:",
+                    styleAsOptional: true,
+                    choices: [
+                      {
+                        id: "FhAF0lzeuB4wLalyXv2BeG",
+                        label: "Completed initiative",
+                      },
+                      {
+                        id: "GUcwKDPBs8K6LY4yT1hPGD",
+                        label: "Discontinued initiative",
+                        children: [
+                          {
+                            id: "closeOutInformation_initiativeStatus-terminationReason",
+                            props: {
+                              label: "Indicate reason for termination",
+                            },
+                            type: ReportFormFieldType.TEXTAREA,
+                            validation: {
+                              type: ValidationType.TEXT,
+                              nested: true,
+                              parentFieldName:
+                                "closeOutInformation_initiativeStatus",
+                              parentOptionId: "GUcwKDPBs8K6LY4yT1hPGD",
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        id: "86SG3qhFfsZ0CAu3G4SxM5",
+                        label:
+                          "Sustaining initiative through a Medicaid authority",
+                        children: [
+                          {
+                            id: "closeOutInformation_initiativeStatus-alternateFunding",
+                            props: {
+                              label: "Indicate alternative funding source",
+                            },
+                            type: ReportFormFieldType.TEXTAREA,
+                            validation: {
+                              type: ValidationType.TEXT,
+                              nested: true,
+                              parentFieldName:
+                                "closeOutInformation_initiativeStatus",
+                              parentOptionId: "86SG3qhFfsZ0CAu3G4SxM5",
+                            },
+                          },
+                        ],
+                      },
+                    ],
                   },
                 },
               ],
             },
             {
-              id: "86SG3qhFfsZ0CAu3G4SxM5",
-              label: "Sustaining initiative through a Medicaid authority",
-              children: [
-                {
-                  id: "closeOutInformation_initiativeStatus-alternateFunding",
-                  props: {
-                    label: "Indicate alternative funding source",
-                  },
-                  type: ReportFormFieldType.TEXTAREA,
-                  validation: {
-                    type: ValidationType.TEXT,
-                    nested: true,
-                    parentFieldName: "closeOutInformation_initiativeStatus",
-                  },
-                },
-              ],
+              id: "closeOutInitiativeNo",
+              label: "No",
             },
           ],
         },
@@ -621,9 +663,6 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
           content: "previous page",
           props: {
             to: "/wp/state-or-territory-specific-initiatives/instructions",
-            style: {
-              textDecoration: "underline",
-            },
           },
         },
         {
