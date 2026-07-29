@@ -641,7 +641,7 @@ describe("<DynamicTableProvider />", () => {
     expect(screen.getByRole("heading", { name: text })).toBeVisible();
   });
 
-  test("generateRows() - thead", async () => {
+  test("generateRows() - thead", () => {
     const table = screen.getByRole("table", { name: "Table 1" });
     const row = within(table).getByRole("row", {
       name: "Total Computable Total State / Territory Share Total Federal Share Actions",
@@ -660,29 +660,35 @@ describe("<DynamicTableProvider />", () => {
     expect(styles.textAlign).toBe("right");
   });
 
-  test("generateRows() - thead renders a visible Actions header by default", async () => {
+  test("generateRows() - thead renders a visible Actions header by default", () => {
     const table = screen.getByRole("table", { name: "Table 1" });
     const actionsHeader = within(table).getByRole("columnheader", {
       name: "Actions",
     });
     expect(actionsHeader.tagName).toBe("TH");
-    // Rendered as plain text, not visually hidden
-    expect(actionsHeader.querySelector("span")).toBeNull();
-    expect(actionsHeader).toHaveTextContent("Actions");
+
+    const actionsText = within(actionsHeader).getByText("Actions");
+    const styles = getComputedStyle(actionsText);
+    // Auto height
+    expect(styles.height).toBe("");
+    expect(styles.width).toBe("7%");
   });
 
-  test("generateRows() - thead hides the Actions header when showEditHeader is false", async () => {
+  test("generateRows() - thead hides the Actions header when showEditHeader is false", () => {
     const table = screen.getByRole("table", { name: "Table 3" });
     const actionsHeader = within(table).getByRole("columnheader", {
       name: "Actions",
     });
     expect(actionsHeader.tagName).toBe("TH");
-    // Rendered inside a visually hidden wrapper for assistive technology
-    expect(actionsHeader.querySelector("span")).not.toBeNull();
-    expect(actionsHeader).toHaveTextContent("Actions");
+
+    const actionsText = within(actionsHeader).getByText("Actions");
+    const styles = getComputedStyle(actionsText);
+    // Visually hidden for assistive technology
+    expect(styles.height).toBe("1px");
+    expect(styles.width).toBe("1px");
   });
 
-  test("generateRows() - tbody", async () => {
+  test("generateRows() - tbody", () => {
     const table = screen.getByRole("table", { name: "Table 2" });
     const row = within(table).getByRole("row", {
       name: "Mock 1 Mock 2 Mock 3 Mock 4 Mock 5 Mock 6",
