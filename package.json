@@ -66,5 +66,8 @@
     "util": "^0.12.5",
     "yargs": "^17.7.2"
   },
+  "resolutions": {
+    "aws-sdk/uuid": "^11.1.1"
+  },
   "packageManager": "yarn@4.12.0"
 }

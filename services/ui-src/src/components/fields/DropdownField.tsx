@@ -7,7 +7,6 @@ import {
   Label,
 } from "@cmsgov/design-system";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
-import uuid from "react-uuid";
 // utils
 import { labelTextWithOptional, parseCustomHtml, shimComponent } from "utils";
 // types
@@ -135,7 +134,7 @@ export const DropdownField = ({
         disabled={disabled}
       >
         {formattedOptions.map((option) => (
-          <option key={uuid()} value={option.value}>
+          <option key={crypto.randomUUID()} value={option.value}>
             {option.label}
           </option>
         ))}

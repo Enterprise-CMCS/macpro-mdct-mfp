@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import uuid from "react-uuid";
 import { useFieldArray, useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
@@ -143,7 +142,7 @@ export const DynamicField = ({
   };
 
   const appendNewRecord = () => {
-    const newRecord = { id: uuid(), name: "" };
+    const newRecord = { id: crypto.randomUUID(), name: "" };
     append(newRecord);
     const newDisplayValues = [...displayValues, newRecord];
     setDisplayValues(newDisplayValues);
@@ -188,7 +187,7 @@ export const DynamicField = ({
     let newDisplayValues = [...displayValues];
     newDisplayValues.splice(index, 1);
     if (newDisplayValues.length === 0) {
-      const newEntity = { id: uuid(), name: "" };
+      const newEntity = { id: crypto.randomUUID(), name: "" };
       append(newEntity);
       newDisplayValues = [newEntity];
     }
