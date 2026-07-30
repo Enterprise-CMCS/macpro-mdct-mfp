@@ -640,6 +640,7 @@ describe("<ExportedModalOverlayReportSection />", () => {
 
     renderWithReport(propsWithStartDate, reportWithStartDate);
     expect(screen.getAllByText("Expected start date").length).toBe(2);
+    expect(screen.getAllByText("MM/DD/YYYY").length).toBe(2);
   });
 
   test("should render field with title and subtitle", () => {

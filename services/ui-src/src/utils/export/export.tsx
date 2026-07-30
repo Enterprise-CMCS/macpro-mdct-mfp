@@ -153,7 +153,7 @@ export const renderResponseData = (
   // check for and handle no response
   if (!hasResponse) {
     if (isFieldValidationOptional(formField)) {
-      return <Text>{missingEntryVerbiage}, optional</Text>;
+      return <Text>{missingEntryVerbiage}; optional</Text>;
     }
     return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;
   }

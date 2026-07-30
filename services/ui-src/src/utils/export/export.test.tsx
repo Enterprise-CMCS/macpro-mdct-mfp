@@ -121,7 +121,7 @@ describe("utils/export", () => {
 
     test("renders optional message", () => {
       render(renderResponseData(mockOptionalFormField, null));
-      expect(screen.getByText("Not answered, optional")).toBeVisible();
+      expect(screen.getByText("Not answered; optional")).toBeVisible();
     });
   });
 
