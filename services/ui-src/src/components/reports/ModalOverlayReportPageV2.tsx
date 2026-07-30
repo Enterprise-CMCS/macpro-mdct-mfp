@@ -40,6 +40,7 @@ import {
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
+  waitForAutosavesAndGetReport,
 } from "utils";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 // assets
@@ -158,13 +159,14 @@ export const ModalOverlayReportPageV2 = ({
   const onSubmit = async (enteredData: AnyObject) => {
     if (userIsEndUser) {
       setSubmitting(true);
+      const latestReport = await waitForAutosavesAndGetReport(report);
       const reportKeys = {
-        reportType: report.reportType,
+        reportType: latestReport.reportType,
         state,
-        id: report.id,
+        id: latestReport.id,
       };
-      const currentEntities = [...(report.fieldData[entityType] || [])];
-      const selectedEntityIndex = report.fieldData[entityType].findIndex(
+      const currentEntities = [...(latestReport.fieldData[entityType] || [])];
+      const selectedEntityIndex = currentEntities.findIndex(
         (entity: EntityShape) => entity.id === selectedEntity?.id
       );
       const nonTableFields = form.fields
@@ -190,7 +192,7 @@ export const ModalOverlayReportPageV2 = ({
         entriesToClear
       );
       const shouldSave = entityWasUpdated(
-        reportFieldDataEntities[selectedEntityIndex],
+        currentEntities[selectedEntityIndex],
         newEntity
       );
       if (shouldSave) {

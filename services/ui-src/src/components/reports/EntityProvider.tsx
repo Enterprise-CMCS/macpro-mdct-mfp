@@ -33,17 +33,20 @@ export const EntityProvider = ({ children }: EntityProviderProps) => {
    * @param updateData - updated entity information
    */
   const prepareEntityPayload = (updateData: AnyObject) => {
+    // read the freshest report so a queued write builds on the previous one
+    const latestReport = useStore.getState?.()?.report ?? report;
     const entityType = selectedEntity!.type;
-    const currentEntities = report?.fieldData?.[entityType];
+    const currentEntities = latestReport?.fieldData?.[entityType];
     const selectedEntityIndex = currentEntities?.findIndex(
       (x: EntityShape) => x.id === selectedEntity?.id
     );
     if (currentEntities && selectedEntityIndex > -1) {
-      const newEntity = {
+      const newEntities = [...currentEntities];
+      newEntities[selectedEntityIndex] = {
         ...currentEntities[selectedEntityIndex],
         ...updateData,
       };
-      currentEntities[selectedEntityIndex] = newEntity;
+      return newEntities;
     }
     return currentEntities;
   };

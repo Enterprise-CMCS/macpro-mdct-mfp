@@ -415,19 +415,25 @@ const EntityFieldsTable = ({
   const { exportVerbiage } = getReportVerbiage(report?.reportType);
   const { tableHeaders } = exportVerbiage;
 
-  // Flatten nested fields from choices.children into main fields array
-  const flattenedFields: (FormField | FormLayoutElement)[] = [];
-  fields.forEach((field) => {
-    flattenedFields.push(field);
-    const choices = field.props?.choices;
-    if (Array.isArray(choices)) {
-      choices.forEach((choice: any) => {
-        if (Array.isArray(choice.children)) {
-          flattenedFields.push(...choice.children);
-        }
+  // Flatten nested fields from choices.children into main fields array.
+  // Recurse so that fields nested more than one level deep (e.g. the close-out
+  // termination reason / alternate funding text fields, which live under a
+  // choice of closeOutInformation_initiativeStatus) are also included.
+  const flattenFields = (
+    fieldList: (FormField | FormLayoutElement)[]
+  ): (FormField | FormLayoutElement)[] => {
+    return fieldList.flatMap((field) => {
+      const choices = field.props?.choices ?? [];
+      const childFields = choices.flatMap((choice: any) => {
+        return Array.isArray(choice.children)
+          ? flattenFields(choice.children)
+          : [];
       });
-    }
-  });
+
+      return [field, ...childFields];
+    });
+  };
+  const flattenedFields = flattenFields(fields);
 
   const tableRows: React.ReactElement[] = [];
   const entityType = entity.type;

@@ -87,6 +87,7 @@ export function createElementWithChildren(
   const elementProps = {
     key: type + uuid(),
     as,
+    className: type === "internalLink" ? "ds-c-link" : "",
     ...props,
   };
   if (element.children) {
@@ -125,4 +126,29 @@ export const labelTextWithOptional = (label: string) => {
   return parseCustomHtml(
     `${parsedLabel}<span class='optional-text'> (optional)${colon}</span>`
   );
+};
+
+/** Parse HTML string, sanitize, and return React elements. */
+export const parseAllowedHtml = (html: string) => {
+  const sanitizedHtml = DOMPurify.sanitize(html, {
+    // Only these tags will be allowed through
+    ALLOWED_TAGS: [
+      "ul",
+      "ol",
+      "li",
+      "a",
+      "#text",
+      "strong",
+      "b",
+      "em",
+      "i",
+      "p",
+    ],
+    // On those tags, only these attributes are allowed
+    ALLOWED_ATTR: ["href", "target"],
+    // If a tag is removed, so will all its child elements & text
+    KEEP_CONTENT: false,
+  });
+  const parsedHtml = parse(sanitizedHtml);
+  return parsedHtml;
 };
