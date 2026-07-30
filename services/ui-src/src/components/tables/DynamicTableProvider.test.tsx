@@ -48,9 +48,6 @@ const mockGetValues = (returnValue: any) =>
     getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-const mockUuid = "mock-uuid";
-jest.mock("react-uuid", () => jest.fn(() => mockUuid));
-
 jest.mock("utils/autosave/autosave", () => ({
   getAutosaveFields: jest.fn().mockImplementation(() => {
     return [
@@ -439,6 +436,13 @@ const testComponent = (
 );
 
 describe("<DynamicTableProvider />", () => {
+  beforeAll(() => {
+    Object.defineProperty(global, "crypto", {
+      value: {
+        randomUUID: jest.fn(() => mockDynamicFieldId),
+      },
+    });
+  });
   beforeEach(() => {
     mockGetValues(undefined);
     render(testComponent);
@@ -572,7 +576,7 @@ describe("<DynamicTableProvider />", () => {
 
   test("addDynamicRow()", async () => {
     const button = screen.getByRole("button", { name: "addDynamicRow" });
-    const text = `addDynamicRow: ${mockUuid}`;
+    const text = `addDynamicRow: ${mockDynamicFieldId}`;
     expect(screen.queryByRole("heading", { name: text })).toBeNull();
 
     await act(async () => {

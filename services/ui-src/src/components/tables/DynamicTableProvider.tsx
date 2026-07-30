@@ -26,7 +26,6 @@ import {
   ReportShape,
 } from "types";
 // utils
-import uuid from "react-uuid";
 import {
   autosaveFieldData,
   combinedSum,
@@ -406,7 +405,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     });
     const rows = localFieldData?.[dynamicRowsTemplate.id] || [];
 
-    const newId = uuid();
+    const newId = crypto.randomUUID();
     const updatedRows = [
       ...rows,
       {

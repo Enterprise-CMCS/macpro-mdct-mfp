@@ -35,8 +35,6 @@ const entityType = mockEntityStore.selectedEntity!.type;
 const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
 
-jest.mock("react-uuid", () => jest.fn(() => "mock-eval-id-2"));
-
 const mockOverlayEntity = {
   id: "mock-eval-id",
   "mock-modal-text-field": "mock input 1",
@@ -184,6 +182,14 @@ const sarModalComponentWithSelectedEntity = (
 );
 
 describe("<AddEditOverlayEntityModal />", () => {
+  beforeAll(() => {
+    Object.defineProperty(global, "crypto", {
+      value: {
+        randomUUID: jest.fn(() => "mock-eval-id-2"),
+      },
+    });
+  });
+
   describe("Test AddEditOverlayEntityModal for WP", () => {
     beforeEach(async () => {
       mockedUseStore.mockReturnValue(mockUseStore);

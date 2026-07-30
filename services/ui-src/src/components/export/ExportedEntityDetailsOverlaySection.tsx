@@ -1,7 +1,6 @@
 // components
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
-import uuid from "react-uuid";
 // components
 import {
   ExportedEntityDetailsTable,
@@ -88,7 +87,7 @@ export function getEntityTableComponents(
     (entityStep as any)?.form?.fields || (entityStep?.slice(3) as FormField[]);
   const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
   return (
-    <Box key={uuid()}>
+    <Box key={crypto.randomUUID()}>
       <Box>
         <Heading as={headingLevel} sx={sx.stepName}>
           {title}

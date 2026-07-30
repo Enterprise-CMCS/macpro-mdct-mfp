@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import uuid from "react-uuid";
 // components
 import { Form, Modal, ReportContext } from "components";
 // types
@@ -83,7 +82,7 @@ export const AddEditKeyMetricsModal = ({
       return data;
     }, {} as AnyObject);
 
-    const dynamicFieldId = currentEntityId || uuid();
+    const dynamicFieldId = currentEntityId || crypto.randomUUID();
 
     const updatedEntity = {
       id: dynamicFieldId,
