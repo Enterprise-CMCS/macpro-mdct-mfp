@@ -306,7 +306,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     row,
     rowIndex,
     section,
-    showEditHeader = false,
+    showEditHeader = true,
     showEditColumn = true,
     styleAsOptionalHeadRows = [],
     tableId,
