@@ -539,6 +539,17 @@ const EntityFieldsTable = ({
                 <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
                   {choiceWithChildren.label}
                 </Text>
+                {childField.type === ReportFormFieldType.DATE && (
+                  <Text
+                    sx={{
+                      lineHeight: "lg",
+                      fontSize: "sm",
+                      color: "gray_dark",
+                    }}
+                  >
+                    MM/DD/YYYY
+                  </Text>
+                )}
               </Td>
               <Td>
                 <Text>{childValue || "Not answered"}</Text>

@@ -21,7 +21,6 @@ const mockCloseHandler = jest.fn();
 const mockUpdateReport = jest.fn();
 const mockSetError = jest.fn();
 
-jest.mock("react-uuid", () => jest.fn(() => "mock-id-2"));
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 jest.mock("utils/auth/useUser");
@@ -141,6 +140,14 @@ const modalComponentWithSelectedEntity = (
 );
 
 describe("<AddEditEntityModal />", () => {
+  beforeAll(() => {
+    Object.defineProperty(global, "crypto", {
+      value: {
+        randomUUID: jest.fn(() => "mock-id-2"),
+      },
+    });
+  });
+
   describe("Test AddEditEntityModal", () => {
     beforeEach(async () => {
       mockedUseStore.mockReturnValue(mockUseStore);

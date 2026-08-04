@@ -48,9 +48,6 @@ const mockGetValues = (returnValue: any) =>
     getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-const mockUuid = "mock-uuid";
-jest.mock("react-uuid", () => jest.fn(() => mockUuid));
-
 jest.mock("utils/autosave/autosave", () => ({
   getAutosaveFields: jest.fn().mockImplementation(() => {
     return [
@@ -405,6 +402,7 @@ const TestComponent = () => {
         <Thead>
           {generateRows({
             columnCount: 3,
+            dynamicRowsTemplate,
             row: [
               "Total Computable",
               "Total State / Territory Share",
@@ -426,6 +424,19 @@ const TestComponent = () => {
           })}
         </Tbody>
       </Table>
+
+      <Table aria-label="Table 3">
+        <Thead>
+          {generateRows({
+            columnCount: 3,
+            dynamicRowsTemplate,
+            row: ["Heading A", "Heading B", "Heading C"],
+            rowIndex: 0,
+            section: "thead",
+            showEditHeader: false,
+          })}
+        </Thead>
+      </Table>
     </div>
   );
 };
@@ -439,6 +450,13 @@ const testComponent = (
 );
 
 describe("<DynamicTableProvider />", () => {
+  beforeAll(() => {
+    Object.defineProperty(global, "crypto", {
+      value: {
+        randomUUID: jest.fn(() => mockDynamicFieldId),
+      },
+    });
+  });
   beforeEach(() => {
     mockGetValues(undefined);
     render(testComponent);
@@ -572,7 +590,7 @@ describe("<DynamicTableProvider />", () => {
 
   test("addDynamicRow()", async () => {
     const button = screen.getByRole("button", { name: "addDynamicRow" });
-    const text = `addDynamicRow: ${mockUuid}`;
+    const text = `addDynamicRow: ${mockDynamicFieldId}`;
     expect(screen.queryByRole("heading", { name: text })).toBeNull();
 
     await act(async () => {
@@ -627,10 +645,10 @@ describe("<DynamicTableProvider />", () => {
     expect(screen.getByRole("heading", { name: text })).toBeVisible();
   });
 
-  test("generateRows() - thead", async () => {
+  test("generateRows() - thead", () => {
     const table = screen.getByRole("table", { name: "Table 1" });
     const row = within(table).getByRole("row", {
-      name: "Total Computable Total State / Territory Share Total Federal Share",
+      name: "Total Computable Total State / Territory Share Total Federal Share Actions",
     });
     expect(row).toBeVisible();
 
@@ -646,7 +664,35 @@ describe("<DynamicTableProvider />", () => {
     expect(styles.textAlign).toBe("right");
   });
 
-  test("generateRows() - tbody", async () => {
+  test("generateRows() - thead renders a visible Actions header by default", () => {
+    const table = screen.getByRole("table", { name: "Table 1" });
+    const actionsHeader = within(table).getByRole("columnheader", {
+      name: "Actions",
+    });
+    expect(actionsHeader.tagName).toBe("TH");
+
+    const actionsText = within(actionsHeader).getByText("Actions");
+    const styles = getComputedStyle(actionsText);
+    // Auto height
+    expect(styles.height).toBe("");
+    expect(styles.width).toBe("7%");
+  });
+
+  test("generateRows() - thead hides the Actions header when showEditHeader is false", () => {
+    const table = screen.getByRole("table", { name: "Table 3" });
+    const actionsHeader = within(table).getByRole("columnheader", {
+      name: "Actions",
+    });
+    expect(actionsHeader.tagName).toBe("TH");
+
+    const actionsText = within(actionsHeader).getByText("Actions");
+    const styles = getComputedStyle(actionsText);
+    // Visually hidden for assistive technology
+    expect(styles.height).toBe("1px");
+    expect(styles.width).toBe("1px");
+  });
+
+  test("generateRows() - tbody", () => {
     const table = screen.getByRole("table", { name: "Table 2" });
     const row = within(table).getByRole("row", {
       name: "Mock 1 Mock 2 Mock 3 Mock 4 Mock 5 Mock 6",

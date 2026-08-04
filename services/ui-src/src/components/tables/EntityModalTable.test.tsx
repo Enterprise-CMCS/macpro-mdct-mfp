@@ -62,8 +62,6 @@ const mockGetValues = (returnValue: any) =>
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
 
-jest.mock("react-uuid", () => jest.fn(() => mockDynamicFieldId));
-
 jest.mock("utils/autosave/autosave", () => ({
   getAutosaveFields: jest.fn().mockImplementation(() => {
     return [
@@ -237,6 +235,13 @@ const tableComponent = (props = mockProps) => (
 );
 
 describe("<EntityModalTable />", () => {
+  beforeAll(() => {
+    Object.defineProperty(global, "crypto", {
+      value: {
+        randomUUID: jest.fn(() => mockDynamicFieldId),
+      },
+    });
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });

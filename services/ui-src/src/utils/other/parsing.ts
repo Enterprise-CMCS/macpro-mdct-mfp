@@ -20,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 // types
 import { CustomHtmlElement } from "types";
-import uuid from "react-uuid";
 
 export const customElementMap: any = {
   externalLink: Link,
@@ -55,7 +54,7 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
       let { type, content, as, props } = element;
       const elementType: string = customElementMap[type] || type;
       const elementProps = {
-        key: type + uuid(),
+        key: type + crypto.randomUUID(),
         as,
         ...props,
       };
@@ -85,7 +84,7 @@ export function createElementWithChildren(
   const { type, content, as, props } = element;
   const elementType: string = customElementMap[type] || type;
   const elementProps = {
-    key: type + uuid(),
+    key: type + crypto.randomUUID(),
     as,
     className: type === "internalLink" ? "ds-c-link" : "",
     ...props,
