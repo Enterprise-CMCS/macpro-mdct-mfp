@@ -1,6 +1,5 @@
 //note: this file is more of a temporary fix until we figure out a better way to handle deeply nested forms
 import { useContext, useState } from "react";
-import uuid from "react-uuid";
 // components
 import { Form, Modal, ReportContext } from "components";
 import { Text, Spinner } from "@chakra-ui/react";
@@ -151,7 +150,7 @@ export const AddEditOverlayEntityModal = ({
     } else {
       const newEntityData = [
         ...currentEntities,
-        { id: uuid(), ...filteredFormData },
+        { id: crypto.randomUUID(), ...filteredFormData },
       ];
 
       //using shallow update to modify the copied report data
