@@ -65,7 +65,7 @@ export const renderOverlayEntityDataCell = (
 
   if (!entity || !entity[formField.id]) {
     if (isFieldValidationOptional(formField)) {
-      return <Text>{noResponse}, optional</Text>;
+      return <Text>{noResponse}; optional</Text>;
     } else {
       return <Text sx={sx.noResponse}>{noResponse}; required</Text>;
     }
@@ -153,7 +153,7 @@ export const renderResponseData = (
   // check for and handle no response
   if (!hasResponse) {
     if (isFieldValidationOptional(formField)) {
-      return <Text>{missingEntryVerbiage}, optional</Text>;
+      return <Text>{missingEntryVerbiage}; optional</Text>;
     }
     return <Text sx={missingEntryStyle}>{missingEntryVerbiage}; required</Text>;
   }

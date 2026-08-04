@@ -1,11 +1,12 @@
 // types
-import { FormField, NumberMask, PageTypes } from "types";
+import { EntityType, FormField, NumberMask, PageTypes } from "types";
 // utils
 import {
   parseFormFieldInfo,
   renderResponseData,
   renderDefaultFieldResponse,
   renderDataCell,
+  renderOverlayEntityDataCell,
 } from "./export";
 import {
   mockFormField,
@@ -121,7 +122,7 @@ describe("utils/export", () => {
 
     test("renders optional message", () => {
       render(renderResponseData(mockOptionalFormField, null));
-      expect(screen.getByText("Not answered, optional")).toBeVisible();
+      expect(screen.getByText("Not answered; optional")).toBeVisible();
     });
   });
 
@@ -157,6 +158,46 @@ describe("utils/export", () => {
         "1.10"
       );
       expect(textField.props.children).toBe("$1.10");
+    });
+  });
+
+  describe("renderOverlayEntityDataCell()", () => {
+    test("renders required message when entity data is missing", () => {
+      const entityResponseData = [
+        {
+          id: "mockEntityId",
+          name: "mockEntityName",
+          type: EntityType.INITIATIVE,
+        },
+      ];
+
+      render(
+        renderOverlayEntityDataCell(
+          mockFormField,
+          entityResponseData,
+          "mockEntityId"
+        )
+      );
+      expect(screen.getByText("Not answered; required")).toBeVisible();
+    });
+
+    test("renders optional message when entity data is missing", () => {
+      const entityResponseData = [
+        {
+          id: "mockEntityId",
+          name: "mockEntityName",
+          type: EntityType.INITIATIVE,
+        },
+      ];
+
+      render(
+        renderOverlayEntityDataCell(
+          mockOptionalFormField,
+          entityResponseData,
+          "mockEntityId"
+        )
+      );
+      expect(screen.getByText("Not answered; optional")).toBeVisible();
     });
   });
 });
