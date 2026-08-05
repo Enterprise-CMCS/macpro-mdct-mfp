@@ -113,6 +113,32 @@ const tableComponent = (
   </RouterWrappedComponent>
 );
 
+// twelve standard quarters plus two extra, as happens when a copied
+// report carries quarters over from a prior reporting period
+const quartersBeyondTwelve = [
+  "2024Q1",
+  "2024Q2",
+  "2024Q3",
+  "2024Q4",
+  "2025Q1",
+  "2025Q2",
+  "2025Q3",
+  "2025Q4",
+  "2026Q1",
+  "2026Q2",
+  "2026Q3",
+  "2026Q4",
+  "2027Q1",
+  "2027Q2",
+];
+const buildQuarterlyProjections = (quarters: string[]) =>
+  Object.fromEntries(
+    quarters.map((quarter, index) => [
+      `quarterlyProjections${quarter}`,
+      `${index + 1}`,
+    ])
+  );
+
 describe("<ExportedModalDrawerReportSection />", () => {
   test("renders correct twelve quarters in table", async () => {
     const mock2024Q1Report = {
@@ -148,6 +174,83 @@ describe("<ExportedModalDrawerReportSection />", () => {
 
     // renders "Not answered" for each quarter given no entity data
     expect(screen.queryAllByText("Not answered").length).toBe(12);
+  });
+
+  test("renders labels for quarters beyond the original twelve", async () => {
+    const quarterlyProjections =
+      buildQuarterlyProjections(quartersBeyondTwelve);
+
+    const mockReport = {
+      ...mockReportStore,
+      report: {
+        ...mockReportStore.report,
+        reportPeriod: 1,
+        reportYear: 2024,
+        fieldData: {
+          ...mockReportFieldData,
+          entityType: [
+            {
+              ...mockReportFieldData.entityType[0],
+              ...quarterlyProjections,
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue(mockReport);
+    render(tableComponent);
+
+    // the extra quarters beyond the original twelve render with correct labels
+    expect(screen.getByText("2027 Q1")).toBeVisible();
+    expect(screen.getByText("2027 Q2")).toBeVisible();
+
+    // no cell is left blank/unlabeled for the extra quarters
+    expect(screen.queryAllByText("Not answered").length).toBe(0);
+  });
+
+  test("fills N/A for every quarter, including beyond the original twelve, for populations not applicable to MFP", async () => {
+    const quarterlyProjections =
+      buildQuarterlyProjections(quartersBeyondTwelve);
+
+    const mockReport = {
+      ...mockReportStore,
+      report: {
+        ...mockReportStore.report,
+        reportPeriod: 1,
+        reportYear: 2024,
+        fieldData: {
+          ...mockReportFieldData,
+          entityType: [
+            {
+              ...mockReportFieldData.entityType[0],
+              ...quarterlyProjections,
+            },
+            {
+              ...mockReportFieldData.entityType[0],
+              id: "mock-entity-id-not-applicable",
+              transitionBenchmarks_targetPopulationName:
+                "Not applicable population",
+              transitionBenchmarks_applicableToMfpDemonstration: [
+                {
+                  key: "transitionBenchmarks_applicableToMfpDemonstration",
+                  value: "No",
+                },
+              ],
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue(mockReport);
+    render(tableComponent);
+
+    // fourteen quarter rows, each with "N/A" for the not-applicable population,
+    // plus one more "N/A" in the "Total by Pop." footer row for that column
+    expect(screen.queryAllByText("N/A").length).toBe(
+      quartersBeyondTwelve.length + 1
+    );
   });
 
   test("renders aria labels for target populations with abbreviated names", async () => {

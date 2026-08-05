@@ -64,13 +64,23 @@ export const ExportedModalDrawerReportSection = ({
 
   const ariaLabelledAsterisk = `<span aria-label="sum of incomplete fields">*</span>`;
 
+  // a copied report can carry quarters from a prior reporting period alongside its own,
+  // so the table must size itself to however many quarters are actually present, not just 12
+  const quarterlyKeysByEntity = entities.map((entity: EntityShape) =>
+    Object.keys(entity).filter((key) => key.includes("quarterly"))
+  );
+  const numberOfQuarters = Math.max(
+    12,
+    ...quarterlyKeysByEntity.map((keys: string[]) => keys.length)
+  );
+
   // applicable quarters for report; populates left table column
   const generateQuarterLabels = () => {
     // The first quarter will be Q1 for period 1, or Q3 for period 2.
     const firstQuarterIndex = reportPeriod === 1 ? 0 : 2;
 
     // returns array of labels like ["2024 Q1", "2024 Q2", ...]
-    return Array.from({ length: 12 })
+    return Array.from({ length: numberOfQuarters })
       .map((_, index) => ({
         year: reportYear + Math.floor((firstQuarterIndex + index) / 4),
         quarter: `Q${1 + ((firstQuarterIndex + index) % 4)}`,
@@ -80,27 +90,29 @@ export const ExportedModalDrawerReportSection = ({
   const quarterLabels = generateQuarterLabels();
 
   // creates arrays of 'only' quarterly values
-  const quarterValueArray = entities.map((entity: EntityShape) => {
-    const isNotApplicableToMfp =
-      entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
-      "No";
+  const quarterValueArray = entities.map(
+    (entity: EntityShape, index: number) => {
+      const isNotApplicableToMfp =
+        entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
+        "No";
 
-    // if not applicable we populate the column with 12 "N/A" cells
-    if (isNotApplicableToMfp) {
-      return Array.from({ length: 12 }).fill("N/A");
+      // if not applicable we populate the column with "N/A" for every quarter
+      if (isNotApplicableToMfp) {
+        return Array.from({ length: numberOfQuarters }).fill("N/A");
+      }
+
+      const quarterArray = quarterlyKeysByEntity[index].map(
+        (key: string) => entity[key]
+      );
+
+      // if length of filled in data is less than expected, show "Not answered" in remaining cells
+      while (quarterArray.length < numberOfQuarters) {
+        quarterArray.push(notAnsweredText);
+      }
+
+      return quarterArray;
     }
-
-    const quarterArray = Object.keys(entity)
-      .filter((key) => key.includes("quarterly"))
-      .map((key) => entity[key]);
-
-    // if length of filled in data is not 12, show "Not answered" in remaining cells
-    while (quarterArray.length < 12) {
-      quarterArray.push(notAnsweredText);
-    }
-
-    return quarterArray;
-  });
+  );
 
   const generateFootRow = () => {
     // creates an array that totals up each each quarter column
@@ -114,9 +126,9 @@ export const ExportedModalDrawerReportSection = ({
           sum += convertToNum(item);
         }
       });
-      if (sum === 0 && isNACol.length !== 12) {
+      if (sum === 0 && isNACol.length !== column.length) {
         return "-";
-      } else if (isNACol.length === 12) {
+      } else if (isNACol.length === column.length) {
         return "N/A";
       } else {
         return sum.toString();
