@@ -28,7 +28,7 @@ import {
   ReportStatus,
 } from "types";
 // utils
-import { calculateNextQuarter, createTempDynamicId } from "utils";
+import { calculateNextQuarter, createTempDynamicId, FieldInfo } from "utils";
 import {
   getDefaultTargetPopulationNames,
   notAnsweredText,
@@ -42,7 +42,8 @@ export const formFieldFactory = (
     nested?: boolean;
     autosave?: boolean;
     validateOnRender?: boolean;
-  }
+    updateFieldValues?: (fieldsToSave: FieldInfo[]) => {}
+  },
 ) => {
   // define form field components
   const fieldToComponentMap: AnyObject = {
@@ -72,16 +73,17 @@ export const formFieldFactory = (
       ...options,
       ...field?.props,
     };
+    // console.log(field.type, fieldProps);
     return React.createElement(componentFieldType, fieldProps);
   });
 };
 
 // add data to choice fields in preparation for render
 export const initializeChoiceListFields = (
-  fields: (FormField | FormLayoutElement)[]
+  fields: (FormField | FormLayoutElement)[],
 ) => {
   const fieldsWithChoices = fields.filter(
-    (field: FormField | FormLayoutElement) => field.props?.choices
+    (field: FormField | FormLayoutElement) => field.props?.choices,
   );
   fieldsWithChoices.forEach((field: FormField | FormLayoutElement) => {
     if (isFieldElement(field)) {
@@ -108,7 +110,7 @@ export const initializeChoiceListFields = (
 
 export const hydrateFormFields = (
   formFields: (FormField | FormLayoutElement)[],
-  formData: AnyObject | undefined
+  formData: AnyObject | undefined,
 ) => {
   formFields.forEach((field: FormField | FormLayoutElement) => {
     const fieldFormIndex = formFields.indexOf(field!);
@@ -155,7 +157,7 @@ export const hydrateFormFields = (
 
 export const sortFormErrors = (
   form: AnyObject,
-  errors: AnyObject
+  errors: AnyObject,
 ): string[] => {
   // sort errors into new array
   const sortedErrorArray: string[] = [];
@@ -170,14 +172,14 @@ export const sortFormErrors = (
 // returns user-entered data, filtered to only fields in the current form
 export const filterFormData = (
   enteredData: AnyObject,
-  currentFormFields: FormField[]
+  currentFormFields: FormField[],
 ) => {
   // translate user-entered data to array for filtration
   const enteredDataEntries = Object.entries(enteredData);
   // flatten current form fields and create array of the form's field ids
   const flattenedFormFields = flattenFormFields(currentFormFields);
   const formFieldArray = flattenedFormFields.map(
-    (field: FormField) => field.id
+    (field: FormField) => field.id,
   );
   // filter user-entered data to only fields in the current form
   const userEnteredEntries = enteredDataEntries.filter((fieldData) => {
@@ -190,7 +192,7 @@ export const filterFormData = (
 
 export const getEntriesToClear = (
   enteredData: AnyObject,
-  currentFormFields: FormField[]
+  currentFormFields: FormField[],
 ) => {
   // Get the users entered data
   const enteredDataEntries = Object.entries(enteredData);
@@ -212,7 +214,7 @@ export const getEntriesToClear = (
 
 export const setClearedEntriesToDefaultValue = (
   entity: AnyObject,
-  entriesToClear: string[]
+  entriesToClear: string[],
 ) => {
   entriesToClear.forEach((entry) => {
     if (Array.isArray(entity[entry])) {
@@ -274,14 +276,14 @@ export const formatOtherTargetPopulationChoices = (field: AnyObject) => {
   defaultTargetPopulations.push("HCBS infrastructure/system-level development");
 
   return defaultTargetPopulations.includes(
-    field.transitionBenchmarks_targetPopulationName
+    field.transitionBenchmarks_targetPopulationName,
   )
     ? field.transitionBenchmarks_targetPopulationName
     : `Other: ${field.transitionBenchmarks_targetPopulationName}`;
 };
 
 export const convertEntityToTargetPopulationChoice = (
-  entity: EntityShape[]
+  entity: EntityShape[],
 ) => {
   return entity?.map((field: EntityShape) => {
     return {
@@ -316,7 +318,7 @@ export const convertChoiceToEntity = (choices: Choice[]) => {
  * and makes the field based on the data stored there.
  */
 export const convertTargetPopulationsFromWPToSAREntity = (
-  targetPopulations: AnyObject[]
+  targetPopulations: AnyObject[],
 ) => {
   return targetPopulations?.map((field: AnyObject) => {
     return {
@@ -338,14 +340,14 @@ export const convertTargetPopulationsFromWPToSAREntity = (
 export const disableCopiedFundingSources = (
   report: ReportShape,
   fields: (FormField | FormLayoutElement)[],
-  formData?: AnyObject
+  formData?: AnyObject,
 ) => {
   if (!report?.isCopied) {
     return;
   }
 
   const fundingSourceField = fields.find(
-    (field) => field.id === "fundingSources_wpTopic"
+    (field) => field.id === "fundingSources_wpTopic",
   );
 
   if (!fundingSourceField) {
@@ -360,7 +362,7 @@ export const disableCopiedFundingSources = (
 export const updateRenderFields = (
   report: ReportShape,
   fields: (FormField | FormLayoutElement)[],
-  formData?: AnyObject
+  formData?: AnyObject,
 ) => {
   disableCopiedFundingSources(report, fields, formData);
   const targetPopulations = report?.fieldData?.targetPopulations;
@@ -380,13 +382,13 @@ export const updateRenderFields = (
   filteredTargetPopulations?.push(hcbsPopulation);
 
   const formatChoiceList = convertTargetPopulationsFromWPToSAREntity(
-    filteredTargetPopulations
+    filteredTargetPopulations,
   );
 
   const updateChoiceList = updateFieldChoicesByID(
     fields,
     "targetPopulations",
-    formatChoiceList
+    formatChoiceList,
   );
 
   return updateChoiceList;
@@ -395,7 +397,7 @@ export const updateRenderFields = (
 export const updateFieldChoicesByID = (
   formFields: (FormField | FormLayoutElement)[],
   id: string,
-  fields: AnyObject[]
+  fields: AnyObject[],
 ) => {
   return formFields.map((field) => {
     return new RegExp(id).test(field.id)
@@ -410,7 +412,7 @@ export const updateFieldChoicesByID = (
 export const injectFormWithTargetPopulations = (
   form: FormJson,
   dataToInject: AnyObject[],
-  dataFromSAR: boolean
+  dataFromSAR: boolean,
 ) => {
   if (!dataToInject) return form;
 
@@ -421,7 +423,7 @@ export const injectFormWithTargetPopulations = (
   const updatedFields = updateFieldChoicesByID(
     form.fields,
     "populations",
-    fields
+    fields,
   );
 
   form.fields = updatedFields;
@@ -438,13 +440,13 @@ export const injectFormWithTargetPopulations = (
  * transitionBenchmarks_applicableToMfpDemonstration
  */
 export const getDefaultAndApplicablePopulations = (
-  targetPopulations: AnyObject[]
+  targetPopulations: AnyObject[],
 ) => {
   const defaultPopulationNames = getDefaultTargetPopulationNames();
 
   const filteredPopulations = targetPopulations?.filter((population) => {
     const isDefault = defaultPopulationNames.includes(
-      population.transitionBenchmarks_targetPopulationName
+      population.transitionBenchmarks_targetPopulationName,
     );
 
     const isApplicable =
@@ -459,7 +461,7 @@ export const getApplicablePopulations = (targetPopulations: AnyObject[]) =>
     (population) =>
       population?.transitionBenchmarks_applicableToMfpDemonstration &&
       population?.transitionBenchmarks_applicableToMfpDemonstration?.[0]
-        ?.value !== "No"
+        ?.value !== "No",
   );
 
 //This function is used to fill out the missing quarters in cards for evaluation plan and funding sources after a copy over
@@ -481,7 +483,7 @@ export const filterResubmissionData = (form: FormJson, report: ReportShape) => {
   const hideResubmissionField = () => {
     const removeResubmissionDataFields: any[] = formDataFields.filter(
       (data: AnyObject) =>
-        data.id !== "generalInformation_resubmissionInformation"
+        data.id !== "generalInformation_resubmissionInformation",
     );
     formCopy.fields = [...removeResubmissionDataFields];
 
@@ -502,7 +504,7 @@ export const filterResubmissionData = (form: FormJson, report: ReportShape) => {
 
 export const addDynamicTableRowsValidation = (
   form: FormJson,
-  formData: AnyObject
+  formData: AnyObject,
 ) => {
   const newFields = form.fields
     .filter((field) => field.type === ReportFormFieldType.DYNAMIC_OBJECT)
@@ -517,7 +519,7 @@ export const addDynamicTableRowsValidation = (
         templates.map((template: DynamicFieldShape) => ({
           ...template,
           id: createTempDynamicId(template.id, row.id),
-        }))
+        })),
       );
     });
 
@@ -527,7 +529,7 @@ export const addDynamicTableRowsValidation = (
 };
 
 export function isFieldElement(
-  field: FormField | FormLayoutElement
+  field: FormField | FormLayoutElement,
 ): field is FormField {
   /*
    * This function is duplicated in app-api/utils/formTemplates/formTemplates.ts
@@ -541,7 +543,7 @@ export function isFieldElement(
 }
 
 export function isLayoutElement(
-  field: FormField | FormLayoutElement
+  field: FormField | FormLayoutElement,
 ): field is FormLayoutElement {
   /*
    * This function is duplicated in app-api/utils/formTemplates/formTemplates.ts
@@ -554,7 +556,7 @@ export const isTableField = (field: FormField | FormLayoutElement) =>
   Boolean(field.forTableOnly);
 
 export const isFieldValidationOptional = (
-  formField: FormField | FormLayoutElement
+  formField: FormField | FormLayoutElement,
 ) => {
   if (!isFieldElement(formField)) return false;
 

@@ -1,5 +1,6 @@
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import { AutosaveField, EntityShape, ReportShape, ReportStatus } from "types";
+import { putReport } from "utils/api/requestMethods/report";
 import { useStore } from "utils/state/useStore";
 
 type FieldValue = any;
@@ -106,7 +107,7 @@ export const autosaveFieldData = async ({
         if (fieldValueIsValid || overrideCheck) return [name, value];
         // otherwise, revert field to default value
         return [name, defaultValue];
-      })
+      }),
   );
 
   // if there are fields to save, create and send payload
@@ -119,7 +120,7 @@ export const autosaveFieldData = async ({
         fieldData: {
           [entityContext.selectedEntity.type]:
             entityContext.prepareEntityPayload(
-              Object.fromEntries(fieldsToSave)
+              Object.fromEntries(fieldsToSave),
             ),
         }, // create field data object
       };
@@ -186,8 +187,61 @@ export const waitForAutosaves = async (): Promise<void> => {
 
 // Waits for in-flight writes, then returns the store's newest report
 export const waitForAutosavesAndGetReport = async (
-  fallbackReport: ReportShape
+  fallbackReport: ReportShape,
 ): Promise<ReportShape> => {
   await waitForAutosaves();
   return useStore.getState?.()?.report ?? fallbackReport;
+};
+
+export const shinyNewSave = async (
+  report: ReportShape,
+  selectedEntity: EntityShape | undefined,
+  fields: FieldInfo[],
+) => {
+  
+  const newReport = structuredClone(report);
+  const { fieldData } = newReport;
+
+  const updateData = (
+    items: any,
+    fieldId: string,
+    newValue: any,
+    editiable: boolean,
+  ) => {
+    Object.entries(items).map((item) => {
+      if (item[0] === fieldId && editiable) {
+        items[item[0] as any] = newValue;
+      } else {
+        if (typeof item[1] == "object" && item[1]) {
+          updateData(
+            item[1],
+            fieldId,
+            newValue,
+            editiable || ("id" in item[1] && item[1].id === selectedEntity?.id),
+          );
+        }
+      }
+    });
+  };
+
+  for (const field of fields) {
+    updateData(fieldData, field.name, field.value, !selectedEntity);
+  }
+
+  const reportKeys = {
+    reportType: report.reportType,
+    id: report.id,
+    state: report.state,
+  };
+
+  const newData = {
+    metadata: {
+      status: report.status,
+      lastAlteredBy: report.lastAltered, //get the username
+    },
+    fieldData: newReport.fieldData,
+  };
+
+  (await putReport(reportKeys, newData)) as ReportShape;
+  return newReport;
 };
