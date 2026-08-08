@@ -21,6 +21,7 @@
     "amazon-user-pool-srp-client": "^1.0.4",
     "aws4": "^1.13.2",
     "axe-core": "^4.10.2",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "playwright-core": ">=1.0.0"
   }
 }
