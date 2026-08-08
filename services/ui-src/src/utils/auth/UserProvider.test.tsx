@@ -61,7 +61,13 @@ const testComponent = (
 // window.location is non-configurable in JSDOM, so we use the reconfigure
 // helper exposed by the custom test environment to change the URL.
 const setWindowOrigin = (origin: string) => {
-  (window as any).reconfigureJsdomLocation(`http://${origin}/`);
+  const url = origin.startsWith("http") ? origin : `http://${origin}/`;
+  if (typeof (window as any).reconfigureJsdomLocation === "function") {
+    (window as any).reconfigureJsdomLocation(url);
+  } else {
+    delete (window as any).location;
+    window.location = new URL(url) as any;
+  }
 };
 
 // TESTS

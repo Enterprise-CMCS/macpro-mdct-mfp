@@ -7,7 +7,7 @@ MDCT-MFP (Money Follows the Person) is a CMS (Centers for Medicare & Medicaid Se
 - **Type**: Monorepo with multiple services
 - **Languages**: TypeScript (100%)
 - **Frameworks**: React 19 (frontend), Node.js Lambda (backend), AWS CDK (infrastructure)
-- **Runtime**: Node.js v22.19.0 (specified in `.nvmrc`)
+- **Runtime**: Node.js v24.19.0 (specified in `.nvmrc`)
 - **Package Manager**: Yarn 4.12.0 (via Corepack)
 - **Size**: ~600 source files across services
 
@@ -132,7 +132,7 @@ Pushes trigger `.github/workflows/deploy.yml`:
 
 | File                       | Purpose                        |
 | -------------------------- | ------------------------------ |
-| `.nvmrc`                   | Node.js version (v22.19.0)     |
+| `.nvmrc`                   | Node.js version (v24.19.0)     |
 | `.oxfmtrc.json`            | Code formatter config          |
 | `.oxlintrc.json`           | Linter rules                   |
 | `.pre-commit-config.yaml`  | Pre-commit hooks               |
