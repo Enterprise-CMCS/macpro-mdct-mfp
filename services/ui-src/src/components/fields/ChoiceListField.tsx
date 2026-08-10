@@ -1,4 +1,4 @@
-import { useState, ReactNode } from "react";
+import { useState } from "react";
 import { FieldValues, useFormContext, UseFormReturn } from "react-hook-form";
 // components
 import { ChoiceList as CmsdsChoiceList } from "@cmsgov/design-system";
@@ -40,7 +40,7 @@ export const ChoiceListField = ({
   const [displayValue, setDisplayValue] = useState<Choice[]>(
     props?.hydrate ?? defaultValue,
   );
-  const { editable } = useStore();
+  const { editable, answers, setAnswers } = useStore();
   //closeout will disables only certain parts of an active form
   const shouldDisableChildFields = !editable || !!props?.disabled;
 
@@ -119,6 +119,9 @@ export const ChoiceListField = ({
       clearUncheckedNestedFields(everyOtherOption);
       selectedOptions = [clickedOption];
       setDisplayValue(selectedOptions);
+
+      //TEST: REMOVE
+      setAnswers({...answers, [event.target.name] : selectedOptions})
     }
     // handle checkbox
     if (type === "checkbox") {
@@ -133,7 +136,10 @@ export const ChoiceListField = ({
       selectedOptions = isOptionChecked
         ? checkedOptionValues
         : uncheckedOptionValues;
-      setDisplayValue(selectedOptions);
+      setDisplayValue(selectedOptions);      
+      
+      //TEST: REMOVE
+      setAnswers({...answers, [event.target.name] : selectedOptions})
     }
   };
 
@@ -169,9 +175,7 @@ export const ChoiceListField = ({
     }
   };
 
-  // prepare error message, hint, and classes
-  const formErrorState = form?.formState?.errors;
-  const errorMessage = formErrorState?.[name]?.message as ReactNode;
+  const errorMessage = "";
   const parsedHint = hint && parseCustomHtml(hint);
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
   const labelClass = !label ? "no-label" : "";

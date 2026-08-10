@@ -4,6 +4,7 @@ import {
   ErrorVerbiage,
   MFPUser,
   ReportMetadataShape,
+  ReportRoute,
   ReportShape,
 } from "types";
 
@@ -34,7 +35,7 @@ export interface AdminBannerState {
   setBannerActive: (bannerStatus: boolean) => void;
   setBannerLoading: (bannerLoading: boolean) => void;
   setBannerErrorMessage: (
-    bannerErrorMessage: ErrorVerbiage | undefined
+    bannerErrorMessage: ErrorVerbiage | undefined,
   ) => void;
   setBannerDeleting: (bannerDeleting: boolean) => void;
 }
@@ -49,19 +50,25 @@ export interface MfpReportState {
   workPlanToCopyFrom: ReportShape | undefined;
   autosaveState: boolean;
   editable: boolean;
+  currentPageTemplate: ReportRoute | undefined;
+  errors: any;
+  answers: {};
   // ACTIONS
   setReport: (newReport: ReportShape | undefined) => void;
   setReportsByState: (
-    newReportsByState: ReportMetadataShape[] | undefined
+    newReportsByState: ReportMetadataShape[] | undefined,
   ) => void;
   clearReportsByState: () => void;
   setSubmittedReportsByState: (
-    newSubmittedReportsByState: ReportMetadataShape[] | undefined
+    newSubmittedReportsByState: ReportMetadataShape[] | undefined,
   ) => void;
   setLastSavedTime: (lastSavedTime: string | undefined) => void;
   setWorkPlanToCopyFrom: (planToCopy: ReportShape | undefined) => void;
   setAutosaveState: (state: boolean) => void;
   setEditable: (state: boolean) => void;
+  setCurrentPageTemplate: (template: ReportRoute | undefined) => void;
+  setErrors: (updatedErrors: any) => void;
+  setAnswers: (newAnswers: any) => void;
 }
 
 // initial entity state

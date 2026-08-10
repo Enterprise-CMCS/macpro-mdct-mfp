@@ -3,8 +3,8 @@ import {
   forwardRef,
   Fragment,
   ReactNode,
+  useEffect,
   useImperativeHandle,
-  useLayoutEffect,
 } from "react";
 import {
   FieldValues,
@@ -76,7 +76,8 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   const { editableByAdmins, fields, options, tables = [] } = formJson;
 
   let location = useLocation();
-  const { report, setReport, selectedEntity } = useStore();
+  const { report, setReport, selectedEntity, errors, setAnswers, answers } =
+    useStore();
   const { userIsEndUser } = useStore().user ?? {};
 
   // determine if fields should be disabled (based on admin roles)
@@ -106,6 +107,14 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     mode: "onChange",
     ...(options as AnyObject),
   });
+
+  useEffect(() => {
+    const defaultAnswers = fields.reduce(
+      (acc: any, curr: { id: string }) => ((acc[curr.id] = undefined), acc),
+      {},
+    );
+    setAnswers(defaultAnswers);
+  }, []);
 
   // will run if any validation errors exist on form submission
   const onErrorHandler: SubmitErrorHandler<FieldValues> = (
@@ -189,7 +198,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
         disabled: fieldInputDisabled,
         autosave,
         validateOnRender,
-        updateFieldValues
+        updateFieldValues,
       },
     );
   };
@@ -244,19 +253,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
         return null;
     }
   };
-
-  /*
-   * useLayoutEffect fires before the browser repaints the screen
-   *
-   * Fixes an issue where some fields registered before the reset and some after.
-   * We want a fresh form state before form fields render and
-   * for every field on the page to register into the form.
-   */
-  useLayoutEffect(() => {
-    if (!dontReset && !validateOnRender) {
-      form?.reset();
-    }
-  }, [location?.pathname]);
 
   const onChange = () => {
     if (onFormChange) {
@@ -326,33 +322,30 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   const submit = (e?: BaseSyntheticEvent) => {
     e?.preventDefault();
 
-    form.handleSubmit(
-      (data) => onSubmit(data),
-      (errors: AnyObject) => {
-        const formErrors = Object.keys(errors).filter((key) => {
-          const currentFormData = report?.fieldData?.[formData.type]?.find(
-            (t: AnyObject) => t.id === formData.id,
-          );
-          const hasTableError = tableFieldIds.includes(key);
-          const hasTableData = currentFormData?.[key]?.length > 0;
+    console.log("errors", errors);
 
-          if (hasTableError && hasTableData) {
-            // If table has data, clear the error
-            form.clearErrors(key);
-            return false;
-          }
+    const formErrors = Object.keys(errors).filter((key) => {
+      const currentFormData = report?.fieldData?.[formData.type]?.find(
+        (t: AnyObject) => t.id === formData.id,
+      );
+      const hasTableError = tableFieldIds.includes(key);
+      const hasTableData = currentFormData?.[key]?.length > 0;
 
-          return true;
-        });
+      if (hasTableError && hasTableData) {
+        // If table has data, clear the error
+        form.clearErrors(key);
+        return false;
+      }
 
-        if (formErrors.length === 0) {
-          onSubmit(form.getValues());
-          return;
-        }
+      return true;
+    });
 
-        onError ? onError(errors) : onErrorHandler(errors);
-      },
-    )(e);
+    if (formErrors.length === 0) {
+      onSubmit(answers);
+      return;
+    }
+
+    onError ? onError(errors) : onErrorHandler(errors);
   };
 
   // Submit fieldset ref like a form
@@ -407,7 +400,7 @@ interface Props {
   reportStatus?: ReportStatus;
   validateOnRender: boolean;
   [key: string]: any;
-  updateFieldValues: (fieldsToSave: FieldInfo[]) => {}
+  updateFieldValues: (fieldsToSave: FieldInfo[]) => {};
 }
 
 const sx = {

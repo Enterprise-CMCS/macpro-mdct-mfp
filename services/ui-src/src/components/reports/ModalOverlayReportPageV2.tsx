@@ -22,9 +22,11 @@ import {
   ErrorVerbiage,
   FormJson,
   ModalOverlayReportPageShape,
+  ReportRoute,
   ReportShape,
   ReportStatus,
   ReportType,
+  StandardReportPageShape,
 } from "types";
 // utils
 import {
@@ -70,6 +72,7 @@ export const ModalOverlayReportPageV2 = ({
     report = {} as ReportShape,
     selectedEntity,
     setSelectedEntity,
+    setCurrentPageTemplate
   } = useStore();
   const isDisabled = Boolean(userIsAdmin || userIsReadOnly || !editable);
 
@@ -135,6 +138,15 @@ export const ModalOverlayReportPageV2 = ({
   // Open/Close overlay action methods
   const openEntityDetailsOverlay = (entity: EntityShape) => {
     window.scrollTo(0, 0);
+    const newForm:StandardReportPageShape = {
+      form: overlayForm,
+      verbiage: {intro: {section: ""}},
+      name: "",
+      path: overlayForm.id
+    };
+    setCurrentPageTemplate(newForm);
+    setSidebarHidden(true);
+
     // In copied report, set closeOutInformation_projectedEndDate to defineInitiative_endDate
     const updatedEntity =
       entity.isCopied && entity.defineInitiative_endDate
@@ -145,8 +157,8 @@ export const ModalOverlayReportPageV2 = ({
           }
         : entity;
     setSelectedEntity(updatedEntity);
-    setIsEntityDetailsOpen(true);
-    setSidebarHidden(true);
+    // setIsEntityDetailsOpen(true);
+    // setSidebarHidden(true);
   };
 
   const closeEntityDetailsOverlay = () => {

@@ -12,6 +12,7 @@ import {
   EntityShape,
   MfpEntityState,
   ErrorVerbiage,
+  ReportRoute,
 } from "types";
 
 // USER STORE
@@ -72,6 +73,9 @@ const reportStore = (set: Function) => ({
   workPlanToCopyFrom: undefined,
   autosaveState: false,
   editable: true,
+  currentPageTemplate: undefined,
+  errors: {},
+  answers: {},
   // actions
   setReport: (newReport: ReportShape | undefined) =>
     set(() => ({ report: newReport }), false, { type: "setReport" }),
@@ -107,6 +111,18 @@ const reportStore = (set: Function) => ({
     set(() => ({ editable: state }), false, {
       type: "setEditable",
     }),
+  setCurrentPageTemplate: (template: ReportRoute | undefined) =>  
+    set(() => ({currentPageTemplate: template}), false, {
+      type: "setPageTemplate"
+    }),
+  setErrors: (updatedErrors: any) => 
+    set(() => ({errors: updatedErrors}), false, {
+      type: "setErrors"
+    }),
+  setAnswers: (newAnswers: any) => 
+    set(() => ({answers: newAnswers}), false, {
+      type: "setAnswers"
+    })
 });
 
 // ENTITY STORE
