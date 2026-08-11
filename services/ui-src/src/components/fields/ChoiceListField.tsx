@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FieldValues, useFormContext, UseFormReturn } from "react-hook-form";
 // components
 import { ChoiceList as CmsdsChoiceList } from "@cmsgov/design-system";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
@@ -44,9 +43,6 @@ export const ChoiceListField = ({
   //closeout will disables only certain parts of an active form
   const shouldDisableChildFields = !editable || !!props?.disabled;
 
-  // get form context and register field
-  const form = useFormContext();
-
   // format choices with nested child fields to render (if any)
   const formatChoices = (choices: FieldChoice[]) => {
     return choices.map((choice: FieldChoice) => {
@@ -81,15 +77,13 @@ export const ChoiceListField = ({
                   choice.checked = false;
                 });
                 child.props = { ...child.props, clear: true };
-                form.setValue(child.id, []);
-                form.unregister(child.id);
+                setAnswers({...answers, [child.id]:[]})
                 clearUncheckedNestedFields(child.props.choices);
               }
               break;
             default:
               child.props = { ...child.props, clear: true };
-              form.setValue(child.id, "");
-              form.unregister(child.id);
+              setAnswers({...answers, [child.id]:""})
               break;
           }
         });
@@ -166,7 +160,7 @@ export const ChoiceListField = ({
 
       const combinedFields = [
         ...fields,
-        ...getNestedChildFields(choicesWithNestedEnabledFields, form),
+        ...getNestedChildFields(choicesWithNestedEnabledFields, answers),
       ];
 
       if (updateFieldValues) {
@@ -224,7 +218,7 @@ const sx = {
 
 export const getNestedChildFields = (
   choices: FieldChoice[],
-  form: UseFormReturn<FieldValues, any>,
+  answers: any,
 ): AutosaveField[] => {
   // set up nested field compilation
   const nestedFields: any = [];
@@ -239,7 +233,7 @@ export const getNestedChildFields = (
         {
           name: field.id,
           type: field.type,
-          value: form.getValues(field.id) || fieldDefaultValue,
+          value: answers[field.id] || fieldDefaultValue,
         },
       ];
       // add to nested fields to be autosaved

@@ -4477,15 +4477,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hookform/resolvers@npm:^2.9.11":
-  version: 2.9.11
-  resolution: "@hookform/resolvers@npm:2.9.11"
-  peerDependencies:
-    react-hook-form: ^7.0.0
-  checksum: 10c0/b24049aa57e72547bd8b4d9b37c5088585306e2d9454ee23b5530621d07eabb8e90748f48b5bafb8299f1f95bac3863b9a2e0aabd540cd6380ebbd605f012283
-  languageName: node
-  linkType: hard
-
 "@inquirer/ansi@npm:^2.0.4":
   version: 2.0.4
   resolution: "@inquirer/ansi@npm:2.0.4"
@@ -14771,15 +14762,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.53.2":
-  version: 7.71.2
-  resolution: "react-hook-form@npm:7.71.2"
-  peerDependencies:
-    react: ^16.8.0 || ^17 || ^18 || ^19
-  checksum: 10c0/bff61c229f5f2516e650325e0c450146cb8a08dc323e5e9aa0753eb937be0b66fe17f40a7b4be9aabc2b5cb770d03de07db7f4912c6c9452a86924072cc1cb46
-  languageName: node
-  linkType: hard
-
 "react-icons@npm:^4.12.0":
   version: 4.12.0
   resolution: "react-icons@npm:4.12.0"
@@ -16216,7 +16198,6 @@ __metadata:
     "@cmsgov/design-system": "npm:^13.1.0"
     "@emotion/react": "npm:^11.13.3"
     "@emotion/styled": "npm:^11.13.0"
-    "@hookform/resolvers": "npm:^2.9.11"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/jest-dom": "npm:^6.6.3"
     "@testing-library/react": "npm:^16.3.2"
@@ -16244,7 +16225,6 @@ __metadata:
     react-dom: "npm:^19.2.4"
     react-error-boundary: "npm:^3.1.4"
     react-helmet: "npm:^6.1.0"
-    react-hook-form: "npm:^7.53.2"
     react-icons: "npm:^4.12.0"
     react-router: "npm:7.15.1"
     sass: "npm:^1.84.0"

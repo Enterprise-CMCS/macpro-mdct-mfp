@@ -1,17 +1,12 @@
-import { useFormContext } from "react-hook-form";
-// components
 import { Banner } from "components";
 
-export const PreviewBanner = () => {
-  // get the form context
-  const form = useFormContext();
-
+export const PreviewBanner = ({answers}: {answers: {[key:string]: any}}) => {
   // set banner preview data
-  const formData = form.getValues();
+  // const formData = form.getValues();
   const bannerData = {
-    title: formData["bannerTitle"] || "New banner title",
-    description: formData["bannerDescription"] || "New banner description",
-    link: formData["bannerLink"] || "",
+    title: answers["bannerTitle"] || "New banner title",
+    description: answers["bannerDescription"] || "New banner description",
+    link: answers["bannerLink"] || "",
   };
 
   return <Banner bannerData={bannerData} />;

@@ -3,7 +3,6 @@ import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // components
 import { Alert, Form, ReportPageIntro } from "components";
 // types
-import { FieldValues, UseFormReturn } from "react-hook-form";
 import {
   AlertTypes,
   DynamicModalOverlayReportPageShape,
@@ -40,7 +39,7 @@ export const EntityDetailsOverlayV2 = ({
     selectedEntity as EntityShape
   );
 
-  const { report } = useStore();
+  const { report, answers, setAnswers } = useStore();
   // Closed initiatives are locked in the Work Plan, but stay editable in the
   // SAR so state users can continue reporting on them.
   const isWP = report?.reportType === ReportType.WP;
@@ -75,8 +74,8 @@ export const EntityDetailsOverlayV2 = ({
     [form, isWP]
   );
 
-  const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {
-    const currentValues = hookForm.getValues() as EntityShape;
+  const onFormChange = () => {
+    const currentValues = answers as EntityShape;
 
     // Update only if close-out section is in form
     if ("closeOutInformation_projectedEndDate" in currentValues) {
@@ -90,7 +89,9 @@ export const EntityDetailsOverlayV2 = ({
         ...currentValues,
         closeOutInformation_projectedEndDate: endDate,
       };
-      hookForm.setValue("closeOutInformation_projectedEndDate", endDate);
+      currentValues["closeOutInformation_projectedEndDate"] = endDate;
+
+      setAnswers(currentValues);
       setCurrentEntity(updatedEntity);
     }
   };

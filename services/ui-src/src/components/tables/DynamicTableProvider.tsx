@@ -3,15 +3,12 @@ import {
   createContext,
   FocusEventHandler,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { useFormContext } from "react-hook-form";
 // components
 import { Flex, Td, Text, Th, Tr, VisuallyHidden } from "@chakra-ui/react";
-import { EntityContext, ReportContext } from "components";
 // types
 import {
   AnyObject,
@@ -27,7 +24,6 @@ import {
 } from "types";
 // utils
 import {
-  autosaveFieldData,
   combinedSum,
   createTempDynamicId,
   debounce,
@@ -63,14 +59,10 @@ export const DynamicTableContext = createContext<DynamicTableMethods>({
 });
 
 export const DynamicTableProvider = ({ children }: any) => {
-  const form = useFormContext();
-  const { full_name, state } = useStore().user ?? {};
   const { selectedEntity } = useStore();
   const report = useStore().report ?? ({} as ReportShape);
   const { setReport } = useStore();
   const { fieldData } = report;
-  const { updateReport } = useContext(ReportContext);
-  const { prepareEntityPayload } = useContext(EntityContext);
   const [localFieldData, setLocalFieldData] = useState<AnyObject>({});
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | null>(null);
 
@@ -117,6 +109,8 @@ export const DynamicTableProvider = ({ children }: any) => {
     type,
   }: DisplayReadOnlyCellOptions) => {
     const cellValue = localFieldData?.[id] || hydrate || initialValue;
+
+    console.log("cellValue",cellValue);
 
     let readOnlyValue = Array.isArray(cellValue)
       ? cellValue?.[rowIndex]?.name || initialValue
@@ -230,6 +224,8 @@ export const DynamicTableProvider = ({ children }: any) => {
       );
 
       hydrateValue = currentField?.[fieldType];
+
+      console.log(hydrateValue);
 
       // handle Key Metrics table edge cases
       if (entityType === EntityType.INITIATIVE) {
@@ -441,29 +437,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       hydrationValue: rows,
     });
 
-    const fieldData = {
-      ...localFieldData,
-      [id]: updatedRows,
-    };
-
-    const reportArgs = {
-      id: report.id,
-      reportType: report.reportType,
-      updateReport,
-      fieldData,
-    };
-    const user = { userName: full_name, state };
-
-    await autosaveFieldData({
-      form,
-      fields,
-      report: reportArgs,
-      user,
-      entityContext: {
-        selectedEntity,
-        prepareEntityPayload,
-      },
-    });
+    updateFieldValues(fields);
   };
 
   const removeDynamicRow = async (
@@ -517,25 +491,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     }
 
     setLocalFieldData(fieldData);
-
-    const reportArgs = {
-      id: report.id,
-      reportType: report.reportType,
-      updateReport,
-      fieldData,
-    };
-    const user = { userName: full_name, state };
-
-    await autosaveFieldData({
-      form,
-      fields,
-      report: reportArgs,
-      user,
-      entityContext: {
-        selectedEntity,
-        prepareEntityPayload,
-      },
-    });
+    updateFieldValues(fields);
   };
 
   const providerValue = {

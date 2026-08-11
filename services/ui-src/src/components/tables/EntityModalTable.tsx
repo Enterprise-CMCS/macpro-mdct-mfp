@@ -5,7 +5,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useFormContext } from "react-hook-form";
 // components
 import {
   Box,
@@ -53,12 +52,13 @@ export const EntityModalTable = ({
   styleAsOptionalHeadRows,
   verbiage,
 }: Props) => {
-  const form = useFormContext();
-  const formErrorState = form?.formState?.errors || {};
+  const formErrorState = {} as {[x:string]:any};
   const [errorMessage, setErrorMessage] = useState<ReactNode>(undefined);
   const errorId = `${tableId}__error`;
   const ariaProps = errorMessage ? { "aria-describedby": errorId } : {};
   const InlineErrorShim = shimComponent(InlineError);
+
+  console.log("EntityModalTable");
 
   useEffect(() => {
     const errorKey = Object.keys(formErrorState).find((key) =>
