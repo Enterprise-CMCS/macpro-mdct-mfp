@@ -40,6 +40,7 @@ import {
   sanitizeAndParseHtml,
   shinyNewSave,
   sortFormErrors,
+  transformYupErrorsIntoObject,
   translate,
   updateRenderFields,
   useStore,
@@ -62,7 +63,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   validateOnRender,
   ...props
 }) {
-  const { editableByAdmins, fields, options, tables = [] } = formJson;
+  const { editableByAdmins, fields, tables = [] } = formJson;
 
   let location = useLocation();
   const {
@@ -70,7 +71,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     setReport,
     selectedEntity,
     setErrors,
-    errors,
     setAnswers,
     answers,
   } = useStore();
@@ -96,13 +96,16 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
   const formResolverSchema = yupSchema(formValidationSchema || {});
 
-  // make form context
-  // const form = useForm({
-  //   resolver: !fieldInputDisabled ? yupResolver(formResolverSchema) : undefined,
-  //   shouldFocusError: false,
-  //   mode: "onChange",
-  //   ...(options as AnyObject),
-  // });
+  const validation = async (values: {}) => {
+    try {
+      await formResolverSchema.validate(values, {
+        abortEarly: false,
+      });
+      return {};
+    } catch (error: any) {
+      return transformYupErrorsIntoObject(error);
+    }
+  };
 
   useEffect(() => {
     const defaultAnswers = fields.reduce(
@@ -111,6 +114,13 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     );
     setAnswers(defaultAnswers);
   }, []);
+
+  useEffect(() => {
+    const runValidation = async() => {
+      setErrors(await validation(answers));
+    }
+    runValidation();
+  }, [answers])
 
   // will run if any validation errors exist on form submission
   const onErrorHandler = (errors: AnyObject) => {
@@ -250,6 +260,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
   const onChange = () => {
     if (onFormChange) {
+      console.log("on change");
       //FIX: TO DO
       // onFormChange(form);
     }
@@ -313,9 +324,13 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     return renderedFieldsAndTables;
   };
 
-  const FormTag = nestedForm ? "fieldset" : "form";
-  const submit = (e?: BaseSyntheticEvent) => {
+  const submit = async (e?: BaseSyntheticEvent) => {
     e?.preventDefault();
+
+    const errors = await validation(answers);
+    setErrors(errors);
+
+    console.log("errors", errors);
 
     const formErrors = Object.keys(errors).filter((key) => {
       const currentFormData = report?.fieldData?.[formData.type]?.find(

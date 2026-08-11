@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
 // components
 import { SingleInputDateField as CmsdsDateField } from "@cmsgov/design-system";
@@ -10,6 +10,7 @@ import {
   checkDateCompleteness,
   parseCustomHtml,
   FieldInfo,
+  useStore
 } from "utils";
 
 export const DateField = ({
@@ -25,16 +26,15 @@ export const DateField = ({
   updateFieldValues,
   ...props
 }: Props) => {
+  const { setAnswers, answers, errors } = useStore();
   const defaultValue = props?.hydrate ?? "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
-  const [errorMsg, setErrorMessage] = useState<string>("");
 
   // update field display value and form field data on change
   const onChangeHandler = (rawValue: string, maskedValue: string) => {
     setDisplayValue(rawValue);
     const isValidDate = checkDateCompleteness(maskedValue);
-    //TO DO: ADD ERROR MESSAGING
-    setErrorMessage(!isValidDate ? "Invalid date" : "");
+    setAnswers({...answers, [name]:isValidDate})
   };
 
   // if should autosave, submit field data to database on blur
@@ -57,6 +57,7 @@ export const DateField = ({
   };
 
   // prepare error message, hint, and classes
+  const errorMessage = errors?.[name]?.message as ReactNode;
   const parsedHint = hint && parseCustomHtml(hint);
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
   const labelClass = !label ? "no-label" : "";
@@ -82,7 +83,7 @@ export const DateField = ({
         onBlur={onBlurHandler}
         value={displayValue}
         hint={parsedHint}
-        errorMessage={errorMsg}
+        errorMessage={errorMessage}
         {...additionalProps}
         {...ariaProps}
       />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 // components
 import { ChoiceList as CmsdsChoiceList } from "@cmsgov/design-system";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
@@ -39,7 +39,7 @@ export const ChoiceListField = ({
   const [displayValue, setDisplayValue] = useState<Choice[]>(
     props?.hydrate ?? defaultValue,
   );
-  const { editable, answers, setAnswers } = useStore();
+  const { editable, answers, setAnswers, errors } = useStore();
   //closeout will disables only certain parts of an active form
   const shouldDisableChildFields = !editable || !!props?.disabled;
 
@@ -169,7 +169,7 @@ export const ChoiceListField = ({
     }
   };
 
-  const errorMessage = "";
+  const errorMessage = errors?.[name]?.message as ReactNode;
   const parsedHint = hint && parseCustomHtml(hint);
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
   const labelClass = !label ? "no-label" : "";

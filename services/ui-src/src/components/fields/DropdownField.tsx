@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   DropdownChangeObject,
   Hint,
@@ -7,7 +7,7 @@ import {
 } from "@cmsgov/design-system";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
 // utils
-import { labelTextWithOptional, parseCustomHtml, shimComponent } from "utils";
+import { labelTextWithOptional, parseCustomHtml, shimComponent, useStore } from "utils";
 // types
 import { DropdownChoice, DropdownOptions } from "types";
 // constants
@@ -25,6 +25,8 @@ export const DropdownField = ({
   styleAsOptional,
   disabled,
 }: Props) => {
+  const { setAnswers, answers, errors } = useStore();
+  
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {
     let dropdownOptions: any[] = [];
@@ -59,6 +61,7 @@ export const DropdownField = ({
       formattedOptions.find((option) => option.value === selectedValue) ||
       defaultValue;
     setDisplayValue(selectedOption);
+    setAnswers({...answers, [name]:selectedOption})
   };
 
   // update form field data & database data on blur
@@ -68,8 +71,7 @@ export const DropdownField = ({
   };
 
   // prepare error message, hint, and classes
-  //TO DO: Fix error messages
-  const errorMessage = "";
+  const errorMessage = errors?.[name]?.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const ariaDescribedBy = `${name}__error${parsedHint ? ` ${name}-hint` : ""}`;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";

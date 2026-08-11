@@ -1,4 +1,4 @@
-import { HTMLInputAutoCompleteAttribute, useState } from "react";
+import { HTMLInputAutoCompleteAttribute, ReactNode, useState } from "react";
 // components
 import { SystemStyleObject } from "@chakra-ui/react";
 import { TextFieldDisplay } from "components";
@@ -36,18 +36,16 @@ export const TextField = ({
   sxOverride,
   updateFieldValues,
 }: Props) => {
-  const { report, selectedEntity } = useStore();
+  const { report, selectedEntity, setAnswers, answers, errors } = useStore();
   const defaultValue = hydrate ?? "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
-  const [errorMsg, setErrorMsg] = useState<string>("");
 
   // update display value and form field data on change
   const onChangeHandler = async (event: InputChangeEvent) => {
     const { value } = event.target;
     setDisplayValue(value);
-    
-    // if field is blank, trigger client-side field validation error
-    setErrorMsg(!value.trim() ? "A response is required" : "");
+    setAnswers({...answers, [name]:value})
+    //TO DO: throw a set value here that updates error
   };
 
   // if should autosave, submit field data on blur
@@ -69,6 +67,7 @@ export const TextField = ({
   };
 
   // prepare error message, hint, and classes
+  const errorMessage = errors?.[name]?.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
@@ -78,7 +77,7 @@ export const TextField = ({
       ariaLabelledby={ariaLabelledby}
       autoComplete={autoComplete}
       disabled={disabled}
-      errorMessage={errorMsg}
+      errorMessage={errorMessage}
       heading={heading}
       hint={parsedHint}
       id={name}

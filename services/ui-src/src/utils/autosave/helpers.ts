@@ -1,5 +1,6 @@
 // types
 import { AnyObject } from "types";
+import { ValidationError } from "yup";
 
 const DYNAMIC_FIELD_PREFIX = "tempDynamicField";
 
@@ -82,4 +83,26 @@ export const getValueToCombine = (id: string, fieldData: AnyObject) => {
   const value = fieldData?.[`${tableId}-${fieldType}`] || 0;
 
   return Number(value);
+};
+
+type ErrorType = {
+  message: string;
+  type: string;
+};
+
+export const transformYupErrorsIntoObject = (
+  errors: ValidationError,
+): Record<string, ErrorType> => {
+  const validationErrors: Record<string, ErrorType> = {};
+
+  errors.inner.forEach((error: any) => {
+    if (error.path !== undefined) {
+      validationErrors[error.path] = {
+        message: error.errors[0],
+        type: "required",
+      };
+    }
+  });
+
+  return validationErrors;
 };

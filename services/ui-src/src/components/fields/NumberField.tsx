@@ -1,4 +1,4 @@
-import { HTMLInputAutoCompleteAttribute, useState } from "react";
+import { HTMLInputAutoCompleteAttribute, ReactNode, useState } from "react";
 // components
 import { NumberFieldDisplay } from "components";
 // utils
@@ -45,12 +45,13 @@ export const NumberField = ({
     applyMask(defaultValue, mask, decimalPlacesToRoundTo).maskedValue,
   );
 
-  const { report, selectedEntity } = useStore();
+  const { report, selectedEntity, setAnswers, answers, errors } = useStore();
 
   // update form data on change, but do not mask
   const onChangeHandler = async (event: InputChangeEvent) => {
     const { name, value } = event.target;
     setDisplayValue(value);
+    setAnswers({...answers, [name]:value})
 
     if (handleOnChange) handleOnChange(event);
   };
@@ -92,8 +93,7 @@ export const NumberField = ({
   };
 
   // prepare error message, hint, and classes
-  //TO DO: Fix error messages
-  const errorMessage = "";
+  const errorMessage = errors?.[name]?.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
