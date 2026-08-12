@@ -58,8 +58,6 @@ export const EntityModalTable = ({
   const ariaProps = errorMessage ? { "aria-describedby": errorId } : {};
   const InlineErrorShim = shimComponent(InlineError);
 
-  console.log("EntityModalTable");
-
   useEffect(() => {
     const errorKey = Object.keys(formErrorState).find((key) =>
       key.startsWith(tableId)

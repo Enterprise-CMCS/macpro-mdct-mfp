@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 // components
 import { Flex } from "@chakra-ui/react";
 import {
@@ -27,16 +27,9 @@ import {
 import { hasEntitySteps, hasInitiativesWithEntitySteps, useStore } from "utils";
 
 export const ReportPageWrapper = () => {
-  const { report, currentPageTemplate, setCurrentPageTemplate } = useStore();
+  const { report } = useStore();
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
-
-  useEffect(() => {
-    const reportTemplate = report?.formTemplate.flatRoutes!.find(
-      (route: ReportRoute) => route.path === pathname,
-    );
-    setCurrentPageTemplate(reportTemplate);
-  }, [pathname]);
 
   const showSidebar = () => {
     if (sidebarHidden) setSidebarHidden(false);
@@ -92,12 +85,16 @@ export const ReportPageWrapper = () => {
     }
   };
 
+  const reportTemplate = report?.formTemplate.flatRoutes!.find(
+    (route: ReportRoute) => route.path === pathname
+  );
+
   return (
     <PageTemplate section={false} type="report">
       <Flex sx={sx.pageContainer}>
         <Sidebar isHidden={sidebarHidden} />
         <Flex as="main" id="report-content" sx={sx.reportContainer}>
-          {currentPageTemplate && renderPageSection(currentPageTemplate)}
+          {reportTemplate && renderPageSection(reportTemplate)}
         </Flex>
       </Flex>
     </PageTemplate>

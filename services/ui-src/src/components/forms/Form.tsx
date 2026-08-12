@@ -65,15 +65,12 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 }) {
   const { editableByAdmins, fields, tables = [] } = formJson;
 
+  console.log("fields", fields);
+  console.log("formData", formData);
+
   let location = useLocation();
-  const {
-    report,
-    setReport,
-    selectedEntity,
-    setErrors,
-    setAnswers,
-    answers,
-  } = useStore();
+  const { report, setReport, selectedEntity, setErrors, setAnswers, answers } =
+    useStore();
   const { userIsEndUser } = useStore().user ?? {};
 
   // determine if fields should be disabled (based on admin roles)
@@ -96,9 +93,9 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
   const formResolverSchema = yupSchema(formValidationSchema || {});
 
-  const validation = async (values: {}) => {
+  const validation = (values: {}) => {
     try {
-      await formResolverSchema.validate(values, {
+      formResolverSchema.validateSync(values, {
         abortEarly: false,
       });
       return {};
@@ -108,19 +105,20 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   useEffect(() => {
+    const fieldData = selectedEntity ?? report?.fieldData;
     const defaultAnswers = fields.reduce(
-      (acc: any, curr: { id: string }) => ((acc[curr.id] = undefined), acc),
+      (acc: any, curr: { id: string }) => (
+        (acc[curr.id] = fieldData?.[curr.id] ?? undefined),
+        acc
+      ),
       {},
     );
     setAnswers(defaultAnswers);
   }, []);
 
   useEffect(() => {
-    const runValidation = async() => {
-      setErrors(await validation(answers));
-    }
-    runValidation();
-  }, [answers])
+    setErrors(validation(answers));
+  }, [answers]);
 
   // will run if any validation errors exist on form submission
   const onErrorHandler = (errors: AnyObject) => {
@@ -329,8 +327,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
     const errors = await validation(answers);
     setErrors(errors);
-
-    console.log("errors", errors);
 
     const formErrors = Object.keys(errors).filter((key) => {
       const currentFormData = report?.fieldData?.[formData.type]?.find(

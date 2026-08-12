@@ -33,8 +33,7 @@ export const DateField = ({
   // update field display value and form field data on change
   const onChangeHandler = (rawValue: string, maskedValue: string) => {
     setDisplayValue(rawValue);
-    const isValidDate = checkDateCompleteness(maskedValue);
-    setAnswers({...answers, [name]:isValidDate})
+    setAnswers({...answers, [name]:rawValue})
   };
 
   // if should autosave, submit field data to database on blur
