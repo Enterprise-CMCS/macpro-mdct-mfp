@@ -115,39 +115,40 @@ export const waitForAutosavesAndGetReport = async (
   return useStore.getState?.()?.report ?? fallbackReport;
 };
 
+const convertToObject = (fields: FieldInfo[]) => {
+  return fields.reduce(
+    (acc: any, curr) => ((acc[curr.name] = curr.value ?? undefined), acc),
+    {},
+  );
+};
+
 export const shinyNewSave = async (
   report: ReportShape,
   selectedEntity: EntityShape | undefined,
   fields: FieldInfo[],
 ) => {
-  
   const newReport = structuredClone(report);
   const { fieldData } = newReport;
 
-  const updateData = (
-    items: any,
-    fieldId: string,
-    newValue: any,
-    editiable: boolean,
-  ) => {
+  const updateData = (items: any, fieldId: string, newValue: any) => {
     Object.entries(items).map((item) => {
-      if (item[0] === fieldId && editiable) {
+      if (item[0] === fieldId) {
         items[item[0] as any] = newValue;
       } else {
         if (typeof item[1] == "object" && item[1]) {
-          updateData(
-            item[1],
-            fieldId,
-            newValue,
-            editiable || ("id" in item[1] && item[1].id === selectedEntity?.id),
-          );
+          //TO DO: Refactor when nested pages are less wild, this can be more decoupled
+          if ("id" in item[1] && item[1].id === selectedEntity?.id) {
+            items[item[0]] = { ...item[1], ...convertToObject(fields) };
+          } else {
+            updateData(item[1], fieldId, newValue);
+          }
         }
       }
     });
   };
 
   for (const field of fields) {
-    updateData(fieldData, field.name, field.value, !selectedEntity);
+    updateData(fieldData, field.name, field.value);
   }
 
   const reportKeys = {

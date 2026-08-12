@@ -178,7 +178,7 @@ export const EntityDetailsOverlay = ({
   };
 
   //used to get the exact form values to enable/disable close out button
-  const onChange = (formProvider: AnyObject) => {
+  const onChange = (answers: AnyObject) => {
     if (selectedEntity) {
       let entity: EntityShape = {
         id: selectedEntity.id,
@@ -187,7 +187,7 @@ export const EntityDetailsOverlay = ({
 
       //pulling the fields needed to build the entity to check the status of
       let fields = form.fields.flatMap((field: any) => {
-        return { id: field.id, value: formProvider.getValues(field.id) };
+        return { id: field.id, value: answers[field.id] };
       });
 
       //format the field data to match EntityShape
@@ -197,13 +197,13 @@ export const EntityDetailsOverlay = ({
 
       //there's two nested textboxes the the user can fill out after checking the checkbox
       entity["closeOutInformation_initiativeStatus-alternateFunding"] =
-        formProvider.getValues(
+        answers[
           "closeOutInformation_initiativeStatus-alternateFunding"
-        );
+        ];
       entity["closeOutInformation_initiativeStatus-terminationReason"] =
-        formProvider.getValues(
+        answers[
           "closeOutInformation_initiativeStatus-terminationReason"
-        );
+        ];
 
       const isClosed =
         selectedEntity?.isInitiativeClosed ?? !getCloseoutStatus(form, entity);

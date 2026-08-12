@@ -65,9 +65,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 }) {
   const { editableByAdmins, fields, tables = [] } = formJson;
 
-  console.log("fields", fields);
-  console.log("formData", formData);
-
   let location = useLocation();
   const { report, setReport, selectedEntity, setErrors, setAnswers, answers } =
     useStore();
@@ -105,15 +102,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   useEffect(() => {
-    const fieldData = selectedEntity ?? report?.fieldData;
-    const defaultAnswers = fields.reduce(
-      (acc: any, curr: { id: string }) => (
-        (acc[curr.id] = fieldData?.[curr.id] ?? undefined),
-        acc
-      ),
-      {},
-    );
-    setAnswers(defaultAnswers);
+    setAnswers(formData);
   }, []);
 
   useEffect(() => {
@@ -175,7 +164,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
       // add aria label to choicelist
       choiceList &&
         choiceList.map((choice: AnyObject) => {
-          console.log("choiceList", choiceList);
           if (choice?.label.includes("*")) {
             let asteriskIndex = choice?.label.includes("*if applicable")
               ? choice?.label.indexOf("*") - 1
@@ -258,9 +246,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
   const onChange = () => {
     if (onFormChange) {
-      console.log("on change");
-      //FIX: TO DO
-      // onFormChange(form);
+      onFormChange(answers);
     }
   };
 
@@ -322,10 +308,10 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     return renderedFieldsAndTables;
   };
 
-  const submit = async (e?: BaseSyntheticEvent) => {
+  const submit = (e?: BaseSyntheticEvent) => {
     e?.preventDefault();
 
-    const errors = await validation(answers);
+    const errors = validation(answers);
     setErrors(errors);
 
     const formErrors = Object.keys(errors).filter((key) => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
 import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
@@ -9,11 +9,7 @@ import {
   ReportFormFieldType,
 } from "types";
 // utils
-import {
-  FieldInfo,
-  getAutosaveFields,
-  useStore,
-} from "utils";
+import { FieldInfo, getAutosaveFields, useStore } from "utils";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
@@ -29,10 +25,12 @@ export const DynamicField = ({
   multiline = false,
   name,
   rows = 3,
-  updateFieldValues
+  updateFieldValues,
 }: Props) => {
-  const { selectedEntity } = useStore();
-  const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>(selectedEntity?.[name] ?? []);
+  const { selectedEntity, answers, setAnswers, errors } = useStore();
+  const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>(
+    selectedEntity?.[name] ?? [],
+  );
 
   // update display value on change
   const onChangeHandler = (event: InputChangeEvent) => {
@@ -41,15 +39,10 @@ export const DynamicField = ({
       (entity) => entity.id === id,
     );
 
-    // Clear error on input
-    //FIX HERE ------------------
-    // if (value.trim() && fieldErrorState?.[currentEntityIndex]?.name) {
-    //   form.clearErrors(`${name}.${currentEntityIndex}.name`);
-    // }
-
     const newDisplayValues = [...displayValues];
     newDisplayValues[currentEntityIndex].name = value;
     setDisplayValues(newDisplayValues);
+    setAnswers({ ...answers, newDisplayValues });
   };
 
   // submit changed field data to database on blur
@@ -67,6 +60,12 @@ export const DynamicField = ({
       updateFieldValues(fields);
     }
   };
+
+  useEffect(() => {
+    if(displayValues.length === 0){
+      appendNewRecord();
+    }
+  }, [])
 
   const appendNewRecord = () => {
     const newRecord = { id: crypto.randomUUID(), name: "" };
@@ -107,8 +106,8 @@ export const DynamicField = ({
       )}
 
       {displayValues.map((field: DynamicFieldShape, index: number) => {
-        //TODO: FIX ERROR MESSAGING
-        const errorMessage = "";
+        const errorId = `${name}[${index}].name`;
+        const errorMessage = errors?.[errorId]?.message;
         const hasError = Boolean(errorMessage);
         const textareaStyle = hasError
           ? sx.removeBoxTextareaError

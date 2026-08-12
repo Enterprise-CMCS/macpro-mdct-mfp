@@ -73,7 +73,6 @@ export const formFieldFactory = (
       ...options,
       ...field?.props,
     };
-    // console.log(field.type, fieldProps);
     return React.createElement(componentFieldType, fieldProps);
   });
 };

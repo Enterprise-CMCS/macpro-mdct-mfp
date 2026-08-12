@@ -77,13 +77,13 @@ export const ChoiceListField = ({
                   choice.checked = false;
                 });
                 child.props = { ...child.props, clear: true };
-                setAnswers({...answers, [child.id]:[]})
+                setAnswers({ ...answers, [child.id]: [] });
                 clearUncheckedNestedFields(child.props.choices);
               }
               break;
             default:
               child.props = { ...child.props, clear: true };
-              setAnswers({...answers, [child.id]:""})
+              setAnswers({ ...answers, [child.id]: "" });
               break;
           }
         });
@@ -115,7 +115,7 @@ export const ChoiceListField = ({
       setDisplayValue(selectedOptions);
 
       //TEST: REMOVE
-      setAnswers({...answers, [event.target.name] : selectedOptions})
+      setAnswers({ ...answers, [event.target.name]: selectedOptions });
     }
     // handle checkbox
     if (type === "checkbox") {
@@ -130,10 +130,9 @@ export const ChoiceListField = ({
       selectedOptions = isOptionChecked
         ? checkedOptionValues
         : uncheckedOptionValues;
-      setDisplayValue(selectedOptions);      
-      
+      setDisplayValue(selectedOptions);
       //TEST: REMOVE
-      setAnswers({...answers, [event.target.name] : selectedOptions})
+      setAnswers({ ...answers, [event.target.name]: selectedOptions });
     }
   };
 
