@@ -781,4 +781,111 @@ describe("Field data copy", () => {
       });
     });
   });
+
+  describe("Copy-of-a-copy regression (gen1 -> gen2 -> gen3)", () => {
+    const formTemplate = {
+      type: ReportType.WP,
+      routes: [
+        {
+          pageType: PageTypes.MODAL_DRAWER,
+          entityType: EntityType.INITIATIVE,
+          drawerForm: {
+            fields: [
+              {
+                id: "defineInitiative_mockField",
+                validation: ValidationType.TEXT,
+              },
+            ],
+          },
+        },
+      ],
+    } as ReportJson;
+
+    const gen1 = {
+      initiative: [
+        {
+          id: "openInitiativeId",
+          type: EntityType.INITIATIVE,
+          initiative_name: "Open Initiative",
+          initiative_wp_otherTopic: "",
+          initiative_wpTopic: [
+            { key: "initiative_wpTopic-mockTopicId", value: "Mock topic" },
+          ],
+          defineInitiative_mockField: "Mock description",
+        },
+      ],
+    };
+
+    it("carries initiatives forward through a second-generation copy, even after an empty array field is added", async () => {
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+        JSON.parse(JSON.stringify(gen1))
+      );
+      const gen2: any = await copyFieldDataFromSource(
+        "CO",
+        "gen1-id",
+        formTemplate,
+        {}
+      );
+
+      // Simulate the real app: gen2 gains a close-out field that is an empty
+      // array, which does not exist in gen1's source data. This is what
+      // triggers the copy-of-a-copy bug
+      gen2.initiative[0].closeOutInformation_initiativeStatus = [];
+
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+        JSON.parse(JSON.stringify(gen2))
+      );
+      const gen3: any = await copyFieldDataFromSource(
+        "CO",
+        "gen2-id",
+        formTemplate,
+        {}
+      );
+
+      expect(gen3.initiative).toBeDefined();
+      expect(gen3.initiative.length).toBe(1);
+      expect(gen3.initiative[0].initiative_name).toBe("Open Initiative");
+    });
+
+    it("still excludes closed initiatives across a second-generation copy", async () => {
+      const gen1WithClosed = {
+        initiative: [
+          ...gen1.initiative,
+          {
+            ...gen1.initiative[0],
+            id: "closedInitiativeId",
+            initiative_name: "Closed Initiative",
+            isInitiativeClosed: true,
+          },
+        ],
+      };
+
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+        JSON.parse(JSON.stringify(gen1WithClosed))
+      );
+      const gen2: any = await copyFieldDataFromSource(
+        "CO",
+        "gen1-id",
+        formTemplate,
+        {}
+      );
+      expect(
+        gen2.initiative.some((i: any) => i.id === "closedInitiativeId")
+      ).toBe(false);
+
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+        JSON.parse(JSON.stringify(gen2))
+      );
+      const gen3: any = await copyFieldDataFromSource(
+        "CO",
+        "gen2-id",
+        formTemplate,
+        {}
+      );
+      expect(
+        gen3.initiative.some((i: any) => i.id === "closedInitiativeId")
+      ).toBe(false);
+      expect(gen3.initiative.length).toBe(1);
+    });
+  });
 });

@@ -225,8 +225,10 @@ const pruneEntityData = async (
     );
     sourceFieldData[key] = filteredData;
   }
-  // Delete whole key if there's nothing in it.
-  if (entityData.every((e) => e === null)) {
+  // Delete the whole key only if every entity in it got fully cleared out above.
+  // Without the length check, an array that's simply empty to start with
+  // (nothing to clear) would also pass .every() and get deleted by mistake.
+  if (entityData.length > 0 && entityData.every((e) => e === null)) {
     delete sourceFieldData[key];
   }
 };
