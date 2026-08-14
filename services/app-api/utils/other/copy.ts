@@ -163,6 +163,8 @@ const pruneEntityData = async (
   // adding fields to be copied over from entries
   const concatEntityFields = [...possibleFields, ...additionalFields];
 
+  const startedWithEntities = entityData.length > 0;
+
   for (const [index, entity] of entityData.entries()) {
     // Delete any key existing in the source data not valid in our template, or any entity key that's not a name.
     if (!concatEntityFields.includes(key)) {
@@ -225,10 +227,13 @@ const pruneEntityData = async (
     );
     sourceFieldData[key] = filteredData;
   }
-  // Delete the whole key only if every entity in it got fully cleared out above.
-  // Without the length check, an array that's simply empty to start with
-  // (nothing to clear) would also pass .every() and get deleted by mistake.
-  if (entityData.length > 0 && entityData.every((e) => e === null)) {
+  // Delete the whole key only if it started with entities AND ended up fully cleared out.
+  const topLevelEntityData = sourceFieldData[key];
+  if (
+    startedWithEntities &&
+    Array.isArray(topLevelEntityData) &&
+    topLevelEntityData.filter(Boolean).length === 0
+  ) {
     delete sourceFieldData[key];
   }
 };

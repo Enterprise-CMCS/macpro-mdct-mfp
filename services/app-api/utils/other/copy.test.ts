@@ -294,9 +294,56 @@ describe("Field data copy", () => {
       fieldData
     );
 
-    // TODO: Investigate this comment
-    // I think this is a bug actually. Probably it should not copy this entity.
-    expect(copiedData).toEqual({ mockEntityType: [] });
+    expect(copiedData).toEqual({});
+  });
+
+  test("Should not delete an unrelated top-level array when a nested array gets fully pruned via holes", async () => {
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+      mockEntityType: [
+        {
+          mockFieldId: "42",
+          nestedRows: [
+            {
+              undeclaredField: "not in the form template, gets pruned away",
+            },
+          ],
+        },
+      ],
+    });
+    const fieldData = {};
+    const formTemplate = {
+      routes: [
+        {
+          pageType: PageTypes.MODAL_DRAWER,
+          entityType: "mockEntityType",
+          drawerForm: {
+            fields: [
+              {
+                id: "mockFieldId",
+                validation: ValidationType.NUMBER,
+              },
+            ],
+          },
+        },
+      ],
+    } as ReportJson;
+
+    const copiedData = await copyFieldDataFromSource(
+      "CO",
+      "mock-source-id",
+      formTemplate,
+      fieldData
+    );
+
+    expect(copiedData).toEqual({
+      mockEntityType: [
+        {
+          mockFieldId: "42",
+          isCopied: true,
+          nestedRows: [undefined],
+        },
+      ],
+    });
   });
 
   test("Should wipe the entire entity if no fields are being copied", async () => {
