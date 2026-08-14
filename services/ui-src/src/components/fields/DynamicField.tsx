@@ -9,7 +9,7 @@ import {
   ReportFormFieldType,
 } from "types";
 // utils
-import { FieldInfo, getAutosaveFields, useStore } from "utils";
+import { FieldInfo, useStore } from "utils";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
@@ -20,7 +20,6 @@ export const DynamicField = ({
   dynamicButtonText,
   dynamicLabel,
   hint,
-  hydrate,
   label,
   multiline = false,
   name,
@@ -42,21 +41,14 @@ export const DynamicField = ({
     const newDisplayValues = [...displayValues];
     newDisplayValues[currentEntityIndex].name = value;
     setDisplayValues(newDisplayValues);
-    setAnswers({ ...answers, newDisplayValues });
+    setAnswers({ ...answers, [name]:newDisplayValues });
   };
 
   // submit changed field data to database on blur
   const onBlurHandler = async () => {
     if (autosave) {
-      const fields = getAutosaveFields({
-        name,
-        type: ReportFormFieldType.DYNAMIC,
-        value: displayValues,
-        defaultValue: undefined,
-        overrideCheck: true,
-        hydrationValue: hydrate,
-      });
-
+      const fields = [{name, type:  ReportFormFieldType.DYNAMIC, displayValues}]
+      console.log("fields", fields);
       updateFieldValues(fields);
     }
   };
@@ -107,6 +99,7 @@ export const DynamicField = ({
 
       {displayValues.map((field: DynamicFieldShape, index: number) => {
         const errorId = `${name}[${index}].name`;
+
         const errorMessage = errors?.[errorId]?.message;
         const hasError = Boolean(errorMessage);
         const textareaStyle = hasError
@@ -172,7 +165,6 @@ interface Props {
   dynamicButtonText?: string;
   dynamicLabel?: string;
   hint?: string;
-  hydrate?: DynamicFieldShape[];
   label: string;
   multiline?: boolean;
   name: string;

@@ -41,6 +41,8 @@ export const DynamicModalOverlayReportPageV2 = ({
 }: Props) => {
   const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
+  console.log("DynamicModalOverlayReportPageV2");
+
   // Route Information
   const { entityInfo, entityType, overlayForm, verbiage } = route;
 

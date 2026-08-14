@@ -309,6 +309,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   const submit = (e?: BaseSyntheticEvent) => {
+    console.log("form submit");
     e?.preventDefault();
 
     const errors = validation(answers);

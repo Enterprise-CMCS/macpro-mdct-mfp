@@ -10,7 +10,6 @@ export interface FieldInfo {
   value?: any;
   defaultValue?: any;
   hydrationValue?: FieldValue;
-  overrideCheck?: boolean;
 }
 
 export interface GetAutosaveFieldsProps extends AutosaveField {
@@ -43,7 +42,6 @@ export const getAutosaveFields = ({
   value,
   defaultValue,
   hydrationValue,
-  overrideCheck,
 }: GetAutosaveFieldsProps): FieldInfo[] => {
   return [
     {
@@ -52,7 +50,6 @@ export const getAutosaveFields = ({
       value,
       defaultValue,
       hydrationValue,
-      overrideCheck,
     },
   ];
 };
@@ -130,9 +127,14 @@ export const shinyNewSave = async (
   const newReport = structuredClone(report);
   const { fieldData } = newReport;
 
-  const updateData = (items: any, fieldId: string, newValue: any) => {
+  const updateData = (
+    items: any,
+    fieldId: string,
+    newValue: any,
+    editiable: boolean,
+  ) => {
     Object.entries(items).map((item) => {
-      if (item[0] === fieldId) {
+      if (item[0] === fieldId && editiable) {
         items[item[0] as any] = newValue;
       } else {
         if (typeof item[1] == "object" && item[1]) {
@@ -140,7 +142,7 @@ export const shinyNewSave = async (
           if ("id" in item[1] && item[1].id === selectedEntity?.id) {
             items[item[0]] = { ...item[1], ...convertToObject(fields) };
           } else {
-            updateData(item[1], fieldId, newValue);
+            updateData(item[1], fieldId, newValue, editiable);
           }
         }
       }
@@ -148,7 +150,7 @@ export const shinyNewSave = async (
   };
 
   for (const field of fields) {
-    updateData(fieldData, field.name, field.value);
+    updateData(fieldData, field.name, field.value, !selectedEntity);
   }
 
   const reportKeys = {

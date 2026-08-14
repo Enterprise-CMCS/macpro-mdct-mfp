@@ -39,6 +39,8 @@ export const EntityDetailsOverlayV2 = ({
     selectedEntity as EntityShape
   );
 
+  console.log("EntityDetailsOverlayV2");
+
   const { report, answers, setAnswers } = useStore();
   // Closed initiatives are locked in the Work Plan, but stay editable in the
   // SAR so state users can continue reporting on them.

@@ -225,8 +225,6 @@ export const DynamicTableProvider = ({ children }: any) => {
 
       hydrateValue = currentField?.[fieldType];
 
-      console.log(hydrateValue);
-
       // handle Key Metrics table edge cases
       if (entityType === EntityType.INITIATIVE) {
         switch (fieldType) {
@@ -429,14 +427,7 @@ export const DynamicTableProvider = ({ children }: any) => {
     };
     setLocalFieldData(updatedFieldData);
 
-    const fields = getAutosaveFields({
-      name: id,
-      type,
-      value: updatedRows,
-      overrideCheck: true,
-      hydrationValue: rows,
-    });
-
+    const fields = [{name:id, type, value: updatedRows}]
     updateFieldValues(fields);
   };
 

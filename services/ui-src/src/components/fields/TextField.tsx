@@ -40,6 +40,10 @@ export const TextField = ({
   const defaultValue = hydrate ?? "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
+  if(name === "defineInitiative_keyMetrics_performanceIndicators-name"){
+    console.log("rendered", name, errors?.[name]?.message);
+  }
+
   // update display value and form field data on change
   const onChangeHandler = async (event: InputChangeEvent) => {
     const { value } = event.target;
