@@ -294,10 +294,12 @@ describe("Field data copy", () => {
       fieldData
     );
 
-    expect(copiedData).toEqual({});
+    // The closed entity is excluded, but the key survives as an empty array.
+    // downstream consumers distinguish an empty array from an absent key.
+    expect(copiedData).toEqual({ mockEntityType: [] });
   });
 
-  test("Should not delete an unrelated top-level array when a nested array gets fully pruned via holes", async () => {
+  test("Should not delete an unrelated top-level array when a nested array gets fully pruned", async () => {
     (getReportFieldData as jest.Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
@@ -335,12 +337,65 @@ describe("Field data copy", () => {
       fieldData
     );
 
+    // The emptied nested row is dropped, not left as an empty array.
+    // Empty arrays blow up the next copy of this report.
     expect(copiedData).toEqual({
       mockEntityType: [
         {
           mockFieldId: "42",
           isCopied: true,
-          nestedRows: [undefined],
+          nestedRows: [],
+        },
+      ],
+    });
+    expect(JSON.stringify(copiedData)).not.toContain("null");
+  });
+
+  test("Should wipe a fully pruned entity rather than leaving an empty husk behind", async () => {
+    // The first entity holds a nested array, so pruning it recurses. The
+    // second has nothing worth copying and must disappear completely.
+    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+      mockEntityType: [
+        {
+          mockFieldId: "42",
+          nestedRows: [{ mockFieldId: "43" }],
+        },
+        {
+          undeclaredField: "not in the form template",
+        },
+      ],
+    });
+    const fieldData = {};
+    const formTemplate = {
+      routes: [
+        {
+          pageType: PageTypes.MODAL_DRAWER,
+          entityType: "mockEntityType",
+          drawerForm: {
+            fields: [
+              {
+                id: "mockFieldId",
+                validation: ValidationType.NUMBER,
+              },
+            ],
+          },
+        },
+      ],
+    } as ReportJson;
+
+    const copiedData = await copyFieldDataFromSource(
+      "CO",
+      "mock-source-id",
+      formTemplate,
+      fieldData
+    );
+
+    expect(copiedData).toEqual({
+      mockEntityType: [
+        {
+          mockFieldId: "42",
+          isCopied: true,
+          nestedRows: [{ mockFieldId: "43", isCopied: true }],
         },
       ],
     });
@@ -376,7 +431,7 @@ describe("Field data copy", () => {
       fieldData
     );
 
-    expect(copiedData).toEqual({});
+    expect(copiedData).toEqual({ mockEntityType: [] });
   });
 
   test("Should prune entity steps", async () => {
@@ -724,6 +779,75 @@ describe("Field data copy", () => {
           ],
         });
       });
+
+      test("strips v1 fields from every initiative regardless of entity order", async () => {
+        (LD.init as jest.Mock).mockReturnValue({
+          variation: jest.fn().mockResolvedValue(true),
+          waitForInitialization,
+        });
+        // Only the first entity carries a v1 marker. Pruning deletes that
+        // marker as it goes, so a mid-pass recomputation would wrongly leave
+        // the second entity's v1 fields intact.
+        (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+          initiative: [
+            {
+              id: "v1InitiativeId",
+              initiative_name: "V1 Initiative",
+              evaluationPlan: [{ id: "mockEvaluationPlanId" }],
+            },
+            {
+              id: "otherInitiativeId",
+              initiative_name: "Other Initiative",
+              defineInitiative_mockField: "should be stripped too",
+            },
+          ],
+        });
+        const copiedData: any = await copyFieldDataFromSource(
+          "CO",
+          "mock-source-id",
+          formTemplate,
+          {}
+        );
+        expect(copiedData.initiative).toHaveLength(2);
+        expect(copiedData.initiative[0].evaluationPlan).toBeUndefined();
+        expect(
+          copiedData.initiative[1].defineInitiative_mockField
+        ).toBeUndefined();
+      });
+
+      test("does not strip v1 fields when the only v1 initiative is closed out", async () => {
+        (LD.init as jest.Mock).mockReturnValue({
+          variation: jest.fn().mockResolvedValue(true),
+          waitForInitialization,
+        });
+        (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+          initiative: [
+            {
+              id: "closedInitiativeId",
+              initiative_name: "Closed V1 Initiative",
+              isInitiativeClosed: true,
+              evaluationPlan: [{ id: "mockEvaluationPlanId" }],
+            },
+            {
+              id: "openInitiativeId",
+              initiative_name: "Open Initiative",
+              defineInitiative_mockField: "kept",
+            },
+          ],
+        });
+        const copiedData: any = await copyFieldDataFromSource(
+          "CO",
+          "mock-source-id",
+          formTemplate,
+          {}
+        );
+        // The closed initiative never reaches the copy, so it should not
+        // trigger v1 stripping on the surviving open initiative.
+        expect(copiedData.initiative).toHaveLength(1);
+        expect(copiedData.initiative[0].defineInitiative_mockField).toBe(
+          "kept"
+        );
+      });
     });
 
     describe("initiativeV2", () => {
@@ -933,6 +1057,62 @@ describe("Field data copy", () => {
         gen3.initiative.some((i: any) => i.id === "closedInitiativeId")
       ).toBe(false);
       expect(gen3.initiative.length).toBe(1);
+    });
+
+    it("survives being copied forward repeatedly without producing nulls", async () => {
+      let current: any = JSON.parse(JSON.stringify(gen1));
+
+      for (let generation = 2; generation <= 5; generation++) {
+        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+          JSON.parse(JSON.stringify(current))
+        );
+        current = await copyFieldDataFromSource(
+          "CO",
+          `gen${generation - 1}-id`,
+          formTemplate,
+          {}
+        );
+
+        expect(current.initiative).toHaveLength(1);
+        expect(current.initiative[0].initiative_name).toBe("Open Initiative");
+        expect(JSON.stringify(current)).not.toContain("null");
+      }
+    });
+
+    it("drops a top-level array not in the template, but keeps a template-valid one that is empty", async () => {
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+        obsoleteThing: [],
+        initiative: [],
+      });
+
+      const copiedData = await copyFieldDataFromSource(
+        "CO",
+        "mock-source-id",
+        formTemplate,
+        {}
+      );
+
+      expect(copiedData).toEqual({ initiative: [] });
+    });
+
+    it("keeps an empty initiative array when every initiative is closed out", async () => {
+      const allClosed = {
+        initiative: [{ ...gen1.initiative[0], isInitiativeClosed: true }],
+      };
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+        JSON.parse(JSON.stringify(allClosed))
+      );
+
+      const gen2: any = await copyFieldDataFromSource(
+        "CO",
+        "gen1-id",
+        formTemplate,
+        {}
+      );
+
+      // SAR creation iterates fieldData.initiative unguarded so an absent key
+      // would turn a valid (if empty) copy into a 500 on SAR creation.
+      expect(gen2.initiative).toEqual([]);
     });
   });
 });

@@ -77,24 +77,45 @@ const isExcludedFinancialReportNormalizedField = (
   );
 };
 
+type CopyOptions = {
+  wpSarRelease2025: boolean;
+  hasInitiativeV1: boolean;
+};
+
+// Arrays that only exist on v1-shaped initiatives; their presence is how a
+// v1 source is detected, and they are stripped along with defineInitiative*
+const initiativeV1Fields = ["evaluationPlan", "fundingSources"];
+
 const isExcludedInitiativeV1Field = (
   fieldKey: string,
-  sourceFieldData: ReportFieldData | undefined,
-  options?: { [key: string]: boolean }
+  options: CopyOptions
 ) => {
-  if (!sourceFieldData?.[EntityType.INITIATIVE] || !options?.wpSarRelease2025) {
+  if (!options.wpSarRelease2025 || !options.hasInitiativeV1) {
     return false;
   }
 
-  const hasInitiativeV1 = (
-    sourceFieldData[EntityType.INITIATIVE] as ReportFieldData[]
-  ).some((t) => t.evaluationPlan || t.fundingSources);
-
-  if (!hasInitiativeV1) return false;
-
   return (
     fieldKey.startsWith("defineInitiative") ||
-    ["evaluationPlan", "fundingSources"].includes(fieldKey)
+    initiativeV1Fields.includes(fieldKey)
+  );
+};
+
+/**
+ * True if any open initiative in the source still uses the v1 shape.
+ * Computed once per copy, before pruning begins: the pruning pass deletes
+ * v1 fields and drops closed initiatives as it goes, so recomputing this
+ * mid-pass would make the answer depend on entity order.
+ */
+const sourceHasInitiativeV1 = (sourceFieldData: ReportFieldData) => {
+  const initiatives = sourceFieldData[EntityType.INITIATIVE];
+  return (
+    Array.isArray(initiatives) &&
+    (initiatives as ReportFieldData[]).some(
+      (initiative) =>
+        initiative &&
+        !initiative.isInitiativeClosed &&
+        initiativeV1Fields.some((field) => initiative[field])
+    )
   );
 };
 
@@ -102,12 +123,11 @@ const shouldExcludeCopiedField = (
   reportType: ReportType | undefined,
   fieldKey: string,
   entityType: string | undefined,
-  sourceFieldData: ReportFieldData,
-  options?: { [key: string]: boolean }
+  options: CopyOptions
 ) => {
   switch (reportType) {
     case ReportType.WP:
-      return isExcludedInitiativeV1Field(fieldKey, sourceFieldData, options);
+      return isExcludedInitiativeV1Field(fieldKey, options);
     case ReportType.FINANCIAL_REPORT: {
       const normalizedFieldName = getFieldKeySuffix(fieldKey);
       const entityExcludedFields = entityType
@@ -131,12 +151,11 @@ const shouldExcludeCopiedField = (
 const shouldExcludeCopiedEntityField = (
   reportType: ReportType | undefined,
   fieldKey: string,
-  sourceFieldData: ReportFieldData,
-  options?: { [key: string]: boolean }
+  options: CopyOptions
 ) => {
   switch (reportType) {
     case ReportType.WP:
-      return isExcludedInitiativeV1Field(fieldKey, sourceFieldData, options);
+      return isExcludedInitiativeV1Field(fieldKey, options);
     case ReportType.FINANCIAL_REPORT: {
       const normalizedFieldName = getFieldKeySuffix(fieldKey);
       return !financialReportEntityIncludedNormalizedFieldNames.includes(
@@ -152,25 +171,28 @@ const isNameField = (entityKey: string) => entityKey.includes("name");
 const isChoiceField = (entityKey: string) =>
   ["key", "value"].includes(entityKey);
 
-const pruneEntityData = async (
-  sourceFieldData: ReportFieldData,
-  key: string,
+/**
+ * Prunes one array of entities, dropping fields that should not be copied and
+ * entities left with nothing at all. Returns a new array: emptied entries
+ * are omitted rather than deleted in place, since they serialize to null and
+ * crash the next copy of the resulting report.
+ *
+ * This mutates the entities it is handed, but never touches any other part of
+ * the field data. Deciding the fate of the top-level key the array belongs to
+ * is the caller's job.
+ */
+const pruneEntityData = (
+  entityType: string,
   entityData: ReportFieldData[],
-  possibleFields: string[],
+  concatEntityFields: Set<string>,
   reportType: ReportType | undefined,
-  options?: { [key: string]: boolean }
-) => {
-  // adding fields to be copied over from entries
-  const concatEntityFields = [...possibleFields, ...additionalFields];
+  options: CopyOptions
+): ReportFieldData[] => {
+  const prunedEntities: ReportFieldData[] = [];
 
-  const startedWithEntities = entityData.length > 0;
-
-  for (const [index, entity] of entityData.entries()) {
-    // Delete any key existing in the source data not valid in our template, or any entity key that's not a name.
-    if (!concatEntityFields.includes(key)) {
-      delete sourceFieldData[key];
-      continue;
-    }
+  for (const entity of entityData) {
+    // guard against holes/nulls left behind by an older copy
+    if (!entity) continue;
 
     for (const entityKey of Object.keys(entity)) {
       /**
@@ -181,61 +203,33 @@ const pruneEntityData = async (
        */
       if (
         Array.isArray(entity[entityKey]) &&
-        !isExcludedInitiativeV1Field(entityKey, sourceFieldData, options)
+        !isExcludedInitiativeV1Field(entityKey, options)
       ) {
-        pruneEntityData(
-          sourceFieldData,
-          key,
+        entity[entityKey] = pruneEntityData(
+          entityType,
           entity[entityKey] as ReportFieldData[],
-          possibleFields,
+          concatEntityFields,
           reportType,
           options
         );
       } else if (
-        shouldExcludeCopiedField(
-          reportType,
-          entityKey,
-          key,
-          sourceFieldData,
-          options
-        ) ||
-        (shouldExcludeCopiedEntityField(
-          reportType,
-          entityKey,
-          sourceFieldData,
-          options
-        ) &&
+        shouldExcludeCopiedField(reportType, entityKey, entityType, options) ||
+        (shouldExcludeCopiedEntityField(reportType, entityKey, options) &&
           !isNameField(entityKey) &&
           !isChoiceField(entityKey) &&
-          !concatEntityFields.includes(entityKey))
+          !concatEntityFields.has(entityKey))
       ) {
-        delete entityData[index][entityKey];
+        delete entity[entityKey];
       }
     }
 
-    if (Object.keys(entity).length === 0) {
-      delete entityData[index];
-    } else {
-      entityData[index].isCopied = true;
-    }
+    if (Object.keys(entity).length === 0) continue;
+
+    entity.isCopied = true;
+    prunedEntities.push(entity);
   }
 
-  // filter out any closeout data
-  if (Array.isArray(sourceFieldData[key])) {
-    const filteredData = (sourceFieldData[key] as ReportFieldData[]).filter(
-      (field) => !field.isInitiativeClosed
-    );
-    sourceFieldData[key] = filteredData;
-  }
-  // Delete the whole key only if it started with entities AND ended up fully cleared out.
-  const topLevelEntityData = sourceFieldData[key];
-  if (
-    startedWithEntities &&
-    Array.isArray(topLevelEntityData) &&
-    topLevelEntityData.filter(Boolean).length === 0
-  ) {
-    delete sourceFieldData[key];
-  }
+  return prunedEntities;
 };
 
 export async function copyFieldDataFromSource(
@@ -245,7 +239,6 @@ export async function copyFieldDataFromSource(
   validatedFieldData: ReportFieldData
 ) {
   const wpSarRelease2025 = await isFeatureFlagEnabled("wpSarRelease2025");
-  const options = { wpSarRelease2025 };
 
   const sourceFieldData = await getReportFieldData({
     reportType: formTemplate.type,
@@ -254,17 +247,23 @@ export async function copyFieldDataFromSource(
   });
 
   if (sourceFieldData) {
-    const possibleFields = getPossibleFieldsFromFormTemplate(formTemplate);
+    const options = {
+      wpSarRelease2025,
+      hasInitiativeV1: sourceHasInitiativeV1(sourceFieldData),
+    };
+
+    const possibleFields = new Set(
+      getPossibleFieldsFromFormTemplate(formTemplate)
+    );
+    // possible fields, plus extra fields to be copied over from entities
+    const concatEntityFields = new Set([
+      ...possibleFields,
+      ...additionalFields,
+    ]);
 
     for (const key of Object.keys(sourceFieldData)) {
       if (
-        shouldExcludeCopiedField(
-          formTemplate.type,
-          key,
-          undefined,
-          sourceFieldData,
-          options
-        )
+        shouldExcludeCopiedField(formTemplate.type, key, undefined, options)
       ) {
         delete sourceFieldData[key];
         continue;
@@ -272,15 +271,30 @@ export async function copyFieldDataFromSource(
 
       // Only iterate through entities, not choice lists
       if (Array.isArray(sourceFieldData[key])) {
-        pruneEntityData(
-          sourceFieldData,
+        // Drop entity arrays that don't exist in the target template.
+        if (!concatEntityFields.has(key)) {
+          delete sourceFieldData[key];
+          continue;
+        }
+
+        // Closed-out entities are never copied, so drop them before doing the
+        // work of pruning them. Nulls and [] left by older copies pass through
+        // here and pruneEntityData discards them.
+        const openEntities = (sourceFieldData[key] as ReportFieldData[]).filter(
+          (entity) => !entity?.isInitiativeClosed
+        );
+
+        // Keep the key even if everything prunes away: downstream consumers
+        // (e.g. SAR creation transformations) distinguish an empty entity
+        // array from an absent key.
+        sourceFieldData[key] = pruneEntityData(
           key,
-          sourceFieldData[key] as ReportFieldData[],
-          possibleFields,
+          openEntities,
+          concatEntityFields,
           formTemplate.type,
           options
         );
-      } else if (!possibleFields.includes(key)) {
+      } else if (!possibleFields.has(key)) {
         delete sourceFieldData[key];
       }
     }
