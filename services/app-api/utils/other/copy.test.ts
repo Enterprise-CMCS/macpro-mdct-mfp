@@ -337,8 +337,9 @@ describe("Field data copy", () => {
       fieldData
     );
 
-    // The emptied nested row is dropped, not left as an empty array.
-    // Empty arrays blow up the next copy of this report.
+    // The nested array is left as an empty array (no declared fields matched),
+    // but must not contain null holes (e.g. [null]) from deleted entries.
+    // Null holes cause the next copy of this report to lose the parent entity.
     expect(copiedData).toEqual({
       mockEntityType: [
         {
