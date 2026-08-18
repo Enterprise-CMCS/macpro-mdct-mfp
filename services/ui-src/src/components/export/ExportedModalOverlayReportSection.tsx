@@ -751,10 +751,14 @@ const EntityFieldsTable = ({
   };
 
   flattenedFields.forEach((field: FormField | FormLayoutElement) => {
-    // Close-out fields should be shown in the
-    // export only for copied-over reports.
+    // Close-out fields should be shown in the export only for copied-over
+    // reports, and only for initiatives that were carried over or closed —
+    // not for initiatives newly added after the copy-over.
     const isCloseOutField = field.id?.startsWith("closeOutInformation_");
-    const showCloseOutField = isCloseOutField && report?.isCopied;
+    const showCloseOutField =
+      isCloseOutField &&
+      report?.isCopied &&
+      (entity?.isCopied || entity?.isInitiativeClosed);
     if ((field as any).forCopyoverOnly && !showCloseOutField) {
       return;
     }
