@@ -170,6 +170,8 @@ const shouldExcludeCopiedEntityField = (
 const isNameField = (entityKey: string) => entityKey.includes("name");
 const isChoiceField = (entityKey: string) =>
   ["key", "value"].includes(entityKey);
+const isCloseOutField = (entityKey: string) =>
+  entityKey.startsWith("closeOutInformation_");
 
 /**
  * Prunes one array of entities, dropping fields that should not be copied and
@@ -195,6 +197,13 @@ const pruneEntityData = (
     if (!entity) continue;
 
     for (const entityKey of Object.keys(entity)) {
+      // Answering 'no' in the Close-out modal does not
+      // carry over between Work Plans. (WP -> SAR copyover keeps them.)
+      if (reportType === ReportType.WP && isCloseOutField(entityKey)) {
+        delete entity[entityKey];
+        continue;
+      }
+
       /**
        * Check to see if the object is an array,
        * this is for capturing entitySteps in initiatives v1

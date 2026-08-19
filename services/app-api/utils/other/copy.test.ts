@@ -1115,5 +1115,39 @@ describe("Field data copy", () => {
       // would turn a valid (if empty) copy into a 500 on SAR creation.
       expect(gen2.initiative).toEqual([]);
     });
+
+    it("clears close-out answers when copying a Work Plan forward", async () => {
+      const gen1WithCloseOutAnswer = {
+        initiative: [
+          {
+            ...gen1.initiative[0],
+            closeOutInformation_closeOut: [
+              {
+                key: "closeOutInformation_closeOut-closeOutInitiativeNo",
+                value: "No",
+              },
+            ],
+            closeOutInformation_actualEndDate: "01/01/2026",
+          },
+        ],
+      };
+      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+        JSON.parse(JSON.stringify(gen1WithCloseOutAnswer))
+      );
+
+      const gen2: any = await copyFieldDataFromSource(
+        "CO",
+        "gen1-id",
+        formTemplate,
+        {}
+      );
+
+      expect(gen2.initiative).toHaveLength(1);
+      expect(gen2.initiative[0].initiative_name).toBe("Open Initiative");
+      expect(gen2.initiative[0].closeOutInformation_closeOut).toBeUndefined();
+      expect(
+        gen2.initiative[0].closeOutInformation_actualEndDate
+      ).toBeUndefined();
+    });
   });
 });
