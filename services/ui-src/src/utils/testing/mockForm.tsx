@@ -590,14 +590,17 @@ export const mockModalOverlayForm = {
       id: "closeOutInformation_projectedEndDate",
       type: ReportFormFieldType.DATE,
       validation: ValidationType.DATE_OPTIONAL,
+      forCopyoverOnly: true,
       props: {
         label: "mock projected end date field",
+        title: "Close-out {{initiativeName}}",
       },
     },
     {
       id: "closeOutInformation_actualEndDate",
       type: ReportFormFieldType.DATE,
       validation: ValidationType.DATE_OPTIONAL,
+      forCopyoverOnly: true,
       props: {
         label: "mock close out actual end date field",
       },

@@ -108,21 +108,31 @@ describe("<EntityDetailsOverlayV2 />", () => {
   });
 
   test("updates initiative endDates", async () => {
-    render(entityDetailsOverlayComponent());
+    const copiedEntity = {
+      ...mockEntityStore.selectedEntity,
+      isCopied: true,
+    } as EntityShape;
+    render(entityDetailsOverlayComponent(true, copiedEntity));
 
     const endDate = screen.getByRole("textbox", {
       name: "mock end date field",
     });
     expect(endDate).toHaveValue("");
 
-    const projectEndDate = screen.getByRole("textbox", {
-      name: "mock projected end date field",
-    });
-    expect(projectEndDate).toHaveValue("");
-
     await act(async () => {
       await userEvent.type(endDate, "01/01/2026");
       await userEvent.tab();
+    });
+
+    // the projected end date lives in the close-out modal
+    await act(async () => {
+      await userEvent.click(
+        screen.getByRole("button", { name: "Close out initiative" })
+      );
+    });
+
+    const projectEndDate = screen.getByRole("textbox", {
+      name: "mock projected end date field",
     });
     expect(projectEndDate).toHaveValue("01/01/2026");
   });
@@ -146,6 +156,12 @@ describe("<EntityDetailsOverlayV2 />", () => {
 
     await act(async () => {
       await render(entityDetailsOverlayComponent(true, closedOutEntity));
+    });
+
+    await act(async () => {
+      await userEvent.click(
+        screen.getByRole("button", { name: "Close out initiative" })
+      );
     });
 
     expect(

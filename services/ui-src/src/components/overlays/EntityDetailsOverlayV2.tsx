@@ -1,11 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Spinner,
+  useDisclosure,
+} from "@chakra-ui/react";
 // components
-import { Alert, Form, ReportPageIntro } from "components";
+import { CloseOutModal, Form, ReportPageIntro } from "components";
 // types
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import {
-  AlertTypes,
   DynamicModalOverlayReportPageShape,
   EntityShape,
   ErrorVerbiage,
@@ -14,7 +21,13 @@ import {
   ReportType,
 } from "types";
 // utils
-import { isClosedInitiative, toggleOptional, useStore } from "utils";
+import {
+  isClosedInitiative,
+  isFieldElement,
+  toggleOptional,
+  translate,
+  useStore,
+} from "utils";
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
@@ -33,7 +46,6 @@ export const EntityDetailsOverlayV2 = ({
   validateOnRender = false,
 }: Props) => {
   const [autosave, setAutosave] = useState<boolean>(true);
-  const [showAlert, setShowAlert] = useState<boolean>(false);
   const [formJson, setFormJson] = useState<FormJson>(form);
   // Use separate entity from selectedEntity for form change
   const [currentEntity, setCurrentEntity] = useState<EntityShape>(
@@ -55,43 +67,65 @@ export const EntityDetailsOverlayV2 = ({
     ? { onClick: () => closeEntityDetailsOverlay() }
     : { form: form.id };
 
-  const getFields = (entity?: EntityShape) => {
-    const fields = entity?.isCopied
-      ? form.fields
-      : form.fields?.filter((f) => !f.forCopyoverOnly);
-    return fields || [];
-  };
+  const closeOutModal = useDisclosure();
+
+  const closeOutFields = form.fields?.filter((f) => f.forCopyoverOnly) || [];
+
+  const isClosed = isClosedInitiative(currentEntity);
+  const showCloseOut =
+    Boolean(currentEntity?.isCopied) && closeOutFields.length > 0;
+
+  // The "Close-out {{initiativeName}}" title lives on the close-out field. Render
+  // it on the page next to the button, and strip it from the modal's copy of the
+  // field so the heading isn't duplicated inside the modal.
+  const closeOutTitleTemplate = closeOutFields
+    .filter(isFieldElement)
+    .find((field) => field.props?.title)?.props?.title;
+  const closeOutTitle = closeOutTitleTemplate
+    ? translate(closeOutTitleTemplate, {
+        initiativeName: currentEntity?.initiative_name,
+      })
+    : "Close-out";
+
+  const closeOutForm = toggleOptional(
+    {
+      ...form,
+      fields: closeOutFields.map((field) =>
+        isFieldElement(field) && field.props?.title
+          ? { ...field, props: { ...field.props, title: undefined } }
+          : field
+      ),
+    },
+    isClosed
+  );
 
   const updateCloseoutSection = useCallback(
     (entity: EntityShape) => {
-      const isClosed = isClosedInitiative(entity);
-      const fields = getFields(entity);
-
       // keep autosave on in the SAR so edits to closed initiatives persist
-      setAutosave(!isClosed || !isWP);
-      setShowAlert(Boolean(entity.isCopied));
-      setFormJson(toggleOptional({ ...form, fields }, isClosed));
+      setAutosave(!isClosedInitiative(entity) || !isWP);
+      setFormJson({
+        ...form,
+        fields: form.fields?.filter((f) => !f.forCopyoverOnly) || [],
+      });
     },
     [form, isWP]
   );
 
   const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {
     const currentValues = hookForm.getValues() as EntityShape;
+    const endDate = currentValues.defineInitiative_endDate;
 
-    // Update only if close-out section is in form
-    if ("closeOutInformation_projectedEndDate" in currentValues) {
-      const endDate = currentValues.defineInitiative_endDate;
-      const projectedEndDate =
-        currentValues.closeOutInformation_projectedEndDate;
-      if (endDate === projectedEndDate) return;
-
-      const updatedEntity = {
+    // Keep the read-only close-out projected end date in sync with the
+    // initiative end date so the modal shows the latest value.
+    if (
+      endDate &&
+      endDate !== currentEntity?.closeOutInformation_projectedEndDate
+    ) {
+      setCurrentEntity({
         ...currentEntity,
         ...currentValues,
         closeOutInformation_projectedEndDate: endDate,
-      };
-      hookForm.setValue("closeOutInformation_projectedEndDate", endDate);
-      setCurrentEntity(updatedEntity);
+      });
     }
   };
 
@@ -101,6 +135,10 @@ export const EntityDetailsOverlayV2 = ({
     currentEntity?.closeOutInformation_actualEndDate,
     currentEntity?.isCopied,
   ]);
+
+  useEffect(() => {
+    if (selectedEntity) setCurrentEntity(selectedEntity as EntityShape);
+  }, [selectedEntity?.id, selectedEntity?.isInitiativeClosed]);
 
   return (
     <Box>
@@ -135,12 +173,30 @@ export const EntityDetailsOverlayV2 = ({
           validateOnRender={validateOnRender}
         />
       )}
-      {showAlert && errorMessage && (
-        <Alert
-          description={errorMessage.description}
-          status={AlertTypes.WARNING}
-          title={errorMessage.title}
-        />
+      {showCloseOut && (
+        <Box sx={sx.closeOutSection}>
+          <Heading as="h2" sx={sx.closeOutHeading}>
+            {closeOutTitle}
+          </Heading>
+          <Button
+            onClick={closeOutModal.onOpen}
+            variant={isClosed ? "outline" : undefined}
+          >
+            {isClosed ? "View close out information" : "Close out initiative"}
+          </Button>
+          <CloseOutModal
+            disabled={isDisabled}
+            entityType={currentEntity?.type as string}
+            errorMessage={errorMessage}
+            form={closeOutForm}
+            heading={closeOutTitle}
+            modalDisclosure={{
+              isOpen: closeOutModal.isOpen,
+              onClose: closeOutModal.onClose,
+            }}
+            selectedEntity={currentEntity}
+          />
+        </Box>
       )}
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
@@ -200,6 +256,13 @@ const sx = {
   },
   closeIcon: {
     width: "0.85rem",
+  },
+  closeOutSection: {
+    marginTop: "spacer4",
+  },
+  closeOutHeading: {
+    fontSize: "xl",
+    marginBottom: "spacer2",
   },
   footerBox: {
     marginTop: "spacer4",

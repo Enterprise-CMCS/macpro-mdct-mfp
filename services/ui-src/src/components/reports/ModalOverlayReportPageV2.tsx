@@ -171,7 +171,9 @@ export const ModalOverlayReportPageV2 = ({
       );
       const nonTableFields = form.fields
         .filter(isFieldElement)
-        .filter((f) => !isTableField(f));
+        .filter((f) => !isTableField(f))
+        // close-out fields are saved from the close-out modal, not this form
+        .filter((f) => !f.forCopyoverOnly);
       const filteredFormData = filterFormData(enteredData, nonTableFields);
       const entriesToClear = getEntriesToClear(enteredData, nonTableFields);
       const closeOutInitiative = isClosedInitiative(enteredData)
