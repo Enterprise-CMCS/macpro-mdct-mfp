@@ -152,24 +152,21 @@ export const EntityRow = ({
                   `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
               </Text>
             )}
-            {isInitiativeClosed &&
-              showEntityCloseoutDetails &&
-              (console.log(entity),
-              (
-                <Table
-                  content={{
-                    headRow: ["Actual end date", "Closed by"],
-                    bodyRows: [
-                      [
-                        entity.closeOutInformation_actualEndDate ?? "N/A",
-                        closedBy,
-                      ],
+            {isInitiativeClosed && showEntityCloseoutDetails && (
+              <Table
+                content={{
+                  headRow: ["Actual end date", "Closed by"],
+                  bodyRows: [
+                    [
+                      entity.closeOutInformation_actualEndDate ?? "No response",
+                      closedBy,
                     ],
-                  }}
-                  variant="none"
-                  sxOverride={sx.table}
-                ></Table>
-              ))}
+                  ],
+                }}
+                variant="none"
+                sxOverride={sx.table}
+              ></Table>
+            )}
           </Box>
           <Box
             sx={sx.actionContainer}
