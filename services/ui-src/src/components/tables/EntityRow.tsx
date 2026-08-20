@@ -158,7 +158,8 @@ export const EntityRow = ({
                   headRow: ["Actual end date", "Closed by"],
                   bodyRows: [
                     [
-                      entity.closeOutInformation_actualEndDate ?? "No response",
+                      entity.closeOutInformation_actualEndDate ??
+                        "No response (optional)",
                       closedBy,
                     ],
                   ],
