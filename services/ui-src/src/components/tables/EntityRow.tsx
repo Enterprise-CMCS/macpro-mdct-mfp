@@ -152,18 +152,24 @@ export const EntityRow = ({
                   `Select "${verbiage.enterEntityDetailsButtonText}" to report data.`}
               </Text>
             )}
-            {isInitiativeClosed && showEntityCloseoutDetails && (
-              <Table
-                content={{
-                  headRow: ["Actual end date", "Closed by"],
-                  bodyRows: [
-                    [entity.closeOutInformation_actualEndDate, closedBy],
-                  ],
-                }}
-                variant="none"
-                sxOverride={sx.table}
-              ></Table>
-            )}
+            {isInitiativeClosed &&
+              showEntityCloseoutDetails &&
+              (console.log(entity),
+              (
+                <Table
+                  content={{
+                    headRow: ["Actual end date", "Closed by"],
+                    bodyRows: [
+                      [
+                        entity.closeOutInformation_actualEndDate ?? "N/A",
+                        closedBy,
+                      ],
+                    ],
+                  }}
+                  variant="none"
+                  sxOverride={sx.table}
+                ></Table>
+              ))}
           </Box>
           <Box
             sx={sx.actionContainer}
@@ -307,16 +313,11 @@ const sx = {
     },
   },
   table: {
-    td: {
-      paddingTop: "0rem",
-      paddingLeft: "0rem",
-    },
     th: {
-      paddingLeft: "0rem",
-      border: "none",
-      fontWeight: "bold",
-      color: "gray",
-      width: "2rem",
+      paddingLeft: "spacer1",
+    },
+    td: {
+      padding: "spacer2",
     },
   },
 };
