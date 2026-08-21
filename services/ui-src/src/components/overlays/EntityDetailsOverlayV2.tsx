@@ -209,8 +209,8 @@ export const EntityDetailsOverlayV2 = ({
             variant={isClosed ? "outline" : undefined}
           >
             {isClosed
-              ? "View close out information"
-              : "Update close out status"}
+              ? "View close-out information"
+              : "Update close-out status"}
           </Button>
           <CloseOutModal
             disabled={isDisabled}
