@@ -6,6 +6,7 @@ import {
   Heading,
   Image,
   Spinner,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 // components
@@ -87,12 +88,36 @@ export const EntityDetailsOverlayV2 = ({
       })
     : "Close-out";
 
+  // The close-out hint renders on the page under the heading; strip it from the
+  // modal's copy of the field so it isn't duplicated inside the modal.
+  const closeOutHintTemplate = closeOutFields
+    .filter(isFieldElement)
+    .find((field) => field.props?.hint)?.props?.hint;
+  const closeOutHint = closeOutHintTemplate
+    ? translate(closeOutHintTemplate, {
+        initiativeName: currentEntity?.initiative_name,
+      })
+    : undefined;
+
+  // The close-out modal hint renders under the modal heading.
+  const closeOutModalHintTemplate = closeOutFields
+    .filter(isFieldElement)
+    .find((field) => field.props?.modalHint)?.props?.modalHint;
+  const closeOutModalHint = closeOutModalHintTemplate
+    ? translate(closeOutModalHintTemplate, {
+        initiativeName: currentEntity?.initiative_name,
+      })
+    : undefined;
+
   const closeOutForm = toggleOptional(
     {
       ...form,
       fields: closeOutFields.map((field) =>
-        isFieldElement(field) && field.props?.title
-          ? { ...field, props: { ...field.props, title: undefined } }
+        isFieldElement(field) && (field.props?.title || field.props?.hint)
+          ? {
+              ...field,
+              props: { ...field.props, title: undefined, hint: undefined },
+            }
           : field
       ),
     },
@@ -178,11 +203,14 @@ export const EntityDetailsOverlayV2 = ({
           <Heading as="h2" sx={sx.closeOutHeading}>
             {closeOutTitle}
           </Heading>
+          {closeOutHint && <Text sx={sx.closeOutHint}>{closeOutHint}</Text>}
           <Button
             onClick={closeOutModal.onOpen}
             variant={isClosed ? "outline" : undefined}
           >
-            {isClosed ? "View close out information" : "Close out initiative"}
+            {isClosed
+              ? "View close out information"
+              : "Update close out status"}
           </Button>
           <CloseOutModal
             disabled={isDisabled}
@@ -190,6 +218,7 @@ export const EntityDetailsOverlayV2 = ({
             errorMessage={errorMessage}
             form={closeOutForm}
             heading={closeOutTitle}
+            subheading={closeOutModalHint}
             modalDisclosure={{
               isOpen: closeOutModal.isOpen,
               onClose: closeOutModal.onClose,
@@ -263,6 +292,10 @@ const sx = {
   closeOutHeading: {
     fontSize: "xl",
     marginBottom: "spacer2",
+  },
+  closeOutHint: {
+    color: "gray",
+    marginBottom: "spacer3",
   },
   footerBox: {
     marginTop: "spacer4",

@@ -27,6 +27,7 @@ export const CloseOutModal = ({
   errorMessage,
   form,
   heading,
+  subheading,
   modalDisclosure,
   selectedEntity,
 }: Props) => {
@@ -105,6 +106,7 @@ export const CloseOutModal = ({
     <Modal
       content={{
         heading,
+        subheading,
         actionButtonText: disabled ? "Return" : "Save",
         closeButtonText: "Cancel",
       }}
@@ -143,6 +145,7 @@ interface Props {
   errorMessage?: ErrorVerbiage;
   form: FormJson;
   heading: string;
+  subheading?: string;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;

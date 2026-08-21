@@ -434,6 +434,9 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
           subtitle:
             "Complete for initiatives that end during the upcoming semi-annual reporting period.",
           title: "Close-out {{initiativeName}}",
+          hint: "Complete this status check for the upcoming semi-annual reporting period to indicate whether your initiative will close or remain open. Closing out an initiative cannot be undone, so only select “Yes” in the modal if ready to close out.",
+          modalHint:
+            "To close this initiative select “Yes” below. Please note closing out an initiative is a final action and the initiative will no longer be available for reporting in future Work Plans.",
           choices: [
             {
               id: "closeOutInitiativeYes",
