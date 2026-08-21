@@ -389,7 +389,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
     // forCopyoverOnly (close-out) fields now live in the close-out modal
     await act(async () => {
       await userEvent.click(
-        screen.getByRole("button", { name: "Close out initiative" })
+        screen.getByRole("button", { name: "Update close-out status" })
       );
     });
 

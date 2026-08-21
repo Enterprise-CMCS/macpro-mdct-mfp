@@ -127,7 +127,7 @@ describe("<EntityDetailsOverlayV2 />", () => {
     // the projected end date lives in the close-out modal
     await act(async () => {
       await userEvent.click(
-        screen.getByRole("button", { name: "Close out initiative" })
+        screen.getByRole("button", { name: "Update close-out status" })
       );
     });
 
@@ -160,7 +160,7 @@ describe("<EntityDetailsOverlayV2 />", () => {
 
     await act(async () => {
       await userEvent.click(
-        screen.getByRole("button", { name: "Close out initiative" })
+        screen.getByRole("button", { name: "Update close-out status" })
       );
     });
 
