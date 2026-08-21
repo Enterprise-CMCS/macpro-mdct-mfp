@@ -315,7 +315,7 @@ const sx = {
       paddingLeft: "spacer1",
     },
     td: {
-      padding: "spacer2",
+      padding: "spacer1",
     },
   },
 };
