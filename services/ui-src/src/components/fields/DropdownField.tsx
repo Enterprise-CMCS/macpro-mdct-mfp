@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   DropdownChangeObject,
   Hint,
@@ -7,7 +7,12 @@ import {
 } from "@cmsgov/design-system";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
 // utils
-import { labelTextWithOptional, parseCustomHtml, shimComponent, useStore } from "utils";
+import {
+  labelTextWithOptional,
+  parseCustomHtml,
+  shimComponent,
+  useStore,
+} from "utils";
 // types
 import { DropdownChoice, DropdownOptions } from "types";
 // constants
@@ -26,7 +31,11 @@ export const DropdownField = ({
   disabled,
 }: Props) => {
   const { setAnswers, answers, errors } = useStore();
-  
+
+  useEffect(() => {
+    setAnswers({ ...answers, [name]: "" });
+  }, []);
+
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {
     let dropdownOptions: any[] = [];
@@ -61,7 +70,7 @@ export const DropdownField = ({
       formattedOptions.find((option) => option.value === selectedValue) ||
       defaultValue;
     setDisplayValue(selectedOption);
-    setAnswers({...answers, [name]:selectedOption})
+    setAnswers({ ...answers, [name]: selectedOption });
   };
 
   // update form field data & database data on blur

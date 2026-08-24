@@ -1,4 +1,9 @@
-import { HTMLInputAutoCompleteAttribute, ReactNode, useState } from "react";
+import {
+  HTMLInputAutoCompleteAttribute,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
 // components
 import { NumberFieldDisplay } from "components";
 // utils
@@ -47,11 +52,15 @@ export const NumberField = ({
 
   const { report, selectedEntity, setAnswers, answers, errors } = useStore();
 
+  useEffect(() => {
+    setAnswers({ ...answers, [name]: "" });
+  }, []);
+
   // update form data on change, but do not mask
   const onChangeHandler = async (event: InputChangeEvent) => {
     const { name, value } = event.target;
     setDisplayValue(value);
-    setAnswers({...answers, [name]:value})
+    setAnswers({ ...answers, [name]: value });
 
     if (handleOnChange) handleOnChange(event);
   };

@@ -55,7 +55,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   formData,
   formJson,
   id,
-  nestedForm,
   onError,
   onFormChange,
   onSubmit,
@@ -66,8 +65,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const { editableByAdmins, fields, tables = [] } = formJson;
 
   let location = useLocation();
-  const { report, setReport, selectedEntity, setErrors, setAnswers, answers } =
-    useStore();
+  const { report, setReport, selectedEntity, setErrors, answers, setAnswers } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
 
   // determine if fields should be disabled (based on admin roles)
@@ -102,8 +100,9 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   useEffect(() => {
-    setAnswers(formData);
-  }, []);
+    console.log("formData", formData);
+    setAnswers({...answers, ...formData});
+  }, [])
 
   useEffect(() => {
     setErrors(validation(answers));
@@ -344,7 +343,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
       id={id}
       autoComplete="off"
       onChange={onChange}
-      {...(!nestedForm && { onSubmit: submit })}
+      onSubmit={submit}
       {...props}
     >
       <Box sx={sx}>
@@ -373,7 +372,6 @@ interface Props {
   formData?: AnyObject;
   formJson: FormJson;
   id: string;
-  nestedForm?: boolean;
   onError?: () => void;
   onFormChange?: Function;
   onSubmit: Function;

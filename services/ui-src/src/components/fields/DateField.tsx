@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
 // components
 import { SingleInputDateField as CmsdsDateField } from "@cmsgov/design-system";
@@ -10,7 +10,7 @@ import {
   checkDateCompleteness,
   parseCustomHtml,
   FieldInfo,
-  useStore
+  useStore,
 } from "utils";
 
 export const DateField = ({
@@ -33,8 +33,12 @@ export const DateField = ({
   // update field display value and form field data on change
   const onChangeHandler = (rawValue: string, maskedValue: string) => {
     setDisplayValue(rawValue);
-    setAnswers({...answers, [name]:rawValue})
+    setAnswers({ ...answers, [name]: rawValue });
   };
+
+  useEffect(() => {
+    setAnswers({ ...answers, [name]: "" });
+  }, []);
 
   // if should autosave, submit field data to database on blur
   const onBlurHandler = async (event: InputChangeEvent) => {

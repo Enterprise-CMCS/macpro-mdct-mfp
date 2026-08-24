@@ -31,6 +31,10 @@ export const DynamicField = ({
     selectedEntity?.[name] ?? [],
   );
 
+  useEffect(() => {
+    setAnswers({...answers, [name] : ""});
+  }, [])
+
   // update display value on change
   const onChangeHandler = (event: InputChangeEvent) => {
     const { id, value } = event.target;

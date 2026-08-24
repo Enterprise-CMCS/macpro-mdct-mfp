@@ -62,8 +62,6 @@ export const ModalOverlayReportPageV2 = ({
   const [form, setForm] = useState<FormJson>({} as FormJson);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  console.log("modal overal report 2");
-
   // State management
   const { full_name, state, userIsAdmin, userIsEndUser, userIsReadOnly } =
     useStore().user ?? {};

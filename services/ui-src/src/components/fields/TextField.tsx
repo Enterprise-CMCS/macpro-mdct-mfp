@@ -1,4 +1,4 @@
-import { HTMLInputAutoCompleteAttribute, ReactNode, useState } from "react";
+import { HTMLInputAutoCompleteAttribute, ReactNode, useEffect, useState } from "react";
 // components
 import { SystemStyleObject } from "@chakra-ui/react";
 import { TextFieldDisplay } from "components";
@@ -40,9 +40,14 @@ export const TextField = ({
   const defaultValue = hydrate ?? "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
-  if(name === "defineInitiative_keyMetrics_performanceIndicators-name"){
+   if(name === "defineInitiative_keyMetrics_performanceIndicators-name"){
     console.log("rendered", name, errors?.[name]?.message);
   }
+  
+  useEffect(() => {
+    const newAnswers = {...answers, [name]:""};
+    setAnswers(newAnswers)
+  }, [])
 
   // update display value and form field data on change
   const onChangeHandler = async (event: InputChangeEvent) => {

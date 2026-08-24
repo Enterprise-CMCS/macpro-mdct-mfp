@@ -110,8 +110,6 @@ export const DynamicTableProvider = ({ children }: any) => {
   }: DisplayReadOnlyCellOptions) => {
     const cellValue = localFieldData?.[id] || hydrate || initialValue;
 
-    console.log("cellValue",cellValue);
-
     let readOnlyValue = Array.isArray(cellValue)
       ? cellValue?.[rowIndex]?.name || initialValue
       : cellValue;
