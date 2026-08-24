@@ -110,6 +110,7 @@ export interface ReportFormFieldProps {
   mask?: NumberMask | null;
   maxLength?: number;
   modalHint?: string;
+  modalTitle?: string;
   multiline?: boolean;
   sectionTitle?: string;
   styleAsOptional?: boolean;

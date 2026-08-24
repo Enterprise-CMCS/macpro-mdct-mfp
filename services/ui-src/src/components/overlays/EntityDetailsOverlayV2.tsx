@@ -76,37 +76,32 @@ export const EntityDetailsOverlayV2 = ({
   const showCloseOut =
     Boolean(currentEntity?.isCopied) && closeOutFields.length > 0;
 
-  // The "Close-out {{initiativeName}}" title lives on the close-out field. Render
-  // it on the page next to the button, and strip it from the modal's copy of the
-  // field so the heading isn't duplicated inside the modal.
-  const closeOutTitleTemplate = closeOutFields
+  // The title/hint/modalTitle/modalHint all live on the same close-out field.
+  const closeOutFieldProps = closeOutFields
     .filter(isFieldElement)
-    .find((field) => field.props?.title)?.props?.title;
-  const closeOutTitle = closeOutTitleTemplate
-    ? translate(closeOutTitleTemplate, {
-        initiativeName: currentEntity?.initiative_name,
-      })
+    .find((field) => field.props)?.props;
+  const initiativeName = currentEntity?.initiative_name;
+
+  // The title renders on the page next to the button, and is stripped from the
+  // modal's copy of the field so the heading isn't duplicated inside the modal.
+  const closeOutTitle = closeOutFieldProps?.title
+    ? translate(closeOutFieldProps.title, { initiativeName })
     : "Close-out";
 
-  // The close-out hint renders on the page under the heading; strip it from the
-  // modal's copy of the field so it isn't duplicated inside the modal.
-  const closeOutHintTemplate = closeOutFields
-    .filter(isFieldElement)
-    .find((field) => field.props?.hint)?.props?.hint;
-  const closeOutHint = closeOutHintTemplate
-    ? translate(closeOutHintTemplate, {
-        initiativeName: currentEntity?.initiative_name,
-      })
+  // The modal uses its own heading; fall back to the page title if unset.
+  const closeOutModalTitle = closeOutFieldProps?.modalTitle
+    ? translate(closeOutFieldProps.modalTitle, { initiativeName })
+    : closeOutTitle;
+
+  // The close-out hint renders on the page under the heading; it's stripped from
+  // the modal's copy of the field so it isn't duplicated inside the modal.
+  const closeOutHint = closeOutFieldProps?.hint
+    ? translate(closeOutFieldProps.hint, { initiativeName })
     : undefined;
 
   // The close-out modal hint renders under the modal heading.
-  const closeOutModalHintTemplate = closeOutFields
-    .filter(isFieldElement)
-    .find((field) => field.props?.modalHint)?.props?.modalHint;
-  const closeOutModalHint = closeOutModalHintTemplate
-    ? translate(closeOutModalHintTemplate, {
-        initiativeName: currentEntity?.initiative_name,
-      })
+  const closeOutModalHint = closeOutFieldProps?.modalHint
+    ? translate(closeOutFieldProps.modalHint, { initiativeName })
     : undefined;
 
   const closeOutForm = toggleOptional(
@@ -217,7 +212,7 @@ export const EntityDetailsOverlayV2 = ({
             entityType={currentEntity?.type as string}
             errorMessage={errorMessage}
             form={closeOutForm}
-            heading={closeOutTitle}
+            heading={closeOutModalTitle}
             subheading={closeOutModalHint}
             modalDisclosure={{
               isOpen: closeOutModal.isOpen,
