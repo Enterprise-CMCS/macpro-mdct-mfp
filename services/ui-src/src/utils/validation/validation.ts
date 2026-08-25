@@ -60,9 +60,10 @@ export const makeNestedFieldSchema = (fieldValidationObject: AnyObject) => {
     );
   } else {
     const correspondingSchema = schemaMap[type];
-    const fieldValidationSchema = options
-      ? correspondingSchema(options)
-      : correspondingSchema;
+    const fieldValidationSchema =
+      typeof correspondingSchema === "function"
+        ? correspondingSchema(options)
+        : correspondingSchema;
 
     return nested(() => fieldValidationSchema, parentFieldName, parentOptionId);
   }
