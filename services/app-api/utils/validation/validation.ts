@@ -56,17 +56,17 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
         }
       }
       // else if custom validation type with options
-      else if (fieldValidation.options) {
+      else if (fieldValidation?.options && !fieldValidation?.nested) {
         const correspondingSchema = schemaMap[fieldValidation.type];
         if (correspondingSchema) {
           validationSchema[key] = correspondingSchema(fieldValidation.options);
         }
       }
       // else if nested validation type, make and set nested schema
-      else if (fieldValidation.nested) {
+      else if (fieldValidation?.nested) {
         validationSchema[key] = makeNestedFieldSchema(fieldValidation);
         // else if not nested, make and set other dependent field types
-      } else if (fieldValidation.type === ValidationType.END_DATE) {
+      } else if (fieldValidation?.type === ValidationType.END_DATE) {
         validationSchema[key] = makeEndDateFieldSchema(fieldValidation);
       }
     }
@@ -96,9 +96,10 @@ export const makeNestedFieldSchema = (fieldValidationObject: AnyObject) => {
     );
   } else {
     const correspondingSchema = schemaMap[type];
-    const fieldValidationSchema = options
-      ? correspondingSchema(options)
-      : correspondingSchema;
+    const fieldValidationSchema =
+      typeof correspondingSchema === "function"
+        ? correspondingSchema(options)
+        : correspondingSchema;
 
     return nested(() => fieldValidationSchema, parentFieldName, parentOptionId);
   }
