@@ -65,7 +65,15 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const { editableByAdmins, fields, tables = [] } = formJson;
 
   let location = useLocation();
-  const { report, setReport, selectedEntity, setErrors, answers, setAnswers } = useStore();
+  const {
+    report,
+    setReport,
+    selectedEntity,
+    setErrors,
+    setValidationSchema,
+    validationSchema,
+    fields: testField,
+  } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
 
   // determine if fields should be disabled (based on admin roles)
@@ -84,12 +92,13 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const tableFieldIds = allFields
     .filter(isTableField)
     .map((f: FormField) => f.id);
+
   const formValidationJson = compileValidationJsonFromFields(allFields);
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
-  const formResolverSchema = yupSchema(formValidationSchema || {});
 
   const validation = (values: {}) => {
     try {
+      const formResolverSchema = yupSchema(formValidationSchema || {});
       formResolverSchema.validateSync(values, {
         abortEarly: false,
       });
@@ -99,14 +108,23 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     }
   };
 
-  useEffect(() => {
-    console.log("formData", formData);
-    setAnswers({...answers, ...formData});
-  }, [])
+  const buildAnswerObject = () => {
+    const answers: { [key: string]: { value: any } } = {};
+    for (const [key, value] of testField) {
+      answers[key] = value.answer;
+    }
+    return answers;
+  };
 
   useEffect(() => {
+    const answers: { [key: string]: { value: any } } = {};
+    for (const [key, value] of testField) {
+      answers[key] = value.answer;
+    }
+    // console.log("answers", answers);
+    // console.log("validation", validation(answers));
     setErrors(validation(answers));
-  }, [answers]);
+  }, [testField]);
 
   // will run if any validation errors exist on form submission
   const onErrorHandler = (errors: AnyObject) => {
@@ -245,7 +263,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
   const onChange = () => {
     if (onFormChange) {
-      onFormChange(answers);
+      onFormChange(buildAnswerObject());
     }
   };
 
@@ -311,7 +329,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     console.log("form submit");
     e?.preventDefault();
 
-    const errors = validation(answers);
+    const errors = validation(buildAnswerObject());
     setErrors(errors);
 
     const formErrors = Object.keys(errors).filter((key) => {
@@ -331,7 +349,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     });
 
     if (formErrors.length === 0) {
-      onSubmit(answers);
+      onSubmit(buildAnswerObject());
       return;
     }
 

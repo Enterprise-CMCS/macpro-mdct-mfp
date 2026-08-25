@@ -26,7 +26,7 @@ export const DateField = ({
   updateFieldValues,
   ...props
 }: Props) => {
-  const { setAnswers, answers, errors } = useStore();
+  const { setAnswers, answers, errors, setField } = useStore();
   const defaultValue = props?.hydrate ?? "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
@@ -37,8 +37,8 @@ export const DateField = ({
   };
 
   useEffect(() => {
-    setAnswers({ ...answers, [name]: "" });
-  }, []);
+    setField(name);
+  }, [])
 
   // if should autosave, submit field data to database on blur
   const onBlurHandler = async (event: InputChangeEvent) => {

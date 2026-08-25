@@ -7,6 +7,7 @@ import {
   ReportRoute,
   ReportShape,
 } from "types";
+import { AnyObject } from "yup/lib/types";
 
 // initial user state
 export interface MfpUserState {
@@ -51,7 +52,6 @@ export interface MfpReportState {
   autosaveState: boolean;
   editable: boolean;
   currentPageTemplate: ReportRoute | undefined;
-  errors: any;
   answers: {};
   // ACTIONS
   setReport: (newReport: ReportShape | undefined) => void;
@@ -67,7 +67,6 @@ export interface MfpReportState {
   setAutosaveState: (state: boolean) => void;
   setEditable: (state: boolean) => void;
   setCurrentPageTemplate: (template: ReportRoute | undefined) => void;
-  setErrors: (updatedErrors: any) => void;
   setAnswers: (newAnswers: any) => void;
 }
 
@@ -78,4 +77,18 @@ export interface MfpEntityState {
   // ACTIONS
   setSelectedEntity: (newSelectedEntity: EntityShape | undefined) => void;
   clearSelectedEntity: () => void;
+}
+export type FIELD_DATA = {
+  answer: any;
+};
+
+export interface MfpFieldState {
+  fields: Map<string, FIELD_DATA>;
+  errors: {[key:string]: {message:string, type: string}};
+  validationSchema: AnyObject,
+  setField: (id: string) => void;
+  setAnswer: (id: string, answer: any) => void;
+  setValidationSchema: (schema: AnyObject) => void;
+  setErrors: (updatedErrors: any) => void;
+  setClearFields: () => void;
 }

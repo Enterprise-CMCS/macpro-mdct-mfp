@@ -50,11 +50,11 @@ export const NumberField = ({
     applyMask(defaultValue, mask, decimalPlacesToRoundTo).maskedValue,
   );
 
-  const { report, selectedEntity, setAnswers, answers, errors } = useStore();
+  const { report, selectedEntity, setAnswers, answers, errors, setField } = useStore();
 
   useEffect(() => {
-    setAnswers({ ...answers, [name]: "" });
-  }, []);
+    setField(name);
+  }, [])
 
   // update form data on change, but do not mask
   const onChangeHandler = async (event: InputChangeEvent) => {

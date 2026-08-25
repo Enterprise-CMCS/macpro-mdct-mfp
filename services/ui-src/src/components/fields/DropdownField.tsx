@@ -30,11 +30,11 @@ export const DropdownField = ({
   styleAsOptional,
   disabled,
 }: Props) => {
-  const { setAnswers, answers, errors } = useStore();
+  const { setAnswers, answers, errors, setField } = useStore();
 
   useEffect(() => {
-    setAnswers({ ...answers, [name]: "" });
-  }, []);
+    setField(name);
+  }, [])
 
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {

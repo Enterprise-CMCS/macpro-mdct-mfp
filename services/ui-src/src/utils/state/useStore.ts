@@ -13,6 +13,9 @@ import {
   MfpEntityState,
   ErrorVerbiage,
   ReportRoute,
+  MfpFieldState,
+  FIELD_DATA,
+  AnyObject,
 } from "types";
 
 // USER STORE
@@ -74,7 +77,6 @@ const reportStore = (set: Function) => ({
   autosaveState: false,
   editable: true,
   currentPageTemplate: undefined,
-  errors: {},
   answers: {},
   // actions
   setReport: (newReport: ReportShape | undefined) =>
@@ -88,12 +90,12 @@ const reportStore = (set: Function) => ({
       type: "clearReportsByState",
     }),
   setSubmittedReportsByState: (
-    newSubmittedReportsByState: ReportMetadataShape[] | undefined
+    newSubmittedReportsByState: ReportMetadataShape[] | undefined,
   ) =>
     set(
       () => ({ submittedReportsByState: newSubmittedReportsByState }),
       false,
-      { type: "setSubmittedReportsByState" }
+      { type: "setSubmittedReportsByState" },
     ),
   setLastSavedTime: (savedTime: string | undefined) =>
     set(() => ({ lastSavedTime: savedTime }), false, {
@@ -111,18 +113,14 @@ const reportStore = (set: Function) => ({
     set(() => ({ editable: state }), false, {
       type: "setEditable",
     }),
-  setCurrentPageTemplate: (template: ReportRoute | undefined) =>  
-    set(() => ({currentPageTemplate: template}), false, {
-      type: "setPageTemplate"
+  setCurrentPageTemplate: (template: ReportRoute | undefined) =>
+    set(() => ({ currentPageTemplate: template }), false, {
+      type: "setPageTemplate",
     }),
-  setErrors: (updatedErrors: any) => 
-    set(() => ({errors: updatedErrors}), false, {
-      type: "setErrors"
+  setAnswers: (newAnswers: any) =>
+    set(() => ({ answers: newAnswers }), false, {
+      type: "setAnswers",
     }),
-  setAnswers: (newAnswers: any) => 
-    set(() => ({answers: newAnswers}), false, {
-      type: "setAnswers"
-    })
 });
 
 // ENTITY STORE
@@ -138,7 +136,7 @@ const entityStore = (set: Function) => ({
       false,
       {
         type: "setSelectedEntity",
-      }
+      },
     ),
   clearSelectedEntity: () =>
     set(() => ({ selectedEntity: undefined }), false, {
@@ -146,20 +144,79 @@ const entityStore = (set: Function) => ({
     }),
 });
 
+// FIELD STORE
+const fieldStore = (set: Function) => ({
+  fields: new Map(),
+  errors: {},
+  validationSchema: {},
+  setField: (id: string) =>
+    set(
+      (state: { fields: Map<string, FIELD_DATA> }) => ({
+        fields: new Map(state.fields).set(id, {
+          answer: undefined,
+        }),
+      }),
+      false,
+      { type: "setField" },
+    ),
+  setAnswer: (id: string, value: any) =>
+    set(
+      (state: { fields: Map<string, FIELD_DATA> }) => {
+        const data = state.fields.get(id) ?? {
+          answer: undefined,
+        };
+        const updateFields = new Map(state.fields).set(id, {
+          ...data,
+          answer: value,
+        });
+        return { fields: updateFields };
+      },
+      false,
+      { type: "setAnswer" },
+    ),
+  setErrors: (updateErrors: any) =>
+    set(() => ({ errors: updateErrors }), false, {
+      type: "setErrors",
+    }),
+  setValidationSchema: (schema: AnyObject) =>
+    set(
+      (state: { validationSchema: AnyObject }) => ({
+        validationScheme: { ...state.validationSchema, schema },
+      }),
+      false,
+      {
+        type: "setValidationSchema",
+      },
+    ),
+  setClearFields: () =>
+    set(
+      () => ({ fields: new Map(), errors: new Map(), validationSchema: {} }),
+      false,
+      {
+        type: "setClearFields",
+      },
+    ),
+});
+
 export const useStore = create(
   // devtools is being used for debugging state
   persist(
-    devtools<MfpUserState & AdminBannerState & MfpReportState & MfpEntityState>(
-      (set) => ({
-        ...userStore(set),
-        ...bannerStore(set),
-        ...reportStore(set),
-        ...entityStore(set),
-      })
-    ),
+    devtools<
+      MfpUserState &
+        AdminBannerState &
+        MfpReportState &
+        MfpEntityState &
+        MfpFieldState
+    >((set) => ({
+      ...userStore(set),
+      ...bannerStore(set),
+      ...reportStore(set),
+      ...entityStore(set),
+      ...fieldStore(set),
+    })),
     {
       name: "mfp-store",
       partialize: (state) => ({ report: state.report }),
-    }
-  )
+    },
+  ),
 );

@@ -27,7 +27,7 @@ import {
 import { hasEntitySteps, hasInitiativesWithEntitySteps, useStore } from "utils";
 
 export const ReportPageWrapper = () => {
-  const { report, setAnswers } = useStore();
+  const { report, setClearFields } = useStore();
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
 
@@ -36,8 +36,8 @@ export const ReportPageWrapper = () => {
   };
 
   useEffect(() => {
-    setAnswers({});
-  }, [pathname])
+    setClearFields();
+  }, [pathname]);
 
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: ReportRoute) => {
@@ -90,7 +90,7 @@ export const ReportPageWrapper = () => {
   };
 
   const reportTemplate = report?.formTemplate.flatRoutes!.find(
-    (route: ReportRoute) => route.path === pathname
+    (route: ReportRoute) => route.path === pathname,
   );
 
   return (

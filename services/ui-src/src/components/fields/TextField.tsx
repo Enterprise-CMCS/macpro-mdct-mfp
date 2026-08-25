@@ -36,25 +36,19 @@ export const TextField = ({
   sxOverride,
   updateFieldValues,
 }: Props) => {
-  const { report, selectedEntity, setAnswers, answers, errors } = useStore();
+  const { report, selectedEntity, setAnswer, errors, setField } = useStore();
   const defaultValue = hydrate ?? "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
-   if(name === "defineInitiative_keyMetrics_performanceIndicators-name"){
-    console.log("rendered", name, errors?.[name]?.message);
-  }
-  
   useEffect(() => {
-    const newAnswers = {...answers, [name]:""};
-    setAnswers(newAnswers)
+    setField(name);
   }, [])
 
   // update display value and form field data on change
   const onChangeHandler = async (event: InputChangeEvent) => {
     const { value } = event.target;
     setDisplayValue(value);
-    setAnswers({...answers, [name]:value})
-    //TO DO: throw a set value here that updates error
+    setAnswer(name, value);
   };
 
   // if should autosave, submit field data on blur
@@ -76,7 +70,7 @@ export const TextField = ({
   };
 
   // prepare error message, hint, and classes
-  const errorMessage = errors?.[name]?.message as ReactNode;
+  const errorMessage = errors[name]?.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;

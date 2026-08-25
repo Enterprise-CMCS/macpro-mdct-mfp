@@ -26,13 +26,13 @@ export const DynamicField = ({
   rows = 3,
   updateFieldValues,
 }: Props) => {
-  const { selectedEntity, answers, setAnswers, errors } = useStore();
+  const { selectedEntity, answers, setAnswers, errors, setField } = useStore();
   const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>(
     selectedEntity?.[name] ?? [],
   );
 
   useEffect(() => {
-    setAnswers({...answers, [name] : ""});
+    setField(name);
   }, [])
 
   // update display value on change
