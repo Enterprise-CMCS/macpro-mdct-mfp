@@ -38,7 +38,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.11",
+    "@babel/core": "^8.0.0",
     "@babel/plugin-transform-react-jsx": "^7.17.3",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
@@ -53,7 +53,7 @@
     "@types/react-helmet": "^6.1.6",
     "@vitejs/plugin-react": "^4.5.1",
     "babel-jest": "30.4.1",
-    "jest": "30.4.1",
+    "jest": "30.4.2",
     "jest-axe": "^6.0.0",
     "jest-environment-jsdom": "30.4.1",
     "jest-launchdarkly-mock": "^2.0.3",
