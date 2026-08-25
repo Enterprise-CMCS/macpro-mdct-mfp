@@ -657,6 +657,13 @@ const EntityFieldsTable = ({
         ? "Provide initiative description, including target populations and timeframe"
         : null;
 
+      // Close-out fields surface their hint/modalTitle/modalHint as descriptive
+      // text under the section heading in the export.
+      const isCloseOutField = formField.id?.startsWith("closeOutInformation_");
+      const fieldHint = fieldProps.hint;
+      const fieldModalTitle = fieldProps.modalTitle;
+      const fieldModalHint = fieldProps.modalHint;
+
       // Render as: H4 heading -> optional helper text -> mini-table
       tableRows.push(
         <Tr
@@ -669,9 +676,39 @@ const EntityFieldsTable = ({
           >
             <Box sx={{ margin: 0, marginBottom: 0, marginTop: "1.5rem" }}>
               <Heading as="h4" sx={sx.sectionHeading}>
-                {fieldOrSectionTitle}
+                {translate(fieldOrSectionTitle, { initiativeName })}
               </Heading>
               {helperText && <Text sx={sx.helperText}>{helperText}</Text>}
+              {isCloseOutField && fieldHint && (
+                <Text sx={sx.helperText}>
+                  {parseCustomHtml(translate(fieldHint, { initiativeName }))}
+                </Text>
+              )}
+              {isCloseOutField &&
+                report?.reportType === ReportType.WP &&
+                entity.isInitiativeClosed && (
+                  <Text
+                    sx={{ ...sx.helperText, color: "gray" }}
+                    data-testid="exportRow"
+                  >
+                    <Text as="span" sx={sx.closedByLabel}>
+                      Closed by
+                    </Text>
+                    <Text sx={sx.closedByValue}>{entity.closedBy}</Text>
+                  </Text>
+                )}
+              {isCloseOutField && fieldModalTitle && (
+                <Heading as="h5" sx={sx.subsectionHeading}>
+                  {translate(fieldModalTitle, { initiativeName })}
+                </Heading>
+              )}
+              {isCloseOutField && fieldModalHint && (
+                <Text sx={sx.helperText}>
+                  {parseCustomHtml(
+                    translate(fieldModalHint, { initiativeName })
+                  )}
+                </Text>
+              )}
               <Table
                 content={{
                   headRow: [tableHeaders.indicator, tableHeaders.response],
@@ -687,7 +724,7 @@ const EntityFieldsTable = ({
                   pageType={PageTypes.MODAL_OVERLAY}
                   entityType={entityType}
                   entityId={entityId}
-                  showHintText={true}
+                  showHintText={!isCloseOutField}
                 />
               </Table>
             </Box>
@@ -855,6 +892,12 @@ const sx = {
     color: "gray_dark",
     marginTop: "spacer2",
     marginBottom: "spacer2",
+  },
+  closedByLabel: {
+    fontWeight: "bold",
+  },
+  closedByValue: {
+    color: "base",
   },
   statusIcon: {
     paddingLeft: "spacer_half",

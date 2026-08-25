@@ -127,7 +127,7 @@ The user-entered data for a report submission. This is unique to each state and 
 - Target populations marked `applicableToMfpDemonstration = "No"` will not have quarterly projection fields.
 - `generalInformation_resubmissionInformation` is only present when the Work Plan is a resubmission.
 - Performance indicator entries inside `defineInitiative_keyMetrics_performanceIndicators` are stored with **unprefixed** keys (`name`, `dataSource`, `baselineValue`, etc.). The prefixed `defineInitiative_keyMetrics_performanceIndicators-*` IDs only exist in the form template definition.
-- `closeOutInformation_*` fields are marked `forCopyoverOnly` in the form template (so values copy from a WP into the next WP/SAR). On a WP they appear only when an initiative has been closed out by the user; in that case the initiative will also have `isInitiativeClosed: true` and `closedBy` information.
+- `closeOutInformation_*` fields are marked `forCopyoverOnly` in the form template, which controls when they render/validate (only on copied reports). They are shown once an initiative has been closed out by the user; in that case the initiative will also have `isInitiativeClosed: true` and `closedBy` information. Close-out answers are cleared when copying a WP into the next WP (see `pruneEntityData` in `copy.ts`); they are still carried into a SAR.
 - `submitterName`, `submitterEmailAddress`, and `reportSubmissionDate` are added on form submission.
 - When a WP is created by copying a previous WP, the copied entities, child option values, key activities, and performance indicators are tagged with `isCopied: true`.
 
