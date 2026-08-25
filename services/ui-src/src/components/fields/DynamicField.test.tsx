@@ -305,4 +305,60 @@ describe("<DynamicField />", () => {
   });
 
   testA11yAct(<DynamicFieldComponent />);
+
+  describe("Test delete button position", () => {
+    test("single line", () => {
+      render(<DynamicFieldComponent multiline={false} />);
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginBottom).toBe("0.625rem");
+      expect(styles.marginLeft).toBe("0.625rem");
+      expect(styles.marginTop).toBe("");
+    });
+
+    test("multiline", () => {
+      render(<DynamicFieldComponent multiline={true} />);
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      expect(container).toBeInTheDocument();
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginLeft).toBe("0.625rem");
+    });
+
+    test("multiline and error", () => {
+      render(<DynamicFieldComponent multiline={true} error={true} />);
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      expect(container).toBeInTheDocument();
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginLeft).toBe("0.625rem");
+    });
+
+    test("multiline and dynamic label", () => {
+      render(
+        <DynamicFieldComponent multiline={true} dynamicLabel="Mock Label" />
+      );
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      expect(container).toBeInTheDocument();
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginLeft).toBe("0.625rem");
+    });
+
+    test("multiline and dynamic label and error", () => {
+      render(
+        <DynamicFieldComponent
+          multiline={true}
+          dynamicLabel="Mock Label"
+          error={true}
+        />
+      );
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      expect(container).toBeInTheDocument();
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginLeft).toBe("0.625rem");
+    });
+  });
 });
