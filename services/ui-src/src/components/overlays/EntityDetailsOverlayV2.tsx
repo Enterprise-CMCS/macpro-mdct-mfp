@@ -8,6 +8,7 @@ import {
   DynamicModalOverlayReportPageShape,
   EntityShape,
   ErrorVerbiage,
+  FIELD_DATA,
   FormJson,
   ModalOverlayReportPageShape,
   ReportType,
@@ -36,12 +37,10 @@ export const EntityDetailsOverlayV2 = ({
   const [formJson, setFormJson] = useState<FormJson>(form);
   // Use separate entity from selectedEntity for form change
   const [currentEntity, setCurrentEntity] = useState<EntityShape>(
-    selectedEntity as EntityShape
+    selectedEntity as EntityShape,
   );
 
-  console.log("EntityDetailsOverlayV2");
-
-  const { report, answers, setAnswers } = useStore();
+  const { report, fields, setAnswer } = useStore();
   // Closed initiatives are locked in the Work Plan, but stay editable in the
   // SAR so state users can continue reporting on them.
   const isWP = report?.reportType === ReportType.WP;
@@ -73,11 +72,15 @@ export const EntityDetailsOverlayV2 = ({
       setShowAlert(Boolean(entity.isCopied));
       setFormJson(toggleOptional({ ...form, fields }, isClosed));
     },
-    [form, isWP]
+    [form, isWP],
   );
 
   const onFormChange = () => {
-    const currentValues = answers as EntityShape;
+    let currentValues: { [key: string]: FIELD_DATA } = {};
+    for (const [key, value] of Object.entries(fields)) {
+      currentValues = { ...currentValues, [key]: value.answer };
+    }
+    console.log("currentValues", currentValues);
 
     // Update only if close-out section is in form
     if ("closeOutInformation_projectedEndDate" in currentValues) {
@@ -93,7 +96,8 @@ export const EntityDetailsOverlayV2 = ({
       };
       currentValues["closeOutInformation_projectedEndDate"] = endDate;
 
-      setAnswers(currentValues);
+      console.log(currentValues);
+      // setAnswers(currentValues);
       setCurrentEntity(updatedEntity);
     }
   };

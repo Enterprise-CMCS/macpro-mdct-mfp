@@ -27,7 +27,7 @@ import {
 import { hasEntitySteps, hasInitiativesWithEntitySteps, useStore } from "utils";
 
 export const ReportPageWrapper = () => {
-  const { report, setClearFields } = useStore();
+  const { report, setClearFields, setValidationSchema } = useStore();
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
 
@@ -37,6 +37,7 @@ export const ReportPageWrapper = () => {
 
   useEffect(() => {
     setClearFields();
+    setValidationSchema([]);
   }, [pathname]);
 
   // these should be built off the form template, which comes from the report.

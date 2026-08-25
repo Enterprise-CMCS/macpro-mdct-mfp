@@ -69,10 +69,12 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     report,
     setReport,
     selectedEntity,
+    rerender,
     setErrors,
     setValidationSchema,
     validationSchema,
-    fields: testField,
+    setAnswer,
+    fields: formFields,
   } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
 
@@ -96,9 +98,26 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const formValidationJson = compileValidationJsonFromFields(allFields);
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
 
+  useEffect(() => {
+    const allFields = fields.filter(isFieldElement);
+    setValidationSchema([...(validationSchema ?? []), ...allFields]);
+
+    if(formData){
+      for(const [key, value] of Object.entries(formData)){
+        if(formFields.get(key)){
+          setAnswer(key, value);
+        }
+      }
+    }
+  }, []);
+
   const validation = (values: {}) => {
+    const allFields = validationSchema;
+    const formValidationJson = compileValidationJsonFromFields(allFields!);
+    const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
+    const formResolverSchema = yupSchema(formValidationSchema || {});
+
     try {
-      const formResolverSchema = yupSchema(formValidationSchema || {});
       formResolverSchema.validateSync(values, {
         abortEarly: false,
       });
@@ -110,21 +129,21 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
   const buildAnswerObject = () => {
     const answers: { [key: string]: { value: any } } = {};
-    for (const [key, value] of testField) {
+    for (const [key, value] of formFields) {
       answers[key] = value.answer;
     }
     return answers;
   };
 
   useEffect(() => {
-    const answers: { [key: string]: { value: any } } = {};
-    for (const [key, value] of testField) {
-      answers[key] = value.answer;
+    if(rerender){
+      const answers: { [key: string]: { value: any } } = {};
+      for (const [key, value] of formFields) {
+        answers[key] = value.answer;
+      }
+      setErrors(validation(answers));
     }
-    // console.log("answers", answers);
-    // console.log("validation", validation(answers));
-    setErrors(validation(answers));
-  }, [testField]);
+  }, [rerender]);
 
   // will run if any validation errors exist on form submission
   const onErrorHandler = (errors: AnyObject) => {
@@ -326,7 +345,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   const submit = (e?: BaseSyntheticEvent) => {
-    console.log("form submit");
     e?.preventDefault();
 
     const errors = validation(buildAnswerObject());

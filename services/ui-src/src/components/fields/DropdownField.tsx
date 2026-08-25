@@ -30,7 +30,7 @@ export const DropdownField = ({
   styleAsOptional,
   disabled,
 }: Props) => {
-  const { setAnswers, answers, errors, setField } = useStore();
+  const { setAnswer, fields, setField } = useStore();
 
   useEffect(() => {
     setField(name);
@@ -70,7 +70,7 @@ export const DropdownField = ({
       formattedOptions.find((option) => option.value === selectedValue) ||
       defaultValue;
     setDisplayValue(selectedOption);
-    setAnswers({ ...answers, [name]: selectedOption });
+    setAnswer(name, selectedOption);
   };
 
   // update form field data & database data on blur
@@ -80,7 +80,7 @@ export const DropdownField = ({
   };
 
   // prepare error message, hint, and classes
-  const errorMessage = errors?.[name]?.message as ReactNode;
+  const errorMessage = fields.get(name)?.error.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const ariaDescribedBy = `${name}__error${parsedHint ? ` ${name}-hint` : ""}`;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";

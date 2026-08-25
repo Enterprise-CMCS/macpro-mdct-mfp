@@ -16,6 +16,7 @@ import {
   MfpFieldState,
   FIELD_DATA,
   AnyObject,
+  FIELD_ERROR,
 } from "types";
 
 // USER STORE
@@ -147,13 +148,14 @@ const entityStore = (set: Function) => ({
 // FIELD STORE
 const fieldStore = (set: Function) => ({
   fields: new Map(),
-  errors: {},
-  validationSchema: {},
+  validationSchema: undefined,
+  rerender: false,
   setField: (id: string) =>
     set(
       (state: { fields: Map<string, FIELD_DATA> }) => ({
         fields: new Map(state.fields).set(id, {
           answer: undefined,
+          error: { message: "" },
         }),
       }),
       false,
@@ -162,32 +164,34 @@ const fieldStore = (set: Function) => ({
   setAnswer: (id: string, value: any) =>
     set(
       (state: { fields: Map<string, FIELD_DATA> }) => {
-        const data = state.fields.get(id) ?? {
-          answer: undefined,
-        };
         const updateFields = new Map(state.fields).set(id, {
-          ...data,
           answer: value,
+          error: {}
         });
-        return { fields: updateFields };
+        return { fields: updateFields, rerender: true };
       },
       false,
       { type: "setAnswer" },
     ),
-  setErrors: (updateErrors: any) =>
-    set(() => ({ errors: updateErrors }), false, {
-      type: "setErrors",
-    }),
-  setValidationSchema: (schema: AnyObject) =>
+  setErrors: (updateErrors: { [key: string]: FIELD_ERROR }) =>
     set(
-      (state: { validationSchema: AnyObject }) => ({
-        validationScheme: { ...state.validationSchema, schema },
-      }),
+      (state: { fields: Map<string, FIELD_DATA> }) => {
+        const updateFields = new Map(state.fields);
+        for (const [key, value] of Object.entries(updateErrors)) {
+          const data = state.fields.get(key) ?? { answer: undefined };
+          updateFields.set(key, { ...data, error: value });
+        }
+        return { fields: updateFields, rerender: false };
+      },
       false,
       {
-        type: "setValidationSchema",
+        type: "setErrors",
       },
     ),
+  setValidationSchema: (updateErrors: any) =>
+    set(() => ({ validationSchema: updateErrors }), false, {
+      type: "setValidationSchema",
+    }),
   setClearFields: () =>
     set(
       () => ({ fields: new Map(), errors: new Map(), validationSchema: {} }),

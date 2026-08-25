@@ -39,7 +39,7 @@ export const ChoiceListField = ({
   const [displayValue, setDisplayValue] = useState<Choice[]>(
     props?.hydrate ?? defaultValue,
   );
-  const { editable, answers, setAnswers, errors, setField} = useStore();
+  const { editable, setAnswer, fields: formFields, setField} = useStore();
   //closeout will disables only certain parts of an active form
   const shouldDisableChildFields = !editable || !!props?.disabled;
 
@@ -81,13 +81,13 @@ export const ChoiceListField = ({
                   choice.checked = false;
                 });
                 child.props = { ...child.props, clear: true };
-                setAnswers({ ...answers, [child.id]: [] });
+                setAnswer(child.id, [] );
                 clearUncheckedNestedFields(child.props.choices);
               }
               break;
             default:
               child.props = { ...child.props, clear: true };
-              setAnswers({ ...answers, [child.id]: "" });
+              setAnswer(child.id, "");
               break;
           }
         });
@@ -119,7 +119,7 @@ export const ChoiceListField = ({
       setDisplayValue(selectedOptions);
 
       //TEST: REMOVE
-      setAnswers({ ...answers, [event.target.name]: selectedOptions });
+      setAnswer(event.target.name, selectedOptions);
     }
     // handle checkbox
     if (type === "checkbox") {
@@ -136,7 +136,7 @@ export const ChoiceListField = ({
         : uncheckedOptionValues;
       setDisplayValue(selectedOptions);
       //TEST: REMOVE
-      setAnswers({ ...answers, [event.target.name]: selectedOptions });
+      setAnswer(event.target.name, selectedOptions);
     }
   };
 
@@ -163,7 +163,7 @@ export const ChoiceListField = ({
 
       const combinedFields = [
         ...fields,
-        ...getNestedChildFields(choicesWithNestedEnabledFields, answers),
+        ...getNestedChildFields(choicesWithNestedEnabledFields, formFields),
       ];
 
       if (updateFieldValues) {
@@ -172,7 +172,7 @@ export const ChoiceListField = ({
     }
   };
 
-  const errorMessage = errors?.[name]?.message as ReactNode;
+  const errorMessage = formFields.get(name)?.error.message as ReactNode;
   const parsedHint = hint && parseCustomHtml(hint);
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
   const labelClass = !label ? "no-label" : "";
@@ -236,7 +236,7 @@ export const getNestedChildFields = (
         {
           name: field.id,
           type: field.type,
-          value: answers[field.id] || fieldDefaultValue,
+          value: answers.get(field.id).answer || fieldDefaultValue,
         },
       ];
       // add to nested fields to be autosaved

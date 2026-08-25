@@ -50,7 +50,7 @@ export const NumberField = ({
     applyMask(defaultValue, mask, decimalPlacesToRoundTo).maskedValue,
   );
 
-  const { report, selectedEntity, setAnswers, answers, errors, setField } = useStore();
+  const { report, selectedEntity, setAnswer, fields, setField } = useStore();
 
   useEffect(() => {
     setField(name);
@@ -60,7 +60,7 @@ export const NumberField = ({
   const onChangeHandler = async (event: InputChangeEvent) => {
     const { name, value } = event.target;
     setDisplayValue(value);
-    setAnswers({ ...answers, [name]: value });
+    setAnswer(name, value);
 
     if (handleOnChange) handleOnChange(event);
   };
@@ -102,7 +102,7 @@ export const NumberField = ({
   };
 
   // prepare error message, hint, and classes
-  const errorMessage = errors?.[name]?.message as ReactNode;
+  const errorMessage = fields.get(name)?.error.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;

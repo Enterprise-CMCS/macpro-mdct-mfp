@@ -179,6 +179,7 @@ export const EntityDetailsOverlay = ({
 
   //used to get the exact form values to enable/disable close out button
   const onChange = (answers: AnyObject) => {
+    console.error("revist this area")
     if (selectedEntity) {
       let entity: EntityShape = {
         id: selectedEntity.id,

@@ -1,12 +1,12 @@
 import { Banner } from "components";
+import { FIELD_DATA } from "types";
 
-export const PreviewBanner = ({answers}: {answers: {[key:string]: any}}) => {
+export const PreviewBanner = ({fields}: {fields: Map<string, FIELD_DATA>}) => {
   // set banner preview data
-  // const formData = form.getValues();
   const bannerData = {
-    title: answers["bannerTitle"] || "New banner title",
-    description: answers["bannerDescription"] || "New banner description",
-    link: answers["bannerLink"] || "",
+    title: fields.get("bannerTitle")?.answer || "New banner title",
+    description: fields.get("bannerDescription")?.answer || "New banner description",
+    link: fields.get("bannerLink")?.answer || "",
   };
 
   return <Banner bannerData={bannerData} />;

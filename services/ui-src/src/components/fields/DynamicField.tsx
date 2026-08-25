@@ -26,14 +26,14 @@ export const DynamicField = ({
   rows = 3,
   updateFieldValues,
 }: Props) => {
-  const { selectedEntity, answers, setAnswers, errors, setField } = useStore();
+  const { selectedEntity, setAnswer, fields, setField } = useStore();
   const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>(
     selectedEntity?.[name] ?? [],
   );
 
   useEffect(() => {
     setField(name);
-  }, [])
+  }, []);
 
   // update display value on change
   const onChangeHandler = (event: InputChangeEvent) => {
@@ -45,23 +45,24 @@ export const DynamicField = ({
     const newDisplayValues = [...displayValues];
     newDisplayValues[currentEntityIndex].name = value;
     setDisplayValues(newDisplayValues);
-    setAnswers({ ...answers, [name]:newDisplayValues });
+    setAnswer(name, newDisplayValues);
   };
 
   // submit changed field data to database on blur
   const onBlurHandler = async () => {
     if (autosave) {
-      const fields = [{name, type:  ReportFormFieldType.DYNAMIC, displayValues}]
-      console.log("fields", fields);
+      const fields = [
+        { name, type: ReportFormFieldType.DYNAMIC, displayValues },
+      ];
       updateFieldValues(fields);
     }
   };
 
   useEffect(() => {
-    if(displayValues.length === 0){
+    if (displayValues.length === 0) {
       appendNewRecord();
     }
-  }, [])
+  }, []);
 
   const appendNewRecord = () => {
     const newRecord = { id: crypto.randomUUID(), name: "" };
@@ -102,9 +103,7 @@ export const DynamicField = ({
       )}
 
       {displayValues.map((field: DynamicFieldShape, index: number) => {
-        const errorId = `${name}[${index}].name`;
-
-        const errorMessage = errors?.[errorId]?.message;
+        const errorMessage = fields.get(name)?.error.message;
         const hasError = Boolean(errorMessage);
         const textareaStyle = hasError
           ? sx.removeBoxTextareaError

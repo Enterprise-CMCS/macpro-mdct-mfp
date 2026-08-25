@@ -26,14 +26,14 @@ export const DateField = ({
   updateFieldValues,
   ...props
 }: Props) => {
-  const { setAnswers, answers, errors, setField } = useStore();
+  const { setAnswer, fields, setField } = useStore();
   const defaultValue = props?.hydrate ?? "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
   // update field display value and form field data on change
   const onChangeHandler = (rawValue: string, maskedValue: string) => {
     setDisplayValue(rawValue);
-    setAnswers({ ...answers, [name]: rawValue });
+    setAnswer(name, rawValue);
   };
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export const DateField = ({
   };
 
   // prepare error message, hint, and classes
-  const errorMessage = errors?.[name]?.message as ReactNode;
+  const errorMessage = fields.get(name)?.error.message as ReactNode;
   const parsedHint = hint && parseCustomHtml(hint);
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
   const labelClass = !label ? "no-label" : "";
