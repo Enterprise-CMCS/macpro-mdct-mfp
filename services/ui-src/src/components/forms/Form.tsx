@@ -70,6 +70,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     setReport,
     selectedEntity,
     rerender,
+    setValidationSchema,
     setErrors,
     fields: formFields,
   } = useStore();
@@ -95,6 +96,10 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
   const formResolverSchema = yupSchema(formValidationSchema || {});
 
+  useEffect(() => {
+    setValidationSchema(formResolverSchema);
+  }, []);
+
   const validation = (values: {}) => {
     try {
       formResolverSchema.validateSync(values, {
@@ -107,24 +112,10 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   const buildAnswerObject = () => {
-    const answers: { [key: string]: { value: any } } = {};
-    for (const [key, value] of formFields) {
-      answers[key] = value.answer;
-    }
-    return answers;
+    return Object.fromEntries(
+      formFields.keys().map((key) => [key, formFields.get(key)?.answer]),
+    );
   };
-
-  useEffect(() => {
-    if (rerender) {
-      const answers: { [key: string]: { value: any } } = {};
-      for (const [key, value] of formFields) {
-        if (value.validate) {
-          answers[key] = value.answer;
-        }
-      }
-      setErrors(validation(answers));
-    }
-  }, [rerender]);
 
   // will run if any validation errors exist on form submission
   const onErrorHandler = (errors: AnyObject) => {
@@ -328,8 +319,9 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const submit = (e?: BaseSyntheticEvent) => {
     e?.preventDefault();
 
-    const errors = validation(buildAnswerObject());
-    console.log("errors", errors);
+    const fieldIds = allFields.map((field: { id: string }) => field.id);
+    const answers = buildAnswerObject();
+    const errors = validation(answers);
     setErrors(errors);
 
     const formErrors = Object.keys(errors).filter((key) => {
