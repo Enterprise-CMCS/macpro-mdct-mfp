@@ -71,9 +71,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     selectedEntity,
     rerender,
     setErrors,
-    setValidationSchema,
-    validationSchema,
-    setAnswer,
     fields: formFields,
   } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
@@ -94,29 +91,11 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const tableFieldIds = allFields
     .filter(isTableField)
     .map((f: FormField) => f.id);
-
-  const formValidationJson = compileValidationJsonFromFields(allFields);
+  const formValidationJson = compileValidationJsonFromFields(allFields!);
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
-
-  useEffect(() => {
-    const allFields = fields.filter(isFieldElement);
-    setValidationSchema([...(validationSchema ?? []), ...allFields]);
-
-    if(formData){
-      for(const [key, value] of Object.entries(formData)){
-        if(formFields.get(key)){
-          setAnswer(key, value);
-        }
-      }
-    }
-  }, []);
+  const formResolverSchema = yupSchema(formValidationSchema || {});
 
   const validation = (values: {}) => {
-    const allFields = validationSchema;
-    const formValidationJson = compileValidationJsonFromFields(allFields!);
-    const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
-    const formResolverSchema = yupSchema(formValidationSchema || {});
-
     try {
       formResolverSchema.validateSync(values, {
         abortEarly: false,
@@ -136,10 +115,12 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   useEffect(() => {
-    if(rerender){
+    if (rerender) {
       const answers: { [key: string]: { value: any } } = {};
       for (const [key, value] of formFields) {
-        answers[key] = value.answer;
+        if (value.validate) {
+          answers[key] = value.answer;
+        }
       }
       setErrors(validation(answers));
     }
@@ -348,6 +329,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     e?.preventDefault();
 
     const errors = validation(buildAnswerObject());
+    console.log("errors", errors);
     setErrors(errors);
 
     const formErrors = Object.keys(errors).filter((key) => {

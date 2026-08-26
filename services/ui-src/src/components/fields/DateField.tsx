@@ -37,7 +37,7 @@ export const DateField = ({
   };
 
   useEffect(() => {
-    setField(name);
+    setField(name, displayValue);
   }, [])
 
   // if should autosave, submit field data to database on blur

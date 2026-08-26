@@ -1,4 +1,9 @@
-import { HTMLInputAutoCompleteAttribute, ReactNode, useEffect, useState } from "react";
+import {
+  HTMLInputAutoCompleteAttribute,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
 // components
 import { SystemStyleObject } from "@chakra-ui/react";
 import { TextFieldDisplay } from "components";
@@ -41,8 +46,8 @@ export const TextField = ({
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
   useEffect(() => {
-    setField(name);
-  }, [])
+    setField(name, defaultValue);
+  }, []);
 
   // update display value and form field data on change
   const onChangeHandler = async (event: InputChangeEvent) => {
@@ -54,6 +59,10 @@ export const TextField = ({
   // if should autosave, submit field data on blur
   const onBlurHandler = async (event: InputChangeEvent) => {
     const { value } = event.target;
+    setAnswer(name, value);
+
+    // if field is blank, trigger client-side field validation error
+    if (!value.trim()) return;
 
     if (autosave) {
       const entityFieldData = selectedEntity

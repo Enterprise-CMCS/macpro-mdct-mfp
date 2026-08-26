@@ -32,10 +32,6 @@ export const DropdownField = ({
 }: Props) => {
   const { setAnswer, fields, setField } = useStore();
 
-  useEffect(() => {
-    setField(name);
-  }, [])
-
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {
     let dropdownOptions: any[] = [];
@@ -62,6 +58,10 @@ export const DropdownField = ({
   const [displayValue, setDisplayValue] = useState<DropdownChoice>(
     hydrate ?? defaultValue,
   );
+
+  useEffect(() => {
+    setField(name, displayValue);
+  }, [])
 
   // update form data
   const onChangeHandler = async (event: DropdownChangeObject) => {

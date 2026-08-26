@@ -44,7 +44,7 @@ export const ChoiceListField = ({
   const shouldDisableChildFields = !editable || !!props?.disabled;
 
   useEffect(() => {
-    setField(name);
+    setField(name, displayValue);
   }, [])
 
   // format choices with nested child fields to render (if any)

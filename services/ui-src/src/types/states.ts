@@ -80,13 +80,14 @@ export type FIELD_ERROR = { message?: string; type?: string }
 export type FIELD_DATA = {
   answer: any;
   error: FIELD_ERROR;
+  validate: boolean;
 };
 
 export interface MfpFieldState {
   fields: Map<string, FIELD_DATA>;
   validationSchema: any[] | undefined;
   rerender: boolean,
-  setField: (id: string) => void;
+  setField: (id: string, value?: any) => void;
   setAnswer: (id: string, answer: any) => void;
   setValidationSchema: (schema: any[]) => void;
   setErrors: (updateErrors: { [key: string]: FIELD_ERROR }) => void;

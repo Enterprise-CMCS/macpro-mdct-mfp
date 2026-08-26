@@ -53,7 +53,7 @@ export const NumberField = ({
   const { report, selectedEntity, setAnswer, fields, setField } = useStore();
 
   useEffect(() => {
-    setField(name);
+    setField(name, defaultValue);
   }, [])
 
   // update form data on change, but do not mask
@@ -68,6 +68,8 @@ export const NumberField = ({
   // if should autosave, submit field data to database on blur
   const onBlurHandler = async (event: InputChangeEvent) => {
     const { name, value } = event.target;
+    setAnswer(name, value);
+    
     // if field is blank, trigger client-side field validation error
     if (!value.trim()) return;
 

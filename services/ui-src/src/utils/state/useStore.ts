@@ -15,7 +15,6 @@ import {
   ReportRoute,
   MfpFieldState,
   FIELD_DATA,
-  AnyObject,
   FIELD_ERROR,
 } from "types";
 
@@ -150,12 +149,13 @@ const fieldStore = (set: Function) => ({
   fields: new Map(),
   validationSchema: undefined,
   rerender: false,
-  setField: (id: string) =>
+  setField: (id: string, value?: any) =>
     set(
       (state: { fields: Map<string, FIELD_DATA> }) => ({
         fields: new Map(state.fields).set(id, {
-          answer: undefined,
+          answer: value ?? undefined,
           error: { message: "" },
+          validate: false,
         }),
       }),
       false,
@@ -166,7 +166,8 @@ const fieldStore = (set: Function) => ({
       (state: { fields: Map<string, FIELD_DATA> }) => {
         const updateFields = new Map(state.fields).set(id, {
           answer: value,
-          error: {}
+          error: {},
+          validate: true,
         });
         return { fields: updateFields, rerender: true };
       },
@@ -179,7 +180,7 @@ const fieldStore = (set: Function) => ({
         const updateFields = new Map(state.fields);
         for (const [key, value] of Object.entries(updateErrors)) {
           const data = state.fields.get(key) ?? { answer: undefined };
-          updateFields.set(key, { ...data, error: value });
+          updateFields.set(key, { ...data, error: value, validate: false });
         }
         return { fields: updateFields, rerender: false };
       },
@@ -194,7 +195,7 @@ const fieldStore = (set: Function) => ({
     }),
   setClearFields: () =>
     set(
-      () => ({ fields: new Map(), errors: new Map(), validationSchema: {} }),
+      () => ({ fields: new Map(), validationSchema: {} }),
       false,
       {
         type: "setClearFields",

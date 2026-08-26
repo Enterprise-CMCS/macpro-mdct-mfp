@@ -32,7 +32,10 @@ export const DynamicField = ({
   );
 
   useEffect(() => {
-    setField(name);
+    if (displayValues.length === 0) {
+      appendNewRecord();
+    }
+    setField(name, displayValues);
   }, []);
 
   // update display value on change
@@ -57,12 +60,6 @@ export const DynamicField = ({
       updateFieldValues(fields);
     }
   };
-
-  useEffect(() => {
-    if (displayValues.length === 0) {
-      appendNewRecord();
-    }
-  }, []);
 
   const appendNewRecord = () => {
     const newRecord = { id: crypto.randomUUID(), name: "" };

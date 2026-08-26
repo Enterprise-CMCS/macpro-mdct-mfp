@@ -132,6 +132,7 @@ export const EntityDetailsOverlayV2 = ({
   );
 
   const onFormChange = () => {
+    //TO DO: FIX THIS
     const currentValues = hookForm.getValues() as EntityShape;
     const endDate = currentValues.defineInitiative_endDate;
 
