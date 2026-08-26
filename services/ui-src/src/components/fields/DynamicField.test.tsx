@@ -52,7 +52,13 @@ const mockedReportContext = {
   updateReport: mockUpdateReport,
 };
 
-const MockForm = ({ dynamicLabel, error, hint, hydrationValue }: any) => {
+const MockForm = ({
+  dynamicLabel,
+  error,
+  hint,
+  hydrationValue,
+  multiline,
+}: any) => {
   const form = useForm({
     shouldFocusError: false,
   });
@@ -78,6 +84,7 @@ const MockForm = ({ dynamicLabel, error, hint, hydrationValue }: any) => {
               hydrate={hydrationValue}
               label={mockFieldLabel}
               name={mockDynamicField}
+              multiline={multiline}
             />
           </form>
         </FormProvider>
@@ -91,12 +98,14 @@ const DynamicFieldComponent = ({
   error,
   hint,
   hydrationValue,
+  multiline,
 }: any) => (
   <MockForm
     dynamicLabel={dynamicLabel}
     error={error}
     hint={hint}
     hydrationValue={hydrationValue}
+    multiline={multiline}
   />
 );
 
@@ -305,4 +314,68 @@ describe("<DynamicField />", () => {
   });
 
   testA11yAct(<DynamicFieldComponent />);
+
+  describe("Test delete button position", () => {
+    test("single line", () => {
+      render(<DynamicFieldComponent multiline={false} />);
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginBottom).toBe("0.625rem");
+      expect(styles.marginLeft).toBe("0.625rem");
+      expect(styles.marginTop).toBe("");
+    });
+
+    test("multiline", () => {
+      render(<DynamicFieldComponent multiline={true} />);
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      expect(container).toBeInTheDocument();
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginBottom).toBe("");
+      expect(styles.marginLeft).toBe("0.625rem");
+      expect(styles.marginTop).toBe("");
+    });
+
+    test("multiline and error", () => {
+      render(<DynamicFieldComponent multiline={true} error={true} />);
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      expect(container).toBeInTheDocument();
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginBottom).toBe("");
+      expect(styles.marginLeft).toBe("0.625rem");
+      expect(styles.marginTop).toBe("1.625rem");
+    });
+
+    test("multiline and dynamic label", () => {
+      render(
+        <DynamicFieldComponent multiline={true} dynamicLabel="Mock Label" />
+      );
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      expect(container).toBeInTheDocument();
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginBottom).toBe("");
+      expect(styles.marginLeft).toBe("0.625rem");
+      expect(styles.marginTop).toBe("3.25rem");
+    });
+
+    test("multiline and dynamic label and error", () => {
+      render(
+        <DynamicFieldComponent
+          multiline={true}
+          dynamicLabel="Mock Label"
+          error={true}
+        />
+      );
+      const deleteButton = screen.getByRole("button", { name: /Delete/ });
+      const container = deleteButton.closest("div");
+      expect(container).toBeInTheDocument();
+      const styles = getComputedStyle(container as Element);
+      expect(styles.marginBottom).toBe("");
+      expect(styles.marginLeft).toBe("0.625rem");
+      expect(styles.marginTop).toBe("4.875rem");
+    });
+  });
 });
