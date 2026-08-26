@@ -157,7 +157,11 @@ export const EntityRow = ({
                 content={{
                   headRow: ["Actual end date", "Closed by"],
                   bodyRows: [
-                    [entity.closeOutInformation_actualEndDate, closedBy],
+                    [
+                      entity.closeOutInformation_actualEndDate ??
+                        "No response (optional)",
+                      closedBy,
+                    ],
                   ],
                 }}
                 variant="none"
@@ -307,16 +311,11 @@ const sx = {
     },
   },
   table: {
-    td: {
-      paddingTop: "0rem",
-      paddingLeft: "0rem",
-    },
     th: {
-      paddingLeft: "0rem",
-      border: "none",
-      fontWeight: "bold",
-      color: "gray",
-      width: "2rem",
+      paddingLeft: "spacer1",
+    },
+    td: {
+      padding: "spacer1",
     },
   },
 };

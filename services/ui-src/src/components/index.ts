@@ -91,6 +91,7 @@ export { AddEditEntityModal } from "./modals/AddEditEntityModal";
 export { AddEditKeyMetricsModal } from "./modals/AddEditKeyMetricsModal";
 export { AddEditOverlayEntityModal } from "./modals/AddEditOverlayEntityModal";
 export { CloseEntityModal } from "./modals/CloseEntityModal";
+export { CloseOutModal } from "./modals/CloseOutModal";
 export { CreateSarModal } from "./modals/CreateSarModal";
 export { CreateWorkPlanModal } from "./modals/CreateWorkPlanModal";
 export { CreateFinancialReportingModal } from "./modals/CreateFinancialReportingModal";
