@@ -205,7 +205,7 @@ export const error = {
 
 ## Testing Patterns
 
-### Backend Tests (Jest)
+### Backend Tests (Vitest)
 
 ```typescript
 import { fetchReport } from "./fetch";
@@ -214,9 +214,9 @@ import { mockDynamoData, mockReportJson } from "../../utils/testing/setupTest";
 import { StatusCodes } from "../../utils/responses/response-lib";
 
 // Mock external dependencies
-jest.mock("../../storage/reports", () => ({
-  getReportMetadata: jest.fn(),
-  getReportFieldData: jest.fn(),
+vi.mock("../../storage/reports", () => ({
+  getReportMetadata: vi.fn(),
+  getReportFieldData: vi.fn(),
 }));
 
 const testEvent: APIGatewayProxyEvent = {
@@ -227,17 +227,17 @@ const testEvent: APIGatewayProxyEvent = {
 
 describe("handlers/reports/fetch", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("Test Report not found in DynamoDB", async () => {
-    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
+    (getReportMetadata as Mock).mockResolvedValue(undefined);
     const res = await fetchReport(testEvent, null);
     expect(res.statusCode).toBe(StatusCodes.NotFound);
   });
 
   test("Test Successful Report Fetch", async () => {
-    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportMetadata as Mock).mockResolvedValue(mockDynamoData);
     const res = await fetchReport(testEvent, null);
     expect(res.statusCode).toBe(StatusCodes.Ok);
   });
