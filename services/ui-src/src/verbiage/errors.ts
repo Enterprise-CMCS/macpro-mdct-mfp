@@ -79,4 +79,8 @@ export const reportErrors = {
     title: "Report could not be deleted",
     description: genericErrorContent,
   },
+  APPROVE_REPORT_FAILED: {
+    title: "Report could not be approved",
+    description: genericErrorContent,
+  },
 };

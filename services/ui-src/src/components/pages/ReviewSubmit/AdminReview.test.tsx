@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 // components
 import { ReportContext } from "components";
 import { AdminReview } from "./AdminReview";
@@ -9,7 +10,7 @@ import {
   mockUseStore,
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
-import { useStore } from "utils";
+import { approveReport, useStore } from "utils";
 // types
 import { ReportStatus, ReportType } from "types";
 // verbiage
@@ -19,6 +20,21 @@ import FinancialReportingFormReviewVerbiage from "verbiage/pages/financial-repor
 
 jest.mock("utils/state/useStore");
 const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+
+jest.mock("utils/api/requestMethods/report", () => ({
+  ...jest.requireActual("utils/api/requestMethods/report"),
+  approveReport: jest.fn(),
+  releaseReport: jest.fn(),
+}));
+const mockApproveReport = approveReport as jest.MockedFunction<
+  typeof approveReport
+>;
+
+const mockUseNavigate = jest.fn();
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
+  useNavigate: () => mockUseNavigate,
+}));
 
 const ReviewSubmitPage = (verbiage: any) => {
   return (
@@ -85,6 +101,45 @@ describe("<AdminReview />", () => {
         render(ReviewSubmitPage(WPReviewVerbiage));
 
         expect(consoleSpy).not.toHaveBeenCalled();
+      });
+    });
+
+    describe("Review and Submit Page - Approval submission", () => {
+      const wpSubmittedReport = {
+        reportType: ReportType.WP,
+        status: ReportStatus.SUBMITTED,
+        state: "AL",
+        id: "mock-report-id",
+        formTemplate: { basePath: "/mfp/wp" },
+      };
+
+      const openApproveModal = async () => {
+        // open the approve confirmation modal
+        await userEvent.click(screen.getByRole("button", { name: "Approve" }));
+        // type the required confirmation text to enable the modal button
+        await userEvent.type(screen.getByRole("textbox"), "APPROVE");
+      };
+
+      test("Shows an error alert and re-enables the button when approval fails", async () => {
+        mockApproveReport.mockRejectedValueOnce(new Error("Request Failed"));
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          report: wpSubmittedReport,
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(WPReviewVerbiage));
+
+        await openApproveModal();
+        const modalApproveButton = screen.getByTestId("modal-approve-button");
+        await userEvent.click(modalApproveButton);
+
+        expect(mockApproveReport).toHaveBeenCalledTimes(1);
+        expect(mockUseNavigate).not.toHaveBeenCalled();
+        expect(
+          await screen.findByText("Report could not be approved")
+        ).toBeInTheDocument();
+        // button re-enabled so the admin can retry
+        expect(modalApproveButton).toBeEnabled();
       });
     });
   });
