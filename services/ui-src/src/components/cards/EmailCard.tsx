@@ -6,8 +6,8 @@ import { useBreakpoint } from "utils";
 import { AnyObject } from "types";
 import { createEmailLink } from "utils/other/email";
 // assets
-import spreadsheetIcon from "assets/icons/icon_spreadsheet.png";
-import settingsIcon from "assets/icons/icon_wrench_gear.png";
+import spreadsheetIcon from "assets/icons/icon_spreadsheet.svg";
+import settingsIcon from "assets/icons/icon_wrench_gear.svg";
 
 const iconMap: { [key: string]: { [key: string]: string } } = {
   spreadsheet: {

@@ -8,7 +8,7 @@ import { AnyObject } from "types";
 // assets
 import downloadIcon from "assets/icons/icon_download.png";
 import nextIcon from "assets/icons/icon_next_white.png";
-import spreadsheetIcon from "assets/icons/icon_spreadsheet.png";
+import spreadsheetIcon from "assets/icons/icon_spreadsheet.svg";
 
 const downloadTemplate = (templateName: string) => {
   const helpFiles: { [key: string]: string } = {

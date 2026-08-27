@@ -386,6 +386,13 @@ describe("<ModalOverlayReportPageV2 />", () => {
       await userEvent.click(enterDetailsButton);
     });
 
+    // forCopyoverOnly (close-out) fields now live in the close-out modal
+    await act(async () => {
+      await userEvent.click(
+        screen.getByRole("button", { name: "Update close-out status" })
+      );
+    });
+
     const textbox = screen.getByRole("textbox", {
       name: "mock copyover field",
     });

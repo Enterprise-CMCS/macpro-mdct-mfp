@@ -19,7 +19,7 @@ import {
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
-import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
+import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.svg";
 // types
 import { EntityShape, OverlayModalPageShape, ReportType } from "types";
 // utils

@@ -233,10 +233,21 @@ export const DynamicField = ({
       {displayValues.map((field: DynamicFieldShape, index: number) => {
         const errorMessage = fieldErrorState?.[index]?.name?.message;
         const hasError = Boolean(errorMessage);
-        const textareaStyle = hasError
-          ? sx.removeBoxTextareaError
-          : sx.removeBoxTextarea;
-        const removeBoxStyle = multiline ? textareaStyle : sx.removeBoxInput;
+
+        let deleteButtonStyle;
+        if (multiline) {
+          if (dynamicLabel) {
+            deleteButtonStyle = hasError
+              ? sx.deleteButtonWithError
+              : sx.deleteButton;
+          } else {
+            deleteButtonStyle = hasError
+              ? sx.removeBoxTextareaError
+              : sx.removeBoxTextarea;
+          }
+        } else {
+          deleteButtonStyle = sx.removeBoxInput;
+        }
 
         return (
           <Flex
@@ -261,7 +272,7 @@ export const DynamicField = ({
               value={field.name || ""}
             />
             {!disabled && (
-              <Box sx={removeBoxStyle}>
+              <Box sx={deleteButtonStyle}>
                 <button type="button" onClick={() => deleteRecord(field)}>
                   <Image
                     sx={
@@ -319,11 +330,28 @@ const sx = {
   },
   removeBoxTextarea: {
     marginLeft: "0.625rem",
-    marginTop: "0",
+    flexShrink: 0,
+    alignSelf: "flex-start",
   },
   removeBoxTextareaError: {
     marginLeft: "0.625rem",
     marginTop: "1.625rem",
+    flexShrink: 0,
+    alignSelf: "flex-start",
+  },
+  deleteButton: {
+    marginLeft: "0.625rem",
+    // 3.25rem = label height (1.5rem) + label margin (0.25rem) + input top padding (1.5rem)
+    marginTop: "3.25rem",
+    flexShrink: 0,
+    alignSelf: "flex-start",
+  },
+  deleteButtonWithError: {
+    marginLeft: "0.625rem",
+    // 4.875rem = label height (1.5rem) + error message height (1.625rem) + input top padding with error (1.75rem)
+    marginTop: "4.875rem",
+    flexShrink: 0,
+    alignSelf: "flex-start",
   },
   removeImageInput: {
     width: "1.25rem",
@@ -370,6 +398,6 @@ const sx = {
     alignItems: "flex-end",
   },
   dynamicFieldTextarea: {
-    alignItems: "center",
+    alignItems: "stretch",
   },
 };
