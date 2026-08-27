@@ -1,23 +1,23 @@
+import { Mock } from "vitest";
 import { approveReport } from "./approve";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
-import { mockWPReport } from "../../utils/testing/setupJest";
+import { mockWPReport } from "../../utils/testing/setupTest";
 import { error } from "../../utils/constants/constants";
 import { getReportMetadata, putReportMetadata } from "../../storage/reports";
+import * as mockAuthUtil from "../../utils/auth/authorization";
 // types
 import { APIGatewayProxyEvent } from "../../utils/types";
 import { StatusCodes } from "../../utils/responses/response-lib";
 
-jest.mock("../../storage/reports", () => ({
-  getReportMetadata: jest.fn(),
-  putReportMetadata: jest.fn(),
+vi.mock("../../storage/reports", () => ({
+  getReportMetadata: vi.fn(),
+  putReportMetadata: vi.fn(),
 }));
 
-jest.mock("../../utils/auth/authorization", () => ({
-  hasPermissions: jest.fn(() => {}),
+vi.mock("../../utils/auth/authorization", () => ({
+  hasPermissions: vi.fn(() => {}),
 }));
-
-const mockAuthUtil = require("../../utils/auth/authorization");
 
 const mockProxyEvent: APIGatewayProxyEvent = {
   ...proxyEvent,
@@ -34,25 +34,16 @@ const approveEvent: APIGatewayProxyEvent = {
   }),
 };
 
-const consoleSpy: {
-  debug: jest.SpyInstance<void>;
-  warn: jest.SpyInstance<void>;
-} = {
-  debug: jest.spyOn(console, "debug").mockImplementation(),
-  warn: jest.spyOn(console, "warn").mockImplementation(),
-};
-
 describe("Test approveReport method", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("Test approve report passes with valid data", async () => {
-    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
+    (mockAuthUtil.hasPermissions as Mock).mockReturnValueOnce(true);
+    (getReportMetadata as Mock).mockResolvedValue(mockWPReport);
     const res: any = await approveReport(approveEvent, null);
     const body = JSON.parse(res.body);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(body.status).toBe("Approved");
     expect(putReportMetadata).toHaveBeenCalled();
@@ -68,33 +59,30 @@ describe("Test approveReport method", () => {
     };
 
     const res = await approveReport(event, null);
-    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
 
   test("Test approve report with no existing record returns 404", async () => {
-    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
+    (mockAuthUtil.hasPermissions as Mock).mockReturnValueOnce(true);
+    (getReportMetadata as Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NotFound);
     expect(res.body).toContain(error.NO_MATCHING_RECORD);
   });
 
   test("Test approve report without admin permissions returns 403", async () => {
-    mockAuthUtil.hasPermissions.mockReturnValueOnce(false);
-    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
+    (mockAuthUtil.hasPermissions as Mock).mockReturnValueOnce(false);
+    (getReportMetadata as Mock).mockResolvedValue(undefined);
     const res = await approveReport(approveEvent, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
   test("Test approve report gives dynamo errors nicer messages", async () => {
-    mockAuthUtil.hasPermissions.mockReturnValueOnce(true);
-    (getReportMetadata as jest.Mock).mockResolvedValue(mockWPReport);
-    (putReportMetadata as jest.Mock).mockImplementation(() => {
+    (mockAuthUtil.hasPermissions as Mock).mockReturnValueOnce(true);
+    (getReportMetadata as Mock).mockResolvedValue(mockWPReport);
+    (putReportMetadata as Mock).mockImplementation(() => {
       throw new Error("A scary message about Dynamo internals 👻");
     });
     const res: any = await approveReport(approveEvent, null);

@@ -77,7 +77,7 @@ describe("Report storage", () => {
   });
 
   it("Should call Dynamo to put report metadata for a state", async () => {
-    const mockPut = jest.fn();
+    const mockPut = vi.fn();
     mockDynamo.on(PutCommand).callsFake(mockPut);
     await putReportMetadata(mockReportMetadata);
     expect(mockPut).toHaveBeenCalledWith(
@@ -90,7 +90,7 @@ describe("Report storage", () => {
   });
 
   it("Should call Dynamo to query report metadata for a state", async () => {
-    const mockQuery = jest.fn().mockResolvedValue({
+    const mockQuery = vi.fn().mockResolvedValue({
       Items: [mockReportMetadata],
       LastEvaluatedKey: undefined,
     });
@@ -107,7 +107,7 @@ describe("Report storage", () => {
   });
 
   it("Should call Dynamo to get metadata for a specific report", async () => {
-    const mockGet = jest.fn().mockResolvedValue({
+    const mockGet = vi.fn().mockResolvedValue({
       Item: mockReportMetadata,
     });
     mockDynamo.on(GetCommand).callsFake(mockGet);
@@ -123,7 +123,7 @@ describe("Report storage", () => {
   });
 
   it("Should call S3 to store report field data", async () => {
-    const mockPut = jest.fn();
+    const mockPut = vi.fn();
     mockS3.on(PutObjectCommand).callsFake(mockPut);
     await putReportFieldData(mockReportMetadata, mockReportFieldData);
     expect(mockPut).toHaveBeenCalledWith(
@@ -137,9 +137,9 @@ describe("Report storage", () => {
   });
 
   it("Should call S3 to retrieve report field data", async () => {
-    const mockGet = jest.fn().mockResolvedValue({
+    const mockGet = vi.fn().mockResolvedValue({
       Body: {
-        transformToString: jest
+        transformToString: vi
           .fn()
           .mockResolvedValue(JSON.stringify(mockReportFieldData)),
       },
@@ -157,7 +157,7 @@ describe("Report storage", () => {
   });
 
   it("Should call S3 to store report form templates", async () => {
-    const mockPut = jest.fn();
+    const mockPut = vi.fn();
     mockS3.on(PutObjectCommand).callsFake(mockPut);
     await putReportFormTemplate(mockReportMetadata, mockReportFormTemplate);
     expect(mockPut).toHaveBeenCalledWith(
@@ -171,9 +171,9 @@ describe("Report storage", () => {
   });
 
   it("Should call S3 to retrieve report form templates", async () => {
-    const mockGet = jest.fn().mockResolvedValue({
+    const mockGet = vi.fn().mockResolvedValue({
       Body: {
-        transformToString: jest
+        transformToString: vi
           .fn()
           .mockResolvedValue(JSON.stringify(mockReportFormTemplate)),
       },
@@ -191,7 +191,7 @@ describe("Report storage", () => {
   });
 
   it("Should call Dynamo to store form template version info", async () => {
-    const mockPut = jest.fn();
+    const mockPut = vi.fn();
     mockDynamo.on(PutCommand).callsFake(mockPut);
     await putFormTemplateVersion(mockFormTemplateVersion);
     expect(mockPut).toHaveBeenCalledWith(
@@ -204,7 +204,7 @@ describe("Report storage", () => {
   });
 
   it("Should call Dynamo to query form template versions by hash", async () => {
-    const mockQuery = jest
+    const mockQuery = vi
       .fn()
       .mockResolvedValue({ Items: [mockFormTemplateVersion] });
     mockDynamo.on(QueryCommand).callsFake(mockQuery);
@@ -229,7 +229,7 @@ describe("Report storage", () => {
   });
 
   it("Should call Dynamo to query form template version numbers", async () => {
-    const mockQuery = jest
+    const mockQuery = vi
       .fn()
       .mockResolvedValue({ Items: [mockFormTemplateVersion] });
     mockDynamo.on(QueryCommand).callsFake(mockQuery);
@@ -251,7 +251,7 @@ describe("Report storage", () => {
   });
 
   it("Should default to version 0 if there are no existing form templates", async () => {
-    const mockQuery = jest.fn().mockResolvedValue({ Items: [] });
+    const mockQuery = vi.fn().mockResolvedValue({ Items: [] });
     mockDynamo.on(QueryCommand).callsFake(mockQuery);
     const versionNumber = await queryLatestFormTemplateVersionNumber(
       ReportType.WP

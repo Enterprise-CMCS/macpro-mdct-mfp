@@ -24,7 +24,7 @@ describe("Banner storage methods", () => {
   });
 
   it("should call Dynamo to create a new or updated banner", async () => {
-    const mockPut = jest.fn();
+    const mockPut = vi.fn();
     mockDynamo.on(PutCommand).callsFakeOnce(mockPut);
 
     await putBanner(mockBanner);
@@ -39,7 +39,7 @@ describe("Banner storage methods", () => {
   });
 
   it("should call Dynamo to fetch a banner", async () => {
-    const mockScan = jest.fn().mockResolvedValue({
+    const mockScan = vi.fn().mockResolvedValue({
       Items: [mockBanner],
       LastEvaluatedKey: undefined,
     });
@@ -57,7 +57,7 @@ describe("Banner storage methods", () => {
   });
 
   it("should call Dynamo to delete a banner", async () => {
-    const mockDelete = jest.fn();
+    const mockDelete = vi.fn();
     mockDynamo.on(DeleteCommand).callsFakeOnce(mockDelete);
 
     await deleteBanner("mock-key");

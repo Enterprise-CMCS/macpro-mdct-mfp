@@ -210,7 +210,7 @@ export const error = {
 ```typescript
 import { fetchReport } from "./fetch";
 import { proxyEvent } from "../../utils/testing/proxyEvent";
-import { mockDynamoData, mockReportJson } from "../../utils/testing/setupJest";
+import { mockDynamoData, mockReportJson } from "../../utils/testing/setupTest";
 import { StatusCodes } from "../../utils/responses/response-lib";
 
 // Mock external dependencies
@@ -249,7 +249,7 @@ describe("handlers/reports/fetch", () => {
 ```tsx
 import { render, screen } from "@testing-library/react";
 import { HomePage } from "components";
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const homeView = (
