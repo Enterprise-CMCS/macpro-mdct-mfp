@@ -90,19 +90,46 @@ type ErrorType = {
   type: string;
 };
 
+const recusiveObjectFromStringArray = (
+  errors: { [key: string]: any },
+  arr: string[],
+  index: number,
+  value: any,
+): { [key: string]: any } => {
+  if (arr.length - 1 == index) {
+    return { [arr[index]]: value };
+  } else {
+    return {
+      [arr[index]]: recusiveObjectFromStringArray(
+        errors,
+        arr,
+        index + 1,
+        value,
+      ),
+    };
+  }
+};
+
 export const transformYupErrorsIntoObject = (
   errors: ValidationError,
 ): Record<string, ErrorType> => {
-  const validationErrors: Record<string, ErrorType> = {};
+  let validationErrors: Record<string, ErrorType> = {};
 
   errors.inner.forEach((error: any) => {
-    if (error.path !== undefined) {
-      validationErrors[error.path] = {
-        message: error.errors[0],
-        type: "required",
+    const formatPath: string[] = error.path.split(/[\.\[\]]/).filter(Boolean);
+    const obj = recusiveObjectFromStringArray(validationErrors, formatPath, 0, {
+      message: error.errors[0],
+      type: "required",
+    });
+
+    if (Object.keys(obj)[0] in validationErrors) {
+      validationErrors[Object.keys(obj)[0]] = {
+        ...validationErrors[Object.keys(obj)[0]],
+        ...Object.values(obj)[0],
       };
+    } else {
+      validationErrors = { ...validationErrors, ...obj };
     }
   });
-
   return validationErrors;
 };
