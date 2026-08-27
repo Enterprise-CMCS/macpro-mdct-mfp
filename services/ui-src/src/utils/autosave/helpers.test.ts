@@ -16,7 +16,7 @@ import {
   mockFormId,
   mockTableId,
   mockTempDynamicFieldId,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 
 describe("utils/autosave/helpers", () => {
   describe("createTempDynamicId()", () => {

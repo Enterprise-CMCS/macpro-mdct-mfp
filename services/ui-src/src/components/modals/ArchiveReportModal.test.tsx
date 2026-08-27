@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import { useStore } from "utils";
 import {
@@ -5,19 +6,19 @@ import {
   mockUseStore,
   mockWPFullReport,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { ReportContext } from "components/reports/ReportProvider";
 import { testA11yAct } from "utils/testing/commonTests";
 import userEvent from "@testing-library/user-event";
 import { ArchiveReportModal } from "./ArchiveReportModal";
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 
-jest.mock("utils/state/useStore");
+vi.mock("utils/state/useStore");
 
-const mockFetchReportsByState = jest.fn();
-const mockCloseHandler = jest.fn();
+const mockFetchReportsByState = vi.fn();
+const mockCloseHandler = vi.fn();
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const report = {
   ...mockWPFullReport,
@@ -49,7 +50,7 @@ describe("<ArchiveReportModal />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("the modal opens with correct content", () => {

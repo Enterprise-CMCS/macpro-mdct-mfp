@@ -1,6 +1,8 @@
+import { Mock, MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useSearchParams } from "react-router";
+import { useFlags } from "launchdarkly-react-client-sdk";
 // components
 import { ReportContext, DashboardPage } from "components";
 // utils
@@ -14,14 +16,13 @@ import {
   mockWPApprovedFullReport,
 } from "utils/testing/mockReport";
 import {
-  mockLDFlags,
   mockReportStore,
   mockUseAdminStore,
   mockUseEmptyReportStore,
   mockUseEntityStore,
   mockUseStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 import { useBreakpoint, useStore, makeMediaQueryClasses } from "utils";
@@ -31,27 +32,32 @@ import { MfpReportState, ReportShape, ReportType } from "types";
 import wpVerbiage from "verbiage/pages/wp/wp-dashboard";
 import sarVerbiage from "verbiage/pages/sar/sar-dashboard";
 
-jest.mock("utils/auth/useUser");
-const mockedUseUser = useUser as jest.MockedFunction<typeof useUser>;
+vi.mock("launchdarkly-react-client-sdk");
+const mockFlags = vi.mocked(useFlags);
+mockFlags.mockReturnValue({
+  wpSarRelease2025: true,
+});
 
-jest.mock("utils/other/useBreakpoint");
-const mockUseBreakpoint = useBreakpoint as jest.MockedFunction<
-  typeof useBreakpoint
->;
-const mockMakeMediaQueryClasses = makeMediaQueryClasses as jest.MockedFunction<
+vi.mock("utils/auth/useUser");
+const mockedUseUser = useUser as MockedFunction<typeof useUser>;
+
+vi.mock("utils/other/useBreakpoint");
+const mockUseBreakpoint = useBreakpoint as MockedFunction<typeof useBreakpoint>;
+const mockMakeMediaQueryClasses = makeMediaQueryClasses as MockedFunction<
   typeof makeMediaQueryClasses
 >;
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockUseNavigate = jest.fn();
-jest.mock("react-router", () => ({
+const mockUseNavigate = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
-  useLocation: jest.fn(() => ({
+  useLocation: vi.fn(() => ({
     pathname: "/mock-dashboard",
   })),
-  useSearchParams: jest.fn(),
+  useSearchParams: vi.fn(),
 }));
 
 const wpDashboardViewWithReports = (
@@ -86,24 +92,24 @@ const sarDashboardViewWithReports = (
   </RouterWrappedComponent>
 );
 
-const mockSetSearchParams = jest.fn();
-const mockGetSearchParams = jest.fn();
+const mockSetSearchParams = vi.fn();
+const mockGetSearchParams = vi.fn();
 
 describe("<DashboardPage />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useSearchParams as jest.Mock).mockReturnValue([
+    vi.clearAllMocks();
+    (useSearchParams as Mock).mockReturnValue([
       { get: mockGetSearchParams },
       mockSetSearchParams,
     ]);
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   describe("Test Report Dashboard view (Desktop)", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockedUseUser.mockReturnValue(mockStateUser);
       mockUseBreakpoint.mockReturnValue({
         isMobile: false,
@@ -135,7 +141,9 @@ describe("<DashboardPage />", () => {
     });
 
     test("Check that WP Dashboard continue button is disabled if latest WP is from period 1 and year 2026 and approved and flag is off", () => {
-      mockLDFlags.set({ wpSarRelease2025: false });
+      mockFlags.mockReturnValue({
+        wpSarRelease2025: false,
+      });
 
       const mockStoreWith2026Q1Approved = {
         ...mockUseStore,
@@ -158,7 +166,9 @@ describe("<DashboardPage />", () => {
     });
 
     test("Check that WP Dashboard continue button is enabled if latest WP is from period 1 and year 2026 and approved and flag is on", () => {
-      mockLDFlags.set({ wpSarRelease2025: true });
+      mockFlags.mockReturnValue({
+        wpSarRelease2025: true,
+      });
 
       const mockStoreWith2026Q1Approved = {
         ...mockUseStore,
@@ -225,7 +235,7 @@ describe("<DashboardPage />", () => {
 
   describe("Test Report Dashboard with no reports", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockedUseUser.mockReturnValue(mockStateUser);
       mockedUseStore.mockReturnValue({
         reportsByState: undefined,
@@ -251,7 +261,7 @@ describe("<DashboardPage />", () => {
 
   describe("Test Report Dashboard (Mobile)", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockUseBreakpoint.mockReturnValue({
         isMobile: true,
       });
@@ -273,7 +283,7 @@ describe("<DashboardPage />", () => {
 
   describe("Test WP Admin Report Dashboard - desktop", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockUseBreakpoint.mockReturnValue({
         isMobile: false,
       });
@@ -347,7 +357,7 @@ describe("<DashboardPage />", () => {
 
   describe("Test WP Admin Report Dashboard - mobile view", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockUseBreakpoint.mockReturnValue({
         isMobile: true,
       });
@@ -400,7 +410,7 @@ describe("<DashboardPage />", () => {
 
   describe("Test error banner on SAR dashboard", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockedUseUser.mockReturnValue(mockStateUser);
       mockedUseStore.mockReturnValue({
         reportsByState: undefined,

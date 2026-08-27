@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { useStore } from "utils";
 import {
@@ -7,14 +8,14 @@ import {
   mockDrawerReportPageJson,
   mockUnknownPageJson,
   mockModalOverlayReportPageJson,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { mockWpReportContext } from "../../utils/testing/mockReport";
 
 import { ReportContext, ExportedReportWrapper } from "components";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockReportStore);
 
 const exportedStandardReportWrapperComponent = (

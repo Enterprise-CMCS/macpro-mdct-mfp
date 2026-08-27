@@ -3,11 +3,11 @@ import { render, screen } from "@testing-library/react";
 import { TextAreaField } from "components";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("react-hook-form", () => ({
+vi.mock("react-hook-form", () => ({
   useFormContext: () => ({
     setValue: () => {},
     register: () => {},
-    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue("test"),
+    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue("test"),
   }),
 }));
 

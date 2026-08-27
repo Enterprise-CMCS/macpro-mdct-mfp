@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import {
   RenderResult,
   render,
@@ -13,22 +14,22 @@ import {
   RouterWrappedComponent,
   mockUseEntityStore,
   mockWpReportContext,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseEntityStore);
 
-const mockCloseEntityDetailsOverlay = jest.fn();
+const mockCloseEntityDetailsOverlay = vi.fn();
 
 let component: RenderResult;
 
 //bypass autosave call when simulating type inputs
-jest.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: jest.fn().mockImplementation(() => {
+vi.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         id: "mockId",
@@ -36,13 +37,13 @@ jest.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: jest.fn().mockImplementation((work) => work()),
+  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
+  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 //mock closeout status to enable closeout button
-jest.mock("components/tables/getEntityStatus", () => ({
-  getCloseoutStatus: jest.fn().mockImplementation(() => {
+vi.mock("components/tables/getEntityStatus", () => ({
+  getCloseoutStatus: vi.fn().mockImplementation(() => {
     return true;
   }),
 }));

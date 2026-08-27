@@ -4,8 +4,8 @@ import { Text } from "@chakra-ui/react";
 import { Modal } from "components";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockCloseHandler = jest.fn();
-const mockConfirmationHandler = jest.fn();
+const mockCloseHandler = vi.fn();
+const mockConfirmationHandler = vi.fn();
 
 const content = {
   heading: "Dialog Heading",

@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -11,24 +12,24 @@ import {
   mockStateUserStore,
   mockWpReportContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 import { ReportContext } from "components";
 import { EntityShape, ReportType } from "types";
 
-const mockCloseEntityDetailsOverlay = jest.fn();
-const mockOnSubmit = jest.fn();
+const mockCloseEntityDetailsOverlay = vi.fn();
+const mockOnSubmit = vi.fn();
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue({
   ...mockStateUserStore,
   ...mockEntityStore,
-  setAutosaveState: jest.fn(),
+  setAutosaveState: vi.fn(),
 });
 
-jest.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: jest.fn().mockImplementation(() => {
+vi.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         name: "mockId",
@@ -36,8 +37,8 @@ jest.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: jest.fn().mockImplementation((work) => work()),
+  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
+  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const entityDetailsOverlayComponent = (
@@ -57,7 +58,7 @@ const entityDetailsOverlayComponent = (
         route={mockModalOverlayReportPageJson}
         selectedEntity={selectedEntity}
         submitting={false}
-        setEntering={jest.fn()}
+        setEntering={vi.fn()}
         validateOnRender={false}
       />
     </ReportContext.Provider>
@@ -66,7 +67,7 @@ const entityDetailsOverlayComponent = (
 
 describe("<EntityDetailsOverlayV2 />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockedUseStore.mockReturnValue({
       ...mockStateUserStore,
       ...mockEntityStore,
@@ -102,7 +103,7 @@ describe("<EntityDetailsOverlayV2 />", () => {
 
     expect(
       screen.getByRole("textbox", {
-        name: "mock optional field (optional)",
+        name: "mock optional field(optional)",
       })
     ).toBeVisible();
   });

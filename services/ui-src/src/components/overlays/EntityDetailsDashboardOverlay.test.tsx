@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { RouterWrappedComponent } from "../../utils/testing/mockRouter";
 import {
@@ -8,17 +9,17 @@ import {
   mockGenericEntity,
   mockModalForm,
   mockModalOverlayReportPageVerbiage,
-} from "../../utils/testing/setupJest";
+} from "../../utils/testing/setupTest";
 import { EntityDetailsDashboardOverlay } from "./EntityDetailsDashboardOverlay";
 import { useStore } from "utils";
 import { EntityType, PageTypes } from "../../types";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockCloseEntityDetailsOverlay = jest.fn();
+const mockCloseEntityDetailsOverlay = vi.fn();
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseEntityStore);
 
 const mockDashboard = {

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { ExportedReportFieldRow } from "./ExportedReportFieldRow";
-import { mockWpReportContext } from "utils/testing/setupJest";
+import { mockWpReportContext } from "utils/testing/setupTest";
 import { ReportContext } from "components";
 import { Table } from "@chakra-ui/react";
 import { testA11yAct } from "utils/testing/commonTests";

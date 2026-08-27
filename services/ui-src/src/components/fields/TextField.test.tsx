@@ -1,33 +1,34 @@
+import { Mock, MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 // components
 import { useFormContext } from "react-hook-form";
 import { TextField } from "components";
 // utils
-import { mockStateUserStore } from "utils/testing/setupJest";
+import { mockStateUserStore } from "utils/testing/setupTest";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockTrigger = jest.fn();
+const mockTrigger = vi.fn();
 const mockRhfMethods = {
   register: () => {},
   setValue: () => {},
-  getValues: jest.fn(),
+  getValues: vi.fn(),
   trigger: mockTrigger,
 };
-const mockUseFormContext = useFormContext as unknown as jest.Mock<
+const mockUseFormContext = useFormContext as unknown as Mock<
   typeof useFormContext
 >;
-jest.mock("react-hook-form", () => ({
-  useFormContext: jest.fn(() => mockRhfMethods),
+vi.mock("react-hook-form", () => ({
+  useFormContext: vi.fn(() => mockRhfMethods),
 }));
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
     ...mockRhfMethods,
-    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
+    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 const maxLength = 1000;
 
 const textFieldComponent = (
@@ -70,7 +71,7 @@ describe("<TextField />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("TextField is visible", () => {
@@ -125,7 +126,7 @@ describe("<TextField />", () => {
       mockGetValues(undefined);
     },
     () => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     }
   );
 });
