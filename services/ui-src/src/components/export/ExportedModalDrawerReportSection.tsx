@@ -64,13 +64,31 @@ export const ExportedModalDrawerReportSection = ({
 
   const ariaLabelledAsterisk = `<span aria-label="sum of incomplete fields">*</span>`;
 
+  // some reports (e.g. copies of copies) can accumulate more than the
+  // standard 12 quarters of data; the table needs a label for every quarter
+  // that actually has data, not just the first 12
+  const getQuarterCount = () => {
+    const counts = entities.map((entity: EntityShape) => {
+      const isNotApplicableToMfp =
+        entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
+        "No";
+      if (isNotApplicableToMfp) return 0;
+
+      return Object.keys(entity).filter((key) => key.includes("quarterly"))
+        .length;
+    });
+
+    return Math.max(12, ...counts);
+  };
+  const quarterCount = getQuarterCount();
+
   // applicable quarters for report; populates left table column
   const generateQuarterLabels = () => {
     // The first quarter will be Q1 for period 1, or Q3 for period 2.
     const firstQuarterIndex = reportPeriod === 1 ? 0 : 2;
 
     // returns array of labels like ["2024 Q1", "2024 Q2", ...]
-    return Array.from({ length: 12 })
+    return Array.from({ length: quarterCount })
       .map((_, index) => ({
         year: reportYear + Math.floor((firstQuarterIndex + index) / 4),
         quarter: `Q${1 + ((firstQuarterIndex + index) % 4)}`,
@@ -85,17 +103,17 @@ export const ExportedModalDrawerReportSection = ({
       entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
       "No";
 
-    // if not applicable we populate the column with 12 "N/A" cells
+    // if not applicable we populate the column with "N/A" cells for every quarter
     if (isNotApplicableToMfp) {
-      return Array.from({ length: 12 }).fill("N/A");
+      return Array.from({ length: quarterCount }).fill("N/A");
     }
 
     const quarterArray = Object.keys(entity)
       .filter((key) => key.includes("quarterly"))
       .map((key) => entity[key]);
 
-    // if length of filled in data is not 12, show "Not answered" in remaining cells
-    while (quarterArray.length < 12) {
+    // if length of filled in data is less than quarterCount, show "Not answered" in remaining cells
+    while (quarterArray.length < quarterCount) {
       quarterArray.push(notAnsweredText);
     }
 

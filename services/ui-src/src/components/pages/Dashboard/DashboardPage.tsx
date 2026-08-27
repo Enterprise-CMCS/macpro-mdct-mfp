@@ -58,7 +58,7 @@ import {
 // verbiage
 import accordion from "verbiage/pages/accordion";
 // assets
-import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
+import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.svg";
 import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {

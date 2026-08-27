@@ -930,7 +930,10 @@ describe("<ExportedModalOverlayReportSection />", () => {
     };
 
     renderWithReport(propsWithCloseOutField, {
-      ...singleInitiativeReport({ initiative_name: "Test Initiative" }),
+      ...singleInitiativeReport({
+        initiative_name: "Test Initiative",
+        isCopied: true,
+      }),
       isCopied: true,
     });
     // Title renders as the section header with the substituted initiative name
@@ -1003,12 +1006,51 @@ describe("<ExportedModalOverlayReportSection />", () => {
     renderWithReport(propsWithCloseOutField, {
       ...singleInitiativeReport({
         initiative_name: "Test Initiative",
+        isCopied: true,
         isInitiativeClosed: false,
         closedBy: "Jane Doe",
       }),
       isCopied: true,
     });
+    // Close-out field still renders for a copied-over initiative,
+    // but without the "Closed by" line since it isn't closed.
+    expect(screen.getByText("Projected end date")).toBeVisible();
     expect(screen.queryByText("Closed by")).not.toBeInTheDocument();
+  });
+
+  test("should hide close-out fields for a newly-added initiative in a copied report", () => {
+    const propsWithCloseOutField = {
+      section: {
+        ...wpMockProps.section,
+        overlayForm: {
+          id: "test_form",
+          fields: [
+            {
+              id: "closeOutInformation_projectedEndDate",
+              type: "date",
+              validation: "dateOptional",
+              forCopyoverOnly: true,
+              props: {
+                title: "Close-out {{initiativeName}}",
+                subtitle: "Complete for initiatives that end soon.",
+                label: "Projected end date",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    // Report is copied, but this initiative was added after the copy-over
+    // (not copied, not closed), so it should not show the close-out section.
+    renderWithReport(propsWithCloseOutField, {
+      ...singleInitiativeReport({ initiative_name: "New Initiative" }),
+      isCopied: true,
+    });
+    expect(screen.queryByText("Projected end date")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Close-out New Initiative")
+    ).not.toBeInTheDocument();
   });
 
   test("should keep non-close-out forCopyoverOnly fields hidden for copied reports", () => {

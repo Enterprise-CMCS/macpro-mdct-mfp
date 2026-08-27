@@ -150,6 +150,52 @@ describe("<ExportedModalDrawerReportSection />", () => {
     expect(screen.queryAllByText("Not answered").length).toBe(12);
   });
 
+  test("renders correct quarter labels when more than twelve quarters exist", async () => {
+    const mockReportWithExtraQuarters = {
+      ...mockReportStore,
+      report: {
+        ...mockReportStore.report,
+        reportPeriod: 1,
+        reportYear: 2024,
+        fieldData: {
+          ...mockReportFieldData,
+          entityType: [
+            {
+              transitionBenchmarks_targetPopulationName: "Older Adults",
+              transitionBenchmarks_targetPopulationName_short: "OA",
+              quarterlyProjections2024Q1: "1",
+              quarterlyProjections2024Q2: "1",
+              quarterlyProjections2024Q3: "1",
+              quarterlyProjections2024Q4: "1",
+              quarterlyProjections2025Q1: "1",
+              quarterlyProjections2025Q2: "1",
+              quarterlyProjections2025Q3: "1",
+              quarterlyProjections2025Q4: "1",
+              quarterlyProjections2026Q1: "1",
+              quarterlyProjections2026Q2: "1",
+              quarterlyProjections2026Q3: "1",
+              quarterlyProjections2026Q4: "1",
+              quarterlyProjections2027Q1: "1",
+              quarterlyProjections2027Q2: "1",
+            },
+          ],
+        },
+      },
+    };
+
+    mockedUseStore.mockReturnValue(mockReportWithExtraQuarters);
+    render(tableComponent);
+
+    // the 13th and 14th quarters should render with their correct labels,
+    // not blank cells
+    expect(screen.getByText("2027 Q1")).toBeVisible();
+    expect(screen.getByText("2027 Q2")).toBeVisible();
+
+    // and the standard first 12 quarters are unaffected
+    expect(screen.getByText("2024 Q1")).toBeVisible();
+    expect(screen.getByText("2026 Q4")).toBeVisible();
+  });
+
   test("renders aria labels for target populations with abbreviated names", async () => {
     const mockReport = {
       ...mockReportStore,

@@ -18,7 +18,7 @@ import {
   PageTypes,
 } from "types";
 // assets
-import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
+import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.svg";
 
 /**
  * @deprecated No longer used as of Report Year 2026, Period 2
