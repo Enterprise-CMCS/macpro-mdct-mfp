@@ -221,7 +221,7 @@ const fieldStore = (set: Function) => ({
       },
     ),
   setValidationSchema: (
-    schema: OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>>,
+    schema: OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>> | undefined,
   ) =>
     set(() => ({ validationSchema: schema }), false, {
       type: "setValidationSchema",

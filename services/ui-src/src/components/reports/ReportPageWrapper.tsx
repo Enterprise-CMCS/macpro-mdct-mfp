@@ -37,7 +37,7 @@ export const ReportPageWrapper = () => {
 
   useEffect(() => {
     setClearFields();
-    setValidationSchema([]);
+    setValidationSchema(undefined);
   }, [pathname]);
 
   // these should be built off the form template, which comes from the report.

@@ -98,7 +98,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
   useEffect(() => {
     setValidationSchema(formResolverSchema);
-  }, []);
+  }, [fields]);
 
   const validation = (values: {}) => {
     try {
@@ -319,7 +319,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   const submit = (e?: BaseSyntheticEvent) => {
     e?.preventDefault();
 
-    const fieldIds = allFields.map((field: { id: string }) => field.id);
     const answers = buildAnswerObject();
     const errors = validation(answers);
     setErrors(errors);

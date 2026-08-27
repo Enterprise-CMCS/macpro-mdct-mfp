@@ -91,7 +91,7 @@ export interface MfpFieldState {
   rerender: boolean,
   setField: (id: string, value?: any) => void;
   setAnswer: (id: string, answer: any) => void;
-  setValidationSchema: (schema: OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>>) => void;
+  setValidationSchema: (schema: OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>> | undefined) => void;
   setErrors: (updateErrors: { [key: string]: FIELD_ERROR }) => void;
   setClearFields: () => void;
 }
