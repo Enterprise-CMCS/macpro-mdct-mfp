@@ -81,7 +81,7 @@ export const SummationTable = ({
 
   return (
     <Box sx={sx.box}>
-      <Heading as="h2">{verbiage?.title}</Heading>
+      {verbiage?.title && <Heading as="h2">{verbiage.title}</Heading>}
       {verbiage?.subtitle && (
         <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
       )}
