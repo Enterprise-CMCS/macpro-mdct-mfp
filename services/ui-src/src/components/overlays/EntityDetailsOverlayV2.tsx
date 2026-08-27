@@ -16,7 +16,6 @@ import {
   DynamicModalOverlayReportPageShape,
   EntityShape,
   ErrorVerbiage,
-  FIELD_DATA,
   FormJson,
   ModalOverlayReportPageShape,
   ReportType,
@@ -52,6 +51,8 @@ export const EntityDetailsOverlayV2 = ({
   const [currentEntity, setCurrentEntity] = useState<EntityShape>(
     selectedEntity as EntityShape,
   );
+
+  console.log("EntityDetailsOverlayV2");
 
   const { report, fields, setAnswer } = useStore();
   // Closed initiatives are locked in the Work Plan, but stay editable in the

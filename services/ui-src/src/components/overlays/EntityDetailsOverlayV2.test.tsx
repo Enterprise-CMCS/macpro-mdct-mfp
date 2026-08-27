@@ -28,16 +28,7 @@ mockedUseStore.mockReturnValue({
 });
 
 jest.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: jest.fn().mockImplementation(() => {
-    return [
-      {
-        name: "mockId",
-        value: "123",
-      },
-    ];
-  }),
-  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: jest.fn().mockImplementation((work) => work()),
+  shinyNewSave: jest.fn().mockImplementation(() => Promise.resolve("")),
 }));
 
 const entityDetailsOverlayComponent = (

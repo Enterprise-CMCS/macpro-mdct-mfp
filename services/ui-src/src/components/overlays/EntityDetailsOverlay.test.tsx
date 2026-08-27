@@ -28,16 +28,7 @@ let component: RenderResult;
 
 //bypass autosave call when simulating type inputs
 jest.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: jest.fn().mockImplementation(() => {
-    return [
-      {
-        id: "mockId",
-        name: "Mock name",
-      },
-    ];
-  }),
-  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: jest.fn().mockImplementation((work) => work()),
+  shinyNewSave: jest.fn().mockImplementation(() => Promise.resolve("")),
 }));
 
 //mock closeout status to enable closeout button

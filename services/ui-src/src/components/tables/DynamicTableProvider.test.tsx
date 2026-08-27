@@ -49,16 +49,7 @@ const mockGetValues = (returnValue: any) =>
   }));
 
 jest.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: jest.fn().mockImplementation(() => {
-    return [
-      {
-        name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-totalComputable`,
-        value: "123",
-      },
-    ];
-  }),
-  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: jest.fn().mockImplementation((work) => work()),
+  shinyNewSave: jest.fn().mockImplementation(() => Promise.resolve("")),
 }));
 
 const TestComponent = () => {

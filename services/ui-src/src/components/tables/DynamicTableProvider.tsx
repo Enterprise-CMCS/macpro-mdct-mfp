@@ -29,7 +29,6 @@ import {
   debounce,
   FieldInfo,
   formFieldFactory,
-  getAutosaveFields,
   getFieldParts,
   getValueToCombine,
   hydrateFormFields,
