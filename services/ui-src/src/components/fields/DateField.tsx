@@ -7,7 +7,6 @@ import { CustomHtmlElement, InputChangeEvent } from "types";
 // utils
 import {
   labelTextWithOptional,
-  checkDateCompleteness,
   parseCustomHtml,
   FieldInfo,
   useStore,
@@ -38,7 +37,7 @@ export const DateField = ({
 
   useEffect(() => {
     setField(name, displayValue);
-  }, [])
+  }, []);
 
   // if should autosave, submit field data to database on blur
   const onBlurHandler = async (event: InputChangeEvent) => {

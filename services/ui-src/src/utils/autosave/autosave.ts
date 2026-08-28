@@ -38,7 +38,7 @@ export const shinyNewSave = async (
   selectedEntity: EntityShape | undefined,
   fields: FieldInfo[],
   updateReport: Function,
-  userName: string
+  userName: string,
 ) => {
   const newReport = structuredClone(report);
   const { fieldData } = newReport;
@@ -69,10 +69,10 @@ export const shinyNewSave = async (
     updateReportData(fieldData, field.name, field.value, !selectedEntity);
   }
 
-  const newFieldData:{[key:string]: any} = {};
+  const newFieldData: { [key: string]: any } = {};
   fields.forEach((field) => {
     newFieldData[field.name] = field.value;
-  })
+  });
 
   const reportKeys = {
     reportType: report.reportType,
@@ -83,9 +83,9 @@ export const shinyNewSave = async (
   const newData = {
     metadata: {
       status: report.status,
-      lastAlteredBy: userName
+      lastAlteredBy: userName,
     },
-    fieldData: newFieldData,
+    fieldData: selectedEntity ? newReport.fieldData : newFieldData,
   };
 
   (await updateReport(reportKeys, newData)) as ReportShape;

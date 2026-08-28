@@ -59,6 +59,7 @@ export const ChoiceListField = ({
           disabled: shouldDisableChildFields,
           nested: isNested,
           autosave: autosave,
+          updateFieldValues
         });
         choiceObject.checkedChildren = formattedChildren;
       }

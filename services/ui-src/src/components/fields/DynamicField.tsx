@@ -54,7 +54,7 @@ export const DynamicField = ({
 
     if (autosave) {
       const fields = [
-        { name, type: ReportFormFieldType.DYNAMIC, displayValues },
+        { name, type: ReportFormFieldType.DYNAMIC, value: displayValues },
       ];
       updateFieldValues(fields);
     }
@@ -99,7 +99,8 @@ export const DynamicField = ({
       )}
 
       {displayValues.map((field: DynamicFieldShape, index: number) => {
-        const errorMessage = (fields.get(name)?.error as any)?.[index]?.name.message;
+        const errorMessage = (fields.get(name)?.error as any)?.[index]?.name
+          .message;
         const hasError = Boolean(errorMessage);
         const textareaStyle = hasError
           ? sx.removeBoxTextareaError
