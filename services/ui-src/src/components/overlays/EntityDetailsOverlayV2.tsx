@@ -31,6 +31,7 @@ import {
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
+import { AnyObject } from "yup/lib/types";
 
 export const EntityDetailsOverlayV2 = ({
   backButtonText,
@@ -51,10 +52,7 @@ export const EntityDetailsOverlayV2 = ({
   const [currentEntity, setCurrentEntity] = useState<EntityShape>(
     selectedEntity as EntityShape,
   );
-
-  console.log("EntityDetailsOverlayV2");
-
-  const { report, fields, setAnswer } = useStore();
+  const { report } = useStore();
   // Closed initiatives are locked in the Work Plan, but stay editable in the
   // SAR so state users can continue reporting on them.
   const isWP = report?.reportType === ReportType.WP;
@@ -132,9 +130,8 @@ export const EntityDetailsOverlayV2 = ({
     [form, isWP],
   );
 
-  const onFormChange = () => {
-    //TO DO: FIX THIS
-    const currentValues = hookForm.getValues() as EntityShape;
+  const onFormChange = (answers: AnyObject) => {
+    const currentValues = answers as EntityShape;
     const endDate = currentValues.defineInitiative_endDate;
 
     // Keep the read-only close-out projected end date in sync with the

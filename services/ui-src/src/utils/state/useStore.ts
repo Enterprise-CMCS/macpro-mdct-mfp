@@ -151,7 +151,6 @@ const entityStore = (set: Function) => ({
 const fieldStore = (set: Function) => ({
   fields: new Map(),
   validationSchema: undefined,
-  rerender: false,
   setField: (id: string, value?: any) =>
     set(
       (state: { fields: Map<string, FIELD_DATA> }) => ({
@@ -200,7 +199,7 @@ const fieldStore = (set: Function) => ({
           error: (validationError[id] as FIELD_ERROR) ?? "",
           validate: true,
         });
-        return { fields: updateFields, rerender: true };
+        return { fields: updateFields };
       },
       false,
       { type: "setAnswer" },
@@ -213,7 +212,7 @@ const fieldStore = (set: Function) => ({
           const data = state.fields.get(key) ?? { answer: undefined };
           updateFields.set(key, { ...data, error: value, validate: false });
         }
-        return { fields: updateFields, rerender: false };
+        return { fields: updateFields };
       },
       false,
       {

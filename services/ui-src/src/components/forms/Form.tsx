@@ -69,7 +69,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     report,
     setReport,
     selectedEntity,
-    rerender,
     setValidationSchema,
     setErrors,
     fields: formFields,

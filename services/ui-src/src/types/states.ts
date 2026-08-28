@@ -88,7 +88,6 @@ export type FIELD_DATA = {
 export interface MfpFieldState {
   fields: Map<string, FIELD_DATA>;
   validationSchema: OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>> | undefined;
-  rerender: boolean,
   setField: (id: string, value?: any) => void;
   setAnswer: (id: string, answer: any) => void;
   setValidationSchema: (schema: OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>> | undefined) => void;
