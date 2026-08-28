@@ -173,11 +173,14 @@ const fieldStore = (set: Function) => ({
           TypeOfShape<AnyObject>
         >;
       }) => {
-        const formattedFields = Object.fromEntries(
-          state.fields
-            .keys()
-            .map((key) => [key, state.fields.get(key)?.answer]),
-        );
+        const formattedFields = {
+          ...Object.fromEntries(
+            state.fields
+              .keys()
+              .map((key) => [key, state.fields.get(key)?.answer]),
+          ),
+          [id]: value,
+        };
 
         const runValidation = () => {
           if (state.validationSchema) {
@@ -192,8 +195,7 @@ const fieldStore = (set: Function) => ({
           return { [id]: "" };
         };
 
-        let validationError = runValidation();
-
+        let validationError = runValidation()
         const updateFields = new Map(state.fields).set(id, {
           answer: value,
           error: (validationError[id] as FIELD_ERROR) ?? "",
@@ -220,7 +222,9 @@ const fieldStore = (set: Function) => ({
       },
     ),
   setValidationSchema: (
-    schema: OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>> | undefined,
+    schema:
+      | OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>>
+      | undefined,
   ) =>
     set(() => ({ validationSchema: schema }), false, {
       type: "setValidationSchema",

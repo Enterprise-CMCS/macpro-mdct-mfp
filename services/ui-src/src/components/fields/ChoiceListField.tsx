@@ -39,13 +39,13 @@ export const ChoiceListField = ({
   const [displayValue, setDisplayValue] = useState<Choice[]>(
     props?.hydrate ?? defaultValue,
   );
-  const { editable, setAnswer, fields: formFields, setField} = useStore();
+  const { editable, setAnswer, fields: formFields, setField } = useStore();
   //closeout will disables only certain parts of an active form
   const shouldDisableChildFields = !editable || !!props?.disabled;
 
   useEffect(() => {
     setField(name, displayValue);
-  }, [])
+  }, []);
 
   // format choices with nested child fields to render (if any)
   const formatChoices = (choices: FieldChoice[]) => {
@@ -59,7 +59,6 @@ export const ChoiceListField = ({
           disabled: shouldDisableChildFields,
           nested: isNested,
           autosave: autosave,
-          updateFieldValues: updateFieldValues,
         });
         choiceObject.checkedChildren = formattedChildren;
       }
@@ -81,7 +80,7 @@ export const ChoiceListField = ({
                   choice.checked = false;
                 });
                 child.props = { ...child.props, clear: true };
-                setAnswer(child.id, [] );
+                setAnswer(child.id, []);
                 clearUncheckedNestedFields(child.props.choices);
               }
               break;
@@ -104,8 +103,9 @@ export const ChoiceListField = ({
 
   // update field values
   const onChangeHandler = (event: InputChangeEvent) => {
-    const clickedOption = { key: event.target.id, value: event.target.value };
-    const isOptionChecked = event.target.checked;
+    const { id, name, value, checked } = event.target;
+    const clickedOption = { key: id, value: value };
+    const isOptionChecked = checked;
     const preChangeFieldValues = displayValue || [];
     let selectedOptions = null;
 
@@ -117,9 +117,7 @@ export const ChoiceListField = ({
       clearUncheckedNestedFields(everyOtherOption);
       selectedOptions = [clickedOption];
       setDisplayValue(selectedOptions);
-
-      //TEST: REMOVE
-      setAnswer(event.target.name, selectedOptions);
+      setAnswer(name, selectedOptions);
     }
     // handle checkbox
     if (type === "checkbox") {
@@ -135,8 +133,7 @@ export const ChoiceListField = ({
         ? checkedOptionValues
         : uncheckedOptionValues;
       setDisplayValue(selectedOptions);
-      //TEST: REMOVE
-      setAnswer(event.target.name, selectedOptions);
+      setAnswer(name, selectedOptions);
     }
   };
 

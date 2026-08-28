@@ -42,7 +42,6 @@ export const formFieldFactory = (
     nested?: boolean;
     autosave?: boolean;
     validateOnRender?: boolean;
-    updateFieldValues?: (fieldsToSave: FieldInfo[]) => {}
   },
 ) => {
   // define form field components
