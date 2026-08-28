@@ -69,14 +69,13 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   let location = useLocation();
   const {
     report,
-    setReport,
     selectedEntity,
     setValidationSchema,
     setErrors,
     fields: formFields,
   } = useStore();
   const { updateReport } = useContext(ReportContext);
-  const { userIsEndUser } = useStore().user ?? {};
+  const { userIsEndUser, full_name } = useStore().user ?? {};
 
   // determine if fields should be disabled (based on admin roles)
   const status = reportStatus || report?.status;
@@ -145,7 +144,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   const updateFieldValues = async (fieldsToSave: FieldInfo[]) => {
-    await shinyNewSave(report!, selectedEntity, fieldsToSave, updateReport);
+    await shinyNewSave(report!, selectedEntity, fieldsToSave, updateReport, full_name!);
   };
 
   // hydrate and create form fields using formFieldFactory

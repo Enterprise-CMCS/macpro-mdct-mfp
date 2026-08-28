@@ -26,7 +26,6 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupJest";
 import { testA11yAct } from "utils/testing/commonTests";
-import { useFormContext } from "react-hook-form";
 import { calculationTableDynamicTotalsOnSave } from "utils";
 
 const mockTrigger = jest.fn();
@@ -36,17 +35,9 @@ const mockRhfMethods = {
   getValues: jest.fn(),
   trigger: mockTrigger,
 };
-const mockUseFormContext = useFormContext as unknown as jest.Mock<
-  typeof useFormContext
->;
 jest.mock("react-hook-form", () => ({
   useFormContext: jest.fn(() => mockRhfMethods),
 }));
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
-  }));
 
 jest.mock("utils/autosave/autosave", () => ({
   shinyNewSave: jest.fn().mockImplementation(() => Promise.resolve("")),
@@ -449,7 +440,6 @@ describe("<DynamicTableProvider />", () => {
     });
   });
   beforeEach(() => {
-    mockGetValues(undefined);
     render(testComponent);
   });
   describe("displayCell()", () => {

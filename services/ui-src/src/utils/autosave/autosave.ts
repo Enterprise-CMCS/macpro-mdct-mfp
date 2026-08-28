@@ -1,4 +1,4 @@
-import { EntityShape, ReportShape } from "types";
+import { EntityShape, MFPUser, ReportShape } from "types";
 
 type FieldValue = any;
 
@@ -37,7 +37,8 @@ export const shinyNewSave = async (
   report: ReportShape,
   selectedEntity: EntityShape | undefined,
   fields: FieldInfo[],
-  updateReport: Function
+  updateReport: Function,
+  userName: string
 ) => {
   const newReport = structuredClone(report);
   const { fieldData } = newReport;
@@ -82,7 +83,7 @@ export const shinyNewSave = async (
   const newData = {
     metadata: {
       status: report.status,
-      lastAlteredBy: report.lastAltered, //get the username
+      lastAlteredBy: userName
     },
     fieldData: newFieldData,
   };
