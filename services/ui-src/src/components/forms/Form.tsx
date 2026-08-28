@@ -3,6 +3,7 @@ import {
   forwardRef,
   Fragment,
   ReactNode,
+  useContext,
   useEffect,
 } from "react";
 import { useLocation } from "react-router";
@@ -13,6 +14,7 @@ import {
   CalculationTable,
   DynamicTableProvider,
   EntityModalTable,
+  ReportContext,
   SummationTable,
 } from "components";
 // types
@@ -73,6 +75,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     setErrors,
     fields: formFields,
   } = useStore();
+  const { updateReport } = useContext(ReportContext);
   const { userIsEndUser } = useStore().user ?? {};
 
   // determine if fields should be disabled (based on admin roles)
@@ -142,8 +145,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   const updateFieldValues = async (fieldsToSave: FieldInfo[]) => {
-    const newReport = await shinyNewSave(report!, selectedEntity, fieldsToSave);
-    setReport(newReport);
+    await shinyNewSave(report!, selectedEntity, fieldsToSave, updateReport);
   };
 
   // hydrate and create form fields using formFieldFactory

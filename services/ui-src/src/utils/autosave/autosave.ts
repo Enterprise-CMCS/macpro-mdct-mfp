@@ -1,5 +1,4 @@
 import { EntityShape, ReportShape } from "types";
-import { putReport } from "utils/api/requestMethods/report";
 
 type FieldValue = any;
 
@@ -38,11 +37,12 @@ export const shinyNewSave = async (
   report: ReportShape,
   selectedEntity: EntityShape | undefined,
   fields: FieldInfo[],
+  updateReport: Function
 ) => {
   const newReport = structuredClone(report);
   const { fieldData } = newReport;
 
-  const updateData = (
+  const updateReportData = (
     items: any,
     fieldId: string,
     newValue: any,
@@ -57,7 +57,7 @@ export const shinyNewSave = async (
           if ("id" in item[1] && item[1].id === selectedEntity?.id) {
             items[item[0]] = { ...item[1], ...convertToObject(fields) };
           } else {
-            updateData(item[1], fieldId, newValue, editiable);
+            updateReportData(item[1], fieldId, newValue, editiable);
           }
         }
       }
@@ -65,8 +65,13 @@ export const shinyNewSave = async (
   };
 
   for (const field of fields) {
-    updateData(fieldData, field.name, field.value, !selectedEntity);
+    updateReportData(fieldData, field.name, field.value, !selectedEntity);
   }
+
+  const newFieldData:{[key:string]: any} = {};
+  fields.forEach((field) => {
+    newFieldData[field.name] = field.value;
+  })
 
   const reportKeys = {
     reportType: report.reportType,
@@ -79,9 +84,9 @@ export const shinyNewSave = async (
       status: report.status,
       lastAlteredBy: report.lastAltered, //get the username
     },
-    fieldData: newReport.fieldData,
+    fieldData: newFieldData,
   };
 
-  (await putReport(reportKeys, newData)) as ReportShape;
+  (await updateReport(reportKeys, newData)) as ReportShape;
   return newReport;
 };
