@@ -5,7 +5,24 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   base: "/",
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: "watch-env-config",
+      configureServer(server) {
+        const envFile = "services/ui-src/public/env-config.js";
+        server.watcher.add(envFile);
+        server.watcher.on("change", (file) => {
+          if (file.endsWith(envFile)) {
+            console.log("[vite] page reload public/env-config.js");
+            server.ws.send({
+              type: "full-reload",
+            });
+          }
+        });
+      },
+    },
+  ],
   server: {
     open: true,
     port: 3000,
