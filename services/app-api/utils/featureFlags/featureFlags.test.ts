@@ -99,16 +99,21 @@ describe("utils/featureFlags", () => {
     });
   });
 
-  // TODO: fix mock not working
-  describe.skip("isFeatureFlagEnabled()", () => {
+  describe("isFeatureFlagEnabled()", () => {
     test("returns true", async () => {
-      (getFlagValue as Mock).mockResolvedValueOnce(true);
+      (LD.init as Mock).mockReturnValue({
+        variation: vi.fn().mockResolvedValue(true),
+        waitForInitialization,
+      });
       const expectedResult = await isFeatureFlagEnabled("mockFlag");
       expect(expectedResult).toBe(true);
     });
 
     test("returns false", async () => {
-      (getFlagValue as Mock).mockResolvedValueOnce(false);
+      (LD.init as Mock).mockReturnValue({
+        variation: vi.fn().mockResolvedValue(false),
+        waitForInitialization,
+      });
       const expectedResult = await isFeatureFlagEnabled("mockFlag");
       expect(expectedResult).toBe(false);
     });

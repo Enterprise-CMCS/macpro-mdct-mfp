@@ -41,6 +41,13 @@ import {
 } from "../../storage/reports";
 import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 
+const { mockFlag } = vi.hoisted(() => ({
+  mockFlag: { basePath: "/mock" },
+}));
+vi.mock("../../forms/routes/wp/flags", () => ({
+  mockFlag,
+}));
+
 vi.mock("../../storage/reports", () => ({
   getReportFormTemplate: vi.fn(),
   putFormTemplateVersion: vi.fn(),
@@ -311,12 +318,10 @@ describe("Test form contents", () => {
     }
   });
 
-  // TODO: fix flag mock
-  const mockFlag = ""; // tmp
-  test.skip("returns flagged routes", async () => {
+  test("returns flagged routes", async () => {
     (isFeatureFlagEnabled as Mock).mockResolvedValue(true);
     const template = await formTemplateForReportType(ReportType.WP);
-    expect(wpFlags).toEqual({ default: { mockFlag }, mockFlag });
+    expect(wpFlags).toEqual({ mockFlag });
     expect(template).toEqual(mockFlag);
   });
 });
