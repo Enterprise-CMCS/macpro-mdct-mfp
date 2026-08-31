@@ -5,6 +5,7 @@ import {
   isFeatureFlagEnabled,
 } from "./featureFlags";
 import * as LD from "@launchdarkly/node-server-sdk";
+import { consoleSpy } from "../testing/setupTest";
 
 vi.mock("@launchdarkly/node-server-sdk", () => ({
   init: vi.fn(),
@@ -38,6 +39,7 @@ describe("utils/featureFlags", () => {
       delete process.env.launchDarklyServer;
       await getLaunchDarklyClient();
 
+      expect(consoleSpy.error).toHaveBeenCalled();
       const expectedResult = await getFlagValue("mockFlag");
       expect(expectedResult).toBe(false);
     });
@@ -48,6 +50,7 @@ describe("utils/featureFlags", () => {
       });
       await getLaunchDarklyClient();
 
+      expect(consoleSpy.error).toHaveBeenCalled();
       const expectedResult = await getFlagValue("mockFlag");
       expect(expectedResult).toBe(false);
     });
@@ -106,6 +109,7 @@ describe("utils/featureFlags", () => {
         waitForInitialization,
       });
       const expectedResult = await isFeatureFlagEnabled("mockFlag");
+      expect(consoleSpy.info).toHaveBeenCalled();
       expect(expectedResult).toBe(true);
     });
 
@@ -115,6 +119,7 @@ describe("utils/featureFlags", () => {
         waitForInitialization,
       });
       const expectedResult = await isFeatureFlagEnabled("mockFlag");
+      expect(consoleSpy.info).toHaveBeenCalled();
       expect(expectedResult).toBe(false);
     });
   });

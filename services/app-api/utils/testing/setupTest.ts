@@ -15,6 +15,13 @@ process.env.BannerTable = "local-banners";
 process.env.brokerString = "broker1,broker2";
 process.env.STAGE = "local";
 
+export const consoleSpy = {
+  trace: vi.spyOn(console, "trace").mockImplementation(vi.fn()),
+  debug: vi.spyOn(console, "debug").mockImplementation(vi.fn()),
+  info: vi.spyOn(console, "info").mockImplementation(vi.fn()),
+  warn: vi.spyOn(console, "warn").mockImplementation(vi.fn()),
+  error: vi.spyOn(console, "error").mockImplementation(vi.fn()),
+};
 /*
  * This mock mutes all logger output during tests! Including console errors!
  *
@@ -26,10 +33,10 @@ process.env.STAGE = "local";
  * which overrides this mock.
  */
 vi.mock("../debugging/debug-lib", () => {
-  const debug = vi.fn();
-  const info = vi.fn();
-  const warn = vi.fn();
-  const error = vi.fn();
+  const debug = consoleSpy.debug;
+  const info = consoleSpy.info;
+  const warn = consoleSpy.warn;
+  const error = consoleSpy.error;
   const logger = { debug, info, warn, error };
   return {
     trace: vi.fn(),
@@ -42,13 +49,6 @@ vi.mock("../debugging/debug-lib", () => {
     flush: vi.fn(),
   };
 });
-
-vi.spyOn(console, "trace").mockImplementation(vi.fn());
-vi.spyOn(console, "debug").mockImplementation(vi.fn());
-vi.spyOn(console, "info").mockImplementation(vi.fn());
-vi.spyOn(console, "log").mockImplementation(vi.fn());
-vi.spyOn(console, "warn").mockImplementation(vi.fn());
-vi.spyOn(console, "error").mockImplementation(vi.fn());
 
 // GLOBALS
 
