@@ -33,7 +33,7 @@ const convertToObject = (fields: FieldInfo[]) => {
   );
 };
 
-export const shinyNewSave = async (
+export const autoSaveFields = async (
   report: ReportShape,
   selectedEntity: EntityShape | undefined,
   fields: FieldInfo[],

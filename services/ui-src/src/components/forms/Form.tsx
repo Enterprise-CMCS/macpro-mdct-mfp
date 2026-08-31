@@ -40,7 +40,7 @@ import {
   mapValidationTypesToSchema,
   parseCustomHtml,
   sanitizeAndParseHtml,
-  shinyNewSave,
+  autoSaveFields,
   sortFormErrors,
   transformYupErrorsIntoObject,
   translate,
@@ -144,7 +144,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   const updateFieldValues = async (fieldsToSave: FieldInfo[]) => {
-    await shinyNewSave(report!, selectedEntity, fieldsToSave, updateReport, full_name!);
+    await autoSaveFields(report!, selectedEntity, fieldsToSave, updateReport, full_name!);
   };
 
   // hydrate and create form fields using formFieldFactory
@@ -207,7 +207,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     switch (tableType) {
       case FormTableType.CALCULATION:
         return (
-          <DynamicTableProvider key={id}>
+          <DynamicTableProvider key={id} updateFieldValues={updateFieldValues}>
             <CalculationTable
               disabled={fieldInputDisabled}
               formData={formData}
@@ -221,7 +221,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
       case FormTableType.ENTITY_MODAL:
         return (
-          <DynamicTableProvider key={id}>
+          <DynamicTableProvider key={id} updateFieldValues={updateFieldValues}>
             <EntityModalTable
               disabled={fieldInputDisabled}
               formData={formData}
@@ -235,7 +235,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
       case FormTableType.SUMMATION:
         return (
-          <DynamicTableProvider key={id}>
+          <DynamicTableProvider key={id} updateFieldValues={updateFieldValues}>
             <SummationTable
               disabled={fieldInputDisabled}
               formData={formData}

@@ -3,7 +3,6 @@ import {
   createContext,
   FocusEventHandler,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -42,9 +41,7 @@ import {
   UpdatedFieldDataOnChange,
   updatedFieldDataOnFieldChange,
   useStore,
-  shinyNewSave,
 } from "utils";
-import { ReportContext } from "components/reports/ReportProvider";
 
 export const DynamicTableContext = createContext<DynamicTableMethods>({
   addDynamicRow: Function,
@@ -59,25 +56,11 @@ export const DynamicTableContext = createContext<DynamicTableMethods>({
   setLocalFieldData: Function,
 });
 
-export const DynamicTableProvider = ({ children }: any) => {
-  const { selectedEntity, user } = useStore();
-  const { updateReport } = useContext(ReportContext);
+export const DynamicTableProvider = ({ updateFieldValues, children }: any) => {
   const report = useStore().report ?? ({} as ReportShape);
-  const { setReport } = useStore();
   const { fieldData } = report;
   const [localFieldData, setLocalFieldData] = useState<AnyObject>({});
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | null>(null);
-
-  const updateFieldValues = async (fieldsToSave: FieldInfo[]) => {
-    const newReport = await shinyNewSave(
-      report!,
-      selectedEntity,
-      fieldsToSave,
-      updateReport,
-      user?.full_name!
-    );
-    setReport(newReport);
-  };
 
   useEffect(() => {
     setLocalFieldData(fieldData);
@@ -267,7 +250,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       autosave: true,
       disabled,
       validateOnRender: false,
-      updateFieldValues,
+      updateFieldValues: updateFieldValues
     });
   };
 
@@ -432,9 +415,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       [id]: updatedRows,
     };
     setLocalFieldData(updatedFieldData);
-
-    const fields = [{ name: id, type, value: updatedRows }];
-    updateFieldValues(fields);
+    updateFieldValues([{ name: id, type, updatedRows }]);
   };
 
   const removeDynamicRow = async (
