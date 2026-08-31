@@ -52,7 +52,6 @@ export interface MfpReportState {
   workPlanToCopyFrom: ReportShape | undefined;
   autosaveState: boolean;
   editable: boolean;
-  currentPageTemplate: ReportRoute | undefined;
   // ACTIONS
   setReport: (newReport: ReportShape | undefined) => void;
   setReportsByState: (
@@ -66,7 +65,6 @@ export interface MfpReportState {
   setWorkPlanToCopyFrom: (planToCopy: ReportShape | undefined) => void;
   setAutosaveState: (state: boolean) => void;
   setEditable: (state: boolean) => void;
-  setCurrentPageTemplate: (template: ReportRoute | undefined) => void;
 }
 
 // initial entity state

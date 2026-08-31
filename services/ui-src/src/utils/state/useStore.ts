@@ -79,7 +79,6 @@ const reportStore = (set: Function) => ({
   workPlanToCopyFrom: undefined,
   autosaveState: false,
   editable: true,
-  currentPageTemplate: undefined,
   answers: {},
   // actions
   setReport: (newReport: ReportShape | undefined) =>
@@ -115,10 +114,6 @@ const reportStore = (set: Function) => ({
   setEditable: (state: boolean) =>
     set(() => ({ editable: state }), false, {
       type: "setEditable",
-    }),
-  setCurrentPageTemplate: (template: ReportRoute | undefined) =>
-    set(() => ({ currentPageTemplate: template }), false, {
-      type: "setPageTemplate",
     }),
   setAnswers: (newAnswers: any) =>
     set(() => ({ answers: newAnswers }), false, {
