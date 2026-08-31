@@ -39,7 +39,7 @@ import {
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import closeGrayIcon from "assets/icons/icon_cancel_x_gray.png";
-import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
+import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.svg";
 
 /**
  * @deprecated No longer used as of Report Year 2026, Period 2

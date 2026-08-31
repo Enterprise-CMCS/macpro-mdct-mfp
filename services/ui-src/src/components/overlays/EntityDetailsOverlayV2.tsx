@@ -29,7 +29,7 @@ import {
   useStore,
 } from "utils";
 // assets
-import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
+import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.svg";
 import previousIcon from "assets/icons/icon_previous_blue.png";
 import { AnyObject } from "yup/lib/types";
 

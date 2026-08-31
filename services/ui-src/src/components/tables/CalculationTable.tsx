@@ -135,8 +135,7 @@ export const CalculationTable = ({
       {verbiage?.errorMessage && showError && (
         <Text sx={sx.error}>{parseCustomHtml(verbiage.errorMessage)}</Text>
       )}
-
-      <Heading as="h2">{verbiage?.title}</Heading>
+      {verbiage?.title && <Heading as="h2">{verbiage.title}</Heading>}
       {verbiage?.percentage && (
         <Text sx={sx.percentageText}>
           {translate(verbiage.percentage, { percentage: percentageDisplay })}
