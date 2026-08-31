@@ -5,7 +5,7 @@ const baseStyles = {
   borderRadius: "0.25rem",
   px: "1.5em",
   py: "0.5em",
-  fontWeight: "bold",
+  fontWeight: "heading_md",
   width: "fit-content",
   "&:disabled, &:disabled:hover": {
     color: "gray",
@@ -87,19 +87,19 @@ const variants = {
 
 const sizes = {
   sm: {
-    fontSize: "sm",
-    fontWeight: "400",
+    fontSize: "body_sm",
+    fontWeight: "body_sm",
     px: "0.5em",
     py: "0.25em",
   },
   md: {
-    fontSize: "md",
-    fontWeight: "700",
+    fontSize: "body_md",
+    fontWeight: "heading_md",
     px: "1.5em",
     py: "0.5em",
   },
   lg: {
-    fontSize: "lg",
+    fontSize: "body_lg",
     px: "1.5em",
     py: "1em",
   },

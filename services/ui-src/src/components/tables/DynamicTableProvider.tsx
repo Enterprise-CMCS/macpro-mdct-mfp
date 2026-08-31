@@ -613,11 +613,11 @@ interface GenerateRows {
 
 const sx = {
   readonly: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
   },
   calculated: {
     display: "block",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     textAlign: "right",
   },
   label: {

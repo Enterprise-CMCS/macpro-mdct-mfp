@@ -92,25 +92,25 @@ const sx = {
   },
   notAnswered: {
     display: "block",
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "body_md",
+    fontWeight: "heading_md",
     color: "error_darker",
     marginTop: "spacer1",
   },
   dashboardTitle: {
     marginTop: "spacer2",
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "body_md",
+    fontWeight: "heading_md",
     color: "gray",
   },
   stepName: {
-    fontSize: "lg",
+    fontSize: "body_lg",
     paddingBottom: "0.75rem",
   },
   stepHint: {
-    fontSize: "md",
-    fontWeight: "normal",
+    fontSize: "body_md",
+    fontWeight: "body_md",
     color: "gray_dark",
-    lineHeight: "1.5rem",
+    lineHeight: "body_md",
   },
 };

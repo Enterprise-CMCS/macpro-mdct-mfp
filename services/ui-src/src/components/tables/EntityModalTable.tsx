@@ -299,7 +299,7 @@ interface Props extends Omit<FormTable, "tableType"> {
 
 export const sx = {
   error: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     marginBottom: "spacer4",
     a: {
       color: "primary",
@@ -307,7 +307,7 @@ export const sx = {
   },
   box: {
     ".table-title": {
-      fontSize: "xl",
+      fontSize: "heading_xl",
       marginBottom: "spacer2",
       marginTop: "spacer4",
       paddingBottom: 0,
@@ -315,7 +315,7 @@ export const sx = {
   },
   percentageText: {
     color: "gray_dark",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     paddingBottom: "spacer2",
   },
   subtitle: {
@@ -340,7 +340,7 @@ export const sx = {
     height: 0,
   },
   emptyTableMessage: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     marginBottom: "spacer5",
     marginTop: "spacer1",
   },
@@ -369,7 +369,7 @@ export const sx = {
       td: {
         backgroundColor: "gray_lighter",
         border: "none",
-        fontWeight: "bold",
+        fontWeight: "heading_md",
         paddingInlineEnd: "spacer2",
         paddingInlineStart: "spacer2",
       },
@@ -379,9 +379,9 @@ export const sx = {
         backgroundColor: "secondary_lightest",
         border: "none",
         color: "base",
-        fontSize: "lg",
+        fontSize: "body_lg",
         letterSpacing: "normal",
-        lineHeight: "normal",
+        lineHeight: "body_lg",
         paddingBottom: "spacer1",
         paddingInlineEnd: "spacer2",
         paddingInlineStart: "spacer2",

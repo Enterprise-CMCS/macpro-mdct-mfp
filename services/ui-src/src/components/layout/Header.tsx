@@ -140,7 +140,7 @@ const sx = {
     alignItems: "center",
   },
   submissionNameText: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
   },
   subnavFlexRight: {
     alignItems: "center",
@@ -154,7 +154,7 @@ const sx = {
     },
   },
   saveStatusText: {
-    fontSize: "sm",
+    fontSize: "body_sm",
     ".mobile &": {
       width: "5rem",
       textAlign: "right",

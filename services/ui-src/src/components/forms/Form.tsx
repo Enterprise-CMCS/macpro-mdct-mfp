@@ -428,7 +428,7 @@ const sx = {
   },
   // field hint and error message
   ".ds-c-field__hint, .ds-c-field__error-message ": {
-    fontSize: "sm",
+    fontSize: "body_sm",
     ul: {
       paddingLeft: "spacer4",
     },
@@ -464,7 +464,7 @@ const sx = {
   },
   // optional text
   ".optional-text": {
-    fontWeight: "lighter",
+    fontWeight: "body_md",
   },
   // RE&T warning message
   retAlert: {
@@ -486,21 +486,21 @@ const sx = {
   },
   // verbiage
   ".verbiage-title": {
-    fontSize: "xl",
+    fontSize: "body_xl",
     paddingBottom: 0,
   },
   ".overlay-form .verbiage-title": {
-    fontSize: "2xl",
+    fontSize: "body_2xl",
     marginTop: "spacer4",
     paddingTop: "spacer3",
   },
   ".overlay-form .section-title": {
-    fontSize: "2xl",
+    fontSize: "body_2xl",
     marginTop: "spacer4",
     paddingBottom: 0,
   },
   ".overlay-form .subsection-title": {
-    fontSize: "xl",
+    fontSize: "body_xl",
     marginTop: "spacer4",
     paddingBottom: 0,
   },

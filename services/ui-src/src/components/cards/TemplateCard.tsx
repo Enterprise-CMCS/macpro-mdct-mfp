@@ -115,9 +115,9 @@ const sx = {
   },
   cardTitleText: {
     marginBottom: "spacer1",
-    fontSize: "lg",
-    fontWeight: "bold",
-    lineHeight: "1.5",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
+    lineHeight: "heading_lg",
   },
   actionsFlex: {
     flexFlow: "wrap",
