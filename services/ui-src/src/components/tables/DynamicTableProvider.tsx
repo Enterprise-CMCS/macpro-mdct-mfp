@@ -2,9 +2,7 @@ import {
   ChangeEventHandler,
   createContext,
   FocusEventHandler,
-  useCallback,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 // components
@@ -26,7 +24,6 @@ import {
 import {
   combinedSum,
   createTempDynamicId,
-  debounce,
   FieldInfo,
   formFieldFactory,
   getFieldParts,
@@ -66,30 +63,22 @@ export const DynamicTableProvider = ({ updateFieldValues, children }: any) => {
     setLocalFieldData(fieldData);
   }, [fieldData]);
 
-  const updatedFieldsForDisplay = useCallback(
-    ({
+  const updatedFieldsForDisplay = ({
+    fieldData,
+    name,
+    value,
+    percentage = 0,
+    percentageOverride,
+  }: UpdatedFieldDataOnChange) => {
+    const updatedFieldData = updatedFieldDataOnFieldChange({
       fieldData,
       name,
-      value,
-      percentage = 0,
+      percentage,
       percentageOverride,
-    }: UpdatedFieldDataOnChange) => {
-      const updatedFieldData = updatedFieldDataOnFieldChange({
-        fieldData,
-        name,
-        percentage,
-        percentageOverride,
-        value,
-      });
-      setLocalFieldData(updatedFieldData);
-    },
-    [],
-  );
-
-  const debouncedUpdateReport = useMemo(
-    () => debounce(updatedFieldsForDisplay, 1),
-    [updatedFieldsForDisplay],
-  );
+      value,
+    });
+    setLocalFieldData(updatedFieldData);
+  };
 
   const displayReadOnlyCell = ({
     id,
@@ -169,7 +158,7 @@ export const DynamicTableProvider = ({ updateFieldValues, children }: any) => {
           const { name, percentage, percentageOverride, value } =
             setPercentageAndValue(event, localFieldData, formPercentage);
 
-          return debouncedUpdateReport({
+          return updatedFieldsForDisplay({
             fieldData: localFieldData,
             name,
             percentage,
@@ -250,7 +239,7 @@ export const DynamicTableProvider = ({ updateFieldValues, children }: any) => {
       autosave: true,
       disabled,
       validateOnRender: false,
-      updateFieldValues: updateFieldValues
+      updateFieldValues: updateFieldValues,
     });
   };
 

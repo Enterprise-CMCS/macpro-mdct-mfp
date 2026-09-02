@@ -1,4 +1,4 @@
-import { EntityShape, MFPUser, ReportShape } from "types";
+import { EntityShape, ReportShape } from "types";
 
 type FieldValue = any;
 
