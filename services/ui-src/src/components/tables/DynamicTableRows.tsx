@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 // components
-import { Button, Flex, Image, Td, Text, Tr } from "@chakra-ui/react";
+import { Button, Flex, Hide, Image, Show, Td, Text, Tr } from "@chakra-ui/react";
 import { DynamicTableContext } from "components";
 // types
 import {
@@ -35,12 +35,12 @@ export const DynamicTableRows = ({
     removeDynamicRow,
   } = useContext(DynamicTableContext);
   const dynamicLabel = dynamicRowsTemplate.props?.dynamicFields.find(
-    (field: FormField) => field.props?.dynamicLabel
+    (field: FormField) => field.props?.dynamicLabel,
   )?.props?.dynamicLabel;
   // Refs to help keep track of rows
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const [localDynamicRows, setLocalDynamicRows] = useState<DynamicFieldShape[]>(
-    []
+    [],
   );
   const [showEmptyRows, setShowEmptyRows] = useState<boolean>(false);
   const emptyRowsColspan =
@@ -50,7 +50,7 @@ export const DynamicTableRows = ({
   useEffect(() => {
     const entityData = entityType
       ? localFieldData?.[entityType]?.find(
-          (t: DynamicFieldShape) => t.id === formData?.id
+          (t: DynamicFieldShape) => t.id === formData?.id,
         )
       : undefined;
 
@@ -83,7 +83,7 @@ export const DynamicTableRows = ({
 
     setTimeout(() => {
       const firstInput = rowElement.querySelector<HTMLElement>(
-        'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])'
+        'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])',
       );
       firstInput?.focus();
     }, 100);
@@ -98,102 +98,113 @@ export const DynamicTableRows = ({
 
   return (
     <>
-      {showEmptyRows && (
-        <Tr>
-          <Td colSpan={emptyRowsColspan}>
-            <Text sx={sx.emptyTableMessage}>{emptyTableMessage}</Text>
-          </Td>
-        </Tr>
-      )}
+      <Hide below="lg" key="table">
+        {showEmptyRows && (
+          <Tr>
+            <Td colSpan={emptyRowsColspan}>
+              <Text sx={sx.emptyTableMessage}>{emptyTableMessage}</Text>
+            </Td>
+          </Tr>
+        )}
 
-      {localDynamicRows.map((row, rowIndex: number) => {
-        const dynamicId = row.id;
-        const name = row.category || row.title || row.name || dynamicId;
-        const editLabel = `Edit ${name}`;
-        const deleteLabel = ["Delete", dynamicLabel, name]
-          .filter(Boolean)
-          .join(" ");
+        {localDynamicRows.map((row, rowIndex: number) => {
+          const dynamicId = row.id;
+          const name = row.category || row.title || row.name || dynamicId;
+          const editLabel = `Edit ${name}`;
+          const deleteLabel = ["Delete", dynamicLabel, name]
+            .filter(Boolean)
+            .join(" ");
 
-        const dynamicFields = (
-          dynamicRowsTemplate.props?.dynamicFields || []
-        ).filter((f: FormField) => !f.id.includes("baselineEndDate"));
+          const dynamicFields = (
+            dynamicRowsTemplate.props?.dynamicFields || []
+          ).filter((f: FormField) => !f.id.includes("baselineEndDate"));
 
-        return (
-          <Tr
-            key={dynamicId}
-            id={dynamicId}
-            ref={(el) => {
-              rowRefs.current[rowIndex] = el;
-            }}
-          >
-            {dynamicFields.map((field: FormField, cellIndex: number) => (
-              <Td
-                id={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-                key={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-              >
-                {displayDynamicCell({
-                  cell: field,
-                  columnId: `${dynamicId}-${rowIndex}-cell-0`,
-                  disabled,
-                  dynamicId,
-                  entityType,
-                  formData,
-                  percentage: formPercentage,
-                  rowId: `${tableId}-thead-row-0-cell-${cellIndex}`,
-                  rowIndex,
-                  tableId,
-                })}
-              </Td>
-            ))}
-            {showEditColumn && (
-              <Td>
-                <Flex>
-                  {!disabled && hasDynamicModalForm && (
-                    <Button
-                      aria-label={editLabel}
-                      onClick={() => openModal(dynamicId)}
-                      sx={sx.editButton}
-                      type="button"
-                      variant={"unstyled"}
-                    >
-                      Edit
-                    </Button>
-                  )}
-                  {!disabled && (
-                    <Button
-                      onClick={() => {
-                        entityType === EntityType.INITIATIVE &&
-                        openDeleteEntityModal
-                          ? openDeleteEntityModal(dynamicId, () =>
-                              removeDynamicRow(
+          return (
+            <Tr
+              key={dynamicId}
+              id={dynamicId}
+              ref={(el) => {
+                rowRefs.current[rowIndex] = el;
+              }}
+            >
+              {dynamicFields.map((field: FormField, cellIndex: number) => (
+                <Td
+                  id={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
+                  key={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
+                >
+                  {displayDynamicCell({
+                    cell: field,
+                    columnId: `${dynamicId}-${rowIndex}-cell-0`,
+                    disabled,
+                    dynamicId,
+                    entityType,
+                    formData,
+                    percentage: formPercentage,
+                    rowId: `${tableId}-thead-row-0-cell-${cellIndex}`,
+                    rowIndex,
+                    tableId,
+                  })}
+                </Td>
+              ))}
+              {showEditColumn && (
+                <Td>
+                  <Flex>
+                    {!disabled && hasDynamicModalForm && (
+                      <Button
+                        aria-label={editLabel}
+                        onClick={() => openModal(dynamicId)}
+                        sx={sx.editButton}
+                        type="button"
+                        variant={"unstyled"}
+                      >
+                        Edit
+                      </Button>
+                    )}
+                    {!disabled && (
+                      <Button
+                        onClick={() => {
+                          entityType === EntityType.INITIATIVE &&
+                          openDeleteEntityModal
+                            ? openDeleteEntityModal(dynamicId, () =>
+                                removeDynamicRow(
+                                  dynamicRowsTemplate.id,
+                                  dynamicId,
+                                  entityType,
+                                  formData?.id,
+                                  updatedFieldsCallback(
+                                    dynamicId,
+                                    localFieldData,
+                                  ),
+                                ),
+                              )
+                            : removeDynamicRow(
                                 dynamicRowsTemplate.id,
                                 dynamicId,
                                 entityType,
                                 formData?.id,
-                                updatedFieldsCallback(dynamicId, localFieldData)
-                              )
-                            )
-                          : removeDynamicRow(
-                              dynamicRowsTemplate.id,
-                              dynamicId,
-                              entityType,
-                              formData?.id,
-                              updatedFieldsCallback(dynamicId, localFieldData)
-                            );
-                      }}
-                      sx={sx.removeButton}
-                      type="button"
-                      variant={"unstyled"}
-                    >
-                      <Image src={cancelIcon} alt={deleteLabel} />
-                    </Button>
-                  )}
-                </Flex>
-              </Td>
-            )}
-          </Tr>
-        );
-      })}
+                                updatedFieldsCallback(
+                                  dynamicId,
+                                  localFieldData,
+                                ),
+                              );
+                        }}
+                        sx={sx.removeButton}
+                        type="button"
+                        variant={"unstyled"}
+                      >
+                        <Image src={cancelIcon} alt={deleteLabel} />
+                      </Button>
+                    )}
+                  </Flex>
+                </Td>
+              )}
+            </Tr>
+          );
+        })}
+      </Hide>
+      <Show below="lg" key="table-mobile">
+        
+      </Show>
     </>
   );
 };

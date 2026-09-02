@@ -40,6 +40,7 @@ import {
 } from "types";
 // utils
 import { parseCustomHtml, shimComponent } from "utils";
+import { ResponsiveTable } from "./ResponsiveTable";
 
 export const EntityModalTable = ({
   bodyRows,
@@ -62,10 +63,10 @@ export const EntityModalTable = ({
 
   useEffect(() => {
     const errorKey = Object.keys(formErrorState).find((key) =>
-      key.startsWith(tableId)
+      key.startsWith(tableId),
     );
     const currentFormData = report?.fieldData?.[formData?.type]?.find(
-      (t: AnyObject) => t.id === formData?.id
+      (t: AnyObject) => t.id === formData?.id,
     );
 
     if (!errorKey || currentFormData?.[errorKey]?.length > 0) {
@@ -80,10 +81,10 @@ export const EntityModalTable = ({
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
   const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
-    undefined
+    undefined,
   );
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
-    undefined
+    undefined,
   );
   const [deleteCallback, setDeleteCallback] = useState<Function>();
 
@@ -112,7 +113,7 @@ export const EntityModalTable = ({
 
   const openDeleteEntityModal = (
     entity: EntityShape,
-    deleteCallback?: Function
+    deleteCallback?: Function,
   ) => {
     setSelectedEntity(entity);
     if (deleteCallback) setDeleteCallback(() => deleteCallback);
@@ -134,7 +135,7 @@ export const EntityModalTable = ({
     // For entity-scoped tables, rows live on the matching entity; otherwise at the top level.
     const source = formData?.type
       ? localFieldData?.[formData.type]?.find(
-          (entity: AnyObject) => entity.id === formData?.id
+          (entity: AnyObject) => entity.id === formData?.id,
         )
       : localFieldData;
     return source?.[dynamicRowsTemplate.id] || [];
@@ -156,7 +157,7 @@ export const EntityModalTable = ({
 
   const updatedFieldsCallback = (
     _dynamicId: string,
-    localFieldData: AnyObject
+    localFieldData: AnyObject,
   ) => {
     const templateFieldData =
       localFieldData?.[dynamicRowsTemplate?.id || ""] || [];
@@ -167,6 +168,53 @@ export const EntityModalTable = ({
         value: templateFieldData,
       },
     ];
+  };
+
+  const tableData = {
+    id: tableId,
+    title: verbiage?.title,
+    headers: headRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "thead",
+        styleAsOptionalHeadRows: styleAsOptionalHeadRows,
+        ...sharedCellProps,
+      }),
+    ),
+    rows: bodyRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "tbody",
+        ...sharedCellProps,
+      }),
+    ),
+    dynamicRows: dynamicRowsTemplate && (
+      <DynamicTableRows
+        disabled={disabled}
+        dynamicRowsTemplate={dynamicRowsTemplate}
+        emptyTableMessage={verbiage?.emptyTableMessage}
+        entityType={formData?.type}
+        formData={formData}
+        formPercentage={0}
+        hasDynamicModalForm={hasDynamicModalForm}
+        hasStaticRows={bodyRows.length > 0}
+        openDeleteEntityModal={openDeleteEntityModal}
+        openModal={openModal}
+        showEditColumn={hasDynamicModalForm}
+        tableId={tableId}
+        updatedFieldsCallback={updatedFieldsCallback}
+      />
+    ),
+    foot: footRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "tfoot",
+        ...sharedCellProps,
+      }),
+    ),
   };
 
   return (
@@ -186,63 +234,7 @@ export const EntityModalTable = ({
       {!showTable && (
         <Text sx={sx.emptyTableMessage}>{verbiage?.emptyTableMessage}</Text>
       )}
-      {showTable && (
-        <Table id={tableId} sx={sx.table} {...ariaProps}>
-          <TableCaption placement="top" sx={sx.captionBox}>
-            <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
-          </TableCaption>
-          <Thead>
-            {headRows.map((row, rowIndex: number) =>
-              generateRows({
-                row,
-                rowIndex,
-                section: "thead",
-                styleAsOptionalHeadRows: styleAsOptionalHeadRows,
-                ...sharedCellProps,
-              })
-            )}
-          </Thead>
-          <Tbody>
-            {bodyRows.map((row, rowIndex: number) =>
-              generateRows({
-                row,
-                rowIndex,
-                section: "tbody",
-                ...sharedCellProps,
-              })
-            )}
-            {dynamicRowsTemplate && (
-              <DynamicTableRows
-                disabled={disabled}
-                dynamicRowsTemplate={dynamicRowsTemplate}
-                emptyTableMessage={verbiage?.emptyTableMessage}
-                entityType={formData?.type}
-                formData={formData}
-                formPercentage={0}
-                hasDynamicModalForm={hasDynamicModalForm}
-                hasStaticRows={bodyRows.length > 0}
-                openDeleteEntityModal={openDeleteEntityModal}
-                openModal={openModal}
-                showEditColumn={hasDynamicModalForm}
-                tableId={tableId}
-                updatedFieldsCallback={updatedFieldsCallback}
-              />
-            )}
-          </Tbody>
-          {footRows.length > 0 && (
-            <Tfoot>
-              {footRows.map((row, rowIndex: number) =>
-                generateRows({
-                  row,
-                  rowIndex,
-                  section: "tfoot",
-                  ...sharedCellProps,
-                })
-              )}
-            </Tfoot>
-          )}
-        </Table>
-      )}
+      {showTable && ResponsiveTable(tableData)}
 
       {dynamicRowsTemplate && hasDynamicModalForm && (
         <>

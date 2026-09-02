@@ -16,6 +16,8 @@ import {
 } from "@chakra-ui/react";
 import { JSX } from "react";
 
+const rightAlign = ["Total State / Territory Share", "Total Federal Share"];
+
 const HorizontalTable = (
   id: string,
   title: string | undefined,
@@ -33,7 +35,9 @@ const HorizontalTable = (
         {headers.map((row) => (
           <Tr>
             {row.map((col) => (
-              <Th>{col}</Th>
+              <Th textAlign={rightAlign.includes(col) ? "right" : "left"}>
+                {col}
+              </Th>
             ))}
           </Tr>
         ))}
@@ -100,6 +104,7 @@ const VerticalTable = (
           );
         }),
       )}
+      {dynamicRows}
       {foot.map((row) =>
         header[0].map((col: string, index: number) => {
           if (index === 0)
