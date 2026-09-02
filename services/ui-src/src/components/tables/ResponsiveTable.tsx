@@ -19,23 +19,24 @@ import { JSX } from "react";
 const HorizontalTable = (
   id: string,
   title: string | undefined,
-  headers: any[],
+  headers: string[][],
   rows: any[],
   dynamicRows: JSX.Element | undefined,
-  foot: any[],
+  foot: string[][],
 ) => {
-    console.log("dynamicRows", dynamicRows);
   return (
     <Table id={id} variant="calculation">
       <TableCaption placement="top">
         <VisuallyHidden>{title}</VisuallyHidden>
       </TableCaption>
       <Thead>
-        <Tr>
-          {headers[0].map((header: string[]) => (
-            <Th>{header}</Th>
-          ))}
-        </Tr>
+        {headers.map((row) => (
+          <Tr>
+            {row.map((col) => (
+              <Th>{col}</Th>
+            ))}
+          </Tr>
+        ))}
       </Thead>
       <Tbody>
         {rows.map((row: any[]) => (
@@ -48,8 +49,12 @@ const HorizontalTable = (
         {dynamicRows}
       </Tbody>
       <Tfoot>
-        {foot[0].map((item: string) => (
-          <Td>{item}</Td>
+        {foot.map((row) => (
+          <Tr>
+            {row.map((col) => (
+              <Td>{col}</Td>
+            ))}
+          </Tr>
         ))}
       </Tfoot>
     </Table>
@@ -57,10 +62,10 @@ const HorizontalTable = (
 };
 
 const VerticalTable = (
-  header: any[],
+  header: string[][],
   rows: any[],
   dynamicRows: JSX.Element | undefined,
-  foot: any[],
+  foot: string[][],
 ) => {
   return (
     <VStack sx={sx.mobile}>

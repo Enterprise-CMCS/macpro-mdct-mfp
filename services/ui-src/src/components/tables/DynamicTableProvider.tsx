@@ -307,7 +307,6 @@ export const DynamicTableProvider = ({ children }: any) => {
 
   const generateRows = ({
     cellPropsCallback = () => {},
-    columnCount,
     disabled,
     dynamicRowsTemplate,
     formData,
@@ -319,25 +318,11 @@ export const DynamicTableProvider = ({ children }: any) => {
     styleAsOptionalHeadRows = [],
     tableId,
   }: GenerateRows) => {
-    let firstColumnWidth = dynamicRowsTemplate ? 30 : 36;
-
-    if (columnCount === 3) {
-      firstColumnWidth = 50;
-    }
-
-    if (columnCount > 5) {
-      firstColumnWidth = 100 / columnCount;
-    }
-
-    const optionsWidth = 7;
-
-    const Cell = section === "thead" ? Th : Td;
     const actionLabel = showEditHeader ? (
       "Actions"
     ) : (
       <VisuallyHidden>Actions</VisuallyHidden>
     );
-    const content = section === "thead" ? actionLabel : null;
     const rowId = section === "tbody" ? "thead" : section;
 
     const isOptional = (cell: FormTableCell) => {
@@ -345,7 +330,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       return styleAsOptionalHeadRows.includes(cell);
     };
 
-    return row.map((cell, cellIndex: number) =>
+    const rows = row.map((cell, cellIndex: number) =>
       displayCell({
         cell,
         columnId: `${tableId}-${section}-row-${rowIndex}-cell-0`,
@@ -359,23 +344,10 @@ export const DynamicTableProvider = ({ children }: any) => {
       }),
     );
 
-    if(dynamicRowsTemplate && showEditColumn)
-      return content;
+    if (dynamicRowsTemplate && showEditColumn)
+      rows.push(section === "thead" ? actionLabel : "");
 
-    return (
-      <>
-        <Hide below="md">
-          {dynamicRowsTemplate && showEditColumn && (
-            <Cell sx={{ width: `${optionsWidth}%` }}>{content}</Cell>
-          )}
-        </Hide>
-        <Show below="md">
-          {row.map((cell, cellIndex: number) => (
-            <>Test</>
-          ))}
-        </Show>
-      </>
-    );
+    return rows;
   };
 
   const addDynamicRow = async (
