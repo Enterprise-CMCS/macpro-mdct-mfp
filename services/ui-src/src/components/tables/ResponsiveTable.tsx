@@ -85,11 +85,17 @@ const VerticalTable = (
             );
           }
           return (
-            <Flex width="100%" justifyContent="space-evenly" padding=".75rem">
-              <Box flex="1 1 50%" alignSelf="center">
+            <Flex
+              width="100%"
+              justifyContent="space-evenly"
+              padding=".75rem"
+              flexFlow={{ base: "column", sm: "row" }}
+              textAlign="left"
+            >
+              <Box flex="1 1 50%" alignSelf={{ base: "start", sm: "center" }}>
                 {header[0][index]}
               </Box>
-              <Box>{col}</Box>
+              <Box alignSelf={{ base: "start", sm: "center" }}>{col}</Box>
             </Flex>
           );
         }),
@@ -109,11 +115,19 @@ const VerticalTable = (
             );
           else
             return (
-              <Flex width="100%" justifyContent="space-evenly" padding=".75rem">
-                <Box flex="1 1 50%" alignSelf="center">
+              <Flex
+                width="100%"
+                justifyContent="space-evenly"
+                padding=".75rem"
+                flexFlow={{ base: "column", sm: "row" }}
+                textAlign="left"
+              >
+                <Box flex="1 1 50%" alignSelf={{ base: "start", sm: "center" }}>
                   {col}
                 </Box>
-                <Box>{row[index]}</Box>
+                <Box alignSelf={{ base: "start", sm: "center" }}>
+                  {row[index]}
+                </Box>
               </Flex>
             );
         }),
@@ -134,10 +148,10 @@ export const ResponsiveTable = (data: {
 
   return (
     <>
-      <Hide below="md" key="table">
+      <Hide below="lg" key="table">
         {HorizontalTable(id, title, headers, rows, dynamicRows, foot)}
       </Hide>
-      <Show below="md" key="table-mobile">
+      <Show below="lg" key="table-mobile">
         {VerticalTable(headers, rows, dynamicRows, foot)}
       </Show>
     </>
