@@ -10,7 +10,16 @@ import {
 } from "react";
 import { useFormContext } from "react-hook-form";
 // components
-import { Flex, Td, Text, Th, Tr, VisuallyHidden } from "@chakra-ui/react";
+import {
+  Flex,
+  Hide,
+  Show,
+  Td,
+  Text,
+  Th,
+  Tr,
+  VisuallyHidden,
+} from "@chakra-ui/react";
 import { EntityContext, ReportContext } from "components";
 // types
 import {
@@ -93,12 +102,12 @@ export const DynamicTableProvider = ({ children }: any) => {
       });
       setLocalFieldData(updatedFieldData);
     },
-    []
+    [],
   );
 
   const debouncedUpdateReport = useMemo(
     () => debounce(updatedFieldsForDisplay, 1),
-    [updatedFieldsForDisplay]
+    [updatedFieldsForDisplay],
   );
 
   const displayReadOnlyCell = ({
@@ -197,7 +206,7 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     const [hydratedField] = hydrateFormFields(
       updateRenderFields(updatedReport, [field], formData),
-      formData
+      formData,
     );
 
     let hydrateValue;
@@ -205,11 +214,11 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     if (isTempDynamicField(hydratedField.id)) {
       const { dynamicFieldId, dynamicTemplateId, fieldType } = getFieldParts(
-        hydratedField.id
+        hydratedField.id,
       );
       const entityData = entityType
         ? localFieldData?.[entityType]?.find(
-            (t: DynamicFieldShape) => t.id === formData?.id
+            (t: DynamicFieldShape) => t.id === formData?.id,
           )
         : undefined;
 
@@ -219,7 +228,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         : localFieldData?.[dynamicTemplateId];
 
       const currentField = templateFieldData?.find(
-        (field: DynamicFieldShape) => field.id === dynamicFieldId
+        (field: DynamicFieldShape) => field.id === dynamicFieldId,
       );
 
       hydrateValue = currentField?.[fieldType];
@@ -302,7 +311,6 @@ export const DynamicTableProvider = ({ children }: any) => {
     disabled,
     dynamicRowsTemplate,
     formData,
-    isTotalsRow = false,
     row,
     rowIndex,
     section,
@@ -322,29 +330,6 @@ export const DynamicTableProvider = ({ children }: any) => {
     }
 
     const optionsWidth = 7;
-    const otherColumnsWidth = 100 - firstColumnWidth;
-    const otherColumnsCount = columnCount - 1;
-    const remainingWidth = dynamicRowsTemplate
-      ? otherColumnsWidth - optionsWidth
-      : otherColumnsWidth;
-
-    const thWidth = (index: number) =>
-      index === 0
-        ? `${firstColumnWidth}%`
-        : `${remainingWidth / otherColumnsCount}%`;
-
-    const thAlign = (cell: FormTableCell) => {
-      const rightAlignedCells: FormTableCell[] = [
-        "Total State / Territory Share",
-        "Total Federal Share",
-      ];
-
-      if (typeof cell === "string" && rightAlignedCells.includes(cell)) {
-        return "right";
-      }
-
-      return "left";
-    };
 
     const Cell = section === "thead" ? Th : Td;
     const actionLabel = showEditHeader ? (
@@ -360,41 +345,43 @@ export const DynamicTableProvider = ({ children }: any) => {
       return styleAsOptionalHeadRows.includes(cell);
     };
 
+    return row.map((cell, cellIndex: number) =>
+      displayCell({
+        cell,
+        columnId: `${tableId}-${section}-row-${rowIndex}-cell-0`,
+        disabled,
+        formData,
+        rowId: `${tableId}-${rowId}-row-0-cell-${cellIndex}`,
+        rowIndex,
+        styleAsOptional: isOptional(cell),
+        tableId,
+        ...cellPropsCallback(cell),
+      }),
+    );
+
+    if(dynamicRowsTemplate && showEditColumn)
+      return content;
+
     return (
-      <Tr
-        key={`${tableId}-${section}-row-${rowIndex}`}
-        className={isTotalsRow ? "totals-row" : ""}
-      >
-        {row.map((cell, cellIndex: number) => (
-          <Cell
-            id={`${tableId}-${section}-row-${rowIndex}-cell-${cellIndex}`}
-            key={`${tableId}-${section}-row-${rowIndex}-cell-${cellIndex}`}
-            sx={{ textAlign: thAlign(cell), width: thWidth(cellIndex) }}
-          >
-            {displayCell({
-              cell,
-              columnId: `${tableId}-${section}-row-${rowIndex}-cell-0`,
-              disabled,
-              formData,
-              rowId: `${tableId}-${rowId}-row-0-cell-${cellIndex}`,
-              rowIndex,
-              styleAsOptional: isOptional(cell),
-              tableId,
-              ...cellPropsCallback(cell),
-            })}
-          </Cell>
-        ))}
-        {dynamicRowsTemplate && showEditColumn && (
-          <Cell sx={{ width: `${optionsWidth}%` }}>{content}</Cell>
-        )}
-      </Tr>
+      <>
+        <Hide below="md">
+          {dynamicRowsTemplate && showEditColumn && (
+            <Cell sx={{ width: `${optionsWidth}%` }}>{content}</Cell>
+          )}
+        </Hide>
+        <Show below="md">
+          {row.map((cell, cellIndex: number) => (
+            <>Test</>
+          ))}
+        </Show>
+      </>
     );
   };
 
   const addDynamicRow = async (
     dynamicRowsTemplate: DynamicRowsTemplate,
     initialData?: AnyObject,
-    scroll: boolean = true
+    scroll: boolean = true,
   ) => {
     const { id, type, props } = dynamicRowsTemplate;
 
@@ -463,11 +450,11 @@ export const DynamicTableProvider = ({ children }: any) => {
     dynamicFieldId: string,
     entityType?: string,
     entityId?: string,
-    updatedFields: FieldInfo[] = []
+    updatedFields: FieldInfo[] = [],
   ) => {
     const entityData = entityType
       ? localFieldData?.[entityType].find(
-          (t: DynamicFieldShape) => t.id === entityId
+          (t: DynamicFieldShape) => t.id === entityId,
         )
       : undefined;
     const rows = entityType
@@ -504,7 +491,7 @@ export const DynamicTableProvider = ({ children }: any) => {
             };
           }
           return t;
-        }
+        },
       );
     }
 
