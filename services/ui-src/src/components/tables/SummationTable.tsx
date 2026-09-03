@@ -1,12 +1,6 @@
 import { useContext, useEffect } from "react";
 // components
-import {
-  Box,
-  Button,
-  Heading,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Heading, Image, Text } from "@chakra-ui/react";
 import { DynamicTableContext, DynamicTableRows } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
@@ -93,19 +87,20 @@ export const SummationTable = ({
         ...sharedCellProps,
       }),
     ),
-    dynamicRows: dynamicRowsTemplate && (
-      <DynamicTableRows
-        disabled={disabled}
-        dynamicRowsTemplate={dynamicRowsTemplate}
-        emptyTableMessage={verbiage?.emptyTableMessage}
-        formData={formData}
-        formPercentage={0}
-        hasDynamicModalForm={false}
-        hasStaticRows={bodyRows.length > 0}
-        tableId={tableId}
-        updatedFieldsCallback={updatedFieldsCallback}
-      />
-    ),
+    dynamicRows:
+      dynamicRowsTemplate &&
+      DynamicTableRows(
+        tableId,
+        0,
+        disabled,
+        dynamicRowsTemplate,
+        false,
+        bodyRows.length > 0,
+        formData,
+        () => {},
+        verbiage?.emptyTableMessage,
+        updatedFieldsCallback,
+      ),
     foot: footRows.map((row, rowIndex: number) =>
       generateRows({
         row,

@@ -190,23 +190,23 @@ export const EntityModalTable = ({
         ...sharedCellProps,
       }),
     ),
-    dynamicRows: dynamicRowsTemplate && (
-      <DynamicTableRows
-        disabled={disabled}
-        dynamicRowsTemplate={dynamicRowsTemplate}
-        emptyTableMessage={verbiage?.emptyTableMessage}
-        entityType={formData?.type}
-        formData={formData}
-        formPercentage={0}
-        hasDynamicModalForm={hasDynamicModalForm}
-        hasStaticRows={bodyRows.length > 0}
-        openDeleteEntityModal={openDeleteEntityModal}
-        openModal={openModal}
-        showEditColumn={hasDynamicModalForm}
-        tableId={tableId}
-        updatedFieldsCallback={updatedFieldsCallback}
-      />
-    ),
+    dynamicRows:
+      dynamicRowsTemplate &&
+      DynamicTableRows(
+        tableId,
+        0,
+        disabled,
+        dynamicRowsTemplate,
+        hasDynamicModalForm,
+        bodyRows.length > 0,
+        formData,
+        openModal,
+        verbiage?.emptyTableMessage,
+        updatedFieldsCallback,
+        hasDynamicModalForm,
+        formData?.type,
+        openDeleteEntityModal,
+      ),
     foot: footRows.map((row, rowIndex: number) =>
       generateRows({
         row,

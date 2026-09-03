@@ -14,7 +14,6 @@ import {
   VStack,
   Flex,
 } from "@chakra-ui/react";
-import { JSX } from "react";
 
 const rightAlign = ["Total State / Territory Share", "Total Federal Share"];
 
@@ -23,7 +22,6 @@ const HorizontalTable = (
   title: string | undefined,
   headers: string[][],
   rows: any[],
-  dynamicRows: JSX.Element | undefined,
   foot: string[][],
 ) => {
   return (
@@ -45,12 +43,13 @@ const HorizontalTable = (
       <Tbody>
         {rows.map((row: any[]) => (
           <Tr>
-            {row.map((col) => (
-              <Td>{col}</Td>
-            ))}
+            {"length" in row ? (
+              row.map((col) => <Td>{col}</Td>)
+            ) : (
+              <Td colSpan={headers[0].length}>{row}</Td>
+            )}
           </Tr>
         ))}
-        {dynamicRows}
       </Tbody>
       <Tfoot>
         {foot.map((row) => (
@@ -65,76 +64,60 @@ const HorizontalTable = (
   );
 };
 
-const VerticalTable = (
-  header: string[][],
-  rows: any[],
-  dynamicRows: JSX.Element | undefined,
-  foot: string[][],
+const buildColumns = (
+  label: string,
+  value: string,
+  index: number,
+  style: { background: string; color: string },
 ) => {
+  if (index == 0) {
+    return (
+      <Box
+        background={style.background}
+        fontWeight="bold"
+        color={style.color}
+        width="100%"
+        padding=".75rem"
+      >
+        {value}
+      </Box>
+    );
+  }
+  return (
+    <Flex
+      width="100%"
+      justifyContent="space-evenly"
+      padding=".75rem"
+      flexFlow={{ base: "column", sm: "row" }}
+      textAlign="left"
+    >
+      <Box flex="1 1 50%" alignSelf={{ base: "start", sm: "center" }}>
+        {label}
+      </Box>
+      <Box alignSelf={{ base: "start", sm: "center" }}>{value}</Box>
+    </Flex>
+  );
+};
+
+const VerticalTable = (header: string[][], rows: any[], foot: string[][]) => {
   return (
     <VStack sx={sx.mobile}>
       {rows.map((row) =>
-        row.map((col: any, index: number) => {
-          if (index == 0) {
-            return (
-              <Box
-                background="primary_darkest"
-                fontWeight="bold"
-                color="white"
-                width="100%"
-                padding=".75rem"
-              >
-                {col}
-              </Box>
-            );
-          }
-          return (
-            <Flex
-              width="100%"
-              justifyContent="space-evenly"
-              padding=".75rem"
-              flexFlow={{ base: "column", sm: "row" }}
-              textAlign="left"
-            >
-              <Box flex="1 1 50%" alignSelf={{ base: "start", sm: "center" }}>
-                {header[0][index]}
-              </Box>
-              <Box alignSelf={{ base: "start", sm: "center" }}>{col}</Box>
-            </Flex>
-          );
-        }),
+        "length" in row
+          ? row.map((col: any, index: number) => {
+              return buildColumns(header[0][index], col, index, {
+                background: "primary_darkest",
+                color: "white",
+              });
+            })
+          : row,
       )}
-      {dynamicRows}
       {foot.map((row) =>
         header[0].map((col: string, index: number) => {
-          if (index === 0)
-            return (
-              <Box
-                background="gray_lighter"
-                fontWeight="bold"
-                width="100%"
-                padding=".75rem"
-              >
-                {row[index]}
-              </Box>
-            );
-          else
-            return (
-              <Flex
-                width="100%"
-                justifyContent="space-evenly"
-                padding=".75rem"
-                flexFlow={{ base: "column", sm: "row" }}
-                textAlign="left"
-              >
-                <Box flex="1 1 50%" alignSelf={{ base: "start", sm: "center" }}>
-                  {col}
-                </Box>
-                <Box alignSelf={{ base: "start", sm: "center" }}>
-                  {row[index]}
-                </Box>
-              </Flex>
-            );
+          return buildColumns(col, row[index], index, {
+            background: "gray_lighter",
+            color: "base",
+          });
         }),
       )}
     </VStack>
@@ -146,18 +129,19 @@ export const ResponsiveTable = (data: {
   title: string | undefined;
   headers: any[];
   rows: any[];
-  dynamicRows: JSX.Element | undefined;
+  dynamicRows: any[] | undefined;
   foot: any[];
 }) => {
   const { id, title, headers, rows, dynamicRows, foot } = data;
+  const mergedRows = [...rows, ...(dynamicRows ?? [])];
 
   return (
     <>
       <Hide below="lg" key="table">
-        {HorizontalTable(id, title, headers, rows, dynamicRows, foot)}
+        {HorizontalTable(id, title, headers, mergedRows, foot)}
       </Hide>
       <Show below="lg" key="table-mobile">
-        {VerticalTable(headers, rows, dynamicRows, foot)}
+        {VerticalTable(headers, mergedRows, foot)}
       </Show>
     </>
   );

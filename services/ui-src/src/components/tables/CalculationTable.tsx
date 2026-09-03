@@ -148,20 +148,20 @@ export const CalculationTable = ({
         ...sharedCellProps,
       }),
     ),
-    dynamicRows: dynamicRowsTemplate && (
-      <DynamicTableRows
-        disabled={isDisabled}
-        dynamicRowsTemplate={dynamicRowsTemplate}
-        emptyTableMessage={verbiage?.emptyTableMessage}
-        formData={formData}
-        formPercentage={formPercentage}
-        hasDynamicModalForm={hasDynamicModalForm}
-        hasStaticRows={bodyRows.length > 0}
-        openModal={openModal}
-        tableId={tableId}
-        updatedFieldsCallback={updatedFieldsCallback}
-      />
-    ),
+    dynamicRows:
+      dynamicRowsTemplate &&
+      DynamicTableRows(
+        tableId,
+        formPercentage,
+        isDisabled,
+        dynamicRowsTemplate,
+        hasDynamicModalForm,
+        bodyRows.length > 0,
+        formData,
+        openModal,
+        verbiage?.emptyTableMessage,
+        updatedFieldsCallback,
+      ),
     foot: footRows.map((row, rowIndex: number) =>
       generateRows({
         cellPropsCallback,
