@@ -1,20 +1,15 @@
 import {
   HTMLInputAutoCompleteAttribute,
   ReactNode,
-  useContext,
   useEffect,
   useState,
 } from "react";
-import { useFormContext } from "react-hook-form";
 // components
 import { SystemStyleObject } from "@chakra-ui/react";
-import { ReportContext, TextFieldDisplay } from "components";
-import { EntityContext } from "components/reports/EntityProvider";
+import { TextFieldDisplay } from "components";
 // utils
 import {
-  autosaveFieldData,
-  enqueueWrite,
-  getAutosaveFields,
+  FieldInfo,
   labelTextWithOptional,
   parseCustomHtml,
   updatedTextFields,
@@ -31,7 +26,6 @@ export const TextField = ({
   ariaLabelledby,
   autoComplete,
   autosave = false,
-  clear = false,
   disabled = false,
   heading,
   hint,
@@ -45,102 +39,47 @@ export const TextField = ({
   rows,
   styleAsOptional = false,
   sxOverride,
-  validateOnRender = false,
+  updateFieldValues,
 }: Props) => {
-  const defaultValue = "";
+  const { report, selectedEntity, setAnswer, fields, setField } = useStore();
+  const defaultValue = hydrate ?? "";
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
-  // get form context and register field
-  const form = useFormContext();
-  const fieldIsRegistered = name in form.getValues();
-  const { full_name, state } = useStore().user ?? {};
-  const { report, selectedEntity } = useStore();
-  const { updateReport } = useContext(ReportContext);
-  const { prepareEntityPayload } = useContext(EntityContext);
-
   useEffect(() => {
-    if (!fieldIsRegistered && !validateOnRender) {
-      form.register(name);
-    } else if (validateOnRender) {
-      form.trigger(name);
-    }
+    setField(name, defaultValue);
   }, []);
-
-  // set initial display value to form state field value or hydration value
-  const hydrationValue = hydrate || defaultValue;
-
-  useEffect(() => {
-    // if clear flag is set, reset to default
-    if (clear) {
-      setDisplayValue(defaultValue);
-      form.setValue(name, defaultValue);
-    }
-    // else if form state has value for field, set as display value
-    else {
-      const fieldValue = form.getValues(name);
-      if (fieldValue) {
-        setDisplayValue(fieldValue);
-      } else if (hydrationValue) {
-        setDisplayValue(hydrationValue);
-        form.setValue(name, hydrationValue, { shouldValidate: true });
-      }
-    }
-  }, [hydrationValue, clear]); // runs on hydrationValue or clear changes
 
   // update display value and form field data on change
   const onChangeHandler = async (event: InputChangeEvent) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     setDisplayValue(value);
-    form.setValue(name, value, { shouldValidate: true });
+    setAnswer(name, value);
   };
 
   // if should autosave, submit field data on blur
   const onBlurHandler = async (event: InputChangeEvent) => {
     const { value } = event.target;
+    setAnswer(name, value);
+
     // if field is blank, trigger client-side field validation error
-    if (!value.trim()) form.trigger(name);
+    if (!value.trim()) return;
 
-    // submit field data to database (inline validation is run prior to API call)
     if (autosave) {
-      const fields = getAutosaveFields({
-        name,
-        type: ReportFormFieldType.TEXT,
-        value,
-        defaultValue,
-        hydrationValue,
-      });
-
       const entityFieldData = selectedEntity
         ? { ...report?.fieldData, ...selectedEntity }
         : report?.fieldData;
 
-      const fieldsToSave = updatedTextFields(fields, entityFieldData);
-
-      const reportArgs = {
-        id: report?.id,
-        reportType: report?.reportType,
-        updateReport,
-      };
-      const user = { userName: full_name, state };
-
-      await enqueueWrite(() =>
-        autosaveFieldData({
-          form,
-          fields: fieldsToSave,
-          report: reportArgs,
-          user,
-          entityContext: {
-            selectedEntity,
-            prepareEntityPayload,
-          },
-        })
+      const fieldsToSave = updatedTextFields(
+        [{ name, type: ReportFormFieldType.TEXT, value }],
+        entityFieldData,
       );
+
+      updateFieldValues(fieldsToSave);
     }
   };
 
   // prepare error message, hint, and classes
-  const formErrorState = form?.formState?.errors;
-  const errorMessage = formErrorState?.[name]?.message as ReactNode;
+  const errorMessage = fields.get(name)?.error.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
@@ -173,7 +112,6 @@ interface Props {
   ariaLabelledby?: string;
   autoComplete?: HTMLInputAutoCompleteAttribute;
   autosave?: boolean;
-  clear?: boolean;
   disabled?: boolean;
   heading?: string;
   hint?: CustomHtmlElement[];
@@ -187,5 +125,5 @@ interface Props {
   rows?: number;
   styleAsOptional?: boolean;
   sxOverride?: SystemStyleObject;
-  validateOnRender?: boolean;
+  updateFieldValues: (fieldsToSave: FieldInfo[]) => {};
 }

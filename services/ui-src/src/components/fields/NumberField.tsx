@@ -1,22 +1,17 @@
 import {
   HTMLInputAutoCompleteAttribute,
   ReactNode,
-  useContext,
   useEffect,
   useState,
 } from "react";
-import { useFormContext } from "react-hook-form";
 // components
-import { EntityContext, NumberFieldDisplay, ReportContext } from "components";
+import { NumberFieldDisplay } from "components";
 // utils
 import {
   applyMask,
-  autosaveFieldData,
   cleanAndMaskNumberValues,
-  enqueueWrite,
-  getAutosaveFields,
+  FieldInfo,
   labelTextWithOptional,
-  makeStringParseableForDatabase,
   parseCustomHtml,
   updatedNumberFields,
   useStore,
@@ -34,7 +29,6 @@ export const NumberField = ({
   ariaLabelledby,
   autoComplete,
   autosave = false,
-  clear = false,
   decimalPlacesToRoundTo,
   disabled = false,
   handleOnChange,
@@ -49,69 +43,24 @@ export const NumberField = ({
   readOnly = false,
   styleAsOptional = false,
   sxOverride,
-  validateOnRender = false,
+  updateFieldValues,
 }: Props) => {
-  const defaultValue = initialValue;
-  const [displayValue, setDisplayValue] = useState<string>(defaultValue);
+  const defaultValue = hydrate ?? initialValue;
+  const [displayValue, setDisplayValue] = useState<string>(
+    applyMask(defaultValue, mask, decimalPlacesToRoundTo).maskedValue,
+  );
 
-  // get form context and register field
-  const form = useFormContext();
-  const fieldIsRegistered = name in form.getValues();
-  const { full_name, state } = useStore().user ?? {};
-  const { report, selectedEntity } = useStore();
-  const { updateReport } = useContext(ReportContext);
-  const { prepareEntityPayload } = useContext(EntityContext);
+  const { report, selectedEntity, setAnswer, fields, setField } = useStore();
 
   useEffect(() => {
-    if (!fieldIsRegistered && !validateOnRender) {
-      form.register(name);
-    } else if (validateOnRender) {
-      form.trigger(name);
-    }
-  }, []);
-
-  // set initial display value to form state field value or hydration value
-  const hydrationValue = hydrate || defaultValue;
-
-  useEffect(() => {
-    // if form state has value for field, set as display value
-    const fieldValue = form.getValues(name);
-    if (fieldValue) {
-      const maskedFieldValue = applyMask(
-        fieldValue,
-        mask,
-        decimalPlacesToRoundTo
-      ).maskedValue;
-      setDisplayValue(maskedFieldValue);
-    }
-    // else set hydrationValue or defaultValue display value
-    else if (hydrationValue) {
-      if (clear) {
-        setDisplayValue(defaultValue);
-        form.setValue(name, defaultValue);
-      } else {
-        const formattedHydrationValue = applyMask(
-          hydrationValue,
-          mask,
-          decimalPlacesToRoundTo
-        );
-        const maskedHydrationValue = formattedHydrationValue.maskedValue;
-        setDisplayValue(maskedHydrationValue);
-
-        // this value eventually gets sent to the database, so we need to make it parseable as a number again
-        const cleanedFieldValue = formattedHydrationValue.isValid
-          ? makeStringParseableForDatabase(maskedHydrationValue, mask)
-          : maskedHydrationValue;
-        form.setValue(name, cleanedFieldValue, { shouldValidate: true });
-      }
-    }
-  }, [hydrationValue]); // only runs on hydrationValue fetch/update
+    setField(name, defaultValue);
+  }, [])
 
   // update form data on change, but do not mask
   const onChangeHandler = async (event: InputChangeEvent) => {
     const { name, value } = event.target;
     setDisplayValue(value);
-    form.setValue(name, value, { shouldValidate: true });
+    setAnswer(name, value);
 
     if (handleOnChange) handleOnChange(event);
   };
@@ -119,8 +68,10 @@ export const NumberField = ({
   // if should autosave, submit field data to database on blur
   const onBlurHandler = async (event: InputChangeEvent) => {
     const { name, value } = event.target;
+    setAnswer(name, value);
+    
     // if field is blank, trigger client-side field validation error
-    if (!value.trim()) form.trigger(name);
+    if (!value.trim()) return;
 
     // update display value with masked value
     const { cleanedFieldValue, maskedFieldValue } = cleanAndMaskNumberValues({
@@ -129,50 +80,31 @@ export const NumberField = ({
       value,
     });
 
-    form.setValue(name, cleanedFieldValue, { shouldValidate: true });
     setDisplayValue(maskedFieldValue);
 
     // submit field data to database (inline validation is run prior to API call)
     if (autosave) {
-      const fields = getAutosaveFields({
-        name,
-        type: ReportFormFieldType.NUMBER,
-        value: cleanedFieldValue,
-        defaultValue,
-        hydrationValue,
-      });
-
       const entityFieldData = selectedEntity
         ? { ...report?.fieldData, ...selectedEntity }
         : report?.fieldData;
 
-      const fieldsToSave = updatedNumberFields(fields, entityFieldData);
-
-      const reportArgs = {
-        id: report?.id,
-        reportType: report?.reportType,
-        updateReport,
-      };
-      const user = { userName: full_name, state };
-
-      await enqueueWrite(() =>
-        autosaveFieldData({
-          form,
-          fields: fieldsToSave,
-          report: reportArgs,
-          user,
-          entityContext: {
-            selectedEntity,
-            prepareEntityPayload,
+      const fieldsToSave = updatedNumberFields(
+        [
+          {
+            name,
+            type: ReportFormFieldType.NUMBER,
+            value: cleanedFieldValue,
           },
-        })
+        ],
+        entityFieldData,
       );
+
+      updateFieldValues(fieldsToSave);
     }
   };
 
   // prepare error message, hint, and classes
-  const formErrorState = form?.formState?.errors;
-  const errorMessage = formErrorState?.[name]?.message as ReactNode;
+  const errorMessage = fields.get(name)?.error.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
@@ -219,4 +151,5 @@ interface Props {
   styleAsOptional?: boolean;
   sxOverride?: SystemStyleObject;
   validateOnRender?: boolean;
+  updateFieldValues: (fieldsToSave: FieldInfo[]) => {};
 }

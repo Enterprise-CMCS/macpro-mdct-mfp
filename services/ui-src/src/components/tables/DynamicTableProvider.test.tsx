@@ -27,7 +27,6 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
-import { useFormContext } from "react-hook-form";
 import { calculationTableDynamicTotalsOnSave } from "utils";
 
 const mockTrigger = vi.fn();
@@ -459,7 +458,6 @@ describe("<DynamicTableProvider />", () => {
     });
   });
   beforeEach(() => {
-    mockGetValues(undefined);
     render(testComponent);
   });
   describe("displayCell()", () => {
