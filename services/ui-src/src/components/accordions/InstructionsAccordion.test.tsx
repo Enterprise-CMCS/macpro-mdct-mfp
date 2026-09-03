@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 // components
 import { InstructionsAccordion } from "components";
 // verbiage
-import { mockAccordion } from "utils/testing/setupJest";
+import { mockAccordion } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const accordionComponent = <InstructionsAccordion verbiage={mockAccordion} />;

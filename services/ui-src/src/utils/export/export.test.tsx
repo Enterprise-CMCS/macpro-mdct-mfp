@@ -13,7 +13,7 @@ import {
   mockNestedFormField,
   mockPlanField,
   mockOptionalFormField,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { render, screen } from "@testing-library/react";
 
 const emailInput: FormField = {

@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -7,7 +8,7 @@ import {
   mockAdminUserStore,
   mockWpReportContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 
 // verbiage
 import verbiage from "verbiage/pages/home";
@@ -18,9 +19,9 @@ import { testA11yAct } from "utils/testing/commonTests";
 
 // MOCKS
 
-jest.mock("utils/state/useStore");
+vi.mock("utils/state/useStore");
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockAdminUserStore);
 
 const adminDashSelectorView = (

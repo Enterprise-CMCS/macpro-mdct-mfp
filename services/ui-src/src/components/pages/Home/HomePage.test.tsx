@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 // components
 import { HomePage } from "components";
 // utils
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const homeView = (

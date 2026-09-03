@@ -1,4 +1,5 @@
 //testing lib
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ExportRETTable } from "components";
 //components
@@ -144,8 +145,8 @@ const mockSARReport = {
   },
 };
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockSARReport);
 
 //These test are testing functions that uses hardcoded return values

@@ -3,7 +3,7 @@ import {
   mockFormField,
   mockNumberField,
   mockVerbiageIntro,
-} from "../testing/setupJest";
+} from "../testing/setupTest";
 import {
   AnyObject,
   DynamicModalOverlayReportPageShape,

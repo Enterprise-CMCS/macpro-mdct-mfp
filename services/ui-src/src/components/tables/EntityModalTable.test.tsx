@@ -1,3 +1,4 @@
+import { Mock, MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -24,15 +25,15 @@ import {
   mockStateUserStore,
   mockWpReportContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockTrigger = jest.fn();
-const openDeleteEntityModal = jest.fn();
+const mockTrigger = vi.fn();
+const openDeleteEntityModal = vi.fn();
 const mockRhfMethods = {
-  register: jest.fn(),
-  setValue: jest.fn(),
-  getValues: jest.fn(),
+  register: vi.fn(),
+  setValue: vi.fn(),
+  getValues: vi.fn(),
   trigger: mockTrigger,
   formState: {
     errors: {
@@ -42,28 +43,27 @@ const mockRhfMethods = {
     },
   },
 };
-const mockUseFormContext = useFormContext as unknown as jest.Mock<
+const mockUseFormContext = useFormContext as unknown as Mock<
   typeof useFormContext
 >;
-jest.mock("react-hook-form", () => {
-  const actual = jest.requireActual("react-hook-form");
+vi.mock("react-hook-form", async (importOriginal) => {
   return {
     __esModule: true,
-    ...actual,
-    useFormContext: jest.fn(() => mockRhfMethods),
+    ...(await importOriginal()),
+    useFormContext: vi.fn(() => mockRhfMethods),
   };
 });
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
     ...mockRhfMethods,
-    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
+    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-jest.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: jest.fn().mockImplementation(() => {
+vi.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-category`,
@@ -71,8 +71,8 @@ jest.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: jest.fn().mockImplementation((work) => work()),
+  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
+  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const mockProps = {
@@ -236,14 +236,14 @@ const tableComponent = (props = mockProps) => (
 
 describe("<EntityModalTable />", () => {
   beforeAll(() => {
-    Object.defineProperty(global, "crypto", {
+    Object.defineProperty(globalThis, "crypto", {
       value: {
-        randomUUID: jest.fn(() => mockDynamicFieldId),
+        randomUUID: vi.fn(() => mockDynamicFieldId),
       },
     });
   });
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("table is visible", () => {

@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 // components
 import { ReportContext, ReviewSubmitPage } from "components";
@@ -10,15 +11,15 @@ import {
   mockReportMethods,
   mockUseStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import userEvent from "@testing-library/user-event";
 import { useStore } from "utils";
 // verbiage
 import reviewVerbiage from "verbiage/pages/wp/wp-review-and-submit";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const WpReviewSubmitPage = (
   <RouterWrappedComponent>
@@ -50,7 +51,7 @@ const mockSubmittedReport = {
 describe("<ReviewSubmitPage />", () => {
   describe("Review and Submit Page Functionality", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     describe("User has not started filling out the form", () => {
@@ -202,7 +203,7 @@ describe("<ReviewSubmitPage />", () => {
 
     describe("Console errors", () => {
       test("should not show console errors", () => {
-        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        const consoleSpy = vi.spyOn(console, "error");
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: mockFilledReport,

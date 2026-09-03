@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 // utils
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupTest";
 //components
 import { LoginIDM } from "components";
 import { testA11yAct } from "utils/testing/commonTests";

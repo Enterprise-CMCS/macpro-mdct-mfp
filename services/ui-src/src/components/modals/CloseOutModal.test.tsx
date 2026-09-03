@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -8,7 +9,7 @@ import {
   mockStateUserStore,
   mockWPFullReport,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 import {
@@ -18,9 +19,9 @@ import {
   ValidationType,
 } from "types";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-const mockSetSelectedEntity = jest.fn();
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+const mockSetSelectedEntity = vi.fn();
 
 mockedUseStore.mockReturnValue({
   ...mockStateUserStore,
@@ -34,7 +35,7 @@ mockedUseStore.mockReturnValue({
   setSelectedEntity: mockSetSelectedEntity,
 });
 
-const mockCloseHandler = jest.fn();
+const mockCloseHandler = vi.fn();
 
 const closeOutForm = {
   id: "close-out-form",
@@ -71,7 +72,7 @@ const modalComponent = (
 
 describe("<CloseOutModal />", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("shows the heading, field, and warning", async () => {

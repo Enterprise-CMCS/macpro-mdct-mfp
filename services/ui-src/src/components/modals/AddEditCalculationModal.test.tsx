@@ -11,12 +11,12 @@ import {
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { ReportContext } from "components/reports/ReportProvider";
 import { ReportShape, ReportStatus } from "types";
 
-const mockCloseHandler = jest.fn();
-const mockUpdateReport = jest.fn();
+const mockCloseHandler = vi.fn();
+const mockUpdateReport = vi.fn();
 
 const getReport = (
   submittedReport: boolean = false,
@@ -70,7 +70,7 @@ const modalComponent = (
 
 describe("AddEditCalculationModal", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("state user - add", () => {

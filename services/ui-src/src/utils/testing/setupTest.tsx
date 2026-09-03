@@ -1,7 +1,18 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router";
 import { configure } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import * as domMatchers from "@testing-library/jest-dom/matchers";
+
+/*
+ * @testing-library defines custom matchers for DOM nodes.
+ * It allows us to assert things like:
+ *     expect(element).toHaveTextContent(/react/i)
+ * Learn more: https://github.com/testing-library/jest-dom
+ * Since vitest is so jest-like, there is no separate TL package for it.
+ */
+expect.extend(domMatchers);
+
+// for accessibility testing, so typescript will recognize .toHaveNoViolations()
 import "jest-axe/extend-expect";
 
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
@@ -45,51 +56,52 @@ import {
 
 // GLOBALS
 
-global.React = React;
-global.structuredClone = (val: any) =>
+globalThis.React = React;
+globalThis.structuredClone = (val: any) =>
   val ? JSON.parse(JSON.stringify(val)) : val;
 
 /* Mocks window.matchMedia (https://bit.ly/3Qs4ZrV) */
 Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
   })),
 });
 
-window.scrollBy = jest.fn();
-window.scrollTo = jest.fn();
-window.HTMLElement.prototype.scrollIntoView = jest.fn();
+(window as any)._env_ = {};
+window.scrollBy = vi.fn();
+window.scrollTo = vi.fn();
+window.HTMLElement.prototype.scrollIntoView = vi.fn();
 
 /* Mock Amplify */
-jest.mock("aws-amplify/api", () => ({
-  get: jest.fn().mockImplementation(() => ({
+vi.mock("aws-amplify/api", () => ({
+  get: vi.fn().mockImplementation(() => ({
     response: Promise.resolve({
       body: {
         json: () => Promise.resolve(`{"json":"blob"}`),
       },
     }),
   })),
-  post: jest.fn().mockImplementation(() => ({
+  post: vi.fn().mockImplementation(() => ({
     response: Promise.resolve({
       body: {
         json: () => Promise.resolve(`{"json":"blob"}`),
       },
     }),
   })),
-  put: jest.fn().mockImplementation(() => ({
+  put: vi.fn().mockImplementation(() => ({
     response: Promise.resolve({
       body: {
         json: () => Promise.resolve(`{"json":"blob"}`),
       },
     }),
   })),
-  del: jest.fn().mockImplementation(() => ({
+  del: vi.fn().mockImplementation(() => ({
     response: Promise.resolve({
       body: {
         json: () => Promise.resolve(`{"json":"blob"}`),
@@ -98,13 +110,13 @@ jest.mock("aws-amplify/api", () => ({
   })),
 }));
 
-jest.mock("aws-amplify/auth", () => ({
-  fetchAuthSession: jest.fn().mockReturnValue({
+vi.mock("aws-amplify/auth", () => ({
+  fetchAuthSession: vi.fn().mockReturnValue({
     idToken: () => ({
       payload: "eyJLongToken",
     }),
   }),
-  signOut: jest.fn().mockImplementation(() => Promise.resolve()),
+  signOut: vi.fn().mockImplementation(() => Promise.resolve()),
   signInWithRedirect: () => {},
 }));
 
@@ -374,8 +386,6 @@ export * from "./mockBanner";
 export * from "./mockEntities";
 // FORM
 export * from "./mockForm";
-// LAUNCHDARKLY
-export * from "./mockLaunchDarkly";
 // REPORT
 export * from "./mockReport";
 // ROUTER

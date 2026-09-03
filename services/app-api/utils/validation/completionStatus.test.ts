@@ -41,7 +41,7 @@ describe("utils/validation/completionStatus", () => {
     };
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     describe("pageType: PageTypes.STANDARD", () => {

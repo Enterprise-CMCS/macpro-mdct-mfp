@@ -1,5 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MockedFunction } from "vitest";
 // components
 import { TemplateCard } from "components";
 // utils
@@ -7,27 +8,28 @@ import {
   mockStateUserStore,
   mockUseStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/home";
 import { MfpReportState, MfpUserState } from "../../types";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/other/useBreakpoint", () => ({
-  useBreakpoint: jest.fn(() => ({
+vi.mock("utils/other/useBreakpoint", () => ({
+  useBreakpoint: vi.fn(() => ({
     isDesktop: true,
   })),
 }));
 
-jest.mock("utils/auth/useUser");
-jest.mock("utils/state/useStore");
+vi.mock("utils/auth/useUser");
+vi.mock("utils/state/useStore");
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockUseNavigate = jest.fn();
+const mockUseNavigate = vi.fn();
 
-jest.mock("react-router", () => ({
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
 }));
 

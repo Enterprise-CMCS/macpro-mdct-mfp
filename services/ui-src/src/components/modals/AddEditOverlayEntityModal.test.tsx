@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -23,17 +24,17 @@ import {
   mockStateUserStore,
   mockWPFullReport,
   mockWpReportContext,
-} from "../../utils/testing/setupJest";
+} from "../../utils/testing/setupTest";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const mockEntityName = "mock-name";
 const entityType = mockEntityStore.selectedEntity!.type;
-const mockCloseHandler = jest.fn();
-const mockUpdateReport = jest.fn();
+const mockCloseHandler = vi.fn();
+const mockUpdateReport = vi.fn();
 
 const mockOverlayEntity = {
   id: "mock-eval-id",
@@ -183,9 +184,9 @@ const sarModalComponentWithSelectedEntity = (
 
 describe("<AddEditOverlayEntityModal />", () => {
   beforeAll(() => {
-    Object.defineProperty(global, "crypto", {
+    Object.defineProperty(globalThis, "crypto", {
       value: {
-        randomUUID: jest.fn(() => "mock-eval-id-2"),
+        randomUUID: vi.fn(() => "mock-eval-id-2"),
       },
     });
   });
@@ -200,7 +201,7 @@ describe("<AddEditOverlayEntityModal />", () => {
 
     afterEach(() => {
       wpReport.fieldData.initiative = [mockInitiative];
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("AddEditOverlayEntityModal shows the correct contents for WP", () => {
@@ -232,7 +233,7 @@ describe("<AddEditOverlayEntityModal />", () => {
 
     afterEach(() => {
       sarReport.fieldData.initiative = [mockInitiative];
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("AddEditOverlayEntityModal shows the correct contents for SAR", () => {
@@ -251,7 +252,7 @@ describe("<AddEditOverlayEntityModal />", () => {
 
     afterEach(() => {
       wpReport.fieldData.initiative[0].evaluationPlan = [mockOverlayEntity];
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     const fillAndSubmitForm = async (form: any) => {

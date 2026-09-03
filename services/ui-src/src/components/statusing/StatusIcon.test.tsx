@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { StatusIcon } from "./StatusIcon";
 // types
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const statusIconComponent = (status?: boolean, hideSuccess?: boolean) => (
@@ -12,7 +12,7 @@ const statusIconComponent = (status?: boolean, hideSuccess?: boolean) => (
 
 describe("<StatusIcon />", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("should render the correct status for complete rows", () => {
