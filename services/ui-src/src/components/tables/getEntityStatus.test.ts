@@ -25,7 +25,7 @@ import {
   mockSARReportWithOverlays,
   mockWPFullReport,
   mockWPReportWithOverlays,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 
 describe("tables/getEntityStatus", () => {
   describe("getValidationList()", () => {

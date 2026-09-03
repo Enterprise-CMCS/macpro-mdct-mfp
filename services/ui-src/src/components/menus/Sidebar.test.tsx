@@ -1,20 +1,21 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   RouterWrappedComponent,
   mockReportStore,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 //components
 import { Sidebar } from "components";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/reports/routing", () => ({
-  isReportFormPage: jest.fn(() => true),
+vi.mock("utils/reports/routing", () => ({
+  isReportFormPage: vi.fn(() => true),
 }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const sidebarComponent = (
   <RouterWrappedComponent>

@@ -5,9 +5,9 @@ import { UserRoles } from "../types";
 const noApiKeyEvent = { ...proxyEvent };
 const apiKeyEvent = { ...proxyEvent, headers: { "x-api-key": "test" } };
 
-const mockedDecode = jest.fn();
+const mockedDecode = vi.fn();
 
-jest.mock("jwt-decode", () => ({
+vi.mock("jwt-decode", () => ({
   __esModule: true,
   default: () => {
     return mockedDecode();
