@@ -1,9 +1,10 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { useStore } from "utils";
 import {
   mockReportStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import {
   mockSARReportWithOverlays,
   mockWPReportWithOverlays,
@@ -26,8 +27,8 @@ import {
 } from "./ExportedModalOverlayReportSection";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const wpMockProps = {
   section: {
@@ -335,7 +336,7 @@ const renderWithReport = (
 
 describe("<ExportedModalOverlayReportSection />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("should render modal overlay report section", () => {

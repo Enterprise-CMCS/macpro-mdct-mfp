@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 // components
 import { ReportContext, ExportedSectionHeading } from "components";
 // utils
-import { mockWpReportContext } from "utils/testing/setupJest";
+import { mockWpReportContext } from "utils/testing/setupTest";
 import { CustomHtmlElement, HeadingLevel } from "types";
 import { testA11yAct } from "utils/testing/commonTests";
 

@@ -6,11 +6,11 @@ import { Menu } from "components";
 import {
   mockUserContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { UserContext } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockLogout = jest.fn();
+const mockLogout = vi.fn();
 
 const mockContext = {
   ...mockUserContext,

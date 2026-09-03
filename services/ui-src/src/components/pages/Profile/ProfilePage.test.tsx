@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 // components
 import { ProfilePage } from "components";
@@ -6,7 +7,7 @@ import {
   mockAdminUserStore,
   mockStateUserStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
@@ -18,8 +19,8 @@ const ProfilePageComponent = (
 
 // MOCKS
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 // TESTS
 

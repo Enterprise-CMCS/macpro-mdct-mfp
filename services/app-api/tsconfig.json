@@ -14,7 +14,8 @@
     "lib": ["ES2022"],
     "module": "node16",
     "target": "ES2022",
-    "isolatedModules": true
+    "isolatedModules": true,
+    "types": ["vitest/globals"]
   },
   "ts-node": {
     "files": true

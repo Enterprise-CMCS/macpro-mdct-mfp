@@ -1,3 +1,4 @@
+import { Mock, MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -15,33 +16,42 @@ import {
   mockStateUserStore,
   mockTableId,
   mockDynamicRowsTemplateWithModalForm,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockTrigger = jest.fn();
+const mockTrigger = vi.fn();
 const mockRhfMethods = {
   register: () => {},
   setValue: () => {},
-  getValues: jest.fn(),
+  getValues: vi.fn(),
   trigger: mockTrigger,
 };
-const mockUseFormContext = useFormContext as unknown as jest.Mock<
+const mockUseFormContext = useFormContext as unknown as Mock<
   typeof useFormContext
 >;
-jest.mock("react-hook-form", () => ({
-  useFormContext: jest.fn(() => mockRhfMethods),
+vi.mock("react-hook-form", () => ({
+  useFormContext: vi.fn(() => mockRhfMethods),
 }));
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
     ...mockRhfMethods,
-    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
+    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-jest.mock("utils/autosave/autosave", () => ({
-  autoSaveFields: jest.fn().mockImplementation(() => Promise.resolve("")),
+vi.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: vi.fn().mockImplementation(() => {
+    return [
+      {
+        name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-totalComputable`,
+        value: "123",
+      },
+    ];
+  }),
+  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
+  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const mockProps = {
@@ -297,7 +307,7 @@ describe("<DynamicTableRows />", () => {
   );
 
   describe("modal", () => {
-    const mockOpenModal = jest.fn();
+    const mockOpenModal = vi.fn();
     const updatedProps = {
       ...mockProps,
       dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,

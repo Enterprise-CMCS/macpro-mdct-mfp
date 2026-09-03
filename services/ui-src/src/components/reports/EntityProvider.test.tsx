@@ -1,21 +1,23 @@
+import { MockedFunction } from "vitest";
 import { render } from "@testing-library/react";
-import { mockEntityStore, mockReportStore } from "utils/testing/setupJest";
+import { mockEntityStore, mockReportStore } from "utils/testing/setupTest";
 import { useStore } from "utils";
 import { useContext } from "react";
 import { EntityProvider, EntityContext } from "./EntityProvider";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockUseNavigate = jest.fn();
-jest.mock("react-router", () => ({
+const mockUseNavigate = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
-  useLocation: jest.fn(() => ({
+  useLocation: vi.fn(() => ({
     pathname: "/mock-route",
   })),
 }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockEntityStore);
 
 const TestComponent = () => {

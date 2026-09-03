@@ -15,7 +15,7 @@ import {
   mockWPFullReport,
   mockWPSubmittedReport,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const createProps = (overrides = {}) => ({
@@ -29,11 +29,11 @@ const createProps = (overrides = {}) => ({
       bodyRows: [],
     },
   },
-  openCreateReportModal: jest.fn(),
-  enterSelectedReport: jest.fn(),
-  archive: jest.fn(),
+  openCreateReportModal: vi.fn(),
+  enterSelectedReport: vi.fn(),
+  archive: vi.fn(),
   entering: false,
-  releaseReport: jest.fn(),
+  releaseReport: vi.fn(),
   releasing: false,
   isStateLevelUser: true,
   isAdmin: false,
@@ -151,7 +151,7 @@ describe("<DashboardTable />", () => {
       reportId: undefined,
       isStateLevelUser: true,
       entering: false,
-      enterSelectedReport: jest.fn(),
+      enterSelectedReport: vi.fn(),
       ...overrides,
     });
 
@@ -208,7 +208,7 @@ describe("<DashboardTable />", () => {
     });
 
     test("should call enterSelectedReport when clicked", async () => {
-      const enterSelectedReport = jest.fn();
+      const enterSelectedReport = vi.fn();
       render(
         <RouterWrappedComponent>
           <ActionButton {...createActionButtonProps({ enterSelectedReport })} />
@@ -231,11 +231,11 @@ describe("<DashboardTable />", () => {
           bodyRows: [],
         },
       },
-      openCreateReportModal: jest.fn(),
-      enterSelectedReport: jest.fn(),
-      archive: jest.fn(),
+      openCreateReportModal: vi.fn(),
+      enterSelectedReport: vi.fn(),
+      archive: vi.fn(),
       entering: false,
-      releaseReport: jest.fn(),
+      releaseReport: vi.fn(),
       releasing: false,
       isStateLevelUser: false,
       isAdmin: true,
@@ -255,7 +255,7 @@ describe("<DashboardTable />", () => {
     });
 
     test("should enable the Unlock button when report is submitted", async () => {
-      const releaseReport = jest.fn();
+      const releaseReport = vi.fn();
       render(
         <RouterWrappedComponent>
           <DashboardTable
@@ -273,7 +273,7 @@ describe("<DashboardTable />", () => {
     });
 
     test("should render the Archive button and call archive when clicked", async () => {
-      const archive = jest.fn();
+      const archive = vi.fn();
       render(
         <RouterWrappedComponent>
           <DashboardTable

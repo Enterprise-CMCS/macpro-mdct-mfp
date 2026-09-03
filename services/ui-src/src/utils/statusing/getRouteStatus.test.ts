@@ -1,3 +1,4 @@
+import { Mock } from "vitest";
 import { getRouteStatus } from "./getRouteStatus";
 // utils
 import {
@@ -6,7 +7,7 @@ import {
   mockSARReportRoutesForStatus,
   mockWPFullReport,
   mockWPReportWithOverlays,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { getWPAlertStatus } from "components/alerts/getWPAlertStatus";
 import { getInitiativeStatus } from "components/tables/getEntityStatus";
 import {
@@ -17,8 +18,8 @@ import {
   ValidationType,
 } from "types";
 
-jest.mock("components/alerts/getWPAlertStatus");
-jest.mock("components/tables/getEntityStatus");
+vi.mock("components/alerts/getWPAlertStatus");
+vi.mock("components/tables/getEntityStatus");
 
 describe("utils/getRouteStatus", () => {
   describe("getRouteStatus()", () => {
@@ -75,7 +76,7 @@ describe("utils/getRouteStatus", () => {
 
     describe("checkAlertOrUndefinedStatus()", () => {
       beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
       });
 
       describe("initiativeV1", () => {
@@ -86,7 +87,7 @@ describe("utils/getRouteStatus", () => {
           },
         };
         test("returns alert status", () => {
-          (getWPAlertStatus as jest.Mock).mockReturnValue(true);
+          (getWPAlertStatus as Mock).mockReturnValue(true);
           const statusMap = getRouteStatus(report);
           expect(statusMap).toEqual([
             {
@@ -103,7 +104,7 @@ describe("utils/getRouteStatus", () => {
         });
 
         test("returns true completion status", () => {
-          (getWPAlertStatus as jest.Mock).mockReturnValue(false);
+          (getWPAlertStatus as Mock).mockReturnValue(false);
           const statusMap = getRouteStatus(report);
           expect(statusMap).toEqual([
             {
@@ -120,7 +121,7 @@ describe("utils/getRouteStatus", () => {
         });
 
         test("returns false completion status", () => {
-          (getWPAlertStatus as jest.Mock).mockReturnValue(false);
+          (getWPAlertStatus as Mock).mockReturnValue(false);
           const report = {
             ...mockWPReportWithOverlays,
             completionStatus: {
@@ -176,7 +177,7 @@ describe("utils/getRouteStatus", () => {
         };
 
         test("returns true status", () => {
-          (getInitiativeStatus as jest.Mock).mockReturnValue(
+          (getInitiativeStatus as Mock).mockReturnValue(
             EntityStatuses.COMPLETE
           );
           const statusMap = getRouteStatus(report);
@@ -195,7 +196,7 @@ describe("utils/getRouteStatus", () => {
         });
 
         test("returns false status", () => {
-          (getInitiativeStatus as jest.Mock).mockReturnValue(
+          (getInitiativeStatus as Mock).mockReturnValue(
             EntityStatuses.INCOMPLETE
           );
           const statusMap = getRouteStatus(report);

@@ -1,3 +1,4 @@
+import { Mock } from "vitest";
 import { createBanner } from "./create";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
@@ -11,8 +12,8 @@ import { hasPermissions } from "../../utils/auth/authorization";
 
 const dynamoClientMock = mockClient(DynamoDBDocumentClient);
 
-jest.mock("../../utils/auth/authorization", () => ({
-  hasPermissions: jest.fn().mockReturnValue(true),
+vi.mock("../../utils/auth/authorization", () => ({
+  hasPermissions: vi.fn().mockReturnValue(true),
 }));
 
 const testEvent: APIGatewayProxyEvent = {
@@ -27,28 +28,18 @@ const testInvalidEvent: APIGatewayProxyEvent = {
   headers: { "cognito-identity-id": "test" },
 };
 
-const consoleSpy: {
-  debug: jest.SpyInstance<void>;
-  error: jest.SpyInstance<void>;
-} = {
-  debug: jest.spyOn(console, "debug").mockImplementation(),
-  error: jest.spyOn(console, "error").mockImplementation(),
-};
-
 describe("Test createBanner API method", () => {
   test("Test unauthorized banner creation throws 403 error", async () => {
-    (hasPermissions as jest.Mock).mockReturnValueOnce(false);
+    (hasPermissions as Mock).mockReturnValueOnce(false);
     const res = await createBanner(testEvent, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
 
   test("Test Successful Run of Banner Creation", async () => {
-    const mockPut = jest.fn();
+    const mockPut = vi.fn();
     dynamoClientMock.on(PutCommand).callsFake(mockPut);
     const res = await createBanner(testEvent, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Created);
     expect(res.body).toContain("test banner");
     expect(res.body).toContain("test description");

@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 // components
 import { PrintButton } from "./PrintButton";
@@ -5,16 +6,16 @@ import { PrintButton } from "./PrintButton";
 import { ReportStatus } from "types";
 // utils
 import { useStore } from "utils";
-import { mockUseStore, RouterWrappedComponent } from "utils/testing/setupJest";
+import { mockUseStore, RouterWrappedComponent } from "utils/testing/setupTest";
 import {
   mockWPApprovedFullReport,
   mockWPFullReport,
 } from "utils/testing/mockReport";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
+vi.mock("utils/state/useStore");
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const wpSubmittedContext = {
   report: {
