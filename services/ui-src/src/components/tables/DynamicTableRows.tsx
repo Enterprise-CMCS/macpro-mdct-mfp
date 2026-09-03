@@ -1,6 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 // components
-import { Button, Flex, Image, Td, Text, Tr } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Image,
+  Text,
+} from "@chakra-ui/react";
 import { DynamicTableContext } from "components";
 // types
 import {
@@ -13,21 +18,21 @@ import {
 // assets
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
 
-export const DynamicTableRows = ({
-  disabled,
-  dynamicRowsTemplate,
-  emptyTableMessage,
-  entityType,
-  formData,
-  formPercentage,
-  hasDynamicModalForm,
-  hasStaticRows,
-  openDeleteEntityModal,
-  openModal = () => {},
-  showEditColumn = true,
-  tableId,
-  updatedFieldsCallback = () => [],
-}: Props) => {
+export const DynamicTableRows = (
+  tableId: string,
+  formPercentage: number,
+  disabled: boolean,
+  dynamicRowsTemplate: DynamicRowsTemplate,
+  hasDynamicModalForm: boolean,
+  hasStaticRows: boolean,
+  formData?: AnyObject,
+  openModal: Function = () => {},
+  emptyTableMessage?: string,
+  updatedFieldsCallback: Function = () => [],
+  showEditColumn: boolean = true,
+  entityType?: EntityType,
+  openDeleteEntityModal?: Function,
+) => {
   const {
     displayDynamicCell,
     focusedRowIndex,
@@ -35,22 +40,19 @@ export const DynamicTableRows = ({
     removeDynamicRow,
   } = useContext(DynamicTableContext);
   const dynamicLabel = dynamicRowsTemplate.props?.dynamicFields.find(
-    (field: FormField) => field.props?.dynamicLabel
+    (field: FormField) => field.props?.dynamicLabel,
   )?.props?.dynamicLabel;
   // Refs to help keep track of rows
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const [localDynamicRows, setLocalDynamicRows] = useState<DynamicFieldShape[]>(
-    []
+    [],
   );
-  const [showEmptyRows, setShowEmptyRows] = useState<boolean>(false);
-  const emptyRowsColspan =
-    (dynamicRowsTemplate.props?.dynamicFields.length || 0) + 1;
 
   // Add rows from fieldData
   useEffect(() => {
     const entityData = entityType
       ? localFieldData?.[entityType]?.find(
-          (t: DynamicFieldShape) => t.id === formData?.id
+          (t: DynamicFieldShape) => t.id === formData?.id,
         )
       : undefined;
 
@@ -70,150 +72,102 @@ export const DynamicTableRows = ({
   }, [localFieldData]);
 
   // Scroll to newly added row and focus first interactive element
-  useEffect(() => {
-    if (focusedRowIndex === null) return;
+  // useEffect(() => {
+  //   if (focusedRowIndex === null) return;
 
-    const rowElement = rowRefs.current[focusedRowIndex];
-    if (!rowElement) return;
+  //   const rowElement = rowRefs.current[focusedRowIndex];
+  //   if (!rowElement) return;
 
-    rowElement.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+  //   rowElement.scrollIntoView({
+  //     behavior: "smooth",
+  //     block: "center",
+  //   });
 
-    setTimeout(() => {
-      const firstInput = rowElement.querySelector<HTMLElement>(
-        'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])'
-      );
-      firstInput?.focus();
-    }, 100);
-  }, [focusedRowIndex, localDynamicRows]);
+  //   setTimeout(() => {
+  //     const firstInput = rowElement.querySelector<HTMLElement>(
+  //       'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])',
+  //     );
+  //     firstInput?.focus();
+  //   }, 100);
+  // }, [focusedRowIndex, localDynamicRows]);
 
-  useEffect(() => {
-    const hasEmptyRows =
-      !!emptyTableMessage && !hasStaticRows && localDynamicRows.length === 0;
+  if (!!emptyTableMessage && !hasStaticRows && localDynamicRows.length === 0)
+    return [<Text sx={sx.emptyTableMessage}>{emptyTableMessage}</Text>];
 
-    setShowEmptyRows(hasEmptyRows);
-  }, [emptyTableMessage, hasStaticRows, localFieldData, localDynamicRows]);
+  return localDynamicRows.map((row, rowIndex: number) => {
+    const dynamicId = row.id;
+    const name = row.category || row.title || row.name || dynamicId;
+    const editLabel = `Edit ${name}`;
+    const deleteLabel = ["Delete", dynamicLabel, name]
+      .filter(Boolean)
+      .join(" ");
 
-  return (
-    <>
-      {showEmptyRows && (
-        <Tr>
-          <Td colSpan={emptyRowsColspan}>
-            <Text sx={sx.emptyTableMessage}>{emptyTableMessage}</Text>
-          </Td>
-        </Tr>
-      )}
+    const dynamicFields = (
+      dynamicRowsTemplate.props?.dynamicFields || []
+    ).filter((f: FormField) => !f.id.includes("baselineEndDate"));
 
-      {localDynamicRows.map((row, rowIndex: number) => {
-        const dynamicId = row.id;
-        const name = row.category || row.title || row.name || dynamicId;
-        const editLabel = `Edit ${name}`;
-        const deleteLabel = ["Delete", dynamicLabel, name]
-          .filter(Boolean)
-          .join(" ");
+    const cells = dynamicFields.map((field: FormField, cellIndex: number) =>
+      displayDynamicCell({
+        cell: field,
+        columnId: `${dynamicId}-${rowIndex}-cell-0`,
+        disabled,
+        dynamicId,
+        entityType,
+        formData,
+        percentage: formPercentage,
+        rowId: `${tableId}-thead-row-0-cell-${cellIndex}`,
+        rowIndex,
+        tableId,
+      }),
+    );
 
-        const dynamicFields = (
-          dynamicRowsTemplate.props?.dynamicFields || []
-        ).filter((f: FormField) => !f.id.includes("baselineEndDate"));
-
-        return (
-          <Tr
-            key={dynamicId}
-            id={dynamicId}
-            ref={(el) => {
-              rowRefs.current[rowIndex] = el;
-            }}
+    const columnAction = showEditColumn && (
+      <Flex>
+        {!disabled && hasDynamicModalForm && (
+          <Button
+            aria-label={editLabel}
+            onClick={() => openModal(dynamicId)}
+            sx={sx.editButton}
+            type="button"
+            variant={"unstyled"}
           >
-            {dynamicFields.map((field: FormField, cellIndex: number) => (
-              <Td
-                id={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-                key={`${dynamicId}-${rowIndex}-cell-${cellIndex}`}
-              >
-                {displayDynamicCell({
-                  cell: field,
-                  columnId: `${dynamicId}-${rowIndex}-cell-0`,
-                  disabled,
-                  dynamicId,
-                  entityType,
-                  formData,
-                  percentage: formPercentage,
-                  rowId: `${tableId}-thead-row-0-cell-${cellIndex}`,
-                  rowIndex,
-                  tableId,
-                })}
-              </Td>
-            ))}
-            {showEditColumn && (
-              <Td>
-                <Flex>
-                  {!disabled && hasDynamicModalForm && (
-                    <Button
-                      aria-label={editLabel}
-                      onClick={() => openModal(dynamicId)}
-                      sx={sx.editButton}
-                      type="button"
-                      variant={"unstyled"}
-                    >
-                      Edit
-                    </Button>
-                  )}
-                  {!disabled && (
-                    <Button
-                      onClick={() => {
-                        entityType === EntityType.INITIATIVE &&
-                        openDeleteEntityModal
-                          ? openDeleteEntityModal(dynamicId, () =>
-                              removeDynamicRow(
-                                dynamicRowsTemplate.id,
-                                dynamicId,
-                                entityType,
-                                formData?.id,
-                                updatedFieldsCallback(dynamicId, localFieldData)
-                              )
-                            )
-                          : removeDynamicRow(
-                              dynamicRowsTemplate.id,
-                              dynamicId,
-                              entityType,
-                              formData?.id,
-                              updatedFieldsCallback(dynamicId, localFieldData)
-                            );
-                      }}
-                      sx={sx.removeButton}
-                      type="button"
-                      variant={"unstyled"}
-                    >
-                      <Image src={cancelIcon} alt={deleteLabel} />
-                    </Button>
-                  )}
-                </Flex>
-              </Td>
-            )}
-          </Tr>
-        );
-      })}
-    </>
-  );
-};
+            Edit
+          </Button>
+        )}
+        {!disabled && (
+          <Button
+            onClick={() => {
+              entityType === EntityType.INITIATIVE && openDeleteEntityModal
+                ? openDeleteEntityModal(dynamicId, () =>
+                    removeDynamicRow(
+                      dynamicRowsTemplate.id,
+                      dynamicId,
+                      entityType,
+                      formData?.id,
+                      updatedFieldsCallback(dynamicId, localFieldData),
+                    ),
+                  )
+                : removeDynamicRow(
+                    dynamicRowsTemplate.id,
+                    dynamicId,
+                    entityType,
+                    formData?.id,
+                    updatedFieldsCallback(dynamicId, localFieldData),
+                  );
+            }}
+            sx={sx.removeButton}
+            type="button"
+            variant={"unstyled"}
+          >
+            <Image src={cancelIcon} alt={deleteLabel} />
+          </Button>
+        )}
+      </Flex>
+    );
 
-interface Props {
-  disabled: boolean;
-  dynamicRowsTemplate: DynamicRowsTemplate;
-  emptyTableMessage?: string;
-  entityType?: EntityType;
-  formData?: AnyObject;
-  formPercentage: number;
-  hasDynamicModalForm: boolean;
-  hasStaticRows: boolean;
-  openDeleteEntityModal?: Function;
-  openModal?: Function;
-  label?: string;
-  showEditColumn?: boolean;
-  tableId: string;
-  updatedFieldsCallback?: Function;
-}
+    return [...cells, columnAction];
+  });
+};
 
 const sx = {
   calculated: {

@@ -5,14 +5,9 @@ import {
   Button,
   Heading,
   Image,
-  Table,
-  TableCaption,
-  Tbody,
   Text,
-  Tfoot,
-  Thead,
+  Tr,
   useDisclosure,
-  VisuallyHidden,
 } from "@chakra-ui/react";
 import {
   AddEditCalculationModal,
@@ -30,6 +25,7 @@ import {
   parseCustomHtml,
   translate,
 } from "utils";
+import { ResponsiveTable } from "./ResponsiveTable";
 
 export const CalculationTable = ({
   bodyRows,
@@ -89,7 +85,7 @@ export const CalculationTable = ({
         report?.fieldData?.[`${fieldId}-percentageOverride`];
       return fieldPercentage || formPercentage;
     },
-    [formPercentage, report?.fieldData]
+    [formPercentage, report?.fieldData],
   );
 
   // Check if a row contains non-footer totals field
@@ -105,7 +101,7 @@ export const CalculationTable = ({
     (cell: FormTableCell) => ({
       percentage: getPercentage(cell),
     }),
-    [formData, getPercentage]
+    [formData, getPercentage],
   );
 
   const sharedCellProps = {
@@ -118,7 +114,7 @@ export const CalculationTable = ({
 
   const updatedFieldsCallback = (
     dynamicId: string,
-    localFieldData: AnyObject
+    localFieldData: AnyObject,
   ) => {
     return calculationTableDynamicTotalsOnSave({
       dynamicFieldId: dynamicId,
@@ -128,6 +124,53 @@ export const CalculationTable = ({
       formId: "",
       tableId,
     });
+  };
+
+  const tableData = {
+    id: tableId,
+    title: verbiage?.title,
+    headers: headRows.map((row, rowIndex: number) =>
+      generateRows({
+        cellPropsCallback,
+        row,
+        rowIndex,
+        section: "thead",
+        ...sharedCellProps,
+      }),
+    ),
+    rows: bodyRows.map((row, rowIndex: number) =>
+      generateRows({
+        cellPropsCallback,
+        isTotalsRow: isTotalsRow(row),
+        row,
+        rowIndex,
+        section: "tbody",
+        ...sharedCellProps,
+      }),
+    ),
+    dynamicRows:
+      dynamicRowsTemplate &&
+      DynamicTableRows(
+        tableId,
+        formPercentage,
+        isDisabled,
+        dynamicRowsTemplate,
+        hasDynamicModalForm,
+        bodyRows.length > 0,
+        formData,
+        openModal,
+        verbiage?.emptyTableMessage,
+        updatedFieldsCallback,
+      ),
+    foot: footRows.map((row, rowIndex: number) =>
+      generateRows({
+        cellPropsCallback,
+        row,
+        rowIndex,
+        section: "tfoot",
+        ...sharedCellProps,
+      }),
+    ),
   };
 
   return (
@@ -179,60 +222,7 @@ export const CalculationTable = ({
           )}
         </>
       )}
-
-      <Table id={tableId} sx={sx.table}>
-        <TableCaption placement="top" sx={sx.captionBox}>
-          <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
-        </TableCaption>
-        <Thead>
-          {headRows.map((row, rowIndex: number) =>
-            generateRows({
-              cellPropsCallback,
-              row,
-              rowIndex,
-              section: "thead",
-              ...sharedCellProps,
-            })
-          )}
-        </Thead>
-        <Tbody>
-          {bodyRows.map((row, rowIndex: number) =>
-            generateRows({
-              cellPropsCallback,
-              isTotalsRow: isTotalsRow(row),
-              row,
-              rowIndex,
-              section: "tbody",
-              ...sharedCellProps,
-            })
-          )}
-          {dynamicRowsTemplate && (
-            <DynamicTableRows
-              disabled={isDisabled}
-              dynamicRowsTemplate={dynamicRowsTemplate}
-              emptyTableMessage={verbiage?.emptyTableMessage}
-              formData={formData}
-              formPercentage={formPercentage}
-              hasDynamicModalForm={hasDynamicModalForm}
-              hasStaticRows={bodyRows.length > 0}
-              openModal={openModal}
-              tableId={tableId}
-              updatedFieldsCallback={updatedFieldsCallback}
-            />
-          )}
-        </Tbody>
-        <Tfoot>
-          {footRows.map((row, rowIndex: number) =>
-            generateRows({
-              cellPropsCallback,
-              row,
-              rowIndex,
-              section: "tfoot",
-              ...sharedCellProps,
-            })
-          )}
-        </Tfoot>
-      </Table>
+      {ResponsiveTable(tableData)}
     </Box>
   );
 };
@@ -285,59 +275,5 @@ export const sx = {
     margin: 0,
     padding: 0,
     height: 0,
-  },
-  table: {
-    marginBottom: "spacer5",
-    marginTop: "spacer1",
-    width: "58rem",
-    tbody: {
-      "tr:nth-of-type(even)": {
-        td: {
-          backgroundColor: "gray_lightest_highlight",
-        },
-      },
-      "tr.totals-row": {
-        td: {
-          backgroundColor: "gray_lightest",
-          border: "none",
-          fontWeight: "bold",
-          paddingInlineEnd: "spacer2",
-          paddingInlineStart: "spacer2",
-        },
-      },
-      td: {
-        border: "none",
-        paddingBottom: "spacer1",
-        paddingInlineEnd: "spacer2",
-        paddingInlineStart: "spacer2",
-        paddingTop: "spacer1",
-      },
-      label: {
-        margin: 0,
-      },
-    },
-    tfoot: {
-      td: {
-        backgroundColor: "gray_lighter",
-        border: "none",
-        fontWeight: "bold",
-        paddingInlineEnd: "spacer2",
-        paddingInlineStart: "spacer2",
-      },
-    },
-    thead: {
-      th: {
-        backgroundColor: "primary_darkest",
-        color: "white",
-        fontSize: "lg",
-        letterSpacing: "normal",
-        lineHeight: "normal",
-        paddingBottom: "spacer1",
-        paddingInlineEnd: "spacer2",
-        paddingInlineStart: "spacer2",
-        paddingTop: "spacer1",
-        textTransform: "none",
-      },
-    },
   },
 };
