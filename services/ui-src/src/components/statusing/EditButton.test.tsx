@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { testA11yAct } from "utils/testing/commonTests";
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupTest";
 import { EditButton } from "./EditButton";
 
 const EditButtonComponentNotEditable = (

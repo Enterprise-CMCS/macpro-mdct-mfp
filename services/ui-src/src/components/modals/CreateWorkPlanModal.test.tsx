@@ -1,19 +1,20 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import {
   RouterWrappedComponent,
   mockWpReportContext,
   mockWPApprovedFullReport,
   mockUseStore,
-} from "../../utils/testing/setupJest";
+} from "../../utils/testing/setupTest";
 import { ReportContext } from "../reports/ReportProvider";
 import { CreateWorkPlanModal } from "./CreateWorkPlanModal";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 import { useStore } from "../../utils";
 
-const mockCreateReport = jest.fn();
-const mockFetchReportsByState = jest.fn();
-const mockCloseHandler = jest.fn();
+const mockCreateReport = vi.fn();
+const mockFetchReportsByState = vi.fn();
+const mockCloseHandler = vi.fn();
 
 const mockedReportContext = {
   ...mockWpReportContext,
@@ -22,8 +23,8 @@ const mockedReportContext = {
   isReportPage: true,
 };
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseStore);
 
 const modalComponent = (
@@ -82,7 +83,7 @@ describe("<CreateWorkPlanModal />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("CreateWorkPlanModal shows the content", () => {
@@ -98,10 +99,10 @@ describe("<CreateWorkPlanModal />", () => {
   });
 
   describe("Test CreateWorkPlanModal functionality for new Work Plan", () => {
-    const mockedDateNow = jest.spyOn(Date, "now");
+    const mockedDateNow = vi.spyOn(Date, "now");
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     const fillForm = async () => {
@@ -132,7 +133,7 @@ describe("<CreateWorkPlanModal />", () => {
     });
 
     test("There should only be two options for reportYear if it is 2024", async () => {
-      global.Date.now = jest.fn(() => new Date(2024, 5, 1).getTime());
+      globalThis.Date.now = vi.fn(() => new Date(2024, 5, 1).getTime());
 
       await render(modalComponent);
       const reportPeriodOptionsLength = 2;
@@ -143,7 +144,7 @@ describe("<CreateWorkPlanModal />", () => {
     });
 
     test("There should only be three options for reportYear if it is NOT 2024", async () => {
-      global.Date.now = jest.fn(() => new Date(2025, 5, 1).getTime());
+      globalThis.Date.now = vi.fn(() => new Date(2025, 5, 1).getTime());
       await render(modalComponent);
       const reportPeriodOptionsLength = 2;
 
@@ -184,7 +185,7 @@ describe("<CreateWorkPlanModal />", () => {
 
   describe("Test CreateWorkPlanModal functionality for continuing Work Plan", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     const fillForm = async () => {
@@ -213,7 +214,7 @@ describe("<CreateWorkPlanModal />", () => {
 
   describe("Test CreateWorkPlanModal functionality for resetting a Work Plan", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     const fillForm = async () => {

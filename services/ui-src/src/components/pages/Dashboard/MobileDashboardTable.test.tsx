@@ -10,18 +10,18 @@ import {
   mockWPFullReport,
   mockWPSubmittedReport,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const createProps = (overrides = {}) => ({
   reportsByState: [mockWPFullReport],
   reportId: undefined,
   reportType: ReportType.WP,
-  openCreateReportModal: jest.fn(),
-  enterSelectedReport: jest.fn(),
-  archive: jest.fn(),
+  openCreateReportModal: vi.fn(),
+  enterSelectedReport: vi.fn(),
+  archive: vi.fn(),
   entering: false,
-  releaseReport: jest.fn(),
+  releaseReport: vi.fn(),
   releasing: false,
   isStateLevelUser: true,
   isAdmin: false,
@@ -128,7 +128,7 @@ describe("<MobileDashboardTable />", () => {
     });
 
     test("should call openCreateReportModal when Edit reporting is clicked", () => {
-      const openCreateReportModal = jest.fn();
+      const openCreateReportModal = vi.fn();
       render(
         mobileDashboardTable({
           reportType: ReportType.SAR,
@@ -183,7 +183,7 @@ describe("<MobileDashboardTable />", () => {
     });
 
     test("should call enterSelectedReport when clicked", () => {
-      const enterSelectedReport = jest.fn();
+      const enterSelectedReport = vi.fn();
       render(mobileDashboardTable({ enterSelectedReport }));
       fireEvent.click(screen.getByText("Edit"));
       expect(enterSelectedReport).toHaveBeenCalledWith(mockWPFullReport);
@@ -212,7 +212,7 @@ describe("<MobileDashboardTable />", () => {
     });
 
     test("should enable the Unlock button when report is submitted", () => {
-      const releaseReport = jest.fn();
+      const releaseReport = vi.fn();
       renderAdmin({
         reportsByState: [mockWPSubmittedReport],
         releaseReport,
@@ -224,7 +224,7 @@ describe("<MobileDashboardTable />", () => {
     });
 
     test("should render the Archive button and call archive when clicked", () => {
-      const archive = jest.fn();
+      const archive = vi.fn();
       renderAdmin({ reportsByState: [mockWPFullReport], archive });
       const archiveButton = screen.getByRole("button", { name: "Archive" });
       expect(archiveButton).toBeVisible();

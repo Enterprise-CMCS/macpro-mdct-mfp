@@ -1,12 +1,12 @@
+import { Mock } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useContext } from "react";
-
 // utils
 import {
   RouterWrappedComponent,
   mockWPFullReport,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import {
   postReport,
   getReport,
@@ -20,15 +20,15 @@ import {
 // components
 import { ReportContext, ReportProvider } from "./ReportProvider";
 
-jest.mock("utils/api/requestMethods/report", () => ({
-  postReport: jest.fn().mockResolvedValue({}),
-  getReport: jest.fn().mockResolvedValue({}),
-  archiveReport: jest.fn().mockResolvedValue({}),
-  putReport: jest.fn().mockResolvedValue({}),
-  approveReport: jest.fn().mockResolvedValue({}),
-  submitReport: jest.fn().mockResolvedValue({}),
-  getReportsByState: jest.fn().mockResolvedValue({}),
-  releaseReport: jest.fn().mockResolvedValue({}),
+vi.mock("utils/api/requestMethods/report", () => ({
+  postReport: vi.fn().mockResolvedValue({}),
+  getReport: vi.fn().mockResolvedValue({}),
+  archiveReport: vi.fn().mockResolvedValue({}),
+  putReport: vi.fn().mockResolvedValue({}),
+  approveReport: vi.fn().mockResolvedValue({}),
+  submitReport: vi.fn().mockResolvedValue({}),
+  getReportsByState: vi.fn().mockResolvedValue({}),
+  releaseReport: vi.fn().mockResolvedValue({}),
 }));
 
 const mockReport = mockWPFullReport!;
@@ -88,7 +88,7 @@ const testComponent = (
 
 describe("<ReportProvider />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     render(testComponent);
   });
 
@@ -101,7 +101,7 @@ describe("<ReportProvider />", () => {
   });
 
   test("should provide an error when a report cannot be created", async () => {
-    (postReport as jest.Mock).mockRejectedValue("Oh no");
+    (postReport as Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Create");
     await act(async () => {
       await userEvent.click(button);
@@ -120,7 +120,7 @@ describe("<ReportProvider />", () => {
   });
 
   test("should provide an error when a report cannot be fetched", async () => {
-    (getReport as jest.Mock).mockRejectedValue("Oh no");
+    (getReport as Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Fetch");
     await act(async () => {
       await userEvent.click(button);
@@ -139,7 +139,7 @@ describe("<ReportProvider />", () => {
   });
 
   test("should provide an error when a report cannot be archived", async () => {
-    (archiveReport as jest.Mock).mockRejectedValue("Oh no");
+    (archiveReport as Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Archive");
     await act(async () => {
       await userEvent.click(button);
@@ -158,7 +158,7 @@ describe("<ReportProvider />", () => {
   });
 
   test("should provide an error when a report cannot be updated", async () => {
-    (putReport as jest.Mock).mockRejectedValue("Oh no");
+    (putReport as Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Update");
     await act(async () => {
       await userEvent.click(button);
@@ -177,7 +177,7 @@ describe("<ReportProvider />", () => {
   });
 
   test("should provide an error when a report cannot be approved", async () => {
-    (approveReport as jest.Mock).mockRejectedValue("Oh no");
+    (approveReport as Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Approve");
     await act(async () => {
       await userEvent.click(button);
@@ -196,7 +196,7 @@ describe("<ReportProvider />", () => {
   });
 
   test("should provide an error when a report cannot be submitted", async () => {
-    (submitReport as jest.Mock).mockRejectedValue("Oh no");
+    (submitReport as Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Submit");
     await act(async () => {
       await userEvent.click(button);
@@ -215,7 +215,7 @@ describe("<ReportProvider />", () => {
   });
 
   test("should provide an error when reports for a state cannot be fetched", async () => {
-    (getReportsByState as jest.Mock).mockRejectedValue("Oh no");
+    (getReportsByState as Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("FetchByState");
     await act(async () => {
       await userEvent.click(button);
@@ -235,7 +235,7 @@ describe("<ReportProvider />", () => {
   });
 
   test("should provide an error when reports for SAR creation cannot be fetched", async () => {
-    (getReportsByState as jest.Mock).mockRejectedValue("Oh no");
+    (getReportsByState as Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("FetchForSar");
     await act(async () => {
       await userEvent.click(button);
@@ -254,7 +254,7 @@ describe("<ReportProvider />", () => {
   });
 
   test("should provide an error when reports for SAR creation cannot be fetched", async () => {
-    (releaseReport as jest.Mock).mockRejectedValue("Oh no");
+    (releaseReport as Mock).mockRejectedValue("Oh no");
     const button = screen.getByText("Release");
     await act(async () => {
       await userEvent.click(button);

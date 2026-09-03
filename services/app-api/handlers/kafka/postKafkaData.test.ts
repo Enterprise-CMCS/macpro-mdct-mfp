@@ -3,28 +3,33 @@ import { Kafka } from "kafkajs";
 import { mockClient } from "aws-sdk-client-mock";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
-jest.spyOn(console, "debug").mockImplementation(jest.fn());
-jest.spyOn(console, "info").mockImplementation(jest.fn());
-jest.spyOn(console, "warn").mockImplementation(jest.fn());
-jest.spyOn(console, "error").mockImplementation(jest.fn());
+vi.spyOn(console, "debug").mockImplementation(vi.fn());
+vi.spyOn(console, "info").mockImplementation(vi.fn());
+vi.spyOn(console, "warn").mockImplementation(vi.fn());
+vi.spyOn(console, "error").mockImplementation(vi.fn());
 
-jest.mock("kafkajs", () => ({
-  Kafka: jest.fn().mockReturnValue({
-    producer: jest.fn().mockReturnValue({
-      disconnect: jest.fn().mockResolvedValue(undefined),
-      connect: jest.fn().mockResolvedValue(undefined),
-      sendBatch: jest.fn().mockResolvedValue(undefined),
-      on: jest.fn(),
-    }),
-  }),
+vi.mock("kafkajs", () => ({
+  Kafka: vi.fn(
+    class {
+      producer = vi.fn().mockReturnValue({
+        disconnect: mockDisconnect,
+        connect: mockConnect,
+        sendBatch: mockSendBatch,
+        on: mockOn,
+      });
+    }
+  ),
 }));
-const mockConnect = (Kafka as Function)().producer().connect;
-const mockSendBatch = (Kafka as Function)().producer().sendBatch;
-const mockDisconnect = (Kafka as Function)().producer().disconnect;
-const mockOn = (Kafka as Function)().producer().on;
-
+const { mockConnect, mockSendBatch, mockDisconnect, mockOn } = vi.hoisted(
+  () => ({
+    mockConnect: vi.fn(),
+    mockSendBatch: vi.fn(),
+    mockDisconnect: vi.fn(),
+    mockOn: vi.fn(),
+  })
+);
 const mockS3Client = mockClient(S3Client);
-const mockS3Get = jest.fn();
+const mockS3Get = vi.fn();
 mockS3Client.on(GetObjectCommand).callsFake(mockS3Get);
 
 const wpFieldDataRecord = {
@@ -66,7 +71,7 @@ const wpFormTemplateRecord = {
 const wpFormTemplate = { mock: "wpTemplate" };
 mockS3Get.mockResolvedValue({
   Body: {
-    transformToString: jest
+    transformToString: vi
       .fn()
       .mockResolvedValue(JSON.stringify(wpFormTemplate)),
   },
@@ -74,7 +79,7 @@ mockS3Get.mockResolvedValue({
 
 describe("Kafka message sending", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should convert AWS Dynamo Stream Events to Kafka Messages", async () => {
@@ -83,7 +88,7 @@ describe("Kafka message sending", () => {
     // kafkalib.ts calls producer.connect() only once.
     // Reload the file to make sure we capture that call in this test.
     // Otherwise, assertions on producer.connect() would rely on test order.
-    jest.resetModules();
+    vi.resetModules();
     expect(mockConnect).not.toHaveBeenCalled();
 
     await handler(event);
@@ -398,8 +403,8 @@ describe("Kafka message sending", () => {
     beforeEach(() => {
       const keys = ["brokerString", "STAGE", "topicNamespace"];
       originalEnv = Object.fromEntries(keys.map((k) => [k, process.env[k]]));
-      jest.resetModules();
-      jest.clearAllMocks();
+      vi.resetModules();
+      vi.clearAllMocks();
     });
 
     afterEach(() => {
@@ -477,7 +482,7 @@ describe("Kafka message sending", () => {
     mockConnect.mockImplementationOnce(delay).mockImplementationOnce(delay);
     const event = { Records: [wpFieldDataRecord] };
 
-    jest.resetModules();
+    vi.resetModules();
     expect(mockConnect).not.toHaveBeenCalled();
 
     // Kick off both calls at once
@@ -490,7 +495,7 @@ describe("Kafka message sending", () => {
   it("should reconnect as needed", async () => {
     const event = { Records: [wpFieldDataRecord] };
 
-    jest.resetModules();
+    vi.resetModules();
     expect(mockOn).not.toHaveBeenCalled();
     expect(mockConnect).not.toHaveBeenCalled();
 

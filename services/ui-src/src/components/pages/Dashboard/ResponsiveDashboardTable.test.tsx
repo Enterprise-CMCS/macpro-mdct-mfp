@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
 import { useBreakpoint } from "utils";
 import { render } from "@testing-library/react";
@@ -6,32 +7,30 @@ import { mockReportsByState } from "utils/testing/mockReport";
 import { MobileDashboardTable } from "./MobileDashboardTable";
 import { ReportType } from "types";
 
-jest.mock("./DashboardTable", () => ({
-  DashboardTable: jest.fn(() => <></>),
+vi.mock("./DashboardTable", () => ({
+  DashboardTable: vi.fn(() => <></>),
 }));
 
-jest.mock("./MobileDashboardTable", () => ({
-  MobileDashboardTable: jest.fn(() => <></>),
+vi.mock("./MobileDashboardTable", () => ({
+  MobileDashboardTable: vi.fn(() => <></>),
 }));
 
-jest.mock("utils/other/useBreakpoint", () => ({
-  useBreakpoint: jest.fn(),
+vi.mock("utils/other/useBreakpoint", () => ({
+  useBreakpoint: vi.fn(),
 }));
 
-const mockUseBreakpoint = useBreakpoint as jest.MockedFunction<
-  typeof useBreakpoint
->;
+const mockUseBreakpoint = useBreakpoint as MockedFunction<typeof useBreakpoint>;
 
 const defaultProps = {
   reportsByState: mockReportsByState,
   reportType: ReportType.WP,
   reportId: "r1",
   body: { table: {} },
-  openCreateReportModal: jest.fn(),
-  enterSelectedReport: jest.fn(),
-  archive: jest.fn(),
+  openCreateReportModal: vi.fn(),
+  enterSelectedReport: vi.fn(),
+  archive: vi.fn(),
   entering: false,
-  releaseReport: jest.fn(),
+  releaseReport: vi.fn(),
   releasing: false,
   isStateLevelUser: true,
   isAdmin: false,
@@ -40,7 +39,7 @@ const defaultProps = {
 
 describe("<ResponsiveDashboardTable />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("renders DashboardTable for desktop", () => {

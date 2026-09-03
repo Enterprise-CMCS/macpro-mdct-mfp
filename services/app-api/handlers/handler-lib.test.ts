@@ -3,16 +3,16 @@ import { proxyEvent } from "../utils/testing/proxyEvent";
 import * as logger from "../utils/debugging/debug-lib";
 import { ok, StatusCodes } from "../utils/responses/response-lib";
 
-jest.mock("../utils/debugging/debug-lib", () => ({
-  init: jest.fn(),
-  debug: jest.fn(),
-  error: jest.fn(),
-  flush: jest.fn(),
+vi.mock("../utils/debugging/debug-lib", () => ({
+  init: vi.fn(),
+  debug: vi.fn(),
+  error: vi.fn(),
+  flush: vi.fn(),
 }));
 
 describe("Test Lambda Handler Lib", () => {
   test("Test successful authorized lambda workflow", async () => {
-    const testFunc = jest.fn().mockReturnValue(ok("test"));
+    const testFunc = vi.fn().mockReturnValue(ok("test"));
     const handler = handlerLib(testFunc);
 
     const res = await handler(proxyEvent, null);
@@ -34,7 +34,7 @@ describe("Test Lambda Handler Lib", () => {
 
   test("Test Errored lambda workflow", async () => {
     const err = new Error("Test Error");
-    const testFunc = jest.fn().mockImplementation(() => {
+    const testFunc = vi.fn().mockImplementation(() => {
       throw err;
     });
     const handler = handlerLib(testFunc);

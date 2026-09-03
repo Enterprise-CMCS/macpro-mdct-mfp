@@ -1,8 +1,9 @@
+import { MockedFunction } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import {
   RouterWrappedComponent,
   mockUseStore,
-} from "../../utils/testing/setupJest";
+} from "../../utils/testing/setupTest";
 import { ReportContext } from "../reports/ReportProvider";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
@@ -12,10 +13,10 @@ import { CreateFinancialReportingModal } from "./CreateFinancialReportingModal";
 import { ReportStatus } from "types";
 import { noEligibleReportsForCopy } from "../../constants";
 
-const mockCreateReport = jest.fn();
-const mockFetchReportsByState = jest.fn();
-const mockCloseHandler = jest.fn();
-const mockUpdateReport = jest.fn();
+const mockCreateReport = vi.fn();
+const mockFetchReportsByState = vi.fn();
+const mockCloseHandler = vi.fn();
+const mockUpdateReport = vi.fn();
 
 const mockedReportContext = {
   ...mockFinancialReportOneNotStartedReportContext,
@@ -24,8 +25,8 @@ const mockedReportContext = {
   isReportPage: true,
 };
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseStore);
 
 const modalComponent = (
@@ -76,7 +77,7 @@ describe("<CreateFinancialReportingModal />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("CreateFinancialReportingModal shows the content", () => {
@@ -91,7 +92,7 @@ describe("<CreateFinancialReportingModal />", () => {
 
   describe("Test CreateFinancialReportingModal functionality for new Financial Report", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     const fillForm = async (
@@ -153,7 +154,7 @@ describe("<CreateFinancialReportingModal />", () => {
 
     describe("Test writeReport function", () => {
       afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
       });
 
       test("writeReport disables submit button during submission", async () => {
@@ -213,7 +214,7 @@ describe("<CreateFinancialReportingModal />", () => {
 
     describe("Test copyReport functionality", () => {
       afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
       });
 
       test("copyReport dropdown is disabled when no eligible reports exist", async () => {
@@ -328,7 +329,7 @@ describe("<CreateFinancialReportingModal />", () => {
 
     describe("Test CreateFinancialReportingModal view-only mode", () => {
       afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
       });
 
       test("Modal is in view-only mode when userIsAdmin is true", async () => {
@@ -407,7 +408,7 @@ describe("<CreateFinancialReportingModal />", () => {
 
   describe("Test duplicate report detection and alert", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     const existingReport2026Period1 = {
