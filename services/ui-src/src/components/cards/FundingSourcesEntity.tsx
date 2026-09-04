@@ -53,7 +53,7 @@ interface Props {
 
 const sx = {
   mainHeading: {
-    fontSize: "md",
+    fontSize: "heading_md",
   },
   grid: {
     display: "grid",
@@ -63,21 +63,21 @@ const sx = {
     marginBottom: "1.25rem",
   },
   gridSubtitle: {
-    fontWeight: "bold",
-    fontSize: "sm",
+    fontWeight: "heading_sm_bold",
+    fontSize: "heading_sm",
     marginRight: "spacer_half",
   },
   subtitle: {
     marginTop: "spacer2",
-    fontSize: "xs",
-    fontWeight: "bold",
+    fontSize: "heading_xs",
+    fontWeight: "heading_xs",
   },
   subtext: {
     marginTop: "spacer_half",
-    fontSize: "sm",
+    fontSize: "body_sm",
   },
   error: {
-    fontSize: "sm",
+    fontSize: "body_sm",
     color: "error_dark",
   },
   gridItems: {

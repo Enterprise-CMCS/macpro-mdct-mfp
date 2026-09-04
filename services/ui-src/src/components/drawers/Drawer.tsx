@@ -90,8 +90,8 @@ const sx = {
   },
   drawerHeaderText: {
     paddingRight: "4rem",
-    fontSize: "2xl",
-    fontWeight: "bold",
+    fontSize: "heading_2xl",
+    fontWeight: "heading_2xl",
   },
   drawerCloseButton: {
     position: "absolute",
@@ -100,7 +100,7 @@ const sx = {
     span: {
       margin: "0 0.25rem",
       svg: {
-        fontSize: "xs",
+        fontSize: "body_xs",
         width: "xs",
         height: "xs",
       },
@@ -108,23 +108,23 @@ const sx = {
   },
   detailBox: {
     marginTop: "spacer4",
-    fontWeight: "normal",
+    fontWeight: "body_md",
     color: "base",
   },
   detailHeader: {
     marginBottom: "spacer1",
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     color: "gray",
   },
   detailDescription: {
     marginBottom: "spacer1",
-    fontSize: "md",
+    fontSize: "body_md",
   },
   infoTextBox: {
     marginTop: "spacer4",
-    fontSize: "md",
-    fontWeight: "light",
+    fontSize: "body_md",
+    fontWeight: "body_md",
     color: "gray",
     paddingBottom: "0",
     p: {

@@ -364,9 +364,9 @@ const sx = {
     },
   },
   dashboardTitle: {
-    fontSize: "21px",
-    lineHeight: "130%",
-    fontWeight: "bold",
+    fontSize: "heading_xl",
+    lineHeight: "heading_xl",
+    fontWeight: "heading_xl",
     color: "gray_darker",
   },
   table: {
@@ -394,7 +394,7 @@ const sx = {
     },
     "td:first-of-type": {
       background: "gray_lightest",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
     th: {
       borderBottom: "1px solid",
@@ -402,8 +402,8 @@ const sx = {
       border: "1px solid",
       borderColor: "black",
       color: "black",
-      lineHeight: "normal",
-      fontWeight: "bold",
+      lineHeight: "heading_md",
+      fontWeight: "heading_md",
       width: "100px",
       minWidth: "100px",
       ".tablet &, .mobile &": {
@@ -415,7 +415,7 @@ const sx = {
     },
     "tbody tr td:last-child, tfoot": {
       background: "secondary_lightest",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
     "tbody tr td": {
       borderRight: "1px solid black",
@@ -433,10 +433,10 @@ const sx = {
     },
     "table:first-of-type tbody tr td:last-child": {
       background: "white",
-      fontWeight: "normal",
+      fontWeight: "body_md",
     },
   },
   text: {
-    fontSize: "0.875rem",
+    fontSize: "body_sm",
   },
 };

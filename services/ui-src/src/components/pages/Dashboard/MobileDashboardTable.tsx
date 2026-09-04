@@ -253,15 +253,15 @@ const sx = {
     marginBottom: "spacer1",
   },
   label: {
-    fontSize: "sm",
-    fontWeight: "bold",
+    fontSize: "body_sm",
+    fontWeight: "heading_md",
     color: "gray",
   },
   editDate: {
     marginRight: "spacer6",
   },
   archivedText: {
-    fontSize: "md",
+    fontSize: "body_md",
     paddingLeft: 2,
     display: "flex",
     alignItems: "center",
@@ -269,7 +269,7 @@ const sx = {
   editReporting: {
     textDecoration: "underline",
     color: "primary",
-    fontSize: "md",
-    fontWeight: "300",
+    fontSize: "body_md",
+    fontWeight: "body_md",
   },
 };

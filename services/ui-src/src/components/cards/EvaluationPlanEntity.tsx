@@ -76,15 +76,15 @@ interface Props {
 
 const sx = {
   mainHeading: {
-    fontSize: "md",
+    fontSize: "heading_md",
   },
   heading: {
-    fontSize: "sm",
+    fontSize: "heading_sm",
   },
   description: {
     marginTop: "spacer_half",
     marginBottom: "spacer2",
-    fontSize: "sm",
+    fontSize: "body_sm",
   },
   grid: {
     display: "grid",
@@ -101,21 +101,21 @@ const sx = {
     width: "50%",
   },
   gridSubtitle: {
-    fontWeight: "bold",
-    fontSize: "sm",
+    fontWeight: "heading_sm_bold",
+    fontSize: "heading_sm",
     marginRight: "spacer_half",
   },
   subtitle: {
     marginTop: "spacer2",
-    fontSize: "xs",
-    fontWeight: "bold",
+    fontSize: "heading_xs",
+    fontWeight: "heading_xs",
   },
   subtext: {
     marginTop: "spacer_half",
-    fontSize: "sm",
+    fontSize: "body_sm",
   },
   error: {
-    fontSize: "sm",
+    fontSize: "body_sm",
     color: "error_dark",
   },
   gridItems: {
@@ -127,7 +127,7 @@ const sx = {
   },
   unfinishedMessage: {
     marginY: "spacer2",
-    fontSize: "xs",
+    fontSize: "body_xs",
     color: "error_dark",
   },
 };

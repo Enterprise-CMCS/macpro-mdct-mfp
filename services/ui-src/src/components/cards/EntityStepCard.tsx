@@ -219,15 +219,15 @@ const sx = {
     },
     ".error-text": {
       color: "error_darker",
-      fontSize: ".75rem",
+      fontSize: "body_xs",
       textAlign: "center",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
     ".completed-text": {
       color: "green",
-      fontSize: ".75rem",
+      fontSize: "body_xs",
       textAlign: "center",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
   },
   statusIcon: {
@@ -245,21 +245,21 @@ const sx = {
   },
   editButton: {
     marginY: "spacer2",
-    fontWeight: "normal",
+    fontWeight: "body_md",
     borderColor: "gray_light",
   },
   reportButton: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
   },
   openDrawerButton: {
     marginTop: "spacer2",
-    fontWeight: "normal",
+    fontWeight: "body_md",
   },
   entitiesCount: {
     position: "absolute",
     right: "-2rem",
-    fontSize: ".75rem",
-    fontWeight: "bold",
+    fontSize: "body_xs",
+    fontWeight: "heading_md",
     color: "#71767a",
     ".mobile &": {
       right: "-1.5rem",
@@ -267,7 +267,7 @@ const sx = {
   },
   unfinishedMessage: {
     marginY: "spacer2",
-    fontSize: "xs",
+    fontSize: "body_xs",
     color: "error_dark",
   },
 };

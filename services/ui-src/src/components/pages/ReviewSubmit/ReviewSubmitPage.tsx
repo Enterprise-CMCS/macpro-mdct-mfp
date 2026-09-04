@@ -347,8 +347,8 @@ const sx = {
   },
   headerText: {
     marginBottom: "spacer2",
-    fontSize: "4xl",
-    fontWeight: "normal",
+    fontSize: "heading_3xl",
+    fontWeight: "heading_3xl",
   },
   infoTextBox: {
     marginTop: "spacer4",
@@ -358,7 +358,7 @@ const sx = {
     },
   },
   infoHeading: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     marginBottom: "spacer1",
   },
   infoParagraph: {
@@ -376,7 +376,7 @@ const sx = {
   },
   additionalInfoHeader: {
     color: "gray",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
   },
   additionalInfo: {
     paddingTop: "spacer3",

@@ -82,11 +82,11 @@ const sx = {
     },
   },
   fieldLabel: {
-    fontSize: "sm",
-    fontWeight: "bold",
+    fontSize: "body_sm",
+    fontWeight: "heading_md",
   },
   fieldHint: {
-    lineHeight: "lg",
+    lineHeight: "body_sm",
     color: "gray",
   },
 };
