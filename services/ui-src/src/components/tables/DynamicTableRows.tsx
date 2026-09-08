@@ -218,7 +218,7 @@ interface Props {
 const sx = {
   calculated: {
     display: "block",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     textAlign: "right",
   },
   editButton: {
@@ -227,7 +227,7 @@ const sx = {
     textDecoration: "underline",
   },
   emptyTableMessage: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     paddingBottom: "spacer2",
     paddingTop: "spacer2",
     textAlign: "center",

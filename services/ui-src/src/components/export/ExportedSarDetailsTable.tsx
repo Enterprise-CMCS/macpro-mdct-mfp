@@ -48,7 +48,7 @@ const sx = {
   table: {
     ...sxSharedExportStyles.table,
     "td:nth-of-type(1)": {
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
   },
 };

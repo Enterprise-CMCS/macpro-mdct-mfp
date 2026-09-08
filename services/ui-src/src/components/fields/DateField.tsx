@@ -178,6 +178,6 @@ const sx = {
     },
   },
   ".optional-text": {
-    fontWeight: "lighter",
+    fontWeight: "body_md",
   },
 };

@@ -511,14 +511,14 @@ const EntityFieldsTable = ({
           tableRows.push(
             <Tr key={formField.id} data-testid="exportRow">
               <Td sx={{ width: "14rem" }}>
-                <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
+                <Text sx={{ fontSize: "body_sm", fontWeight: "heading_md" }}>
                   {formFieldInfo.label}
                 </Text>
                 {formFieldInfo.hint && (
                   <Text
                     sx={{
-                      lineHeight: "lg",
-                      fontSize: "sm",
+                      lineHeight: "body_sm",
+                      fontSize: "body_sm",
                       color: "gray_dark",
                     }}
                   >
@@ -536,14 +536,14 @@ const EntityFieldsTable = ({
           tableRows.push(
             <Tr key={`${formField.id}_value`} data-testid="exportRow">
               <Td sx={{ width: "14rem" }}>
-                <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
+                <Text sx={{ fontSize: "body_sm", fontWeight: "heading_md" }}>
                   {choiceWithChildren.label}
                 </Text>
                 {childField.type === ReportFormFieldType.DATE && (
                   <Text
                     sx={{
-                      lineHeight: "lg",
-                      fontSize: "sm",
+                      lineHeight: "body_sm",
+                      fontSize: "body_sm",
                       color: "gray_dark",
                     }}
                   >
@@ -617,7 +617,7 @@ const EntityFieldsTable = ({
                 report?.reportType === ReportType.WP &&
                 entity.isInitiativeClosed && (
                   <Text sx={sx.helperText} data-testid="exportRow">
-                    <Text as="span" sx={{ fontWeight: "bold" }}>
+                    <Text as="span" sx={{ fontWeight: "heading_md" }}>
                       Closed by
                     </Text>
                     <Text>{entity.closedBy}</Text>
@@ -826,7 +826,7 @@ const EntityFieldsTable = ({
             tableRows.push(
               <Tr key={fieldId} data-testid="exportRow">
                 <Td sx={{ width: "14rem" }}>
-                  <Text sx={{ fontSize: "sm", fontWeight: "bold" }}>
+                  <Text sx={{ fontSize: "body_sm", fontWeight: "heading_md" }}>
                     Please describe:
                   </Text>
                 </Td>
@@ -876,25 +876,25 @@ const sx = {
     marginTop: "spacer2",
   },
   sectionHeading: {
-    fontSize: "lg",
-    fontWeight: "bold",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
     marginBottom: 0,
   },
   subsectionHeading: {
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     marginBottom: 0,
     marginTop: "spacer2",
   },
   helperText: {
-    lineHeight: "lg",
-    fontSize: "sm",
+    lineHeight: "body_sm",
+    fontSize: "body_sm",
     color: "gray_dark",
     marginTop: "spacer2",
     marginBottom: "spacer2",
   },
   closedByLabel: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
   },
   closedByValue: {
     color: "base",
@@ -913,11 +913,11 @@ const sx = {
     paddingBottom: "5rem",
   },
   heading: {
-    fontSize: "xl",
+    fontSize: "heading_xl",
   },
   headingSubtitle: {
-    fontSize: "xl",
-    fontWeight: "normal",
+    fontSize: "body_xl",
+    fontWeight: "body_xl",
     marginLeft: "spacer3",
   },
   container: {
