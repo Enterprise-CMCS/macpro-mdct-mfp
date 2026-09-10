@@ -78,7 +78,7 @@ export const ReportProvider = ({ children }: Props) => {
   const hydrateAndSetReport = (report: ReportShape | undefined) => {
     if (report) {
       report.formTemplate.flatRoutes = flattenReportRoutesArray(
-        report.formTemplate.routes
+        report.formTemplate.routes,
       );
     }
     setReport(report);
@@ -99,7 +99,7 @@ export const ReportProvider = ({ children }: Props) => {
 
   const fetchReportsByState = async (
     reportType: string,
-    selectedState: string
+    selectedState: string,
   ) => {
     try {
       // clear stored reports by state prior to fetching from current state
@@ -120,12 +120,12 @@ export const ReportProvider = ({ children }: Props) => {
 
       const workPlanSubmissions = await getReportsByState(
         ReportType.WP,
-        selectedState
+        selectedState,
       );
 
       const sarSubmissions = await getReportsByState(
         ReportType.SAR,
-        selectedState
+        selectedState,
       );
 
       const workplan = getEligibleWorkPlan(workPlanSubmissions);
@@ -151,14 +151,14 @@ export const ReportProvider = ({ children }: Props) => {
   const createReport = async (
     reportType: string,
     state: string,
-    report: ReportShape
+    report: ReportShape,
   ) => {
     try {
       // TODO: Remove casting
       const result = (await postReport(
         reportType,
         state,
-        report
+        report,
       )) as ReportShape;
       hydrateAndSetReport(result);
       setLastSavedTime(getLocalHourMinuteTime());
@@ -238,7 +238,7 @@ export const ReportProvider = ({ children }: Props) => {
     localStorage.setItem("selectedReport", report.id);
     localStorage.setItem(
       "selectedReportBasePath",
-      report.formTemplate.basePath
+      report.formTemplate.basePath,
     );
   };
 
@@ -246,7 +246,7 @@ export const ReportProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const submittedReports = reportsByState?.filter(
-      (item) => item.status === "Submitted"
+      (item) => item.status === "Submitted",
     );
     setSubmittedReportsByState(submittedReports);
   }, [reportsByState]);
@@ -308,7 +308,7 @@ export const ReportProvider = ({ children }: Props) => {
       isReportPage,
       error,
       lastSavedTime,
-    ]
+    ],
   );
 
   return (

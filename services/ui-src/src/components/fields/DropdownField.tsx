@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
 import {
   DropdownChangeObject,
   Hint,
@@ -8,9 +7,14 @@ import {
 } from "@cmsgov/design-system";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
 // utils
-import { labelTextWithOptional, parseCustomHtml, shimComponent } from "utils";
+import {
+  labelTextWithOptional,
+  parseCustomHtml,
+  shimComponent,
+  useStore,
+} from "utils";
 // types
-import { AnyObject, DropdownChoice, DropdownOptions } from "types";
+import { DropdownChoice, DropdownOptions } from "types";
 // constants
 import { dropdownDefaultOptionText } from "../../constants";
 
@@ -22,12 +26,12 @@ export const DropdownField = ({
   hint,
   hydrate,
   nested,
-  validateOnRender,
   sxOverride,
   styleAsOptional,
   disabled,
-  clear = false,
 }: Props) => {
+  const { setAnswer, fields, setField } = useStore();
+
   // fetch the option values and format them if necessary
   const formatOptions = (options: DropdownOptions[] | string) => {
     let dropdownOptions: any[] = [];
@@ -51,39 +55,13 @@ export const DropdownField = ({
   };
   const formattedOptions = formatOptions(options);
   const defaultValue = formattedOptions[0];
-  const [displayValue, setDisplayValue] =
-    useState<DropdownChoice>(defaultValue);
-
-  // get form context
-  const form = useFormContext();
+  const [displayValue, setDisplayValue] = useState<DropdownChoice>(
+    hydrate ?? defaultValue,
+  );
 
   useEffect(() => {
-    if (validateOnRender) {
-      form.trigger(name);
-    }
-  }, []);
-
-  // set initial display value to form state field value or hydration value
-  const hydrationValue = hydrate || defaultValue;
-  useEffect(() => {
-    // if clear flag is set, reset to default
-    if (clear) {
-      setDisplayValue(defaultValue);
-      form.setValue(name, defaultValue);
-    }
-    // else if form state has value for field, set as display value
-    else {
-      const fieldValue = form.getValues(name);
-      if (fieldValue) {
-        setDisplayValue(fieldValue);
-      } else if (hydrationValue) {
-        setDisplayValue(hydrationValue);
-        form.setValue(name, hydrationValue, {
-          shouldValidate: validateOnRender,
-        });
-      }
-    }
-  }, [hydrationValue, clear]); // runs on hydrationValue or clear changes
+    setField(name, displayValue);
+  }, [])
 
   // update form data
   const onChangeHandler = async (event: DropdownChangeObject) => {
@@ -92,18 +70,17 @@ export const DropdownField = ({
       formattedOptions.find((option) => option.value === selectedValue) ||
       defaultValue;
     setDisplayValue(selectedOption);
-    form.setValue(name, selectedOption, { shouldValidate: true });
+    setAnswer(name, selectedOption);
   };
 
   // update form field data & database data on blur
   const onBlurHandler = async () => {
     // if blanking field, trigger client-side field validation error
-    if (displayValue?.value === defaultValue?.value) form.trigger(name);
+    if (displayValue?.value === defaultValue?.value) return;
   };
 
   // prepare error message, hint, and classes
-  const formErrorState: AnyObject = form?.formState?.errors;
-  const errorMessage = formErrorState?.[name]?.value?.message as ReactNode;
+  const errorMessage = fields.get(name)?.error.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const ariaDescribedBy = `${name}__error${parsedHint ? ` ${name}-hint` : ""}`;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";

@@ -1,11 +1,14 @@
 import {
   AdminBannerData,
+  AnyObject,
   EntityShape,
   ErrorVerbiage,
   MFPUser,
   ReportMetadataShape,
+  ReportRoute,
   ReportShape,
 } from "types";
+import { OptionalObjectSchema, TypeOfShape } from "yup/lib/object";
 
 // initial user state
 export interface MfpUserState {
@@ -34,7 +37,7 @@ export interface AdminBannerState {
   setBannerActive: (bannerStatus: boolean) => void;
   setBannerLoading: (bannerLoading: boolean) => void;
   setBannerErrorMessage: (
-    bannerErrorMessage: ErrorVerbiage | undefined
+    bannerErrorMessage: ErrorVerbiage | undefined,
   ) => void;
   setBannerDeleting: (bannerDeleting: boolean) => void;
 }
@@ -52,11 +55,11 @@ export interface MfpReportState {
   // ACTIONS
   setReport: (newReport: ReportShape | undefined) => void;
   setReportsByState: (
-    newReportsByState: ReportMetadataShape[] | undefined
+    newReportsByState: ReportMetadataShape[] | undefined,
   ) => void;
   clearReportsByState: () => void;
   setSubmittedReportsByState: (
-    newSubmittedReportsByState: ReportMetadataShape[] | undefined
+    newSubmittedReportsByState: ReportMetadataShape[] | undefined,
   ) => void;
   setLastSavedTime: (lastSavedTime: string | undefined) => void;
   setWorkPlanToCopyFrom: (planToCopy: ReportShape | undefined) => void;
@@ -71,4 +74,21 @@ export interface MfpEntityState {
   // ACTIONS
   setSelectedEntity: (newSelectedEntity: EntityShape | undefined) => void;
   clearSelectedEntity: () => void;
+}
+
+export type FIELD_ERROR = { message?: string; type?: string }
+export type FIELD_DATA = {
+  answer: any;
+  error: FIELD_ERROR;
+  validate: boolean;
+};
+
+export interface MfpFieldState {
+  fields: Map<string, FIELD_DATA>;
+  validationSchema: OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>> | undefined;
+  setField: (id: string, value?: any) => void;
+  setAnswer: (id: string, answer: any) => void;
+  setValidationSchema: (schema: OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>> | undefined) => void;
+  setErrors: (updateErrors: { [key: string]: FIELD_ERROR }) => void;
+  setClearFields: () => void;
 }

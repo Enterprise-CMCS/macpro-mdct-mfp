@@ -32,7 +32,6 @@ import {
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
-  waitForAutosavesAndGetReport,
 } from "utils";
 
 export const DynamicModalOverlayReportPageV2 = ({
@@ -91,7 +90,7 @@ export const DynamicModalOverlayReportPageV2 = ({
   const onSubmit = async (enteredData: AnyObject) => {
     if (userIsEndUser) {
       setSubmitting(true);
-      const latestReport = await waitForAutosavesAndGetReport(report);
+      const latestReport = report;
       const reportKeys = {
         reportType: latestReport.reportType,
         state,

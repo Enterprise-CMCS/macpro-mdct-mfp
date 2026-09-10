@@ -1,17 +1,12 @@
-import { useFormContext } from "react-hook-form";
-// components
 import { Banner } from "components";
+import { FIELD_DATA } from "types";
 
-export const PreviewBanner = () => {
-  // get the form context
-  const form = useFormContext();
-
+export const PreviewBanner = ({fields}: {fields: Map<string, FIELD_DATA>}) => {
   // set banner preview data
-  const formData = form.getValues();
   const bannerData = {
-    title: formData["bannerTitle"] || "New banner title",
-    description: formData["bannerDescription"] || "New banner description",
-    link: formData["bannerLink"] || "",
+    title: fields.get("bannerTitle")?.answer || "New banner title",
+    description: fields.get("bannerDescription")?.answer || "New banner description",
+    link: fields.get("bannerLink")?.answer || "",
   };
 
   return <Banner bannerData={bannerData} />;

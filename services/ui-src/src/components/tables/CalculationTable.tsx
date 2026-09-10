@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useContext, useState } from "react";
 // components
 import {
   Box,
@@ -81,32 +81,25 @@ export const CalculationTable = ({
   const isDisabled = disabled || missingPercentage;
 
   // Use field-level percentage or formPercentage
-  const getPercentage = useCallback(
-    (cell: FormTableCell) => {
-      if (typeof cell === "string") return formPercentage;
-      const { fieldId } = getFieldParts(cell.id);
-      const fieldPercentage =
-        report?.fieldData?.[`${fieldId}-percentageOverride`];
-      return fieldPercentage || formPercentage;
-    },
-    [formPercentage, report?.fieldData]
-  );
+  const getPercentage = (cell: FormTableCell) => {
+    if (typeof cell === "string") return formPercentage;
+    const { fieldId } = getFieldParts(cell.id);
+    const fieldPercentage =
+      report?.fieldData?.[`${fieldId}-percentageOverride`];
+    return fieldPercentage || formPercentage;
+  };
 
   // Check if a row contains non-footer totals field
-  const isTotalsRow = useCallback((row: FormTableCell[]) => {
+  const isTotalsRow = (row: FormTableCell[]) => {
     return row.some((cell) => {
       if (typeof cell === "string") return false;
       return cell.id.includes("totals_totalsSummary_serviceTotals");
     });
-  }, []);
+  };
 
-  // Use useCallback to reduce lookups
-  const cellPropsCallback = useCallback(
-    (cell: FormTableCell) => ({
-      percentage: getPercentage(cell),
-    }),
-    [formData, getPercentage]
-  );
+  const cellPropsCallback = (cell: FormTableCell) => ({
+    percentage: getPercentage(cell),
+  });
 
   const sharedCellProps = {
     columnCount: headRows?.[0].length || 0,
@@ -118,7 +111,7 @@ export const CalculationTable = ({
 
   const updatedFieldsCallback = (
     dynamicId: string,
-    localFieldData: AnyObject
+    localFieldData: AnyObject,
   ) => {
     return calculationTableDynamicTotalsOnSave({
       dynamicFieldId: dynamicId,
@@ -192,7 +185,7 @@ export const CalculationTable = ({
               rowIndex,
               section: "thead",
               ...sharedCellProps,
-            })
+            }),
           )}
         </Thead>
         <Tbody>
@@ -204,7 +197,7 @@ export const CalculationTable = ({
               rowIndex,
               section: "tbody",
               ...sharedCellProps,
-            })
+            }),
           )}
           {dynamicRowsTemplate && (
             <DynamicTableRows
@@ -229,7 +222,7 @@ export const CalculationTable = ({
               rowIndex,
               section: "tfoot",
               ...sharedCellProps,
-            })
+            }),
           )}
         </Tfoot>
       </Table>

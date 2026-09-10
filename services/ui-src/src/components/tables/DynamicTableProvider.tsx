@@ -2,16 +2,11 @@ import {
   ChangeEventHandler,
   createContext,
   FocusEventHandler,
-  useCallback,
-  useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
-import { useFormContext } from "react-hook-form";
 // components
 import { Flex, Td, Text, Th, Tr, VisuallyHidden } from "@chakra-ui/react";
-import { EntityContext, ReportContext } from "components";
 // types
 import {
   AnyObject,
@@ -27,13 +22,10 @@ import {
 } from "types";
 // utils
 import {
-  autosaveFieldData,
   combinedSum,
   createTempDynamicId,
-  debounce,
   FieldInfo,
   formFieldFactory,
-  getAutosaveFields,
   getFieldParts,
   getValueToCombine,
   hydrateFormFields,
@@ -61,14 +53,9 @@ export const DynamicTableContext = createContext<DynamicTableMethods>({
   setLocalFieldData: Function,
 });
 
-export const DynamicTableProvider = ({ children }: any) => {
-  const form = useFormContext();
-  const { full_name, state } = useStore().user ?? {};
-  const { selectedEntity } = useStore();
+export const DynamicTableProvider = ({ updateFieldValues, children }: any) => {
   const report = useStore().report ?? ({} as ReportShape);
   const { fieldData } = report;
-  const { updateReport } = useContext(ReportContext);
-  const { prepareEntityPayload } = useContext(EntityContext);
   const [localFieldData, setLocalFieldData] = useState<AnyObject>({});
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | null>(null);
 
@@ -76,30 +63,22 @@ export const DynamicTableProvider = ({ children }: any) => {
     setLocalFieldData(fieldData);
   }, [fieldData]);
 
-  const updatedFieldsForDisplay = useCallback(
-    ({
+  const updatedFieldsForDisplay = ({
+    fieldData,
+    name,
+    value,
+    percentage = 0,
+    percentageOverride,
+  }: UpdatedFieldDataOnChange) => {
+    const updatedFieldData = updatedFieldDataOnFieldChange({
       fieldData,
       name,
-      value,
-      percentage = 0,
+      percentage,
       percentageOverride,
-    }: UpdatedFieldDataOnChange) => {
-      const updatedFieldData = updatedFieldDataOnFieldChange({
-        fieldData,
-        name,
-        percentage,
-        percentageOverride,
-        value,
-      });
-      setLocalFieldData(updatedFieldData);
-    },
-    []
-  );
-
-  const debouncedUpdateReport = useMemo(
-    () => debounce(updatedFieldsForDisplay, 1),
-    [updatedFieldsForDisplay]
-  );
+      value,
+    });
+    setLocalFieldData(updatedFieldData);
+  };
 
   const displayReadOnlyCell = ({
     id,
@@ -179,7 +158,7 @@ export const DynamicTableProvider = ({ children }: any) => {
           const { name, percentage, percentageOverride, value } =
             setPercentageAndValue(event, localFieldData, formPercentage);
 
-          return debouncedUpdateReport({
+          return updatedFieldsForDisplay({
             fieldData: localFieldData,
             name,
             percentage,
@@ -197,7 +176,7 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     const [hydratedField] = hydrateFormFields(
       updateRenderFields(updatedReport, [field], formData),
-      formData
+      formData,
     );
 
     let hydrateValue;
@@ -205,11 +184,11 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     if (isTempDynamicField(hydratedField.id)) {
       const { dynamicFieldId, dynamicTemplateId, fieldType } = getFieldParts(
-        hydratedField.id
+        hydratedField.id,
       );
       const entityData = entityType
         ? localFieldData?.[entityType]?.find(
-            (t: DynamicFieldShape) => t.id === formData?.id
+            (t: DynamicFieldShape) => t.id === formData?.id,
           )
         : undefined;
 
@@ -219,7 +198,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         : localFieldData?.[dynamicTemplateId];
 
       const currentField = templateFieldData?.find(
-        (field: DynamicFieldShape) => field.id === dynamicFieldId
+        (field: DynamicFieldShape) => field.id === dynamicFieldId,
       );
 
       hydrateValue = currentField?.[fieldType];
@@ -260,6 +239,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       autosave: true,
       disabled,
       validateOnRender: false,
+      updateFieldValues: updateFieldValues,
     });
   };
 
@@ -394,7 +374,7 @@ export const DynamicTableProvider = ({ children }: any) => {
   const addDynamicRow = async (
     dynamicRowsTemplate: DynamicRowsTemplate,
     initialData?: AnyObject,
-    scroll: boolean = true
+    scroll: boolean = true,
   ) => {
     const { id, type, props } = dynamicRowsTemplate;
 
@@ -424,38 +404,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       [id]: updatedRows,
     };
     setLocalFieldData(updatedFieldData);
-
-    const fields = getAutosaveFields({
-      name: id,
-      type,
-      value: updatedRows,
-      overrideCheck: true,
-      hydrationValue: rows,
-    });
-
-    const fieldData = {
-      ...localFieldData,
-      [id]: updatedRows,
-    };
-
-    const reportArgs = {
-      id: report.id,
-      reportType: report.reportType,
-      updateReport,
-      fieldData,
-    };
-    const user = { userName: full_name, state };
-
-    await autosaveFieldData({
-      form,
-      fields,
-      report: reportArgs,
-      user,
-      entityContext: {
-        selectedEntity,
-        prepareEntityPayload,
-      },
-    });
+    updateFieldValues([{ name: id, type, updatedRows }]);
   };
 
   const removeDynamicRow = async (
@@ -463,11 +412,11 @@ export const DynamicTableProvider = ({ children }: any) => {
     dynamicFieldId: string,
     entityType?: string,
     entityId?: string,
-    updatedFields: FieldInfo[] = []
+    updatedFields: FieldInfo[] = [],
   ) => {
     const entityData = entityType
       ? localFieldData?.[entityType].find(
-          (t: DynamicFieldShape) => t.id === entityId
+          (t: DynamicFieldShape) => t.id === entityId,
         )
       : undefined;
     const rows = entityType
@@ -504,30 +453,12 @@ export const DynamicTableProvider = ({ children }: any) => {
             };
           }
           return t;
-        }
+        },
       );
     }
 
     setLocalFieldData(fieldData);
-
-    const reportArgs = {
-      id: report.id,
-      reportType: report.reportType,
-      updateReport,
-      fieldData,
-    };
-    const user = { userName: full_name, state };
-
-    await autosaveFieldData({
-      form,
-      fields,
-      report: reportArgs,
-      user,
-      entityContext: {
-        selectedEntity,
-        prepareEntityPayload,
-      },
-    });
+    updateFieldValues(fields);
   };
 
   const providerValue = {

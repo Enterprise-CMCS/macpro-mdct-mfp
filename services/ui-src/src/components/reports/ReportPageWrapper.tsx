@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // components
 import { Flex } from "@chakra-ui/react";
 import {
@@ -27,13 +27,18 @@ import {
 import { hasEntitySteps, hasInitiativesWithEntitySteps, useStore } from "utils";
 
 export const ReportPageWrapper = () => {
-  const { report } = useStore();
+  const { report, setClearFields, setValidationSchema } = useStore();
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
 
   const showSidebar = () => {
     if (sidebarHidden) setSidebarHidden(false);
   };
+
+  useEffect(() => {
+    setClearFields();
+    setValidationSchema(undefined);
+  }, [pathname]);
 
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: ReportRoute) => {
@@ -86,7 +91,7 @@ export const ReportPageWrapper = () => {
   };
 
   const reportTemplate = report?.formTemplate.flatRoutes!.find(
-    (route: ReportRoute) => route.path === pathname
+    (route: ReportRoute) => route.path === pathname,
   );
 
   return (
