@@ -194,9 +194,9 @@ const sx = {
     borderBottom: "1px solid var(--mdct-colors-gray_lighter)",
   },
   title: {
-    fontSize: "xl",
-    fontWeight: "bold",
-    lineHeight: "1.33",
+    fontSize: "body_xl",
+    fontWeight: "heading_md",
+    lineHeight: "body_xl",
     width: "15rem",
     padding: "1rem 1rem",
     ".desktop &": {
@@ -236,12 +236,12 @@ const sx = {
     align: "center",
     role: "group",
     borderBottom: "1px solid var(--mdct-colors-gray_lighter)",
-    fontSize: "0.875rem",
+    fontSize: "body_sm",
     ".ds-c-icon--arrow": {
       position: "absolute",
       top: "10px",
       right: "spacer1",
-      fontSize: "13px",
+      fontSize: "body_sm",
       color: "gray",
     },
     "&.selected": {
@@ -271,7 +271,7 @@ const sx = {
   },
   navItemTitle: {
     marginRight: "spacer5",
-    fontSize: "14px",
+    fontSize: "body_sm",
     marginY: "10px",
     textAlign: "left",
     "&.level-1": {

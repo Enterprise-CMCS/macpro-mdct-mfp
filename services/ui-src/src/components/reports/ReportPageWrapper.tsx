@@ -117,8 +117,8 @@ const sx = {
     },
     h3: {
       paddingBottom: "0.75rem",
-      fontSize: "lg",
-      fontWeight: "bold",
+      fontSize: "heading_lg",
+      fontWeight: "heading_lg",
     },
   },
   spinnerContainer: {

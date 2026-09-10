@@ -407,8 +407,8 @@ const sx = {
       border: "1px solid",
       borderColor: "black",
       color: "black",
-      lineHeight: "normal",
-      fontWeight: "bold",
+      lineHeight: "body_sm",
+      fontWeight: "heading_md",
       minWidth: "100px",
       width: "100px",
       ".tablet &, .mobile &": {
@@ -422,11 +422,11 @@ const sx = {
       textAlign: "center",
       wordWrap: "break-word",
       border: "1px solid black",
-      fontWeight: "normal",
+      fontWeight: "body_md",
     },
     "td:first-of-type, tfoot th:first-of-type": {
       background: "gray_lightest",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
       color: "black",
     },
     "tbody tr": {
@@ -434,7 +434,7 @@ const sx = {
     },
     ":last-of-type tbody tr td:last-child, tfoot th": {
       background: "secondary_lightest",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
   },
   // RE&T warning message

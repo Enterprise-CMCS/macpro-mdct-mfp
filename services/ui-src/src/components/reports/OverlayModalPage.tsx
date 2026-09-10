@@ -243,7 +243,7 @@ interface Props {
 const sx = {
   backButton: {
     padding: 0,
-    fontWeight: "normal",
+    fontWeight: "body_sm",
     color: "primary",
     display: "flex",
     position: "relative",
@@ -265,7 +265,7 @@ const sx = {
   dashboardTitle: {
     paddingTop: "spacer2",
     marginBottom: "spacer2",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     color: "gray",
   },
   addEntityButton: {

@@ -50,15 +50,15 @@ const sx = {
   printButton: {
     minWidth: "6rem",
     height: "2.375rem",
-    fontSize: "md",
-    fontWeight: "700",
+    fontSize: "body_md",
+    fontWeight: "heading_md",
     border: "1px solid",
   },
   downloadButton: {
     minWidth: "6rem",
     height: "2.375rem",
-    fontSize: "md",
-    fontWeight: "700",
+    fontSize: "body_md",
+    fontWeight: "heading_md",
     color: "white !important",
     textDecoration: "none !important",
     "&:hover, &:focus": {

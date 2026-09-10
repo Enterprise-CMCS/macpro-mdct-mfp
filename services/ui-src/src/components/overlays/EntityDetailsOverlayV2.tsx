@@ -263,7 +263,7 @@ interface Props {
 const sx = {
   backButton: {
     padding: 0,
-    fontWeight: "normal",
+    fontWeight: "body_sm",
     color: "primary",
     display: "flex",
     position: "relative",
@@ -285,7 +285,7 @@ const sx = {
     marginTop: "spacer4",
   },
   closeOutHeading: {
-    fontSize: "xl",
+    fontSize: "heading_xl",
     marginBottom: "spacer2",
   },
   closeOutHint: {
@@ -307,8 +307,8 @@ const sx = {
     width: "1.375rem",
   },
   subsectionHeading: {
-    fontWeight: "normal",
-    fontSize: "4xl",
+    fontWeight: "heading_3xl",
+    fontSize: "heading_3xl",
     marginTop: "spacer1",
   },
   infoTextBox: {

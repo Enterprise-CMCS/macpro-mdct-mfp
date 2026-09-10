@@ -6,7 +6,6 @@ import {
   Heading,
   Image,
   Text,
-  Tr,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -236,7 +235,7 @@ interface Props extends Omit<FormTable, "tableType"> {
 
 export const sx = {
   error: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     marginBottom: "spacer4",
     a: {
       color: "primary",
@@ -244,7 +243,7 @@ export const sx = {
   },
   box: {
     h2: {
-      fontSize: "2xl",
+      fontSize: "heading_2xl",
       marginBottom: "spacer2",
       marginTop: "spacer4",
       paddingBottom: 0,
@@ -252,7 +251,7 @@ export const sx = {
   },
   percentageText: {
     color: "gray_dark",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     paddingBottom: "spacer2",
   },
   subtitle: {

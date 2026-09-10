@@ -37,8 +37,8 @@ const sx = {
   },
   heading: {
     marginBottom: "spacer3",
-    fontSize: "2xl",
-    fontWeight: "bold",
+    fontSize: "heading_2xl",
+    fontWeight: "heading_2xl",
     color: "black",
   },
   info: {
