@@ -151,7 +151,11 @@ const NavItem = ({
   const currentPath = window.location.pathname;
   const isCurrentPath = optionPath === currentPath;
   return (
-    <Flex sx={sx.navItemFlex} className={isCurrentPath ? "selected" : ""}>
+    <Flex
+      sx={sx.navItemFlex}
+      className={isCurrentPath ? "selected" : ""}
+      aria-current={isCurrentPath}
+    >
       <Text sx={sx.navItemTitle} className={`level-${level}`}>
         {name}
       </Text>
