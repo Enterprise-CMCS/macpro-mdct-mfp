@@ -45,10 +45,17 @@ const HorizontalTable = (
         ))}
       </Thead>
       <Tbody>
-        {rows.map((row: any[]) => (
+        {rows.map((row: any[], rIndex) => (
           <Tr>
             {"length" in row ? (
-              row.map((col) => <Td>{col}</Td>)
+              row.map((col, cIndex) => (
+                <Td
+                  key={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
+                  id={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
+                >
+                  {col}
+                </Td>
+              ))
             ) : (
               <Td colSpan={headers[0].length}>{row}</Td>
             )}
@@ -69,12 +76,14 @@ const HorizontalTable = (
 };
 
 const buildColumns = (
+  id: string,
   label: string,
   value: string,
-  index: number,
+  rIndex: number,
+  cIndex: number,
   style: { background: string; color: string },
 ) => {
-  if (index == 0) {
+  if (cIndex == 0) {
     return (
       <Box
         background={style.background}
@@ -82,6 +91,8 @@ const buildColumns = (
         color={style.color}
         width="100%"
         padding=".75rem"
+        key={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
+        id={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
       >
         {value}
       </Box>
@@ -94,6 +105,8 @@ const buildColumns = (
       padding=".75rem"
       flexFlow={{ base: "column", sm: "row" }}
       textAlign="left"
+      key={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
+      id={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
     >
       <Box flex="1 1 50%" alignSelf={{ base: "start", sm: "center" }}>
         {label}
@@ -103,22 +116,27 @@ const buildColumns = (
   );
 };
 
-const VerticalTable = (header: string[][], rows: any[], foot: string[][]) => {
+const VerticalTable = (
+  id: string,
+  header: string[][],
+  rows: any[],
+  foot: string[][],
+) => {
   return (
     <VStack sx={sx.mobile}>
-      {rows.map((row) =>
+      {rows.map((row, rIndex) =>
         "length" in row
           ? row.map((col: any, index: number) => {
-              return buildColumns(header[0][index], col, index, {
+              return buildColumns(id, header[0][index], col, rIndex, index, {
                 background: "primary_darkest",
                 color: "white",
               });
             })
           : row,
       )}
-      {foot.map((row) =>
+      {foot.map((row, rIndex) =>
         header[0].map((col: string, index: number) => {
-          return buildColumns(col, row[index], index, {
+          return buildColumns(id, col, row[index], rIndex, index, {
             background: "gray_lighter",
             color: "base",
           });
@@ -145,7 +163,7 @@ export const ResponsiveTable = (data: {
         {HorizontalTable(id, title, headers, mergedRows, foot)}
       </Hide>
       <Show below="lg" key="table-mobile">
-        {VerticalTable(headers, mergedRows, foot)}
+        {VerticalTable(id, headers, mergedRows, foot)}
       </Show>
     </>
   );
