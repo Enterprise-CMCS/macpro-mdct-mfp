@@ -30,10 +30,14 @@ const HorizontalTable = (
         <VisuallyHidden>{title}</VisuallyHidden>
       </TableCaption>
       <Thead>
-        {headers.map((row) => (
+        {headers.map((row, rIndex) => (
           <Tr>
-            {row.map((col) => (
-              <Th textAlign={rightAlign.includes(col) ? "right" : "left"}>
+            {row.map((col, cIndex) => (
+              <Th
+                key={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
+                id={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
+                textAlign={rightAlign.includes(col) ? "right" : "left"}
+              >
                 {col}
               </Th>
             ))}
@@ -156,12 +160,12 @@ export const sx = {
     label: {
       margin: 0,
     },
-    ".ds-c-inline-error":{
-      color:"error_lighter"
+    ".ds-c-inline-error": {
+      color: "error_lighter",
     },
     ".no-label": {
       width: "100%",
-      paddingLeft: "0.25rem"
-    }
+      paddingLeft: "0.25rem",
+    },
   },
 };
