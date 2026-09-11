@@ -156,5 +156,12 @@ export const sx = {
     label: {
       margin: 0,
     },
+    ".ds-c-inline-error":{
+      color:"error_lighter"
+    },
+    ".no-label": {
+      width: "100%",
+      paddingLeft: "0.25rem"
+    }
   },
 };
