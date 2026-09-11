@@ -12,12 +12,7 @@ import { useFormContext } from "react-hook-form";
 // components
 import {
   Flex,
-  Hide,
-  Show,
-  Td,
   Text,
-  Th,
-  Tr,
   VisuallyHidden,
 } from "@chakra-ui/react";
 import { EntityContext, ReportContext } from "components";
@@ -284,7 +279,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       const dynamicLabelId = `${tempDynamicId}_dynamic-label`;
 
       return (
-        <Flex>
+        <Flex id={dynamicId}>
           <Flex sx={sx.label}>
             <label htmlFor={tempDynamicId} id={dynamicLabelId}>
               {cell.props?.dynamicLabel}

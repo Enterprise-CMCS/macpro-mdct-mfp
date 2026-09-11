@@ -1,11 +1,6 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
-import {
-  Button,
-  Flex,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, Image, Text } from "@chakra-ui/react";
 import { DynamicTableContext } from "components";
 // types
 import {
@@ -42,8 +37,6 @@ export const DynamicTableRows = (
   const dynamicLabel = dynamicRowsTemplate.props?.dynamicFields.find(
     (field: FormField) => field.props?.dynamicLabel,
   )?.props?.dynamicLabel;
-  // Refs to help keep track of rows
-  const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const [localDynamicRows, setLocalDynamicRows] = useState<DynamicFieldShape[]>(
     [],
   );
@@ -72,24 +65,24 @@ export const DynamicTableRows = (
   }, [localFieldData]);
 
   // Scroll to newly added row and focus first interactive element
-  // useEffect(() => {
-  //   if (focusedRowIndex === null) return;
+  useEffect(() => {
+    if (focusedRowIndex === null) return;
 
-  //   const rowElement = rowRefs.current[focusedRowIndex];
-  //   if (!rowElement) return;
+    const rowElement = document.getElementById(localDynamicRows[focusedRowIndex]?.id);
+    if (!rowElement) return;
 
-  //   rowElement.scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "center",
-  //   });
+    rowElement.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
 
-  //   setTimeout(() => {
-  //     const firstInput = rowElement.querySelector<HTMLElement>(
-  //       'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])',
-  //     );
-  //     firstInput?.focus();
-  //   }, 100);
-  // }, [focusedRowIndex, localDynamicRows]);
+    setTimeout(() => {
+      const firstInput = rowElement.querySelector<HTMLElement>(
+        'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])',
+      );
+      firstInput?.focus();
+    }, 100);
+  }, [focusedRowIndex, localDynamicRows]);
 
   if (!!emptyTableMessage && !hasStaticRows && localDynamicRows.length === 0)
     return [<Text sx={sx.emptyTableMessage}>{emptyTableMessage}</Text>];
