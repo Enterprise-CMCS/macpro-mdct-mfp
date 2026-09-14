@@ -17,6 +17,14 @@ import {
 
 const rightAlign = ["Total State / Territory Share", "Total Federal Share"];
 
+const getHeaderWidthByLabel = (label: string) => {
+  if(label === "Actions")
+    return "7%";
+
+  return "";
+}
+
+
 const HorizontalTable = (
   id: string,
   title: string | undefined,
@@ -37,6 +45,7 @@ const HorizontalTable = (
                 key={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
                 id={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
                 textAlign={rightAlign.includes(col) ? "right" : "left"}
+                width={getHeaderWidthByLabel(col)}
               >
                 {col}
               </Th>
@@ -109,7 +118,7 @@ const buildColumns = (
       id={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
     >
       <Box flex="1 1 50%" alignSelf={{ base: "start", sm: "center" }}>
-        {label}
+        {label ?? ""}
       </Box>
       <Box alignSelf={{ base: "start", sm: "center" }}>{value}</Box>
     </Flex>
@@ -127,7 +136,7 @@ const VerticalTable = (
       {rows.map((row, rIndex) =>
         "length" in row
           ? row.map((col: any, index: number) => {
-              return buildColumns(id, header[0][index], col, rIndex, index, {
+              return buildColumns(id, header?.[0]?.[index], col, rIndex, index, {
                 background: "primary_darkest",
                 color: "white",
               });
@@ -151,7 +160,7 @@ export const ResponsiveTable = (data: {
   title: string | undefined;
   headers: any[];
   rows: any[];
-  dynamicRows: any[] | undefined;
+  dynamicRows?: any[] | undefined;
   foot: any[];
 }) => {
   const { id, title, headers, rows, dynamicRows, foot } = data;
