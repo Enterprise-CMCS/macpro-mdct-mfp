@@ -12,14 +12,8 @@ import {
   Button,
   Heading,
   Image,
-  Table,
-  TableCaption,
-  Tbody,
   Text,
-  Tfoot,
-  Thead,
   useDisclosure,
-  VisuallyHidden,
 } from "@chakra-ui/react";
 import { InlineError } from "@cmsgov/design-system";
 import {
@@ -58,7 +52,6 @@ export const EntityModalTable = ({
   const formErrorState = form?.formState?.errors || {};
   const [errorMessage, setErrorMessage] = useState<ReactNode>(undefined);
   const errorId = `${tableId}__error`;
-  const ariaProps = errorMessage ? { "aria-describedby": errorId } : {};
   const InlineErrorShim = shimComponent(InlineError);
 
   useEffect(() => {

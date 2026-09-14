@@ -450,19 +450,6 @@ const TestComponent = () => {
         rows: [],
         foot: [],
       })}
-
-      {/* <Table aria-label="Table 3">
-        <Thead>
-          {generateRows({
-            columnCount: 3,
-            dynamicRowsTemplate,
-            row: ["Heading A", "Heading B", "Heading C"],
-            rowIndex: 0,
-            section: "thead",
-            showEditHeader: false,
-          })}
-        </Thead>
-      </Table> */}
     </div>
   );
 };
