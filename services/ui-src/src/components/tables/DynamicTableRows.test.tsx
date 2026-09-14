@@ -19,6 +19,7 @@ import {
   mockDynamicRowsTemplateWithModalForm,
 } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
+import { ResponsiveTable } from "./ResponsiveTable";
 
 const mockTrigger = vi.fn();
 const mockRhfMethods = {
@@ -76,16 +77,24 @@ const mockProps = {
   tableId: mockTableId,
 };
 
-const dynamicTableRowsComponent = (props = mockProps) => (
-  <DynamicTableProvider>
-    <Table>
-      <Tbody>
-        //TO DO: FIX
-        {/* <DynamicTableRows {...props} /> */}
-      </Tbody>
-    </Table>
-  </DynamicTableProvider>
-);
+const DynamicTableRowsComponent = ({ props = mockProps }) => {
+  return ResponsiveTable({
+    id: "",
+    title: "",
+    headers: [],
+    rows: [],
+    dynamicRows: DynamicTableRows(
+      props.tableId,
+      props.formPercentage,
+      props.disabled,
+      props.dynamicRowsTemplate,
+      props.hasDynamicModalForm,
+      props.hasStaticRows,
+      props.formData,
+    ),
+    foot: [],
+  });
+};
 
 describe("<DynamicTableRows />", () => {
   test("delete row", async () => {
@@ -95,10 +104,14 @@ describe("<DynamicTableRows />", () => {
       report: {
         fieldData: mockProps.formData,
       },
+      localFieldData: mockProps.formData,
     });
     mockGetValues(undefined);
-    render(dynamicTableRowsComponent());
-
+    render(
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent />
+      </DynamicTableProvider>,
+    );
     const row = screen.getByRole("row", {
       name: `Other: $ % Delete Other: ${mockDynamicFieldId}`,
     });
@@ -131,7 +144,11 @@ describe("<DynamicTableRows />", () => {
       },
     });
     mockGetValues(undefined);
-    render(dynamicTableRowsComponent());
+    render(
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent />
+      </DynamicTableProvider>,
+    );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
     const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
@@ -176,7 +193,11 @@ describe("<DynamicTableRows />", () => {
     });
     mockGetValues(undefined);
 
-    render(dynamicTableRowsComponent(updatedProps));
+    render(
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent props={updatedProps} />
+      </DynamicTableProvider>,
+    );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
     const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
@@ -209,7 +230,11 @@ describe("<DynamicTableRows />", () => {
       },
     });
     mockGetValues(undefined);
-    render(dynamicTableRowsComponent());
+    render(
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent />
+      </DynamicTableProvider>,
+    );
 
     const rows = screen.queryAllByRole("row");
     expect(rows).toHaveLength(0);
@@ -234,12 +259,12 @@ describe("<DynamicTableRows />", () => {
     });
     mockGetValues(undefined);
 
+    const newProps = { ...mockProps, dynamicRowsTemplate, formData };
+
     return render(
-      dynamicTableRowsComponent({
-        ...mockProps,
-        dynamicRowsTemplate,
-        formData,
-      })
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent props={newProps} />
+      </DynamicTableProvider>,
     );
   };
 
@@ -257,7 +282,7 @@ describe("<DynamicTableRows />", () => {
                   dynamicLabel: "Misc. Costs:",
                 },
               }
-            : field
+            : field,
       ),
     },
   };
@@ -302,10 +327,10 @@ describe("<DynamicTableRows />", () => {
         expect(
           screen.getByRole("button", {
             name: label,
-          })
+          }),
         ).toBeVisible();
       });
-    }
+    },
   );
 
   describe("modal", () => {
@@ -330,7 +355,11 @@ describe("<DynamicTableRows />", () => {
       });
       mockGetValues(undefined);
 
-      render(dynamicTableRowsComponent(updatedProps));
+      render(
+        <DynamicTableProvider>
+          <DynamicTableRowsComponent props={updatedProps} />
+        </DynamicTableProvider>,
+      );
 
       const editButton = screen.getByRole("button", {
         name: `Edit ${mockDynamicFieldId}`,
@@ -355,13 +384,21 @@ describe("<DynamicTableRows />", () => {
       });
       mockGetValues(undefined);
 
-      render(dynamicTableRowsComponent(updatedProps));
+      render(
+        <DynamicTableProvider>
+          <DynamicTableRowsComponent props={updatedProps} />
+        </DynamicTableProvider>,
+      );
 
       expect(
-        screen.getByText("Mock dynamic empty table message")
+        screen.getByText("Mock dynamic empty table message"),
       ).toBeVisible();
     });
   });
 
-  testA11yAct(dynamicTableRowsComponent());
+  testA11yAct(
+    <DynamicTableProvider>
+      <DynamicTableRowsComponent />
+    </DynamicTableProvider>,
+  );
 });

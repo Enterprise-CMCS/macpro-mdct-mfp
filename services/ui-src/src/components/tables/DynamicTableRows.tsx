@@ -68,7 +68,9 @@ export const DynamicTableRows = (
   useEffect(() => {
     if (focusedRowIndex === null) return;
 
-    const rowElement = document.getElementById(localDynamicRows[focusedRowIndex]?.id);
+    const rowElement = document.getElementById(
+      localDynamicRows[focusedRowIndex]?.id,
+    );
     if (!rowElement) return;
 
     rowElement.scrollIntoView({
