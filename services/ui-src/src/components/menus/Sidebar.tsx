@@ -108,6 +108,7 @@ const NavSection = ({ section, level, sidebarOpen }: NavSectionProps) => {
           to={path}
           variant="unstyled"
           sx={sx.navLinkSansChildren}
+          aria-current={path === pathname}
         >
           <NavItem
             name={name}
@@ -151,11 +152,7 @@ const NavItem = ({
   const currentPath = window.location.pathname;
   const isCurrentPath = optionPath === currentPath;
   return (
-    <Flex
-      sx={sx.navItemFlex}
-      className={isCurrentPath ? "selected" : ""}
-      aria-current={isCurrentPath}
-    >
+    <Flex sx={sx.navItemFlex} className={isCurrentPath ? "selected" : ""}>
       <Text sx={sx.navItemTitle} className={`level-${level}`}>
         {name}
       </Text>
