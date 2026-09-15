@@ -24,6 +24,7 @@ import {
 
 export const ExportedReportFieldTable = ({
   section,
+  heading,
   headingLevel = "h3",
 }: Props) => {
   const { report } = useStore();
@@ -80,7 +81,7 @@ export const ExportedReportFieldTable = ({
   return (
     <>
       {calculationTables.length > 0 &&
-        renderCalculationTables(section, fieldData, formPercentage)}
+        renderCalculationTables(section, fieldData, formPercentage, heading)}
 
       {!isTableWithNoFormFields && (
         <>
@@ -94,6 +95,7 @@ export const ExportedReportFieldTable = ({
             className={formHasOnlyDynamicFields ? "two-column" : ""}
             content={{
               headRow: headRowItems,
+              caption: `${heading} ${nonTableFields?.[0]?.props?.title ?? ""}`,
             }}
             data-testid="exportTable"
           >
@@ -190,6 +192,6 @@ export const renderGeneralInformation = (
 };
 export interface Props {
   section: StandardReportPageShape | DrawerReportPageShape;
-  showHintText?: boolean;
+  heading?: string;
   headingLevel?: HeadingLevel;
 }
