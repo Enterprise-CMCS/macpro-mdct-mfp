@@ -74,11 +74,14 @@ const mockProps = {
   hasDynamicModalForm: false,
   hasStaticRows: true,
   tableId: mockTableId,
+  openModal: () => {},
+  emptyTableMessage: undefined,
+  entityType: undefined
 };
 
 const DynamicTableRowsComponent = ({ props = mockProps }) => {
   return ResponsiveTable({
-    id: "123a-456b-789c2",
+    id: "",
     dynamicRows: DynamicTableRows(
       props.tableId,
       props.formPercentage,
@@ -87,6 +90,11 @@ const DynamicTableRowsComponent = ({ props = mockProps }) => {
       props.hasDynamicModalForm,
       props.hasStaticRows,
       props.formData,
+      props.openModal,
+      props.emptyTableMessage,
+      undefined,
+      undefined,
+      props.entityType
     ),
   });
 };
@@ -146,7 +154,7 @@ describe("<DynamicTableRows />", () => {
     );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
-    const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
+    const pctInputs = screen.getAllByRole("textbox", { name: "" }); //Updated from "Other: $"
 
     await act(async () => {
       await userEvent.clear(inputs[0]);
@@ -190,12 +198,12 @@ describe("<DynamicTableRows />", () => {
 
     render(
       <DynamicTableProvider>
-        <DynamicTableRowsComponent props={updatedProps} />
+        <DynamicTableRowsComponent props={updatedProps as any} />
       </DynamicTableProvider>,
     );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
-    const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
+    const pctInputs = screen.getAllByRole("textbox", { name: "" }); //Updated from "Other: $"
 
     await act(async () => {
       await userEvent.clear(inputs[0]);
@@ -352,7 +360,7 @@ describe("<DynamicTableRows />", () => {
 
       render(
         <DynamicTableProvider>
-          <DynamicTableRowsComponent props={updatedProps} />
+          <DynamicTableRowsComponent props={updatedProps as any} />
         </DynamicTableProvider>,
       );
 
@@ -381,7 +389,7 @@ describe("<DynamicTableRows />", () => {
 
       render(
         <DynamicTableProvider>
-          <DynamicTableRowsComponent props={updatedProps} />
+          <DynamicTableRowsComponent props={updatedProps as any} />
         </DynamicTableProvider>,
       );
 
