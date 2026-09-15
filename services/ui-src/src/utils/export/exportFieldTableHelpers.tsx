@@ -311,10 +311,10 @@ export const sx = {
       borderColor: "gray.400",
     },
     "& tbody tr td span": {
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
     "& tfoot tr th": {
-      fontWeight: "bold",
+      fontWeight: "heading_md",
       color: "black",
     },
     "& tfoot tr:first-of-type": {
@@ -327,19 +327,19 @@ export const sx = {
     },
   },
   heading: {
-    fontSize: "xl",
-    fontWeight: "bold",
+    fontSize: "heading_xl",
+    fontWeight: "heading_xl",
     color: "black",
   },
   subHeading: {
-    fontSize: "xl",
+    fontSize: "heading_xl",
     "& + table": {
       marginTop: "spacer2",
     },
   },
   tableSubHeading: {
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     color: "gray_dark",
     marginTop: "spacer2",
   },
@@ -351,20 +351,20 @@ export const sx = {
     marginBottom: 0,
   },
   entityTableSectionHeading: {
-    fontSize: "lg",
-    fontWeight: "bold",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
     marginBottom: "spacer3",
   },
   entityTableHeading: {
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     marginBottom: "spacer2",
   },
   tableCommonStyle: {
     "& th, & td": {
       paddingX: "spacer1",
       paddingY: "spacer1",
-      fontSize: "sm",
+      fontSize: "body_sm",
     },
     "& thead tr": {
       backgroundColor: "gray.50",

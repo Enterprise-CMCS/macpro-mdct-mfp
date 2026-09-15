@@ -98,8 +98,8 @@ const sx = {
   },
   headerText: {
     marginBottom: "spacer2",
-    fontSize: "2rem",
-    fontWeight: "normal",
+    fontSize: "heading_3xl",
+    fontWeight: "heading_3xl",
   },
   card: {
     marginBottom: "spacer4",

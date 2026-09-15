@@ -37,8 +37,8 @@ const sx = {
   enterButton: {
     width: "4.25rem",
     height: "1.75rem",
-    fontSize: "md",
-    fontWeight: "normal",
+    fontSize: "body_md",
+    fontWeight: "body_md",
     border: "1px solid",
     borderColor: "gray_lighter",
     color: "primary",

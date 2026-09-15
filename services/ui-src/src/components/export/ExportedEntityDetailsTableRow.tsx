@@ -31,7 +31,7 @@ export const ExportedEntityDetailsTableRow = ({
         {formFieldInfo.label || formFieldInfo.hint ? (
           <>
             {formFieldInfo.label && (
-              <Text sx={sx.fieldLabel} fontSize={"sm"}>
+              <Text sx={sx.fieldLabel} fontSize={"body_sm"}>
                 {!isDynamicField ? (
                   optional ? (
                     <Box>
@@ -94,15 +94,15 @@ const sx = {
     },
   },
   fieldLabel: {
-    fontSize: "sm",
-    fontWeight: "bold",
+    fontSize: "heading_sm",
+    fontWeight: "heading_sm_bold",
     ".optional-text": {
-      fontWeight: "lighter",
+      fontWeight: "heading_sm_regular",
     },
   },
   fieldHint: {
-    lineHeight: "lg",
-    fontSize: "sm",
+    lineHeight: "body_lg",
+    fontSize: "body_sm",
     color: "base",
   },
 };

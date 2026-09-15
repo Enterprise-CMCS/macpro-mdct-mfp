@@ -267,12 +267,12 @@ const sx = {
       ".entityResponse": {
         paddingBottom: "spacer1",
         p: {
-          lineHeight: "1.25rem",
-          fontSize: "sm",
+          lineHeight: "body_sm",
+          fontSize: "body_sm",
         },
       },
       p: {
-        lineHeight: "1.25rem",
+        lineHeight: "body_sm",
         marginBottom: "spacer1",
       },
     },
@@ -282,7 +282,7 @@ const sx = {
   },
   entityName: {
     marginBottom: "spacer2",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
   },
   noResponse: {
     color: "error_darker",

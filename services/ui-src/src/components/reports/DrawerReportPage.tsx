@@ -190,8 +190,8 @@ const sx = {
     paddingBottom: "0.75rem",
     borderBottom: "1.5px solid var(--mdct-colors-gray_lighter)",
     color: "gray",
-    fontSize: "lg",
-    fontWeight: "bold",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
   },
   entityRow: {
     justifyContent: "space-between",
@@ -202,14 +202,14 @@ const sx = {
     borderBottom: "1.5px solid var(--mdct-colors-gray_lighter)",
   },
   entityName: {
-    fontSize: "lg",
-    fontWeight: "bold",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
     flexGrow: 1,
     marginLeft: "2.25rem",
   },
   missingEntityMessage: {
     paddingTop: "spacer2",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     a: {
       color: "primary",
       textDecoration: "underline",
@@ -221,7 +221,7 @@ const sx = {
   enterButton: {
     width: "4.25rem",
     height: "1.75rem",
-    fontSize: "md",
-    fontWeight: "normal",
+    fontSize: "body_md",
+    fontWeight: "body_md",
   },
 };

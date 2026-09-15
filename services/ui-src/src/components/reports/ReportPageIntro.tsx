@@ -78,11 +78,11 @@ const sx = {
   },
   smallHeading: {
     color: "gray",
-    fontSize: "md",
+    fontSize: "heading_md",
   },
   largeHeading: {
-    fontWeight: "normal",
-    fontSize: "4xl",
+    fontWeight: "heading_3xl",
+    fontSize: "heading_3xl",
     marginTop: "spacer1",
   },
   infoTextBox: {
@@ -130,7 +130,7 @@ const sx = {
     },
     ".mdct-smalltext": {
       color: "gray",
-      fontSize: "xs",
+      fontSize: "body_xs",
       marginBottom: "spacer5",
       marginTop: "0.625rem",
     },
@@ -138,8 +138,8 @@ const sx = {
       th: {
         borderColor: "gray_lighter",
         color: "gray",
-        fontSize: "sm",
-        fontWeight: "600",
+        fontSize: "heading_sm",
+        fontWeight: "heading_sm_bold",
         textTransform: "capitalize",
       },
       td: {

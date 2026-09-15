@@ -166,7 +166,7 @@ export const AdminReview = ({
           <Text sx={sx.unlockModalBody}>
             {adminInfo.modal.approveModal.body}
           </Text>
-          <Text fontWeight="bold">Enter APPROVE to confirm.</Text>
+          <Text fontWeight="heading_md">Enter APPROVE to confirm.</Text>
           <Input
             id="approve"
             name="approve"
@@ -232,7 +232,7 @@ const sx = {
     },
   },
   infoHeading: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     marginBottom: "spacer1",
   },
   list: {
@@ -293,7 +293,7 @@ const sx = {
       },
     },
     ".mobile &": {
-      fontSize: "sm",
+      fontSize: "body_sm",
     },
   },
 };

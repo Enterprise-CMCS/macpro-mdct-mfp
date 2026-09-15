@@ -126,8 +126,8 @@ const sx = {
   },
   symbolOverlay: {
     position: "absolute",
-    fontSize: "lg",
-    fontWeight: "700",
+    fontSize: "body_lg",
+    fontWeight: "heading_lg",
     "&.nested": {
       bottom: "15px",
       left: "245px",

@@ -299,7 +299,7 @@ const AdminReleaseButton = ({
       className="admin-action-button"
       variant="transparent"
       disabled={isDisabled}
-      sx={{ ...sxOverride.adminActionButton, fontSize: "md" }}
+      sx={{ ...sxOverride.adminActionButton, fontSize: "body_md" }}
       onClick={() => releaseReport!(report)}
     >
       {releasing && reportId === report.id ? <Spinner size="md" /> : "Unlock"}
@@ -329,7 +329,7 @@ const AdminArchiveButton = ({
         <Button
           className="admin-action-button"
           variant="transparent"
-          sx={{ ...sxOverride.adminActionButton, fontSize: "md" }}
+          sx={{ ...sxOverride.adminActionButton, fontSize: "body_md" }}
           onClick={() => archive(report)}
         >
           Archive
@@ -361,7 +361,7 @@ const sx = {
       borderBottom: "1px solid",
       borderColor: "gray_light",
       color: "gray",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
     tr: {
       borderBottom: "1px solid",
@@ -389,8 +389,8 @@ const sx = {
     },
   },
   copyOverText: {
-    fontSize: "xs",
-    fontWeight: "300",
+    fontSize: "body_xs",
+    fontWeight: "body_xs",
     color: "gray",
   },
   archivedText: {
@@ -398,9 +398,9 @@ const sx = {
     alignItems: "center",
     justifyContent: "center",
     height: "1.75rem",
-    lineHeight: "1.75rem",
-    fontSize: "md",
-    fontWeight: "normal",
+    lineHeight: "body_md",
+    fontSize: "body_md",
+    fontWeight: "body_md",
   },
   submissionCountCell: {
     minWidth: "2rem",
@@ -416,7 +416,7 @@ const sx = {
     py: 0,
     textDecoration: "underline",
     color: "primary",
-    fontSize: "md",
-    fontWeight: 700,
+    fontSize: "body_md",
+    fontWeight: "heading_md",
   },
 };

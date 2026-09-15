@@ -244,7 +244,7 @@ const sx = {
   },
   errorText: {
     color: "error_dark",
-    fontSize: "0.75rem",
+    fontSize: "body_xs",
     marginBottom: "spacer1",
   },
   entityName: {
@@ -253,7 +253,7 @@ const sx = {
       margin: "0.3rem auto",
       padding: 0,
       listStyleType: "none",
-      lineHeight: "1.3rem",
+      lineHeight: "body_md",
       width: "15rem",
       ".mobile &": {
         margin: "auto",
@@ -262,8 +262,8 @@ const sx = {
         wordWrap: "break-word",
         whiteSpace: "break-spaces",
         "&:first-of-type": {
-          fontWeight: "bold",
-          fontSize: "md",
+          fontWeight: "heading_md",
+          fontSize: "body_md",
           marginBottom: "0rem",
         },
       },
@@ -281,19 +281,19 @@ const sx = {
     },
   },
   editNameButton: {
-    fontWeight: "normal",
+    fontWeight: "body_md",
     textDecoration: "underline",
     color: "primary",
   },
   editEntityButton: {
     padding: 0,
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     width: "5rem",
     marginRight: "2.875rem",
   },
   editOtherEntityButton: {
     padding: 0,
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     minWidth: "5rem",
   },
   deleteButton: {

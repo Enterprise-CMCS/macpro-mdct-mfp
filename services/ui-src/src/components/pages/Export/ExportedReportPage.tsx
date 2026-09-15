@@ -237,9 +237,9 @@ const sx = {
     },
   },
   heading: {
-    fontWeight: "300",
-    lineHeight: "lineHeights.heading",
-    fontSize: "4xl",
+    fontWeight: "heading_3xl",
+    lineHeight: "heading_3xl",
+    fontSize: "heading_3xl",
   },
 };
 
@@ -252,7 +252,7 @@ export const sxSharedExportStyles = {
     "tr, th": {
       borderBottom: "1px solid",
       borderColor: "gray_lighter",
-      lineHeight: "base",
+      lineHeight: "body_sm",
       verticalAlign: "top",
     },
     thead: {
@@ -262,16 +262,16 @@ export const sxSharedExportStyles = {
     td: {
       border: 0,
       color: "base",
-      fontWeight: "normal",
+      fontWeight: "body_sm",
       padding: "spacer",
       paddingLeft: 0,
       // indicator or response text
       p: {
-        lineHeight: "1.25rem",
+        lineHeight: "body_sm",
         // hint text
         "& + div": {
           marginTop: "spacer_half",
-          lineHeight: "1.25rem",
+          lineHeight: "body_sm",
         },
       },
       ".shrink &": {
@@ -279,13 +279,13 @@ export const sxSharedExportStyles = {
         paddingY: "spacer_half",
       },
       ".mobile &": {
-        fontSize: "xs",
+        fontSize: "body_xs",
       },
     },
     th: {
       color: "gray",
-      fontWeight: "bold",
-      lineHeight: "lg",
+      fontWeight: "heading_sm_bold",
+      lineHeight: "heading_sm",
       padding: 0,
       paddingBottom: "spacer_half",
       paddingRight: "spacer1",

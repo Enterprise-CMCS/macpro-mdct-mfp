@@ -243,7 +243,7 @@ const sx = {
       },
     },
     ".mobile &": {
-      fontSize: "sm",
+      fontSize: "body_sm",
     },
   },
 };
