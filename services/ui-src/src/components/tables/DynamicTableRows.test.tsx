@@ -107,7 +107,6 @@ describe("<DynamicTableRows />", () => {
       report: {
         fieldData: mockProps.formData,
       },
-      localFieldData: mockProps.formData,
     });
     mockGetValues(undefined);
     render(
@@ -154,7 +153,7 @@ describe("<DynamicTableRows />", () => {
     );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
-    const pctInputs = screen.getAllByRole("textbox", { name: "" }); //Updated from "Other: $"
+    const pctInputs = screen.getAllByRole("textbox", { name: "" }); //Changed from "Other: $"
 
     await act(async () => {
       await userEvent.clear(inputs[0]);
@@ -203,7 +202,7 @@ describe("<DynamicTableRows />", () => {
     );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
-    const pctInputs = screen.getAllByRole("textbox", { name: "" }); //Updated from "Other: $"
+    const pctInputs = screen.getAllByRole("textbox", { name: "" }); //Changed from "Other: $"
 
     await act(async () => {
       await userEvent.clear(inputs[0]);
