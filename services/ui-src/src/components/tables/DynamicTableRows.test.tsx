@@ -3,7 +3,6 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
-import { Table, Tbody } from "@chakra-ui/react";
 import { DynamicTableRows, DynamicTableProvider } from "components";
 // types
 import { EntityType, ReportType } from "types";
@@ -79,10 +78,7 @@ const mockProps = {
 
 const DynamicTableRowsComponent = ({ props = mockProps }) => {
   return ResponsiveTable({
-    id: "",
-    title: "",
-    headers: [],
-    rows: [],
+    id: "123a-456b-789c2",
     dynamicRows: DynamicTableRows(
       props.tableId,
       props.formPercentage,
@@ -92,7 +88,6 @@ const DynamicTableRowsComponent = ({ props = mockProps }) => {
       props.hasStaticRows,
       props.formData,
     ),
-    foot: [],
   });
 };
 

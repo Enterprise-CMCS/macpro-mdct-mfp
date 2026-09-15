@@ -18,68 +18,70 @@ import {
 const rightAlign = ["Total State / Territory Share", "Total Federal Share"];
 
 const getHeaderWidthByLabel = (label: string) => {
-  if(label === "Actions")
-    return "7%";
-
-  return "";
-}
-
+  return (label === "Actions") ? "7%" : "";
+};
 
 const HorizontalTable = (
   id: string,
   title: string | undefined,
-  headers: string[][],
-  rows: any[],
-  foot: string[][],
+  headers?: string[][],
+  rows?: any[],
+  foot?: string[][],
 ) => {
   return (
     <Table id={id} variant="calculation">
-      <TableCaption placement="top">
+      {title && <TableCaption placement="top">
         <VisuallyHidden>{title}</VisuallyHidden>
-      </TableCaption>
-      <Thead>
-        {headers.map((row, rIndex) => (
-          <Tr>
-            {row.map((col, cIndex) => (
-              <Th
-                key={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
-                id={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
-                textAlign={rightAlign.includes(col) ? "right" : "left"}
-                width={getHeaderWidthByLabel(col)}
-              >
-                {col}
-              </Th>
-            ))}
-          </Tr>
-        ))}
-      </Thead>
-      <Tbody>
-        {rows.map((row: any[], rIndex) => (
-          <Tr>
-            {"length" in row ? (
-              row.map((col, cIndex) => (
-                <Td
-                  key={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
-                  id={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
+      </TableCaption>}
+      {headers && (
+        <Thead>
+          {headers.map((row, rIndex) => (
+            <Tr>
+              {row.map((col, cIndex) => (
+                <Th
+                  key={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
+                  id={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
+                  textAlign={rightAlign.includes(col) ? "right" : "left"}
+                  width={getHeaderWidthByLabel(col)}
                 >
                   {col}
-                </Td>
-              ))
-            ) : (
-              <Td colSpan={headers[0].length}>{row}</Td>
-            )}
-          </Tr>
-        ))}
-      </Tbody>
-      <Tfoot>
-        {foot.map((row) => (
-          <Tr>
-            {row.map((col) => (
-              <Td>{col}</Td>
-            ))}
-          </Tr>
-        ))}
-      </Tfoot>
+                </Th>
+              ))}
+            </Tr>
+          ))}
+        </Thead>
+      )}
+      {rows && (
+        <Tbody>
+          {rows.map((row: any[], rIndex) => (
+            <Tr>
+              {"length" in row ? (
+                row.map((col, cIndex) => (
+                  <Td
+                    key={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
+                    id={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
+                  >
+                    {col}
+                  </Td>
+                ))
+              ) : (
+                <Td colSpan={rows.length}>{row}</Td>
+              )}
+            </Tr>
+          ))}
+        </Tbody>
+      )}
+      {foot && (
+        <Tfoot>
+          {foot.map((row) => (
+            <Tr>
+              {row.map((col) => (
+                <Td>{col}</Td>
+              ))}
+            </Tr>
+          ))}
+        </Tfoot>
+      )}
     </Table>
   );
 };
@@ -136,10 +138,17 @@ const VerticalTable = (
       {rows.map((row, rIndex) =>
         "length" in row
           ? row.map((col: any, index: number) => {
-              return buildColumns(id, header?.[0]?.[index], col, rIndex, index, {
-                background: "primary_darkest",
-                color: "white",
-              });
+              return buildColumns(
+                id,
+                header?.[0]?.[index],
+                col,
+                rIndex,
+                index,
+                {
+                  background: "primary_darkest",
+                  color: "white",
+                },
+              );
             })
           : row,
       )}
@@ -157,14 +166,14 @@ const VerticalTable = (
 
 export const ResponsiveTable = (data: {
   id: string;
-  title: string | undefined;
-  headers: any[];
-  rows: any[];
-  dynamicRows?: any[] | undefined;
-  foot: any[];
+  title?: string;
+  headers?: any[];
+  rows?: any[];
+  dynamicRows?: any[];
+  foot?: any[];
 }) => {
   const { id, title, headers, rows, dynamicRows, foot } = data;
-  const mergedRows = [...rows, ...(dynamicRows ?? [])];
+  const mergedRows = [...rows ?? [], ...(dynamicRows ?? [])];
 
   return (
     <>
@@ -172,7 +181,7 @@ export const ResponsiveTable = (data: {
         {HorizontalTable(id, title, headers, mergedRows, foot)}
       </Hide>
       <Show below="lg" key="table-mobile">
-        {VerticalTable(id, headers, mergedRows, foot)}
+        {VerticalTable(id, headers ?? [], mergedRows, foot ?? [])}
       </Show>
     </>
   );
