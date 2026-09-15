@@ -95,14 +95,12 @@ const buildColumns = (
   value: string,
   rIndex: number,
   cIndex: number,
-  style: { background: string; color: string }
+  style: {}
 ) => {
   if (cIndex == 0) {
     return (
       <Box
-        background={style.background}
-        fontWeight="bold"
-        color={style.color}
+        sx={style}
         width="100%"
         padding=".75rem"
         key={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
@@ -151,20 +149,21 @@ const VerticalTable = (
                 col,
                 rIndex,
                 index,
-                {
-                  background: "primary_darkest",
-                  color: "white",
-                }
+                sx.mobile.cellHeader
               );
             })
           : row
       )}
       {foot.map((row, rIndex) =>
         header[0].map((col: string, index: number) => {
-          return buildColumns(id, col, row[index], rIndex, index, {
-            background: "gray_lighter",
-            color: "base",
-          });
+          return buildColumns(
+            id,
+            col,
+            row[index],
+            rIndex,
+            index,
+            sx.mobile.cellDefault
+          );
         })
       )}
     </VStack>
@@ -204,12 +203,21 @@ export const sx = {
     label: {
       margin: 0,
     },
-    ".ds-c-inline-error": {
-      color: "error_lighter",
-    },
     ".no-label": {
       width: "100%",
       paddingLeft: "0.25rem",
+    },
+    cellHeader: {
+      background: "primary_darkest",
+      color: "white",
+      fontWeight: "bold",
+      ".ds-c-inline-error": {
+        color: "error_lighter",
+      },
+    },
+    cellDefault: {
+      background: "gray_lighter",
+      color: "base",
     },
   },
 };
