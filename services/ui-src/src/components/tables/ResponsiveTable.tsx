@@ -26,10 +26,11 @@ const HorizontalTable = (
   title: string | undefined,
   headers?: string[][],
   rows?: any[],
-  foot?: string[][]
+  foot?: string[][],
+  ariaProps?: any
 ) => {
   return (
-    <Table id={id} variant="calculation">
+    <Table id={id} variant="calculation" {...ariaProps}>
       {title && (
         <TableCaption placement="top">
           <VisuallyHidden>{title}</VisuallyHidden>
@@ -177,14 +178,15 @@ export const ResponsiveTable = (data: {
   rows?: any[];
   dynamicRows?: any[];
   foot?: any[];
+  ariaProps?: any;
 }) => {
-  const { id, title, headers, rows, dynamicRows, foot } = data;
+  const { id, title, headers, rows, dynamicRows, foot, ariaProps } = data;
   const mergedRows = [...(rows ?? []), ...(dynamicRows ?? [])];
 
   return (
     <>
       <Hide below="lg" key="table">
-        {HorizontalTable(id, title, headers, mergedRows, foot)}
+        {HorizontalTable(id, title, headers, mergedRows, foot, ariaProps)}
       </Hide>
       <Show below="lg" key="table-mobile">
         {VerticalTable(id, headers ?? [], mergedRows, foot ?? [])}

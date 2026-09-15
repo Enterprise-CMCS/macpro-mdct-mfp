@@ -52,6 +52,7 @@ export const EntityModalTable = ({
   const formErrorState = form?.formState?.errors || {};
   const [errorMessage, setErrorMessage] = useState<ReactNode>(undefined);
   const errorId = `${tableId}__error`;
+  const ariaProps = errorMessage ? { "aria-describedby": errorId } : {};
   const InlineErrorShim = shimComponent(InlineError);
 
   useEffect(() => {
@@ -208,6 +209,7 @@ export const EntityModalTable = ({
         ...sharedCellProps,
       })
     ),
+    ariaProps,
   };
 
   return (
