@@ -108,6 +108,7 @@ const NavSection = ({ section, level, sidebarOpen }: NavSectionProps) => {
           to={path}
           variant="unstyled"
           sx={sx.navLinkSansChildren}
+          aria-current={path === pathname}
         >
           <NavItem
             name={name}
