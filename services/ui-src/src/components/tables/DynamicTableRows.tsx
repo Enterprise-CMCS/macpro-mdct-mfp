@@ -26,7 +26,7 @@ export const DynamicTableRows = (
   updatedFieldsCallback: Function = () => [],
   showEditColumn: boolean = true,
   entityType?: EntityType,
-  openDeleteEntityModal?: Function,
+  openDeleteEntityModal?: Function
 ) => {
   const {
     displayDynamicCell,
@@ -35,17 +35,17 @@ export const DynamicTableRows = (
     removeDynamicRow,
   } = useContext(DynamicTableContext);
   const dynamicLabel = dynamicRowsTemplate.props?.dynamicFields.find(
-    (field: FormField) => field.props?.dynamicLabel,
+    (field: FormField) => field.props?.dynamicLabel
   )?.props?.dynamicLabel;
   const [localDynamicRows, setLocalDynamicRows] = useState<DynamicFieldShape[]>(
-    [],
+    []
   );
 
   // Add rows from fieldData
   useEffect(() => {
     const entityData = entityType
       ? localFieldData?.[entityType]?.find(
-          (t: DynamicFieldShape) => t.id === formData?.id,
+          (t: DynamicFieldShape) => t.id === formData?.id
         )
       : undefined;
 
@@ -69,7 +69,7 @@ export const DynamicTableRows = (
     if (focusedRowIndex === null) return;
 
     const rowElement = document.getElementById(
-      localDynamicRows[focusedRowIndex]?.id,
+      localDynamicRows[focusedRowIndex]?.id
     );
     if (!rowElement) return;
 
@@ -80,7 +80,7 @@ export const DynamicTableRows = (
 
     setTimeout(() => {
       const firstInput = rowElement.querySelector<HTMLElement>(
-        'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])',
+        'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])'
       );
       firstInput?.focus();
     }, 100);
@@ -113,7 +113,7 @@ export const DynamicTableRows = (
         rowId: `${tableId}-thead-row-0-cell-${cellIndex}`,
         rowIndex,
         tableId,
-      }),
+      })
     );
 
     const columnAction = showEditColumn && (
@@ -139,15 +139,15 @@ export const DynamicTableRows = (
                       dynamicId,
                       entityType,
                       formData?.id,
-                      updatedFieldsCallback(dynamicId, localFieldData),
-                    ),
+                      updatedFieldsCallback(dynamicId, localFieldData)
+                    )
                   )
                 : removeDynamicRow(
                     dynamicRowsTemplate.id,
                     dynamicId,
                     entityType,
                     formData?.id,
-                    updatedFieldsCallback(dynamicId, localFieldData),
+                    updatedFieldsCallback(dynamicId, localFieldData)
                   );
             }}
             sx={sx.removeButton}

@@ -39,7 +39,7 @@ export const SummationTable = ({
           const { fieldType } = getFieldParts(field.id);
           const initialValue = field.props?.initialValue || "";
           return [fieldType, initialValue];
-        },
+        }
       );
       const initialData = Object.fromEntries(dynamicKeys);
       addDynamicRow(dynamicRowsTemplate, initialData, false);
@@ -56,7 +56,7 @@ export const SummationTable = ({
 
   const updatedFieldsCallback = (
     dynamicId: string,
-    localFieldData: AnyObject,
+    localFieldData: AnyObject
   ) => {
     return summationTableDynamicTotalsOnSave({
       dynamicFieldId: dynamicId,
@@ -77,7 +77,7 @@ export const SummationTable = ({
         rowIndex,
         section: "thead",
         ...sharedCellProps,
-      }),
+      })
     ),
     rows: bodyRows.map((row, rowIndex: number) =>
       generateRows({
@@ -85,7 +85,7 @@ export const SummationTable = ({
         rowIndex,
         section: "tbody",
         ...sharedCellProps,
-      }),
+      })
     ),
     dynamicRows:
       dynamicRowsTemplate &&
@@ -99,7 +99,7 @@ export const SummationTable = ({
         formData,
         () => {},
         verbiage?.emptyTableMessage,
-        updatedFieldsCallback,
+        updatedFieldsCallback
       ),
     foot: footRows.map((row, rowIndex: number) =>
       generateRows({
@@ -107,7 +107,7 @@ export const SummationTable = ({
         rowIndex,
         section: "tfoot",
         ...sharedCellProps,
-      }),
+      })
     ),
   };
 

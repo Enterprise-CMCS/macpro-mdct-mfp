@@ -56,10 +56,10 @@ export const EntityModalTable = ({
 
   useEffect(() => {
     const errorKey = Object.keys(formErrorState).find((key) =>
-      key.startsWith(tableId),
+      key.startsWith(tableId)
     );
     const currentFormData = report?.fieldData?.[formData?.type]?.find(
-      (t: AnyObject) => t.id === formData?.id,
+      (t: AnyObject) => t.id === formData?.id
     );
 
     if (!errorKey || currentFormData?.[errorKey]?.length > 0) {
@@ -74,10 +74,10 @@ export const EntityModalTable = ({
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
   const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
-    undefined,
+    undefined
   );
   const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
-    undefined,
+    undefined
   );
   const [deleteCallback, setDeleteCallback] = useState<Function>();
 
@@ -106,7 +106,7 @@ export const EntityModalTable = ({
 
   const openDeleteEntityModal = (
     entity: EntityShape,
-    deleteCallback?: Function,
+    deleteCallback?: Function
   ) => {
     setSelectedEntity(entity);
     if (deleteCallback) setDeleteCallback(() => deleteCallback);
@@ -128,7 +128,7 @@ export const EntityModalTable = ({
     // For entity-scoped tables, rows live on the matching entity; otherwise at the top level.
     const source = formData?.type
       ? localFieldData?.[formData.type]?.find(
-          (entity: AnyObject) => entity.id === formData?.id,
+          (entity: AnyObject) => entity.id === formData?.id
         )
       : localFieldData;
     return source?.[dynamicRowsTemplate.id] || [];
@@ -150,7 +150,7 @@ export const EntityModalTable = ({
 
   const updatedFieldsCallback = (
     _dynamicId: string,
-    localFieldData: AnyObject,
+    localFieldData: AnyObject
   ) => {
     const templateFieldData =
       localFieldData?.[dynamicRowsTemplate?.id || ""] || [];
@@ -173,7 +173,7 @@ export const EntityModalTable = ({
         section: "thead",
         styleAsOptionalHeadRows: styleAsOptionalHeadRows,
         ...sharedCellProps,
-      }),
+      })
     ),
     rows: bodyRows.map((row, rowIndex: number) =>
       generateRows({
@@ -181,7 +181,7 @@ export const EntityModalTable = ({
         rowIndex,
         section: "tbody",
         ...sharedCellProps,
-      }),
+      })
     ),
     dynamicRows:
       dynamicRowsTemplate &&
@@ -198,7 +198,7 @@ export const EntityModalTable = ({
         updatedFieldsCallback,
         hasDynamicModalForm,
         formData?.type,
-        openDeleteEntityModal,
+        openDeleteEntityModal
       ),
     foot: footRows.map((row, rowIndex: number) =>
       generateRows({
@@ -206,7 +206,7 @@ export const EntityModalTable = ({
         rowIndex,
         section: "tfoot",
         ...sharedCellProps,
-      }),
+      })
     ),
   };
 

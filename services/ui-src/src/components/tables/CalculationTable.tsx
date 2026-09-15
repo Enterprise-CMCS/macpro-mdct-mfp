@@ -84,7 +84,7 @@ export const CalculationTable = ({
         report?.fieldData?.[`${fieldId}-percentageOverride`];
       return fieldPercentage || formPercentage;
     },
-    [formPercentage, report?.fieldData],
+    [formPercentage, report?.fieldData]
   );
 
   // Check if a row contains non-footer totals field
@@ -100,7 +100,7 @@ export const CalculationTable = ({
     (cell: FormTableCell) => ({
       percentage: getPercentage(cell),
     }),
-    [formData, getPercentage],
+    [formData, getPercentage]
   );
 
   const sharedCellProps = {
@@ -113,7 +113,7 @@ export const CalculationTable = ({
 
   const updatedFieldsCallback = (
     dynamicId: string,
-    localFieldData: AnyObject,
+    localFieldData: AnyObject
   ) => {
     return calculationTableDynamicTotalsOnSave({
       dynamicFieldId: dynamicId,
@@ -135,7 +135,7 @@ export const CalculationTable = ({
         rowIndex,
         section: "thead",
         ...sharedCellProps,
-      }),
+      })
     ),
     rows: bodyRows.map((row, rowIndex: number) =>
       generateRows({
@@ -145,7 +145,7 @@ export const CalculationTable = ({
         rowIndex,
         section: "tbody",
         ...sharedCellProps,
-      }),
+      })
     ),
     dynamicRows:
       dynamicRowsTemplate &&
@@ -159,7 +159,7 @@ export const CalculationTable = ({
         formData,
         openModal,
         verbiage?.emptyTableMessage,
-        updatedFieldsCallback,
+        updatedFieldsCallback
       ),
     foot: footRows.map((row, rowIndex: number) =>
       generateRows({
@@ -168,7 +168,7 @@ export const CalculationTable = ({
         rowIndex,
         section: "tfoot",
         ...sharedCellProps,
-      }),
+      })
     ),
   };
 

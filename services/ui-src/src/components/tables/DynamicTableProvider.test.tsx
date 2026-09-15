@@ -290,7 +290,7 @@ const TestComponent = () => {
 
   const updatedFieldsCallback = (
     dynamicId: string,
-    localFieldData: AnyObject,
+    localFieldData: AnyObject
   ) => {
     return calculationTableDynamicTotalsOnSave({
       dynamicFieldId: dynamicId,
@@ -326,7 +326,7 @@ const TestComponent = () => {
             mockDynamicFieldId,
             "",
             "",
-            updatedFieldsCallback(mockDynamicFieldId, localFieldData),
+            updatedFieldsCallback(mockDynamicFieldId, localFieldData)
           )
         }
       >
@@ -343,7 +343,7 @@ const TestComponent = () => {
             mockDynamicFieldId,
             EntityType.INITIATIVE,
             mockCurrentEntityId,
-            updatedFieldsCallback(mockDynamicFieldId, localFieldData),
+            updatedFieldsCallback(mockDynamicFieldId, localFieldData)
           )
         }
       >
@@ -378,7 +378,7 @@ const TestComponent = () => {
       <h3>
         displayReadOnlyCell administrativeCosts_budgetCategory-totalComputable:{" "}
         {displayReadOnlyCell(
-          displayReadOnlyCellAdministrativeCostsBudgetCategoryProps,
+          displayReadOnlyCellAdministrativeCostsBudgetCategoryProps
         )}
       </h3>
       <h3>

@@ -76,7 +76,7 @@ const mockProps = {
   tableId: mockTableId,
   openModal: () => {},
   emptyTableMessage: undefined,
-  entityType: undefined
+  entityType: undefined,
 };
 
 const DynamicTableRowsComponent = ({ props = mockProps }) => {
@@ -112,7 +112,7 @@ describe("<DynamicTableRows />", () => {
     render(
       <DynamicTableProvider>
         <DynamicTableRowsComponent />
-      </DynamicTableProvider>,
+      </DynamicTableProvider>
     );
     const row = screen.getByRole("row", {
       name: `Other: $ % Delete Other: ${mockDynamicFieldId}`,
@@ -149,7 +149,7 @@ describe("<DynamicTableRows />", () => {
     render(
       <DynamicTableProvider>
         <DynamicTableRowsComponent />
-      </DynamicTableProvider>,
+      </DynamicTableProvider>
     );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
@@ -198,7 +198,7 @@ describe("<DynamicTableRows />", () => {
     render(
       <DynamicTableProvider>
         <DynamicTableRowsComponent props={updatedProps as any} />
-      </DynamicTableProvider>,
+      </DynamicTableProvider>
     );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
@@ -235,7 +235,7 @@ describe("<DynamicTableRows />", () => {
     render(
       <DynamicTableProvider>
         <DynamicTableRowsComponent />
-      </DynamicTableProvider>,
+      </DynamicTableProvider>
     );
 
     const rows = screen.queryAllByRole("row");
@@ -266,7 +266,7 @@ describe("<DynamicTableRows />", () => {
     return render(
       <DynamicTableProvider>
         <DynamicTableRowsComponent props={newProps} />
-      </DynamicTableProvider>,
+      </DynamicTableProvider>
     );
   };
 
@@ -284,7 +284,7 @@ describe("<DynamicTableRows />", () => {
                   dynamicLabel: "Misc. Costs:",
                 },
               }
-            : field,
+            : field
       ),
     },
   };
@@ -329,10 +329,10 @@ describe("<DynamicTableRows />", () => {
         expect(
           screen.getByRole("button", {
             name: label,
-          }),
+          })
         ).toBeVisible();
       });
-    },
+    }
   );
 
   describe("modal", () => {
@@ -360,7 +360,7 @@ describe("<DynamicTableRows />", () => {
       render(
         <DynamicTableProvider>
           <DynamicTableRowsComponent props={updatedProps as any} />
-        </DynamicTableProvider>,
+        </DynamicTableProvider>
       );
 
       const editButton = screen.getByRole("button", {
@@ -389,11 +389,11 @@ describe("<DynamicTableRows />", () => {
       render(
         <DynamicTableProvider>
           <DynamicTableRowsComponent props={updatedProps as any} />
-        </DynamicTableProvider>,
+        </DynamicTableProvider>
       );
 
       expect(
-        screen.getByText("Mock dynamic empty table message"),
+        screen.getByText("Mock dynamic empty table message")
       ).toBeVisible();
     });
   });
@@ -401,6 +401,6 @@ describe("<DynamicTableRows />", () => {
   testA11yAct(
     <DynamicTableProvider>
       <DynamicTableRowsComponent />
-    </DynamicTableProvider>,
+    </DynamicTableProvider>
   );
 });

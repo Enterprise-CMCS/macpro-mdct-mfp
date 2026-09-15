@@ -18,7 +18,7 @@ import {
 const rightAlign = ["Total State / Territory Share", "Total Federal Share"];
 
 const getHeaderWidthByLabel = (label: string) => {
-  return (label === "Actions") ? "7%" : "";
+  return label === "Actions" ? "7%" : "";
 };
 
 const HorizontalTable = (
@@ -26,13 +26,15 @@ const HorizontalTable = (
   title: string | undefined,
   headers?: string[][],
   rows?: any[],
-  foot?: string[][],
+  foot?: string[][]
 ) => {
   return (
     <Table id={id} variant="calculation">
-      {title && <TableCaption placement="top">
-        <VisuallyHidden>{title}</VisuallyHidden>
-      </TableCaption>}
+      {title && (
+        <TableCaption placement="top">
+          <VisuallyHidden>{title}</VisuallyHidden>
+        </TableCaption>
+      )}
       {headers && (
         <Thead>
           {headers.map((row, rIndex) => (
@@ -92,7 +94,7 @@ const buildColumns = (
   value: string,
   rIndex: number,
   cIndex: number,
-  style: { background: string; color: string },
+  style: { background: string; color: string }
 ) => {
   if (cIndex == 0) {
     return (
@@ -109,6 +111,10 @@ const buildColumns = (
       </Box>
     );
   }
+
+  //special cases for action columns
+  if (label === "Actions" && !value) return;
+
   return (
     <Flex
       width="100%"
@@ -131,7 +137,7 @@ const VerticalTable = (
   id: string,
   header: string[][],
   rows: any[],
-  foot: string[][],
+  foot: string[][]
 ) => {
   return (
     <VStack sx={sx.mobile}>
@@ -147,10 +153,10 @@ const VerticalTable = (
                 {
                   background: "primary_darkest",
                   color: "white",
-                },
+                }
               );
             })
-          : row,
+          : row
       )}
       {foot.map((row, rIndex) =>
         header[0].map((col: string, index: number) => {
@@ -158,7 +164,7 @@ const VerticalTable = (
             background: "gray_lighter",
             color: "base",
           });
-        }),
+        })
       )}
     </VStack>
   );
@@ -173,7 +179,7 @@ export const ResponsiveTable = (data: {
   foot?: any[];
 }) => {
   const { id, title, headers, rows, dynamicRows, foot } = data;
-  const mergedRows = [...rows ?? [], ...(dynamicRows ?? [])];
+  const mergedRows = [...(rows ?? []), ...(dynamicRows ?? [])];
 
   return (
     <>

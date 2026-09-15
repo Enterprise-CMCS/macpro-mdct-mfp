@@ -10,11 +10,7 @@ import {
 } from "react";
 import { useFormContext } from "react-hook-form";
 // components
-import {
-  Flex,
-  Text,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { Flex, Text, VisuallyHidden } from "@chakra-ui/react";
 import { EntityContext, ReportContext } from "components";
 // types
 import {
@@ -97,12 +93,12 @@ export const DynamicTableProvider = ({ children }: any) => {
       });
       setLocalFieldData(updatedFieldData);
     },
-    [],
+    []
   );
 
   const debouncedUpdateReport = useMemo(
     () => debounce(updatedFieldsForDisplay, 1),
-    [updatedFieldsForDisplay],
+    [updatedFieldsForDisplay]
   );
 
   const displayReadOnlyCell = ({
@@ -201,7 +197,7 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     const [hydratedField] = hydrateFormFields(
       updateRenderFields(updatedReport, [field], formData),
-      formData,
+      formData
     );
 
     let hydrateValue;
@@ -209,11 +205,11 @@ export const DynamicTableProvider = ({ children }: any) => {
 
     if (isTempDynamicField(hydratedField.id)) {
       const { dynamicFieldId, dynamicTemplateId, fieldType } = getFieldParts(
-        hydratedField.id,
+        hydratedField.id
       );
       const entityData = entityType
         ? localFieldData?.[entityType]?.find(
-            (t: DynamicFieldShape) => t.id === formData?.id,
+            (t: DynamicFieldShape) => t.id === formData?.id
           )
         : undefined;
 
@@ -223,7 +219,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         : localFieldData?.[dynamicTemplateId];
 
       const currentField = templateFieldData?.find(
-        (field: DynamicFieldShape) => field.id === dynamicFieldId,
+        (field: DynamicFieldShape) => field.id === dynamicFieldId
       );
 
       hydrateValue = currentField?.[fieldType];
@@ -336,7 +332,7 @@ export const DynamicTableProvider = ({ children }: any) => {
         styleAsOptional: isOptional(cell),
         tableId,
         ...cellPropsCallback(cell),
-      }),
+      })
     );
 
     if (dynamicRowsTemplate && showEditColumn)
@@ -348,7 +344,7 @@ export const DynamicTableProvider = ({ children }: any) => {
   const addDynamicRow = async (
     dynamicRowsTemplate: DynamicRowsTemplate,
     initialData?: AnyObject,
-    scroll: boolean = true,
+    scroll: boolean = true
   ) => {
     const { id, type, props } = dynamicRowsTemplate;
 
@@ -417,11 +413,11 @@ export const DynamicTableProvider = ({ children }: any) => {
     dynamicFieldId: string,
     entityType?: string,
     entityId?: string,
-    updatedFields: FieldInfo[] = [],
+    updatedFields: FieldInfo[] = []
   ) => {
     const entityData = entityType
       ? localFieldData?.[entityType].find(
-          (t: DynamicFieldShape) => t.id === entityId,
+          (t: DynamicFieldShape) => t.id === entityId
         )
       : undefined;
     const rows = entityType
@@ -458,7 +454,7 @@ export const DynamicTableProvider = ({ children }: any) => {
             };
           }
           return t;
-        },
+        }
       );
     }
 
