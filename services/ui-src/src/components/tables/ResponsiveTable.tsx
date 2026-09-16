@@ -68,7 +68,7 @@ const HorizontalTable = (
                   </Td>
                 ))
               ) : (
-                <Td colSpan={rows.length}>{row}</Td>
+                <Td colSpan={headers?.[0].length}>{row}</Td>
               )}
             </Tr>
           ))}
@@ -99,15 +99,24 @@ const buildColumns = (
 ) => {
   if (cIndex == 0) {
     return (
-      <Box
-        sx={style}
-        width="100%"
-        padding=".75rem"
-        key={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
-        id={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
-      >
-        {value}
-      </Box>
+      <>
+        <p
+          hidden
+          key={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
+          id={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
+        >
+          {label}
+        </p>
+        <Box
+          sx={style}
+          width="100%"
+          padding=".75rem"
+          key={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
+          id={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
+        >
+          {value}
+        </Box>
+      </>
     );
   }
 
@@ -121,10 +130,13 @@ const buildColumns = (
       padding=".75rem"
       flexFlow={{ base: "column", sm: "row" }}
       textAlign="left"
-      key={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
-      id={`${id}-tbody-row-${rIndex}-cell-${cIndex}`}
     >
-      <Box flex="1 1 50%" alignSelf={{ base: "start", sm: "center" }}>
+      <Box
+        flex="1 1 50%"
+        alignSelf={{ base: "start", sm: "center" }}
+        key={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
+        id={`${id}-thead-row-${rIndex}-cell-${cIndex}`}
+      >
         {label ?? ""}
       </Box>
       <Box alignSelf={{ base: "start", sm: "center" }}>{value}</Box>
@@ -213,6 +225,9 @@ export const sx = {
       fontWeight: "bold",
       ".ds-c-inline-error": {
         color: "error_lighter",
+      },
+      ".ds-c-field--error": {
+        borderColor: "error_lighter",
       },
     },
     cellDefault: {
