@@ -247,7 +247,12 @@ describe("<ExportRETTable />", () => {
   describe("Test ExportedRETTable Component", () => {
     beforeEach(() => {
       mockedUseStore.mockReturnValue(mockSARReport);
-      render(<ExportRETTable section={section as any} />);
+      render(
+        <ExportRETTable
+          section={section as any}
+          heading={"mock table caption"}
+        />
+      );
     });
 
     test("Test ExportRETTable render", () => {
@@ -255,7 +260,7 @@ describe("<ExportRETTable />", () => {
       const table = screen.queryByRole("table");
       expect(table).toBeVisible();
       //check to see if table caption exist
-      expect(screen.getByText(`${section.name} Table`)).toBeVisible();
+      expect(screen.getByText("mock table caption")).toBeVisible();
       //there should be 1 not answered in the table
       expect(screen.queryAllByText(notAnsweredText)).toHaveLength(1);
       //thead, Q3, Q4, other, total, target Q3, target Q4, target total, % total, a total of 9 rows should exist

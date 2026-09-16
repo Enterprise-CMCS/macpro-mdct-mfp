@@ -46,6 +46,9 @@ export const totalsSummaryRoute: FormTablesRoute = {
         }),
         headRows: [totalsSummaryHeaders],
         tableType: FormTableType.CALCULATION,
+        verbiage: {
+          title: "Totals",
+        },
       },
     ],
     fields: [

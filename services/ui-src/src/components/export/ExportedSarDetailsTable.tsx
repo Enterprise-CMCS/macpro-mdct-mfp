@@ -19,6 +19,7 @@ export const ExportedSarDetailsTable = ({ verbiage }: Props) => {
           verbiage.reportPage.sarDetailsTable.headers.response,
         ],
         bodyRows: bodyRowContent(verbiage.reportPage.sarDetailsTable, report),
+        caption: "Report details",
       }}
     />
   );

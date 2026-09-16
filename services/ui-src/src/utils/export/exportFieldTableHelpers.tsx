@@ -95,7 +95,8 @@ export const renderFieldTableBody = (
 export const renderCalculationTables = (
   section: any,
   fieldData: any,
-  formPercentage: number
+  formPercentage: number,
+  heading?: string
 ) => {
   const calculationTables = section.form?.tables || [];
   return calculationTables.map((table: any) => {
@@ -156,6 +157,7 @@ export const renderCalculationTables = (
             headRow: headRow,
             bodyRows: bodyRows,
             footRow: footerRow,
+            caption: `${heading} ${table.verbiage?.title ?? ""}`,
           }}
           data-testid={`service-table-${table.id}`}
         />
