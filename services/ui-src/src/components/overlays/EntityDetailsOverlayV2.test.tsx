@@ -36,7 +36,7 @@ vi.mock("utils/autosave/autosave", () => ({
         value: "123",
       },
     ];
-  }),,
+  }),
 }));
 
 const entityDetailsOverlayComponent = (
