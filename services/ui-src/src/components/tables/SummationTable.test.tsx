@@ -22,7 +22,7 @@ const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue({ ...mockFieldStore, setAnswer: mockSetValue });
 
 vi.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: vi.fn().mockImplementation(() => {
+  autoSaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-category`,
@@ -30,8 +30,6 @@ vi.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const mockProps = {

@@ -29,7 +29,7 @@ let component: RenderResult;
 
 //bypass autosave call when simulating type inputs
 vi.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: vi.fn().mockImplementation(() => {
+  autoSaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         id: "mockId",
@@ -37,8 +37,6 @@ vi.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 //mock closeout status to enable closeout button

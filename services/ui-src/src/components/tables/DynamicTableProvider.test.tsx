@@ -31,7 +31,7 @@ import { ResponsiveTable } from "./ResponsiveTable";
 const mockSetValue = vi.fn();
 
 vi.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: vi.fn().mockImplementation(() => {
+  autoSaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-totalComputable`,
@@ -39,7 +39,6 @@ vi.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
 }));
 
 const TestComponent = () => {

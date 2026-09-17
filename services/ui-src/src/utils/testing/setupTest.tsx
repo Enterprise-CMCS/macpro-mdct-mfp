@@ -316,12 +316,23 @@ export const mockEmptyReportStore: MfpReportState = {
   setEditable: () => {},
 };
 
+export const mockFieldStore: MfpFieldState = {
+  fields: new Map(),
+  validationSchema: undefined,
+  setField: () => {},
+  setAnswer: () => {},
+  setValidationSchema: () => {},
+  setErrors: () => {},
+  setClearFields: () => {},
+};
+
 // BOUND STORE
 
 export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
   ...mockReportStore,
   ...mockStateUserStore,
   ...mockBannerStore,
+  ...mockFieldStore,
 };
 
 export const mockUseSARStore: MfpUserState & AdminBannerState & MfpReportState =
@@ -329,6 +340,7 @@ export const mockUseSARStore: MfpUserState & AdminBannerState & MfpReportState =
     ...mockSARReportStore,
     ...mockStateUserStore,
     ...mockBannerStore,
+    ...mockFieldStore,
   };
 
 export const mockUseEmptyReportStore: MfpUserState &
@@ -337,6 +349,7 @@ export const mockUseEmptyReportStore: MfpUserState &
   ...mockEmptyReportStore,
   ...mockStateUserStore,
   ...mockBannerStore,
+  ...mockFieldStore,
 };
 
 export const mockUseAdminStore: MfpUserState &
@@ -345,6 +358,7 @@ export const mockUseAdminStore: MfpUserState &
   ...mockReportStore,
   ...mockAdminUserStore,
   ...mockBannerStore,
+  ...mockFieldStore,
 };
 
 export const mockUseEntityStore: MfpUserState &
@@ -355,6 +369,7 @@ export const mockUseEntityStore: MfpUserState &
   ...mockStateUserStore,
   ...mockBannerStore,
   ...mockEntityStore,
+  ...mockFieldStore,
 };
 
 export const mockUseEvaluationPlanEntityStore: MfpUserState &
@@ -373,15 +388,6 @@ export const mockUseObjectiveProgressEntityStore: MfpUserState &
   ...mockObjectiveProgressEntityStore,
 };
 
-export const mockFieldStore: MfpFieldState = {
-  fields: new Map(),
-  validationSchema: undefined,
-  setField: () => {},
-  setAnswer: () => {},
-  setValidationSchema: () => {},
-  setErrors: () => {},
-  setClearFields: () => {},
-};
 // ROUTER
 
 export const RouterWrappedComponent: React.FC<{ children: any }> = ({
