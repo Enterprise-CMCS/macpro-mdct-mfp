@@ -29,7 +29,7 @@ mockedUseStore.mockReturnValue({
 });
 
 vi.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: vi.fn().mockImplementation(() => {
+  autoSaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         name: "mockId",
@@ -37,8 +37,6 @@ vi.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const entityDetailsOverlayComponent = (

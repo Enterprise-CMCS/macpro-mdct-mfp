@@ -4,6 +4,7 @@ import { MockedFunction } from "vitest";
 import {
   mockDrawerForm,
   mockEmptyDrawerForm,
+  mockFieldStore,
   mockGenericEntity,
   mockModalDrawerReportPageVerbiage,
   mockStateUserStore,
@@ -77,6 +78,6 @@ describe("<ReportDrawer />", () => {
   });
 
   testA11yAct(drawerComponent, () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue({...mockStateUserStore, ...mockFieldStore});
   });
 });

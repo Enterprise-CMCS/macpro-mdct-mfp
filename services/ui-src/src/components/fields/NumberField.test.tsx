@@ -1,43 +1,27 @@
-import { Mock, MockedFunction } from "vitest";
+import { MockedFunction } from "vitest";
 import { act, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
-import { useFormContext } from "react-hook-form";
 import { NumberField } from "components";
 // types
 import { NumberMask } from "types";
 // utils
 import { useStore } from "utils";
-import { mockStateUserStore } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
+import { mockFieldStore } from "utils/testing/setupTest";
 
-const mockTrigger = vi.fn();
-const mockRhfMethods = {
-  register: () => {},
-  setValue: () => {},
-  getValues: vi.fn(),
-  trigger: mockTrigger,
-};
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-vi.mock("react-hook-form", () => ({
-  useFormContext: vi.fn(() => mockRhfMethods),
-}));
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
-  }));
+const mockSetValue = vi.fn();
 
 vi.mock("utils/state/useStore");
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue({ ...mockFieldStore, setAnswer: mockSetValue });
 
 const numberFieldComponent = (
   <NumberField
     name="testNumberField"
     label="test-label"
     data-testid="test-number-field"
+    updateFieldValues={mockSetValue}
   />
 );
 
@@ -46,11 +30,17 @@ const commaMaskedNumberFieldComponent = (
     name="testNumberField"
     label="test-label"
     mask={NumberMask.COMMA_SEPARATED}
+    updateFieldValues={mockSetValue}
   />
 );
 
 const currencyMaskedNumberFieldComponent = (
-  <NumberField name="testNumberField" label="" mask={NumberMask.CURRENCY} />
+  <NumberField
+    name="testNumberField"
+    label=""
+    mask={NumberMask.CURRENCY}
+    updateFieldValues={mockSetValue}
+  />
 );
 
 const percentageMaskedNumberFieldComponent = (
@@ -58,6 +48,7 @@ const percentageMaskedNumberFieldComponent = (
     name="testNumberField"
     label="test-label"
     mask={NumberMask.PERCENTAGE}
+    updateFieldValues={mockSetValue}
   />
 );
 
@@ -66,20 +57,13 @@ const ratioMaskedNumberFieldComponent = (
     name="testNumberField"
     label="test-label"
     mask={NumberMask.RATIO}
+    updateFieldValues={mockSetValue}
   />
 );
 
 describe("<NumberField />", () => {
   describe("Test Maskless NumberField", () => {
-    beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
-    });
-    afterEach(() => {
-      vi.clearAllMocks();
-    });
-
     test("NumberField is visible", () => {
-      mockGetValues(undefined);
       const result = render(numberFieldComponent);
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
@@ -88,7 +72,6 @@ describe("<NumberField />", () => {
     });
 
     test("onChangeHandler updates unmasked field value", async () => {
-      mockGetValues(undefined);
       const result = render(numberFieldComponent);
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
@@ -105,11 +88,7 @@ describe("<NumberField />", () => {
   });
 
   describe("Test Masked NumberField", () => {
-    beforeEach(() => {
-      mockGetValues(undefined);
-    });
     test("onChangeHandler updates comma masked field value", async () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
       const result = render(commaMaskedNumberFieldComponent);
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
@@ -149,7 +128,6 @@ describe("<NumberField />", () => {
     });
 
     test("onChangeHandler updates Currency masked field value", async () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
       const result = render(currencyMaskedNumberFieldComponent);
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
@@ -174,7 +152,6 @@ describe("<NumberField />", () => {
     });
 
     test("onChangeHandler updates Percentage masked field value", async () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
       const result = render(percentageMaskedNumberFieldComponent);
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
@@ -202,7 +179,6 @@ describe("<NumberField />", () => {
     });
 
     test("onChangeHandler updates ratio field value", async () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
       const result = render(ratioMaskedNumberFieldComponent);
       const numberFieldInput: HTMLInputElement = result.container.querySelector(
         "[name='testNumberField']"
@@ -247,7 +223,6 @@ describe("<NumberField />", () => {
   });
 
   describe("Test NumberField hydration functionality", () => {
-    const mockFormFieldValue = "54321";
     const mockHydrationValue = "12345";
 
     const numberFieldComponentWithHydrationValue = (
@@ -256,48 +231,11 @@ describe("<NumberField />", () => {
         label="test-label"
         hydrate={mockHydrationValue}
         data-testid="test-id"
+        updateFieldValues={mockSetValue}
       />
     );
-
-    const clearPropGivenAndTrueNumberField = (
-      <NumberField
-        name="testNumberField"
-        label=""
-        mask={NumberMask.CURRENCY}
-        hydrate={mockHydrationValue}
-        clear
-      />
-    );
-
-    const clearPropGivenAndFalseNumberField = (
-      <NumberField
-        name="testNumberField"
-        label=""
-        mask={NumberMask.CURRENCY}
-        hydrate={mockHydrationValue}
-        clear={false}
-      />
-    );
-
-    beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
-    });
-    afterEach(() => {
-      vi.clearAllMocks();
-    });
-
-    test("If only formFieldValue exists, displayValue is set to it", () => {
-      mockGetValues(mockFormFieldValue);
-      const result = render(numberFieldComponent);
-      const numberField: HTMLInputElement = result.container.querySelector(
-        "[name='testNumberField']"
-      )!;
-      const displayValue = numberField.value;
-      expect(displayValue).toEqual("54,321");
-    });
 
     test("If only hydrationValue exists, displayValue is set to it", () => {
-      mockGetValues(undefined);
       const result = render(numberFieldComponentWithHydrationValue);
       const numberField: HTMLInputElement = result.container.querySelector(
         "[name='testNumberFieldWithHydrationValue']"
@@ -305,40 +243,7 @@ describe("<NumberField />", () => {
       const displayValue = numberField.value;
       expect(displayValue).toEqual("12,345");
     });
-
-    test("If both formFieldValue and hydrationValue exist, displayValue is set to formFieldValue", () => {
-      mockGetValues(mockFormFieldValue);
-      const result = render(numberFieldComponentWithHydrationValue);
-      const numberField: HTMLInputElement = result.container.querySelector(
-        "[name='testNumberFieldWithHydrationValue']"
-      )!;
-      const displayValue = numberField.value;
-      expect(displayValue).toEqual("54,321");
-    });
-
-    test("should set value to default if given clear prop and clear is set to true", () => {
-      mockGetValues(undefined);
-
-      const result = render(clearPropGivenAndTrueNumberField);
-      const numberField: HTMLInputElement = result.container.querySelector(
-        "[name='testNumberField']"
-      )!;
-      const displayValue = numberField.value;
-      expect(displayValue).toEqual("");
-    });
-
-    test("should set value to hydrationvalue if given clear prop and clear is set to false", () => {
-      mockGetValues(undefined);
-      const result = render(clearPropGivenAndFalseNumberField);
-      const numberField: HTMLInputElement = result.container.querySelector(
-        "[name='testNumberField']"
-      )!;
-      const displayValue = numberField.value;
-      expect(displayValue).toEqual("12,345.00");
-    });
   });
 
-  testA11yAct(numberFieldComponent, () => {
-    mockGetValues(undefined);
-  });
+  testA11yAct(numberFieldComponent);
 });

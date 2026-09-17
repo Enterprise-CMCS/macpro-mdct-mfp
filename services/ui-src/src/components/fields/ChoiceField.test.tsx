@@ -1,27 +1,8 @@
-import { Mock } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 //components
 import { ChoiceField } from "components";
-import { useFormContext } from "react-hook-form";
 import { testA11yAct } from "utils/testing/commonTests";
-
-const mockRhfMethods = {
-  register: () => {},
-  setValue: () => {},
-  getValues: vi.fn(),
-};
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-vi.mock("react-hook-form", () => ({
-  useFormContext: vi.fn(() => mockRhfMethods),
-}));
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi.fn().mockReturnValue(returnValue),
-  }));
 
 const ChoiceFieldComponent = (
   <ChoiceField
@@ -52,7 +33,6 @@ describe("<ChoiceField />", () => {
   });
 
   describe("Test ChoiceField hydration functionality", () => {
-    const mockFormFieldValue = true;
     const mockHydrationValue = true;
     const ChoiceFieldComponentWithHydrationValue = (
       <ChoiceField
@@ -65,7 +45,6 @@ describe("<ChoiceField />", () => {
     );
 
     test("If only formFieldValue exists, displayValue is set to it", () => {
-      mockGetValues(mockFormFieldValue);
       render(ChoiceFieldComponent);
       const choiceField: HTMLInputElement = screen.getByLabelText("Checkbox A");
       const displayValue = choiceField.value;
@@ -73,7 +52,6 @@ describe("<ChoiceField />", () => {
     });
 
     test("If only hydrationValue exists, displayValue is set to it", () => {
-      mockGetValues(undefined);
       render(ChoiceFieldComponentWithHydrationValue);
       const choiceField: HTMLInputElement = screen.getByLabelText("Checkbox B");
       const displayValue = choiceField.value;

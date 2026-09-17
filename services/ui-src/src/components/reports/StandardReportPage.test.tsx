@@ -14,6 +14,7 @@ import {
   mockUseStore,
   mockWPFullReport,
   mockReportStore,
+  mockFieldStore,
 } from "utils/testing/setupTest";
 import { useStore } from "utils/state/useStore";
 import { testA11yAct } from "utils/testing/commonTests";
@@ -24,6 +25,7 @@ const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const mockReportStoreWithoutData = {
   ...mockUseStore,
+  ...mockFieldStore,
   report: {
     ...(mockWPFullReport as ReportShape),
     fieldData: {},
@@ -45,7 +47,7 @@ describe("<StandardReportPage />", () => {
     mockedUseStore.mockReturnValue(mockReportStore);
     render(standardPageSectionComponent);
     expect(
-      screen.getByText(mockStandardReportPageJson.verbiage.intro.section)
+      screen.getByText(mockStandardReportPageJson.verbiage.intro.section),
     ).toBeVisible();
   });
 
@@ -53,6 +55,7 @@ describe("<StandardReportPage />", () => {
     mockedUseStore.mockReturnValue({
       ...mockReportStore,
       ...mockStateUser,
+      ...mockFieldStore,
     });
     render(standardPageSectionComponent);
     const textFieldInput: HTMLInputElement = screen.getByRole("textbox", {
@@ -97,6 +100,6 @@ describe("<StandardReportPage />", () => {
   });
 
   testA11yAct(standardPageSectionComponent, () => {
-    mockedUseStore.mockReturnValue(mockReportStore);
+    mockedUseStore.mockReturnValue({ ...mockReportStore, ...mockFieldStore });
   });
 });

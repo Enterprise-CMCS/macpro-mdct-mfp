@@ -13,6 +13,7 @@ import {
 // utils
 import {
   RouterWrappedComponent,
+  mockFieldStore,
   mockModalOverlayReportPageJson,
   mockReportFieldData,
   mockReportStore,
@@ -264,6 +265,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
   test("submits overlay form for state user", async () => {
     mockedUseStore.mockReturnValue({
       ...mockStateUser,
+      ...mockFieldStore,
       ...mockWpReportContext,
       editable: true,
       setAutosaveState: vi.fn(),
@@ -322,6 +324,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
   test("does not submits overlay form for admin user", async () => {
     mockedUseStore.mockReturnValue({
       ...mockAdminUser,
+      ...mockFieldStore,
       ...mockWpReportContext,
       editable: true,
       setAutosaveState: vi.fn(),
