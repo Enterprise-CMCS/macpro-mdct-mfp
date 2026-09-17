@@ -94,7 +94,7 @@ const recusiveObjectFromStringArray = (
   errors: { [key: string]: any },
   arr: string[],
   index: number,
-  value: any,
+  value: any
 ): { [key: string]: any } => {
   if (arr.length - 1 == index) {
     return { [arr[index]]: value };
@@ -104,14 +104,14 @@ const recusiveObjectFromStringArray = (
         errors,
         arr,
         index + 1,
-        value,
+        value
       ),
     };
   }
 };
 
 export const transformYupErrorsIntoObject = (
-  errors: ValidationError,
+  errors: ValidationError
 ): Record<string, ErrorType> => {
   let validationErrors: Record<string, ErrorType> = {};
 

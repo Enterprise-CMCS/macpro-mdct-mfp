@@ -11,14 +11,8 @@ import {
   Button,
   Heading,
   Image,
-  Table,
-  TableCaption,
-  Tbody,
   Text,
-  Tfoot,
-  Thead,
   useDisclosure,
-  VisuallyHidden,
 } from "@chakra-ui/react";
 import { InlineError } from "@cmsgov/design-system";
 import {
@@ -39,6 +33,7 @@ import {
 } from "types";
 // utils
 import { parseCustomHtml, shimComponent } from "utils";
+import { ResponsiveTable } from "./ResponsiveTable";
 
 export const EntityModalTable = ({
   bodyRows,
@@ -52,7 +47,7 @@ export const EntityModalTable = ({
   styleAsOptionalHeadRows,
   verbiage,
 }: Props) => {
-  const formErrorState = {} as {[x:string]:any};
+  const formErrorState = {} as { [x: string]: any };
   const [errorMessage, setErrorMessage] = useState<ReactNode>(undefined);
   const errorId = `${tableId}__error`;
   const ariaProps = errorMessage ? { "aria-describedby": errorId } : {};
@@ -167,6 +162,54 @@ export const EntityModalTable = ({
     ];
   };
 
+  const tableData = {
+    id: tableId,
+    title: verbiage?.title,
+    headers: headRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "thead",
+        styleAsOptionalHeadRows: styleAsOptionalHeadRows,
+        ...sharedCellProps,
+      })
+    ),
+    rows: bodyRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "tbody",
+        ...sharedCellProps,
+      })
+    ),
+    dynamicRows:
+      dynamicRowsTemplate &&
+      DynamicTableRows(
+        tableId,
+        0,
+        disabled,
+        dynamicRowsTemplate,
+        hasDynamicModalForm,
+        bodyRows.length > 0,
+        formData,
+        openModal,
+        verbiage?.emptyTableMessage,
+        updatedFieldsCallback,
+        hasDynamicModalForm,
+        formData?.type,
+        openDeleteEntityModal
+      ),
+    foot: footRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "tfoot",
+        ...sharedCellProps,
+      })
+    ),
+    ariaProps,
+  };
+
   return (
     <Box sx={sx.box}>
       {verbiage?.sectionTitle && (
@@ -184,63 +227,7 @@ export const EntityModalTable = ({
       {!showTable && (
         <Text sx={sx.emptyTableMessage}>{verbiage?.emptyTableMessage}</Text>
       )}
-      {showTable && (
-        <Table id={tableId} sx={sx.table} {...ariaProps}>
-          <TableCaption placement="top" sx={sx.captionBox}>
-            <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
-          </TableCaption>
-          <Thead>
-            {headRows.map((row, rowIndex: number) =>
-              generateRows({
-                row,
-                rowIndex,
-                section: "thead",
-                styleAsOptionalHeadRows: styleAsOptionalHeadRows,
-                ...sharedCellProps,
-              })
-            )}
-          </Thead>
-          <Tbody>
-            {bodyRows.map((row, rowIndex: number) =>
-              generateRows({
-                row,
-                rowIndex,
-                section: "tbody",
-                ...sharedCellProps,
-              })
-            )}
-            {dynamicRowsTemplate && (
-              <DynamicTableRows
-                disabled={disabled}
-                dynamicRowsTemplate={dynamicRowsTemplate}
-                emptyTableMessage={verbiage?.emptyTableMessage}
-                entityType={formData?.type}
-                formData={formData}
-                formPercentage={0}
-                hasDynamicModalForm={hasDynamicModalForm}
-                hasStaticRows={bodyRows.length > 0}
-                openDeleteEntityModal={openDeleteEntityModal}
-                openModal={openModal}
-                showEditColumn={hasDynamicModalForm}
-                tableId={tableId}
-                updatedFieldsCallback={updatedFieldsCallback}
-              />
-            )}
-          </Tbody>
-          {footRows.length > 0 && (
-            <Tfoot>
-              {footRows.map((row, rowIndex: number) =>
-                generateRows({
-                  row,
-                  rowIndex,
-                  section: "tfoot",
-                  ...sharedCellProps,
-                })
-              )}
-            </Tfoot>
-          )}
-        </Table>
-      )}
+      {showTable && ResponsiveTable(tableData)}
 
       {dynamicRowsTemplate && hasDynamicModalForm && (
         <>

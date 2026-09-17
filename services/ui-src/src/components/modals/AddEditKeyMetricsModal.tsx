@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
 // types
@@ -33,8 +33,8 @@ export const AddEditKeyMetricsModal = ({
   const [formData, setFormData] = useState<AnyObject>(
     form.fields.reduce(
       (acc: any, curr) => ((acc[curr.id] = undefined), acc),
-      {},
-    ),
+      {}
+    )
   );
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -45,7 +45,7 @@ export const AddEditKeyMetricsModal = ({
 
   const parentEntityFieldData = report?.fieldData?.[entityType] || [];
   const parentEntityIndex = parentEntityFieldData.findIndex(
-    (field: DynamicFieldShape) => field.id === parentEntityId,
+    (field: DynamicFieldShape) => field.id === parentEntityId
   );
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export const AddEditKeyMetricsModal = ({
     setCurrentEntityFieldData(fieldData);
 
     const index = fieldData.findIndex(
-      (t: DynamicFieldShape) => t.id === currentEntityId,
+      (t: DynamicFieldShape) => t.id === currentEntityId
     );
     setCurrentEntityIndex(index);
 
@@ -159,7 +159,7 @@ export const AddEditKeyMetricsModal = ({
         formJson={form}
         formData={form.fields.reduce(
           (acc: any, curr) => ((acc[curr.id] = undefined), acc),
-          {},
+          {}
         )}
         onSubmit={handleSubmit}
         validateOnRender={false}

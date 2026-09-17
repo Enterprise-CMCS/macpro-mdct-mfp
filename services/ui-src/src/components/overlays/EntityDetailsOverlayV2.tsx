@@ -50,7 +50,7 @@ export const EntityDetailsOverlayV2 = ({
   const [formJson, setFormJson] = useState<FormJson>(form);
   // Use separate entity from selectedEntity for form change
   const [currentEntity, setCurrentEntity] = useState<EntityShape>(
-    selectedEntity as EntityShape,
+    selectedEntity as EntityShape
   );
   const { report } = useStore();
   // Closed initiatives are locked in the Work Plan, but stay editable in the
@@ -127,7 +127,7 @@ export const EntityDetailsOverlayV2 = ({
         fields: form.fields?.filter((f) => !f.forCopyoverOnly) || [],
       });
     },
-    [form, isWP],
+    [form, isWP]
   );
 
   const onFormChange = (answers: AnyObject) => {

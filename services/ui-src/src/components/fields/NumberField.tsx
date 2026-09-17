@@ -47,14 +47,14 @@ export const NumberField = ({
 }: Props) => {
   const defaultValue = hydrate ?? initialValue;
   const [displayValue, setDisplayValue] = useState<string>(
-    applyMask(defaultValue, mask, decimalPlacesToRoundTo).maskedValue,
+    applyMask(defaultValue, mask, decimalPlacesToRoundTo).maskedValue
   );
 
   const { report, selectedEntity, setAnswer, fields, setField } = useStore();
 
   useEffect(() => {
     setField(name, defaultValue);
-  }, [])
+  }, []);
 
   // update form data on change, but do not mask
   const onChangeHandler = async (event: InputChangeEvent) => {
@@ -69,7 +69,7 @@ export const NumberField = ({
   const onBlurHandler = async (event: InputChangeEvent) => {
     const { name, value } = event.target;
     setAnswer(name, value);
-    
+
     // if field is blank, trigger client-side field validation error
     if (!value.trim()) return;
 
@@ -96,7 +96,7 @@ export const NumberField = ({
             value: cleanedFieldValue,
           },
         ],
-        entityFieldData,
+        entityFieldData
       );
 
       updateFieldValues(fieldsToSave);

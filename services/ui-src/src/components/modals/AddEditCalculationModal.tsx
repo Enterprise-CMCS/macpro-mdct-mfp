@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
 // types

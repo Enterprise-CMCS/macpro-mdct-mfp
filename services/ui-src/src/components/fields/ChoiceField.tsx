@@ -13,7 +13,9 @@ export const ChoiceField = ({
   styleAsOptional,
   ...props
 }: Props) => {
-  const [checkboxState, setCheckboxState] = useState<boolean>(props?.hydrate ?? false);
+  const [checkboxState, setCheckboxState] = useState<boolean>(
+    props?.hydrate ?? false
+  );
 
   // update form data and checkbox state
   const onChangeHandler = async () => {

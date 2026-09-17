@@ -91,7 +91,7 @@ export const ReportPageWrapper = () => {
   };
 
   const reportTemplate = report?.formTemplate.flatRoutes!.find(
-    (route: ReportRoute) => route.path === pathname,
+    (route: ReportRoute) => route.path === pathname
   );
 
   return (

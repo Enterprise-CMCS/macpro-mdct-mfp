@@ -56,12 +56,12 @@ export const DropdownField = ({
   const formattedOptions = formatOptions(options);
   const defaultValue = formattedOptions[0];
   const [displayValue, setDisplayValue] = useState<DropdownChoice>(
-    hydrate ?? defaultValue,
+    hydrate ?? defaultValue
   );
 
   useEffect(() => {
     setField(name, displayValue);
-  }, [])
+  }, []);
 
   // update form data
   const onChangeHandler = async (event: DropdownChangeObject) => {

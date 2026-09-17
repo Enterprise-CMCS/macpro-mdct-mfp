@@ -277,7 +277,7 @@ export const truncateTable = (table: TableContentShape, maxColumn: number) => {
   return splitTables;
 };
 
-export const ExportRETTable = ({ section }: Props) => {
+export const ExportRETTable = ({ section, heading }: Props) => {
   const report = useStore().report;
   const form: FormJson = (section as AnyObject)?.form;
 
@@ -353,6 +353,7 @@ export const ExportRETTable = ({ section }: Props) => {
       rows[0] = formatLabelForRET(form?.id, rows[0], report!);
       return rows;
     });
+    table.caption = heading;
   }
   //split the table if there are >= 3 Other columns
   const tables: TableContentShape[] = truncateTable(table, 7);
@@ -381,6 +382,7 @@ export const ExportRETTable = ({ section }: Props) => {
 
 export interface Props {
   section: ReportPageShapeBase;
+  heading?: string;
 }
 
 const sx = {

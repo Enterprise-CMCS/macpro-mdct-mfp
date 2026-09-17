@@ -29,7 +29,7 @@ export const isFieldChanged = (field: FieldInfo) => {
 const convertToObject = (fields: FieldInfo[]) => {
   return fields.reduce(
     (acc: any, curr) => ((acc[curr.name] = curr.value ?? undefined), acc),
-    {},
+    {}
   );
 };
 
@@ -38,7 +38,7 @@ export const autoSaveFields = async (
   selectedEntity: EntityShape | undefined,
   fields: FieldInfo[],
   updateReport: Function,
-  userName: string,
+  userName: string
 ) => {
   const newReport = structuredClone(report);
   const { fieldData } = newReport;
@@ -47,7 +47,7 @@ export const autoSaveFields = async (
     items: any,
     fieldId: string,
     newValue: any,
-    editiable: boolean,
+    editiable: boolean
   ) => {
     Object.entries(items).map((item) => {
       if (item[0] === fieldId && editiable) {

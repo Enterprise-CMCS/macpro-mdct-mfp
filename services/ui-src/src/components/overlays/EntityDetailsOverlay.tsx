@@ -179,7 +179,7 @@ export const EntityDetailsOverlay = ({
 
   //used to get the exact form values to enable/disable close out button
   const onChange = (answers: AnyObject) => {
-    console.error("double check this area")
+    console.error("double check this area");
     if (selectedEntity) {
       let entity: EntityShape = {
         id: selectedEntity.id,
@@ -198,13 +198,9 @@ export const EntityDetailsOverlay = ({
 
       //there's two nested textboxes the the user can fill out after checking the checkbox
       entity["closeOutInformation_initiativeStatus-alternateFunding"] =
-        answers[
-          "closeOutInformation_initiativeStatus-alternateFunding"
-        ];
+        answers["closeOutInformation_initiativeStatus-alternateFunding"];
       entity["closeOutInformation_initiativeStatus-terminationReason"] =
-        answers[
-          "closeOutInformation_initiativeStatus-terminationReason"
-        ];
+        answers["closeOutInformation_initiativeStatus-terminationReason"];
 
       const isClosed =
         selectedEntity?.isInitiativeClosed ?? !getCloseoutStatus(form, entity);

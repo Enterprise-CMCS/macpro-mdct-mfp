@@ -193,6 +193,7 @@ export const renderReportSections = (
             />
             <ExportedReportWrapper
               section={section as ReportRouteWithForm}
+              heading={sectionHeading}
               headingLevel={nextHeadingLevel as HeadingLevel}
             />
           </Box>

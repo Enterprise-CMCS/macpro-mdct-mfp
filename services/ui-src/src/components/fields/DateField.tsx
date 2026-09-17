@@ -20,7 +20,6 @@ export const DateField = ({
   sxOverride,
   nested,
   autosave,
-  validateOnRender,
   styleAsOptional,
   updateFieldValues,
   ...props
@@ -30,7 +29,7 @@ export const DateField = ({
   const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
   // update field display value and form field data on change
-  const onChangeHandler = (rawValue: string, maskedValue: string) => {
+  const onChangeHandler = (rawValue: string, _maskedValue: string) => {
     setDisplayValue(rawValue);
     setAnswer(name, rawValue);
   };

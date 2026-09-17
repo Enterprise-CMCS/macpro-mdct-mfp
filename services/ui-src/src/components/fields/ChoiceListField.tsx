@@ -28,16 +28,14 @@ export const ChoiceListField = ({
   hint,
   nested,
   autosave,
-  validateOnRender,
   sxOverride,
   styleAsOptional,
-  clear,
   updateFieldValues,
   ...props
 }: Props) => {
   const defaultValue: Choice[] = [];
   const [displayValue, setDisplayValue] = useState<Choice[]>(
-    props?.hydrate ?? defaultValue,
+    props?.hydrate ?? defaultValue
   );
   const { editable, setAnswer, fields: formFields, setField } = useStore();
   //closeout will disables only certain parts of an active form
@@ -59,7 +57,7 @@ export const ChoiceListField = ({
           disabled: shouldDisableChildFields,
           nested: isNested,
           autosave: autosave,
-          updateFieldValues
+          updateFieldValues,
         });
         choiceObject.checkedChildren = formattedChildren;
       }
@@ -97,7 +95,7 @@ export const ChoiceListField = ({
 
   const setCheckedOrUnchecked = (choice: FieldChoice) => {
     const checkedState = displayValue?.find(
-      (option) => option.value === choice.value,
+      (option) => option.value === choice.value
     );
     choice.checked = !!checkedState;
   };
@@ -113,7 +111,7 @@ export const ChoiceListField = ({
     // handle radio
     if (type === "radio") {
       let everyOtherOption = choices.filter(
-        (choice) => choice.id != clickedOption.key,
+        (choice) => choice.id != clickedOption.key
       );
       clearUncheckedNestedFields(everyOtherOption);
       selectedOptions = [clickedOption];
@@ -128,7 +126,7 @@ export const ChoiceListField = ({
       }
       const checkedOptionValues = [...preChangeFieldValues, clickedOption];
       const uncheckedOptionValues = preChangeFieldValues.filter(
-        (field) => field.value !== clickedOption.value,
+        (field) => field.value !== clickedOption.value
       );
       selectedOptions = isOptionChecked
         ? checkedOptionValues
@@ -219,7 +217,7 @@ const sx = {
 
 export const getNestedChildFields = (
   choices: FieldChoice[],
-  answers: any,
+  answers: any
 ): AutosaveField[] => {
   // set up nested field compilation
   const nestedFields: any = [];
@@ -243,7 +241,7 @@ export const getNestedChildFields = (
       const fieldChoices = field.props?.choices;
       fieldChoices?.forEach(
         (choice: FieldChoice) =>
-          choice.children && compileNestedFields(choice.children),
+          choice.children && compileNestedFields(choice.children)
       );
     });
   };

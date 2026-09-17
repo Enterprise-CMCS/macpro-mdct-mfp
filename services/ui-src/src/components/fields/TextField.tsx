@@ -71,7 +71,7 @@ export const TextField = ({
 
       const fieldsToSave = updatedTextFields(
         [{ name, type: ReportFormFieldType.TEXT, value }],
-        entityFieldData,
+        entityFieldData
       );
 
       updateFieldValues(fieldsToSave);

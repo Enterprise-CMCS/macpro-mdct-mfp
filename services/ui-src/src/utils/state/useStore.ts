@@ -12,7 +12,6 @@ import {
   EntityShape,
   MfpEntityState,
   ErrorVerbiage,
-  ReportRoute,
   MfpFieldState,
   FIELD_DATA,
   FIELD_ERROR,
@@ -92,12 +91,12 @@ const reportStore = (set: Function) => ({
       type: "clearReportsByState",
     }),
   setSubmittedReportsByState: (
-    newSubmittedReportsByState: ReportMetadataShape[] | undefined,
+    newSubmittedReportsByState: ReportMetadataShape[] | undefined
   ) =>
     set(
       () => ({ submittedReportsByState: newSubmittedReportsByState }),
       false,
-      { type: "setSubmittedReportsByState" },
+      { type: "setSubmittedReportsByState" }
     ),
   setLastSavedTime: (savedTime: string | undefined) =>
     set(() => ({ lastSavedTime: savedTime }), false, {
@@ -134,7 +133,7 @@ const entityStore = (set: Function) => ({
       false,
       {
         type: "setSelectedEntity",
-      },
+      }
     ),
   clearSelectedEntity: () =>
     set(() => ({ selectedEntity: undefined }), false, {
@@ -156,7 +155,7 @@ const fieldStore = (set: Function) => ({
         }),
       }),
       false,
-      { type: "setField" },
+      { type: "setField" }
     ),
   setAnswer: (id: string, value: any) =>
     set(
@@ -172,7 +171,7 @@ const fieldStore = (set: Function) => ({
           ...Object.fromEntries(
             state.fields
               .keys()
-              .map((key) => [key, state.fields.get(key)?.answer]),
+              .map((key) => [key, state.fields.get(key)?.answer])
           ),
           [id]: value,
         };
@@ -190,7 +189,7 @@ const fieldStore = (set: Function) => ({
           return { [id]: "" };
         };
 
-        let validationError = runValidation()
+        let validationError = runValidation();
         const updateFields = new Map(state.fields).set(id, {
           answer: value,
           error: (validationError[id] as FIELD_ERROR) ?? "",
@@ -199,7 +198,7 @@ const fieldStore = (set: Function) => ({
         return { fields: updateFields };
       },
       false,
-      { type: "setAnswer" },
+      { type: "setAnswer" }
     ),
   setErrors: (updateErrors: { [key: string]: FIELD_ERROR }) =>
     set(
@@ -214,12 +213,12 @@ const fieldStore = (set: Function) => ({
       false,
       {
         type: "setErrors",
-      },
+      }
     ),
   setValidationSchema: (
     schema:
       | OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>>
-      | undefined,
+      | undefined
   ) =>
     set(() => ({ validationSchema: schema }), false, {
       type: "setValidationSchema",
@@ -249,6 +248,6 @@ export const useStore = create(
     {
       name: "mfp-store",
       partialize: (state) => ({ report: state.report }),
-    },
-  ),
+    }
+  )
 );

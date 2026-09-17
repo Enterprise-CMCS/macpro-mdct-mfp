@@ -28,7 +28,7 @@ export const DynamicField = ({
 }: Props) => {
   const { selectedEntity, setAnswer, fields, setField } = useStore();
   const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>(
-    selectedEntity?.[name] ?? [{ id: crypto.randomUUID(), name: "" }],
+    selectedEntity?.[name] ?? [{ id: crypto.randomUUID(), name: "" }]
   );
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const DynamicField = ({
   const onChangeHandler = (event: InputChangeEvent) => {
     const { id, value } = event.target;
     const currentEntityIndex = displayValues.findIndex(
-      (entity) => entity.id === id,
+      (entity) => entity.id === id
     );
 
     const newDisplayValues = [...displayValues];
@@ -69,7 +69,7 @@ export const DynamicField = ({
   // remove selected record from the UI
   const removeRecord = (selectedRecord: DynamicFieldShape) => {
     const index = displayValues.findIndex(
-      (entity: DynamicFieldShape) => entity.id === selectedRecord.id,
+      (entity: DynamicFieldShape) => entity.id === selectedRecord.id
     );
     let newDisplayValues = [...displayValues];
     newDisplayValues.splice(index, 1);

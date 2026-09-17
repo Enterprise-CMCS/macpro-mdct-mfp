@@ -91,7 +91,7 @@ export const AdminBannerForm = ({ writeAdminBanner }: Props) => {
         validateOnRender={false}
         dontReset={false}
       >
-        <PreviewBanner fields={fields}/>
+        <PreviewBanner fields={fields} />
       </Form>
       <Flex sx={sx.previewFlex}>
         <Button form={form.id} type="submit" sx={sx.replaceBannerButton}>

@@ -53,7 +53,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   className,
   children,
   disabled = false,
-  dontReset,
   formData,
   formJson,
   id,
@@ -114,7 +113,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
   const buildAnswerObject = () => {
     return Object.fromEntries(
-      formFields.keys().map((key) => [key, formFields.get(key)?.answer]),
+      formFields.keys().map((key) => [key, formFields.get(key)?.answer])
     );
   };
 
@@ -127,7 +126,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
     // Get input with aria-invalid
     const elementByNameAndAria = document.querySelector(
-      `[name^='${firstError}'][aria-invalid="true"]`,
+      `[name^='${firstError}'][aria-invalid="true"]`
     );
     // Choice lists don't use aria-invalid
     const elementByName = document.querySelector(`[name^='${firstError}']`);
@@ -144,20 +143,26 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   };
 
   const updateFieldValues = async (fieldsToSave: FieldInfo[]) => {
-    await autoSaveFields(report!, selectedEntity, fieldsToSave, updateReport, full_name!);
+    await autoSaveFields(
+      report!,
+      selectedEntity,
+      fieldsToSave,
+      updateReport,
+      full_name!
+    );
   };
 
   // hydrate and create form fields using formFieldFactory
   const renderFormFields = (fields: (FormField | FormLayoutElement)[]) => {
     const fieldsToRender = hydrateFormFields(
       updateRenderFields(report!, fields, formData),
-      formData,
+      formData
     );
     const updateFieldsToRenderWithAriaLabels = (
-      fieldsToRender: FormField | FormLayoutElement[],
+      fieldsToRender: FormField | FormLayoutElement[]
     ) => {
       const fieldsToRenderWithAriaLabels = JSON.parse(
-        JSON.stringify(fieldsToRender),
+        JSON.stringify(fieldsToRender)
       );
       let choiceList: [] =
         fieldsToRenderWithAriaLabels[1] &&
@@ -166,7 +171,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
       //add aria label to hint hint
       sanitizeAndParseHtml(
         fieldsToRenderWithAriaLabels[1] &&
-          fieldsToRenderWithAriaLabels[1].props.hint,
+          fieldsToRenderWithAriaLabels[1].props.hint
       );
 
       // add aria label to choicelist
@@ -179,10 +184,10 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
             let newOption = sanitizeAndParseHtml(
               `${choice?.label.slice(
                 0,
-                asteriskIndex,
+                asteriskIndex
               )} <span aria-label="(required topic at least once across all initiatives)"> ${choice?.label.charAt(
-                asteriskIndex,
-              )}</span>${choice?.label.slice(asteriskIndex + 1)}`,
+                asteriskIndex
+              )}</span>${choice?.label.slice(asteriskIndex + 1)}`
             );
             choice.label = newOption;
           }
@@ -197,7 +202,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
         autosave,
         validateOnRender,
         updateFieldValues,
-      },
+      }
     );
   };
 
@@ -260,7 +265,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
   const renderFieldOrTable = (
     fields: (FormField | FormLayoutElement)[],
-    tables: FormTable[],
+    tables: FormTable[]
   ) => {
     const renderedTableIds = new Set<string>();
     let tableIndex = 0;
@@ -325,7 +330,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
     const formErrors = Object.keys(errors).filter((key) => {
       const currentFormData = report?.fieldData?.[formData.type]?.find(
-        (t: AnyObject) => t.id === formData.id,
+        (t: AnyObject) => t.id === formData.id
       );
       const hasTableError = tableFieldIds.includes(key);
       const hasTableData = currentFormData?.[key]?.length > 0;
