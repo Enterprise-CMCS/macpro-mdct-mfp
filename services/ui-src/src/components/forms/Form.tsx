@@ -53,6 +53,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   className,
   children,
   disabled = false,
+  dontReset,
   formData,
   formJson,
   id,

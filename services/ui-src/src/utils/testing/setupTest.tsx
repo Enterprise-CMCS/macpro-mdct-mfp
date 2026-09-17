@@ -40,6 +40,7 @@ import {
   ReportShape,
   MfpEntityState,
   EntityType,
+  MfpFieldState,
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
@@ -372,6 +373,17 @@ export const mockUseObjectiveProgressEntityStore: MfpUserState &
   ...mockObjectiveProgressEntityStore,
 };
 
+export const mockFieldStore: MfpFieldState = {
+  fields: new Map(),
+  validationSchema: undefined,
+  setField: (id, value) => {
+    console.log(id, value);
+  },
+  setAnswer: () => {},
+  setValidationSchema: () => {},
+  setErrors: () => {},
+  setClearFields: () => {},
+};
 // ROUTER
 
 export const RouterWrappedComponent: React.FC<{ children: any }> = ({
