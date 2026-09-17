@@ -1,4 +1,3 @@
-import { Mock } from "vitest";
 import { useContext } from "react";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -29,24 +28,7 @@ import { testA11yAct } from "utils/testing/commonTests";
 import { calculationTableDynamicTotalsOnSave } from "utils";
 import { ResponsiveTable } from "./ResponsiveTable";
 
-const mockTrigger = vi.fn();
-const mockRhfMethods = {
-  register: () => {},
-  setValue: () => {},
-  getValues: vi.fn(),
-  trigger: mockTrigger,
-};
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-vi.mock("react-hook-form", () => ({
-  useFormContext: vi.fn(() => mockRhfMethods),
-}));
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
-  }));
+const mockSetValue = vi.fn();
 
 vi.mock("utils/autosave/autosave", () => ({
   getAutosaveFields: vi.fn().mockImplementation(() => {
@@ -58,7 +40,6 @@ vi.mock("utils/autosave/autosave", () => ({
     ];
   }),
   autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const TestComponent = () => {
@@ -455,7 +436,7 @@ const TestComponent = () => {
 
 const testComponent = (
   <RouterWrappedComponent>
-    <DynamicTableProvider>
+    <DynamicTableProvider updateFieldValues={mockSetValue}>
       <TestComponent />
     </DynamicTableProvider>
   </RouterWrappedComponent>

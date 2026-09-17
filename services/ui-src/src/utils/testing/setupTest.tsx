@@ -376,9 +376,7 @@ export const mockUseObjectiveProgressEntityStore: MfpUserState &
 export const mockFieldStore: MfpFieldState = {
   fields: new Map(),
   validationSchema: undefined,
-  setField: (id, value) => {
-    console.log(id, value);
-  },
+  setField: () => {},
   setAnswer: () => {},
   setValidationSchema: () => {},
   setErrors: () => {},

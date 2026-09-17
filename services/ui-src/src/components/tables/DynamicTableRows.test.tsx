@@ -1,8 +1,7 @@
-import { Mock, MockedFunction } from "vitest";
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
-import { useFormContext } from "react-hook-form";
 import { DynamicTableRows, DynamicTableProvider } from "components";
 // types
 import { EntityType, ReportType } from "types";
@@ -16,44 +15,10 @@ import {
   mockStateUserStore,
   mockTableId,
   mockDynamicRowsTemplateWithModalForm,
+  mockFieldStore,
 } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 import { ResponsiveTable } from "./ResponsiveTable";
-
-const mockTrigger = vi.fn();
-const mockRhfMethods = {
-  register: () => {},
-  setValue: () => {},
-  getValues: vi.fn(),
-  trigger: mockTrigger,
-};
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-vi.mock("react-hook-form", () => ({
-  useFormContext: vi.fn(() => mockRhfMethods),
-}));
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
-  }));
-
-vi.mock("utils/state/useStore");
-const mockedUseStore = useStore as MockedFunction<typeof useStore>;
-
-vi.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: vi.fn().mockImplementation(() => {
-    return [
-      {
-        name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-totalComputable`,
-        value: "123",
-      },
-    ];
-  }),
-  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: vi.fn().mockImplementation((work) => work()),
-}));
 
 const mockProps = {
   disabled: false,
@@ -79,6 +44,35 @@ const mockProps = {
   entityType: undefined,
 };
 
+const mockSetValue = vi.fn();
+const mockAutosave = vi.fn();
+
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+
+mockedUseStore.mockReturnValue({
+  ...mockStateUserStore,
+  ...mockReportStore,
+  report: {
+    fieldData: mockProps.formData,
+  },
+  ...mockFieldStore,
+  setAnswer: mockSetValue,
+});
+
+vi.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: vi.fn().mockImplementation(() => {
+    return [
+      {
+        name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-totalComputable`,
+        value: "123",
+      },
+    ];
+  }),
+  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
+  enqueueWrite: vi.fn().mockImplementation((work) => work()),
+}));
+
 const DynamicTableRowsComponent = ({ props = mockProps }) => {
   return ResponsiveTable({
     id: "",
@@ -101,16 +95,8 @@ const DynamicTableRowsComponent = ({ props = mockProps }) => {
 
 describe("<DynamicTableRows />", () => {
   test("delete row", async () => {
-    mockedUseStore.mockReturnValue({
-      ...mockStateUserStore,
-      ...mockReportStore,
-      report: {
-        fieldData: mockProps.formData,
-      },
-    });
-    mockGetValues(undefined);
     render(
-      <DynamicTableProvider>
+      <DynamicTableProvider updateFieldValues={mockAutosave}>
         <DynamicTableRowsComponent />
       </DynamicTableProvider>
     );
@@ -138,16 +124,8 @@ describe("<DynamicTableRows />", () => {
   });
 
   test("edit row", async () => {
-    mockedUseStore.mockReturnValue({
-      ...mockStateUserStore,
-      ...mockReportStore,
-      report: {
-        fieldData: mockProps.formData,
-      },
-    });
-    mockGetValues(undefined);
     render(
-      <DynamicTableProvider>
+      <DynamicTableProvider updateFieldValues={mockAutosave}>
         <DynamicTableRowsComponent />
       </DynamicTableProvider>
     );
@@ -192,11 +170,12 @@ describe("<DynamicTableRows />", () => {
           [EntityType.INITIATIVE]: [formData],
         },
       },
+      ...mockFieldStore,
+      setAnswer: mockSetValue,
     });
-    mockGetValues(undefined);
 
     render(
-      <DynamicTableProvider>
+      <DynamicTableProvider updateFieldValues={mockAutosave}>
         <DynamicTableRowsComponent props={updatedProps as any} />
       </DynamicTableProvider>
     );
@@ -230,10 +209,11 @@ describe("<DynamicTableRows />", () => {
           [mockDynamicTemplateId]: [],
         },
       },
+      ...mockFieldStore,
+      setAnswer: mockSetValue,
     });
-    mockGetValues(undefined);
     render(
-      <DynamicTableProvider>
+      <DynamicTableProvider updateFieldValues={mockAutosave}>
         <DynamicTableRowsComponent />
       </DynamicTableProvider>
     );
@@ -258,13 +238,14 @@ describe("<DynamicTableRows />", () => {
         reportType: ReportType.FINANCIAL_REPORT,
         fieldData: formData,
       },
+      ...mockFieldStore,
+      setAnswer: mockSetValue,
     });
-    mockGetValues(undefined);
 
     const newProps = { ...mockProps, dynamicRowsTemplate, formData };
 
     return render(
-      <DynamicTableProvider>
+      <DynamicTableProvider updateFieldValues={mockAutosave}>
         <DynamicTableRowsComponent props={newProps} />
       </DynamicTableProvider>
     );
@@ -354,11 +335,12 @@ describe("<DynamicTableRows />", () => {
         report: {
           fieldData: mockProps.formData,
         },
+        ...mockFieldStore,
+        setAnswer: mockSetValue,
       });
-      mockGetValues(undefined);
 
       render(
-        <DynamicTableProvider>
+        <DynamicTableProvider updateFieldValues={mockAutosave}>
           <DynamicTableRowsComponent props={updatedProps as any} />
         </DynamicTableProvider>
       );
@@ -383,11 +365,12 @@ describe("<DynamicTableRows />", () => {
             [mockDynamicTemplateId]: [],
           },
         },
+        ...mockFieldStore,
+        setAnswer: mockSetValue,
       });
-      mockGetValues(undefined);
 
       render(
-        <DynamicTableProvider>
+        <DynamicTableProvider updateFieldValues={mockAutosave}>
           <DynamicTableRowsComponent props={updatedProps as any} />
         </DynamicTableProvider>
       );
@@ -399,7 +382,7 @@ describe("<DynamicTableRows />", () => {
   });
 
   testA11yAct(
-    <DynamicTableProvider>
+    <DynamicTableProvider updateFieldValues={mockAutosave}>
       <DynamicTableRowsComponent />
     </DynamicTableProvider>
   );

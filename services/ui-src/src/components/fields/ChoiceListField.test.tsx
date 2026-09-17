@@ -6,7 +6,6 @@ import { mockWpReportContext } from "../../utils/testing/mockReport";
 import { ReportStatus } from "../../types";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockTrigger = vi.fn().mockReturnValue(true);
 const mockSetValue = vi.fn();
 
 const mockChoices = [
@@ -217,20 +216,6 @@ describe("<ChoiceListField />", () => {
           type="checkbox"
           hydrate={[{ key: "Choice1", value: "Choice1" }]}
           autosave
-        />
-      </ReportContext.Provider>
-    );
-
-    const CheckboxHydrationClearComponent = (
-      <ReportContext.Provider value={mockWpReportContext}>
-        <ChoiceListField
-          choices={mockChoices}
-          label="Checkbox Hydration Example"
-          name=""
-          type="checkbox"
-          hydrate={[{ key: "Choice1", value: "Choice1" }]}
-          autosave
-          clear={true}
         />
       </ReportContext.Provider>
     );
