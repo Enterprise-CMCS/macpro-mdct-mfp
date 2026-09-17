@@ -10,7 +10,7 @@ import {
 } from "react";
 import { useFormContext } from "react-hook-form";
 // components
-import { Flex, Td, Text, Th, Tr, VisuallyHidden } from "@chakra-ui/react";
+import { Flex, Text, VisuallyHidden } from "@chakra-ui/react";
 import { EntityContext, ReportContext } from "components";
 // types
 import {
@@ -275,7 +275,7 @@ export const DynamicTableProvider = ({ children }: any) => {
       const dynamicLabelId = `${tempDynamicId}_dynamic-label`;
 
       return (
-        <Flex>
+        <Flex id={dynamicId}>
           <Flex sx={sx.label}>
             <label htmlFor={tempDynamicId} id={dynamicLabelId}>
               {cell.props?.dynamicLabel}
@@ -298,11 +298,9 @@ export const DynamicTableProvider = ({ children }: any) => {
 
   const generateRows = ({
     cellPropsCallback = () => {},
-    columnCount,
     disabled,
     dynamicRowsTemplate,
     formData,
-    isTotalsRow = false,
     row,
     rowIndex,
     section,
@@ -311,48 +309,11 @@ export const DynamicTableProvider = ({ children }: any) => {
     styleAsOptionalHeadRows = [],
     tableId,
   }: GenerateRows) => {
-    let firstColumnWidth = dynamicRowsTemplate ? 30 : 36;
-
-    if (columnCount === 3) {
-      firstColumnWidth = 50;
-    }
-
-    if (columnCount > 5) {
-      firstColumnWidth = 100 / columnCount;
-    }
-
-    const optionsWidth = 7;
-    const otherColumnsWidth = 100 - firstColumnWidth;
-    const otherColumnsCount = columnCount - 1;
-    const remainingWidth = dynamicRowsTemplate
-      ? otherColumnsWidth - optionsWidth
-      : otherColumnsWidth;
-
-    const thWidth = (index: number) =>
-      index === 0
-        ? `${firstColumnWidth}%`
-        : `${remainingWidth / otherColumnsCount}%`;
-
-    const thAlign = (cell: FormTableCell) => {
-      const rightAlignedCells: FormTableCell[] = [
-        "Total State / Territory Share",
-        "Total Federal Share",
-      ];
-
-      if (typeof cell === "string" && rightAlignedCells.includes(cell)) {
-        return "right";
-      }
-
-      return "left";
-    };
-
-    const Cell = section === "thead" ? Th : Td;
     const actionLabel = showEditHeader ? (
       "Actions"
     ) : (
       <VisuallyHidden>Actions</VisuallyHidden>
     );
-    const content = section === "thead" ? actionLabel : null;
     const rowId = section === "tbody" ? "thead" : section;
 
     const isOptional = (cell: FormTableCell) => {
@@ -360,35 +321,24 @@ export const DynamicTableProvider = ({ children }: any) => {
       return styleAsOptionalHeadRows.includes(cell);
     };
 
-    return (
-      <Tr
-        key={`${tableId}-${section}-row-${rowIndex}`}
-        className={isTotalsRow ? "totals-row" : ""}
-      >
-        {row.map((cell, cellIndex: number) => (
-          <Cell
-            id={`${tableId}-${section}-row-${rowIndex}-cell-${cellIndex}`}
-            key={`${tableId}-${section}-row-${rowIndex}-cell-${cellIndex}`}
-            sx={{ textAlign: thAlign(cell), width: thWidth(cellIndex) }}
-          >
-            {displayCell({
-              cell,
-              columnId: `${tableId}-${section}-row-${rowIndex}-cell-0`,
-              disabled,
-              formData,
-              rowId: `${tableId}-${rowId}-row-0-cell-${cellIndex}`,
-              rowIndex,
-              styleAsOptional: isOptional(cell),
-              tableId,
-              ...cellPropsCallback(cell),
-            })}
-          </Cell>
-        ))}
-        {dynamicRowsTemplate && showEditColumn && (
-          <Cell sx={{ width: `${optionsWidth}%` }}>{content}</Cell>
-        )}
-      </Tr>
+    const rows = row.map((cell, cellIndex: number) =>
+      displayCell({
+        cell,
+        columnId: `${tableId}-${section}-row-${rowIndex}-cell-0`,
+        disabled,
+        formData,
+        rowId: `${tableId}-${rowId}-row-0-cell-${cellIndex}`,
+        rowIndex,
+        styleAsOptional: isOptional(cell),
+        tableId,
+        ...cellPropsCallback(cell),
+      })
     );
+
+    if (dynamicRowsTemplate && showEditColumn)
+      rows.push(section === "thead" ? actionLabel : "");
+
+    return rows;
   };
 
   const addDynamicRow = async (

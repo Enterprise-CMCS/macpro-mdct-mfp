@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
-import { Table, Tbody, Thead } from "@chakra-ui/react";
 import {
   DynamicTableContext,
   DynamicTableProvider,
@@ -29,6 +28,7 @@ import {
 import { testA11yAct } from "utils/testing/commonTests";
 import { useFormContext } from "react-hook-form";
 import { calculationTableDynamicTotalsOnSave } from "utils";
+import { ResponsiveTable } from "./ResponsiveTable";
 
 const mockTrigger = vi.fn();
 const mockRhfMethods = {
@@ -399,9 +399,11 @@ const TestComponent = () => {
       {displayDynamicCell(dynamicDisplayCellProps)}
       {displayDynamicCell(dynamicDisplayCellLabelProps)}
 
-      <Table aria-label="Table 1">
-        <Thead>
-          {generateRows({
+      {ResponsiveTable({
+        id: "Table 1",
+        title: "Table 1",
+        headers: [
+          generateRows({
             columnCount: 3,
             dynamicRowsTemplate,
             row: [
@@ -411,33 +413,43 @@ const TestComponent = () => {
             ],
             rowIndex: 0,
             section: "thead",
-          })}
-        </Thead>
-      </Table>
+          }),
+        ],
+        rows: [],
+        foot: [],
+      })}
 
-      <Table aria-label="Table 2">
-        <Tbody>
-          {generateRows({
+      {ResponsiveTable({
+        id: "Table 2",
+        title: "Table 2",
+        headers: [],
+        rows: [
+          generateRows({
             columnCount: 6,
             row: ["Mock 1", "Mock 2", "Mock 3", "Mock 4", "Mock 5", "Mock 6"],
             rowIndex: 0,
             section: "tbody",
-          })}
-        </Tbody>
-      </Table>
+          }),
+        ],
+        foot: [],
+      })}
 
-      <Table aria-label="Table 3">
-        <Thead>
-          {generateRows({
+      {ResponsiveTable({
+        id: "Table 3",
+        title: "Table 3",
+        headers: [
+          generateRows({
             columnCount: 3,
             dynamicRowsTemplate,
             row: ["Heading A", "Heading B", "Heading C"],
             rowIndex: 0,
             section: "thead",
             showEditHeader: false,
-          })}
-        </Thead>
-      </Table>
+          }),
+        ],
+        rows: [],
+        foot: [],
+      })}
     </div>
   );
 };
