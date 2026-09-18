@@ -152,17 +152,10 @@ export class StatePage extends BasePage {
     await this.page.getByRole("button", { name: "Continue" }).click();
   }
 
-  async completeTransitionBenchmarkStrategy(
-    explanation: string
-    // additionalDetails: string
-  ) {
-    // await this.page.locator('[id^="strategy_expla"]').fill(explanation);
+  async completeTransitionBenchmarkStrategy(explanation: string) {
     await this.page
       .getByRole("textbox", { name: "Explain how you formulated" })
       .fill(explanation);
-    // await this.page
-    //   .locator("#strategy_additionalDetails")
-    //   .fill(additionalDetails);
     const putResp = this.waitForReportResponse("PUT", 200);
     await this.page.getByRole("button", { name: "Continue" }).click();
     await putResp;
@@ -442,8 +435,7 @@ export class StatePage extends BasePage {
       workPlan.transitionBenchmarkProjections
     );
     await this.completeTransitionBenchmarkStrategy(
-      workPlan.transitionBenchmarkStrategy.explanation,
-      workPlan.transitionBenchmarkStrategy.additionalDetails
+      workPlan.transitionBenchmarkStrategy.explanation
     );
     await this.completeInitiativesInstructions(
       workPlan.initiativesInstructions.selfDirected,
