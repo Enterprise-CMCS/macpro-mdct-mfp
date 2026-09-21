@@ -41,7 +41,7 @@ const BASE_TARGET_POPULATIONS: ReportFieldData[] = [
 ];
 
 export const newWorkPlan = (
-  flags: { [key: string]: true },
+  flags: Record<string, boolean>,
   stateName: string,
   reportYear: number,
   reportPeriod: number
@@ -72,7 +72,7 @@ export const newWorkPlan = (
 };
 
 export const fillWorkPlan = (
-  flags: { [key: string]: true },
+  flags: Record<string, boolean>,
   year: number,
   period: number
 ): SeedFillReportShape => {
@@ -107,7 +107,6 @@ export const fillWorkPlan = (
     };
   } else {
     flaggedData = {
-      strategy_additionalDetails: faker.lorem.sentence(),
       strategy_explaination: faker.lorem.sentence(),
     };
   }
@@ -158,7 +157,7 @@ const addEvaluationPlan = (
 };
 
 const addInitiative = (
-  flags: { [key: string]: true },
+  flags: Record<string, boolean>,
   year: number,
   period: number
 ): ReportFieldData[] => {
