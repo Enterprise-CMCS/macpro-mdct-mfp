@@ -91,7 +91,7 @@ const mockUseStore: MfpReportState & MfpUserState & MfpFieldState = {
   setEditable: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
-  ...mockFieldStore
+  ...mockFieldStore,
 };
 
 // mock report context for WP
@@ -120,7 +120,7 @@ const mockSarUseStore: MfpReportState & MfpUserState & MfpFieldState = {
   setEditable: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
-  ...mockFieldStore
+  ...mockFieldStore,
 };
 
 // mock report context for SAR

@@ -99,7 +99,7 @@ describe("<AdminBannerForm />", () => {
   });
 
   test("Form submits correctly with existing banners that don't overlap", async () => {
-    mockedUseStore.mockReturnValue(mockBannerStore);
+    mockedUseStore.mockReturnValue({...mockBannerStore, ...mockFieldStore});
     const result = render(adminBannerFormComponent(mockWriteAdminBanner));
     const form = result.container;
     await fillOutForm(form);

@@ -78,6 +78,9 @@ describe("<ReportDrawer />", () => {
   });
 
   testA11yAct(drawerComponent, () => {
-    mockedUseStore.mockReturnValue({...mockStateUserStore, ...mockFieldStore});
+    mockedUseStore.mockReturnValue({
+      ...mockStateUserStore,
+      ...mockFieldStore,
+    });
   });
 });

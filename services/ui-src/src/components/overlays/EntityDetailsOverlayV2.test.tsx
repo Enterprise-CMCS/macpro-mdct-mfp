@@ -6,6 +6,7 @@ import { EntityDetailsOverlayV2 } from "./EntityDetailsOverlayV2";
 // utils
 import {
   mockEntityStore,
+  mockFieldStore,
   mockModalOverlayForm,
   mockModalOverlayReportPageJson,
   mockModalOverlayReportPageVerbiage,
@@ -24,6 +25,7 @@ vi.mock("utils/state/useStore");
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue({
   ...mockStateUserStore,
+  ...mockFieldStore,
   ...mockEntityStore,
   setAutosaveState: vi.fn(),
 });
@@ -68,6 +70,7 @@ describe("<EntityDetailsOverlayV2 />", () => {
     vi.clearAllMocks();
     mockedUseStore.mockReturnValue({
       ...mockStateUserStore,
+      ...mockFieldStore,
       ...mockEntityStore,
     });
   });
@@ -200,6 +203,7 @@ describe("<EntityDetailsOverlayV2 />", () => {
   test("keeps a closed initiative editable in the SAR", async () => {
     mockedUseStore.mockReturnValue({
       ...mockStateUserStore,
+      ...mockFieldStore,
       ...mockEntityStore,
       report: { reportType: ReportType.SAR } as any,
     });
@@ -219,6 +223,7 @@ describe("<EntityDetailsOverlayV2 />", () => {
   test("locks a closed initiative in the Work Plan", async () => {
     mockedUseStore.mockReturnValue({
       ...mockStateUserStore,
+      ...mockFieldStore,
       ...mockEntityStore,
       report: { reportType: ReportType.WP } as any,
     });

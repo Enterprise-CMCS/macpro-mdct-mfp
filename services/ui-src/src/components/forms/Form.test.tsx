@@ -37,15 +37,15 @@ const formComponent = (form = mockForm) => (
 
 const mockStore = {
   ...mockStateUser,
-  ...mockFieldStore
-}
+  ...mockFieldStore,
+};
 
 describe("<Form />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
   test("Form is visible and disabled by default", () => {
-    mockedUseStore.mockReturnValue({...mockFieldStore});
+    mockedUseStore.mockReturnValue({ ...mockFieldStore });
     render(formComponent());
     const form = screen.getByRole("textbox", {
       name: mockForm.fields[0].props.label,
@@ -65,7 +65,7 @@ describe("<Form />", () => {
   });
 
   test("Form is enabled for admin users when specified", () => {
-    mockedUseStore.mockReturnValue({...mockAdminUser, ...mockFieldStore});
+    mockedUseStore.mockReturnValue({ ...mockAdminUser, ...mockFieldStore });
     const mockFormEditableByAdmins = {
       ...mockForm,
       editableByAdmins: true,

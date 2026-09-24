@@ -319,8 +319,20 @@ export const mockEmptyReportStore: MfpReportState = {
 export const mockFieldStore: MfpFieldState = {
   fields: new Map(),
   validationSchema: undefined,
-  setField: () => {},
-  setAnswer: () => {},
+  setField: (key, value) => {
+    mockFieldStore.fields.set(key, {
+      answer: value,
+      error: { message: "" },
+      validate: false,
+    });
+  },
+  setAnswer: (key, value) => {
+    mockFieldStore.fields.set(key, {
+      answer: value,
+      error: { message: "" },
+      validate: false,
+    });
+  },
   setValidationSchema: () => {},
   setErrors: () => {},
   setClearFields: () => {},

@@ -329,7 +329,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
     setErrors(errors);
 
     const formErrors = Object.keys(errors).filter((key) => {
-      const currentFormData = report?.fieldData?.[formData.type]?.find(
+      const currentFormData = report?.fieldData?.[formData?.type]?.find(
         (t: AnyObject) => t.id === formData.id
       );
       const hasTableError = tableFieldIds.includes(key);

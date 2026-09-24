@@ -44,7 +44,10 @@ describe("<AdminPage />", () => {
   describe("Test AdminPage banner manipulation functionality", () => {
     test("Deletes current banner on delete button click", async () => {
       await act(async () => {
-        mockedUseStore.mockReturnValue({...mockBannerStore, ...mockFieldStore});
+        mockedUseStore.mockReturnValue({
+          ...mockBannerStore,
+          ...mockFieldStore,
+        });
         await render(adminView(mockBannerMethods));
       });
       const deleteButton = screen.getByText(deleteButtonText);
@@ -59,7 +62,8 @@ describe("<AdminPage />", () => {
     beforeEach(async () => {
       await act(async () => {
         mockedUseStore.mockReturnValue({
-          ...mockBannerStore, ...mockFieldStore,
+          ...mockBannerStore,
+          ...mockFieldStore,
           bannerData: undefined,
           allBanners: undefined,
         });
@@ -84,7 +88,10 @@ describe("<AdminPage />", () => {
   describe("Test AdminPage with banner", () => {
     beforeEach(async () => {
       await act(async () => {
-        mockedUseStore.mockReturnValue({...mockBannerStore, ...mockFieldStore});
+        mockedUseStore.mockReturnValue({
+          ...mockBannerStore,
+          ...mockFieldStore,
+        });
         await render(adminView(mockBannerMethods));
       });
     });
@@ -112,7 +119,7 @@ describe("<AdminPage />", () => {
     const currentTime = Date.now(); // 'current' time in ms since unix epoch
     const oneDay = 1000 * 60 * 60 * 24; // 1000ms * 60s * 60m * 24h = 86,400,000ms
     const context = mockBannerMethods;
-    mockedUseStore.mockReturnValue({...mockBannerStore, ...mockFieldStore});
+    mockedUseStore.mockReturnValue({ ...mockBannerStore, ...mockFieldStore });
 
     test("Active banner shows 'active' status", async () => {
       // TODO: actually toggle active status
