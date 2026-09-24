@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 //components
 import { AddEditEntityModal, ReportContext } from "components";
 import {
+  mockFieldStore,
   mockModalDrawerReportPageVerbiage,
   mockModalForm,
   mockReportKeys,
@@ -72,6 +73,7 @@ const mockUseStore: MfpReportState & MfpUserState = {
   setEditable: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
+  ...mockFieldStore
 };
 
 const mockedReportContext = {

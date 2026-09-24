@@ -1,4 +1,3 @@
-import { Mock } from "vitest";
 import { useContext } from "react";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -26,31 +25,13 @@ import {
   RouterWrappedComponent,
 } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
-import { useFormContext } from "react-hook-form";
 import { calculationTableDynamicTotalsOnSave } from "utils";
 import { ResponsiveTable } from "./ResponsiveTable";
 
-const mockTrigger = vi.fn();
-const mockRhfMethods = {
-  register: () => {},
-  setValue: () => {},
-  getValues: vi.fn(),
-  trigger: mockTrigger,
-};
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-vi.mock("react-hook-form", () => ({
-  useFormContext: vi.fn(() => mockRhfMethods),
-}));
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
-  }));
+const mockSetValue = vi.fn();
 
 vi.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: vi.fn().mockImplementation(() => {
+  autoSaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-totalComputable`,
@@ -58,8 +39,6 @@ vi.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const TestComponent = () => {
@@ -456,7 +435,7 @@ const TestComponent = () => {
 
 const testComponent = (
   <RouterWrappedComponent>
-    <DynamicTableProvider>
+    <DynamicTableProvider updateFieldValues={mockSetValue}>
       <TestComponent />
     </DynamicTableProvider>
   </RouterWrappedComponent>
@@ -471,7 +450,6 @@ describe("<DynamicTableProvider />", () => {
     });
   });
   beforeEach(() => {
-    mockGetValues(undefined);
     render(testComponent);
   });
   describe("displayCell()", () => {

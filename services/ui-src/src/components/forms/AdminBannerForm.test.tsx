@@ -8,7 +8,7 @@ import { RouterWrappedComponent } from "utils/testing/mockRouter";
 import { testA11yAct } from "utils/testing/commonTests";
 import { convertDateTimeEtToUtc, useStore } from "utils";
 import { mockBannerData } from "utils/testing/mockBanner";
-import { mockBannerStore } from "utils/testing/setupTest";
+import { mockBannerStore, mockFieldStore } from "utils/testing/setupTest";
 
 const mockWriteAdminBanner = vi.fn();
 const mockWriteAdminBannerWithError = vi.fn(() => {
@@ -26,12 +26,14 @@ const mockBannerOverlappingDates = {
 
 const emptyBannerStore = {
   ...mockBannerStore,
+  ...mockFieldStore,
   allBanners: undefined,
   bannerData: undefined,
 };
 
 const mockStoreWithConflictingBanner = {
   ...mockBannerStore,
+  ...mockFieldStore,
   allBanners: [mockBannerOverlappingDates],
   bannerData: mockBannerOverlappingDates,
 };
@@ -97,7 +99,7 @@ describe("<AdminBannerForm />", () => {
   });
 
   test("Form submits correctly with existing banners that don't overlap", async () => {
-    mockedUseStore.mockReturnValue(mockBannerStore);
+    mockedUseStore.mockReturnValue({...mockBannerStore, ...mockFieldStore});
     const result = render(adminBannerFormComponent(mockWriteAdminBanner));
     const form = result.container;
     await fillOutForm(form);

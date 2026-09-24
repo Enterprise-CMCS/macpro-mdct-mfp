@@ -3,13 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { TextAreaField } from "components";
 import { testA11yAct } from "utils/testing/commonTests";
 
-vi.mock("react-hook-form", () => ({
-  useFormContext: () => ({
-    setValue: () => {},
-    register: () => {},
-    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue("test"),
-  }),
-}));
+const mockAutosave = vi.fn();
 
 const textAreaFieldComponent = (
   <TextAreaField
@@ -17,6 +11,7 @@ const textAreaFieldComponent = (
     label="test-label"
     placeholder="test-placeholder"
     data-testid="test-text-area-field"
+    updateFieldValues={mockAutosave}
   />
 );
 

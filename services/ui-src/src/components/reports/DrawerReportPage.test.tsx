@@ -6,6 +6,7 @@ import { ReportContext, DrawerReportPage } from "components";
 // utils
 import {
   mockDrawerReportPageJson,
+  mockFieldStore,
   mockUseStore,
   mockWPFullReport,
   mockWpReportContext,
@@ -31,6 +32,7 @@ const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const mockReportStoreWithoutEntities = {
   ...mockUseStore,
+  ...mockFieldStore,
   report: {
     ...(mockWPFullReport as ReportShape),
     fieldData: {},
