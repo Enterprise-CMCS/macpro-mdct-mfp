@@ -41,6 +41,7 @@ import {
   MfpEntityState,
   EntityType,
   MfpFieldState,
+  FIELD_ERROR,
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
@@ -333,9 +334,22 @@ export const mockFieldStore: MfpFieldState = {
       validate: false,
     });
   },
-  setValidationSchema: () => {},
-  setErrors: () => {},
-  setClearFields: () => {},
+  setValidationSchema: (schema) => {
+    mockFieldStore.validationSchema = schema;
+  },
+  setErrors: (updateErrors: { [key: string]: FIELD_ERROR }) => {
+    if (Object.keys(updateErrors).length > 0) {
+      const updateFields = new Map(mockFieldStore.fields);
+      for (const [key, value] of Object.entries(updateErrors)) {
+        const data = mockFieldStore.fields.get(key) ?? { answer: undefined };
+        updateFields.set(key, { ...data, error: value, validate: false });
+      }
+      mockFieldStore.fields = updateFields;
+    }
+  },
+  setClearFields: () => {
+    mockFieldStore.fields = new Map();
+  },
 };
 
 // BOUND STORE

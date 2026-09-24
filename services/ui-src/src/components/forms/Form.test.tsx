@@ -88,8 +88,8 @@ describe("<Form />", () => {
       await userEvent.click(submitButton);
     });
 
-    const errorMessage = screen.getAllByText("A response is required");
-    expect(errorMessage).toHaveLength(3);
+    const errors = Array.from(mockFieldStore.fields).filter((field) => field[1].error.message === "A response is required")
+    expect(errors).toHaveLength(3);
   });
 
   test("form tables are visible", () => {
