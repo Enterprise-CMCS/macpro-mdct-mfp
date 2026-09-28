@@ -178,7 +178,7 @@ export const renderEntityTables = (
 
     const transformedHeadRow = headRow.map((header: string) => {
       if (styleAsOptionalHeadRows.includes(header)) {
-        return `${header}<span style="font-weight: normal;"> (optional)</span>`;
+        return `${header}<span style="font-weight: normal;"> (Optional)</span>`;
       }
       return header;
     });
