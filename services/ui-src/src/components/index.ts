@@ -76,6 +76,8 @@ export { Header } from "./layout/Header";
 export { InfoSection } from "./layout/InfoSection";
 export { PageTemplate } from "./layout/PageTemplate";
 export { Timeout } from "./layout/Timeout";
+//links
+export { ExternalLink } from "./links/ExternalLink";
 // logins
 export { LoginCognito } from "./logins/LoginCognito";
 export { LoginIDM } from "./logins/LoginIDM";

@@ -2,10 +2,11 @@ import { ComponentClass, useEffect } from "react";
 import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 import { useFlags } from "launchdarkly-react-client-sdk";
 // components
-import { Box, Collapse, Heading, Link, Text } from "@chakra-ui/react";
+import { Box, Collapse, Heading, Text } from "@chakra-ui/react";
 import {
   AdminDashSelector,
   Banner,
+  ExternalLink,
   PageTemplate,
   TemplateCard,
 } from "components";
@@ -53,9 +54,11 @@ export const HomePage = () => {
               </Heading>
               <Text>
                 {intro.body.preLinkText}
-                <Link href={intro.body.linkLocation} isExternal>
-                  {intro.body.linkText}
-                </Link>
+                {intro.body.linkText && (
+                  <ExternalLink href={intro.body.linkLocation}>
+                    {intro.body.linkText}
+                  </ExternalLink>
+                )}
                 {intro.body.postLinkText}
               </Text>
               <Text></Text>

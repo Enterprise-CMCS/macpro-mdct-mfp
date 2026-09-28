@@ -177,3 +177,14 @@ button {
   margin-top: var(--mdct-space-spacer3);
   margin-bottom: var(--mdct-space-spacer5);
 }
+
+// EXTERNAL LINK ICON
+
+.external-link-icon.ds-c-icon {
+  color: inherit;
+  flex-shrink: 0;
+  font-size: 1em;
+  margin-left: 0.25em;
+  height: 1em;
+  width: 1em;
+}

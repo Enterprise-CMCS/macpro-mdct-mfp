@@ -9,7 +9,7 @@ const primaryVariant = {
   color: "primary",
   _visited: {
     color: "visited",
-    textDecorationColor: "primary",
+    textDecorationColor: "visited",
   },
   ":hover, :visited:hover": {
     color: "primary_darker",
