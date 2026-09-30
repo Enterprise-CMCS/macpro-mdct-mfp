@@ -123,7 +123,7 @@ export const labelTextWithOptional = (label: string) => {
   const colon = endsWithColon ? ":" : "";
 
   return parseCustomHtml(
-    `${parsedLabel}<span class='optional-text'> (optional)${colon}</span>`
+    `${parsedLabel}<span class='optional-text'> (Optional)${colon}</span>`
   );
 };
 

@@ -260,7 +260,7 @@ describe("utils/parsing", () => {
       const fieldText = screen.getByText("field title");
       expect(fieldText).toBeVisible();
 
-      const optionalText = screen.getByText("(optional)");
+      const optionalText = screen.getByText("(Optional)");
       expect(optionalText).toBeVisible();
     });
 
@@ -272,7 +272,7 @@ describe("utils/parsing", () => {
       const fieldText = screen.getByText("field title");
       expect(fieldText).toBeVisible();
 
-      const optionalText = screen.getByText("(optional):");
+      const optionalText = screen.getByText("(Optional):");
       expect(optionalText).toBeVisible();
     });
   });

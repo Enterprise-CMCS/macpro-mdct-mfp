@@ -103,7 +103,7 @@ describe("<EntityDetailsOverlayV2 />", () => {
 
     expect(
       screen.getByRole("textbox", {
-        name: "mock optional field(optional)",
+        name: "mock optional field(Optional)",
       })
     ).toBeVisible();
   });
