@@ -119,6 +119,9 @@ const sx = {
     paddingRight: "spacer1",
     margin: "0",
   },
+  ".ds-c-label": {
+    width: "max-content",
+  },
   numberFieldContainer: {
     position: "relative",
     "&.currency": {
