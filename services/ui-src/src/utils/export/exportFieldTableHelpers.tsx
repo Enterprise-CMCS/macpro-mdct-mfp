@@ -135,7 +135,7 @@ export const renderCalculationTables = (
       percentageValue = formPercentage;
     }
 
-    const percentageText = table.verbiage?.percentage || "[auto-populated]%";
+    const percentageText = table.verbiage?.percentage || "Not provided";
     const displayPercentage = percentageText.replace(
       "{{percentage}}",
       `${percentageValue}%`

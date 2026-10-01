@@ -322,7 +322,7 @@ describe("<CalculationTable />", () => {
     const errorMessage = screen.getByText("Mock error");
     expect(errorMessage).toBeVisible();
 
-    const pct = screen.getByText("Mock Percentage: [auto-populated]%");
+    const pct = screen.getByText("Mock Percentage: Not provided");
     expect(pct).toBeVisible();
   });
 
