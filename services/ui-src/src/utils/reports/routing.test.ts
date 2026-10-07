@@ -2,13 +2,13 @@ import { useFindRoute } from "./routing";
 import {
   mockFlattenedReportRoutes,
   mockReportJson,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 
 const mockFallbackRoute = mockReportJson.basePath;
 const mockFlatRoutesArray = mockFlattenedReportRoutes;
 
-jest.mock("react-router", () => ({
-  useLocation: jest
+vi.mock("react-router", () => ({
+  useLocation: vi
     .fn()
     .mockReturnValueOnce({ pathname: "/mock/mock-route-1" }) // first path
     .mockReturnValueOnce({ pathname: "/mock/mock-route-2a" }) // middle path

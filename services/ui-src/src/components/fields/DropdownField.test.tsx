@@ -1,10 +1,11 @@
+import { Mock, MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useFormContext } from "react-hook-form";
 //components
 import { DropdownField } from "components";
 // utils
-import { mockStateUserStore } from "utils/testing/setupJest";
+import { mockStateUserStore } from "utils/testing/setupTest";
 import { useStore } from "utils";
 import { mockDropdownOptions } from "utils/testing/fields/mockDropdownChoices";
 import { testA11yAct } from "utils/testing/commonTests";
@@ -12,10 +13,10 @@ import { testA11yAct } from "utils/testing/commonTests";
 const mockFormFieldValue = { label: "Option 1", value: "test-dropdown-1" };
 const mockHydrationValue = { label: "Option 3", value: "test-dropdown-3" };
 
-const mockRegister = jest.fn();
-const mockTrigger = jest.fn();
-const mockSetValue = jest.fn();
-const mockGetValuesBase = jest.fn().mockReturnValue(undefined);
+const mockRegister = vi.fn();
+const mockTrigger = vi.fn();
+const mockSetValue = vi.fn();
+const mockGetValuesBase = vi.fn().mockReturnValue(undefined);
 
 const mockRhfMethods = {
   getValues: mockGetValuesBase,
@@ -27,12 +28,12 @@ const mockRhfMethods = {
   },
 };
 
-const mockUseFormContext = useFormContext as unknown as jest.Mock<
+const mockUseFormContext = useFormContext as unknown as Mock<
   typeof useFormContext
 >;
 
-jest.mock("react-hook-form", () => ({
-  useFormContext: jest.fn(),
+vi.mock("react-hook-form", () => ({
+  useFormContext: vi.fn(),
 }));
 
 const mockGetValues = (returnValue: any) => {
@@ -58,8 +59,8 @@ const mockErrors = (name: string, message: string) => {
   });
 };
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const dropdownComponentWithOptions = ({
   hint = "Dropdown hint",
@@ -84,14 +85,14 @@ const dropdownComponentWithOptions = ({
 describe("<DropdownField />", () => {
   describe("Test DropdownField basic functionality", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockedUseStore.mockReturnValue(mockStateUserStore);
       (mockUseFormContext as any).mockReturnValue(mockRhfMethods);
       mockGetValuesBase.mockReturnValue(undefined);
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("Dropdown renders", () => {
@@ -159,14 +160,14 @@ describe("<DropdownField />", () => {
 
   describe("Test DropdownField hydration functionality", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockedUseStore.mockReturnValue(mockStateUserStore);
       (mockUseFormContext as any).mockReturnValue(mockRhfMethods);
       mockGetValuesBase.mockReturnValue(undefined);
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("If only formFieldValue exists, displayValue is set to it", () => {
@@ -199,7 +200,7 @@ describe("<DropdownField />", () => {
   });
 
   testA11yAct(dropdownComponentWithOptions(), () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockedUseStore.mockReturnValue(mockStateUserStore);
     (mockUseFormContext as any).mockReturnValue(mockRhfMethods);
     mockGetValuesBase.mockReturnValue(undefined);

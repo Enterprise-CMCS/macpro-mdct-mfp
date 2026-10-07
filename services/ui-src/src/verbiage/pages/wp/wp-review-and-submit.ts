@@ -58,6 +58,7 @@ const submitReviewVerbiage: ReviewSubmitPageVerbiage = {
     },
     table: {
       headRow: ["Section", "Status", "Actions"],
+      caption: "Section Review",
     },
     modal: {
       structure: {

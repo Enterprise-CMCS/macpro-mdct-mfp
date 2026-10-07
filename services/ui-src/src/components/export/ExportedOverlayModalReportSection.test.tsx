@@ -1,10 +1,11 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 // components
 import { ReportContext } from "components";
 import { renderModalOverlayTableBody } from "./ExportedModalOverlayReportSection";
 // utils
 import { useStore } from "../../utils";
-import { mockUseStore } from "../../utils/testing/setupJest";
+import { mockUseStore } from "../../utils/testing/setupTest";
 import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
 import {
   mockReportFieldData,
@@ -17,9 +18,9 @@ import {
   NumberMask,
   OverlayModalPageShape,
 } from "types";
-import { mockOverlayModalPageJson } from "utils/testing/setupJest";
+import { mockOverlayModalPageJson } from "utils/testing/setupTest";
 
-jest.mock("utils/state/useStore");
+vi.mock("utils/state/useStore");
 
 const mockEntity = {
   id: "mock-id-1",
@@ -39,7 +40,7 @@ const mockEntity2 = {
   ],
 };
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseStore);
 
 const entityMockStep = [

@@ -70,7 +70,7 @@ const sx = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    fontSize: "0.667rem",
+    fontSize: "body_xs",
   },
   successText: {
     color: "success_darker",

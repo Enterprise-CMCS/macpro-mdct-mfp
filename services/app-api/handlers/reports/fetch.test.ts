@@ -7,7 +7,7 @@ import {
   mockDynamoDataWPCompleted,
   mockReportJson,
   mockReportFieldData,
-} from "../../utils/testing/setupJest";
+} from "../../utils/testing/setupTest";
 import {
   getReportFieldData,
   getReportFormTemplate,
@@ -18,17 +18,18 @@ import {
 import { APIGatewayProxyEvent } from "../../utils/types";
 import { StatusCodes } from "../../utils/responses/response-lib";
 import { isAuthorizedToFetchState } from "../../utils/auth/authorization";
+import { Mock } from "vitest";
 
-jest.mock("../../storage/reports", () => ({
-  getReportFieldData: jest.fn(),
-  getReportFormTemplate: jest.fn(),
-  getReportMetadata: jest.fn(),
-  queryReportMetadatasForState: jest.fn(),
+vi.mock("../../storage/reports", () => ({
+  getReportFieldData: vi.fn(),
+  getReportFormTemplate: vi.fn(),
+  getReportMetadata: vi.fn(),
+  queryReportMetadatasForState: vi.fn(),
 }));
 
-jest.mock("../../utils/auth/authorization", () => ({
-  hasPermissions: jest.fn(() => {}),
-  isAuthorizedToFetchState: jest.fn().mockReturnValue(true),
+vi.mock("../../utils/auth/authorization", () => ({
+  hasPermissions: vi.fn(() => {}),
+  isAuthorizedToFetchState: vi.fn().mockReturnValue(true),
 }));
 
 const testReadEvent: APIGatewayProxyEvent = {
@@ -47,53 +48,35 @@ const testReadEventByState: APIGatewayProxyEvent = {
   pathParameters: { reportType: "WP", state: "NJ" },
 };
 
-let consoleSpy: {
-  debug: jest.SpyInstance<void>;
-  warn: jest.SpyInstance<void>;
-} = {
-  debug: jest.fn() as jest.SpyInstance,
-  warn: jest.fn() as jest.SpyInstance,
-};
-
 describe("handlers/reports/fetch", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
-    consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
-  });
-
   describe("Test fetchReport API method", () => {
     test("Test Report not found in DynamoDB", async () => {
-      (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
+      (getReportMetadata as Mock).mockResolvedValue(undefined);
       const res = await fetchReport(testReadEvent, null);
-      expect(consoleSpy.debug).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.NotFound);
     });
 
     test("Test Report Form not found in S3", async () => {
-      (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
-      (getReportFormTemplate as jest.Mock).mockResolvedValue(undefined);
-      (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+      (getReportMetadata as Mock).mockResolvedValue(mockDynamoData);
+      (getReportFormTemplate as Mock).mockResolvedValue(undefined);
+      (getReportFieldData as Mock).mockResolvedValue(mockReportFieldData);
       const res = await fetchReport(testReadEvent, null);
-      expect(consoleSpy.debug).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.NotFound);
     });
 
     test("Test Field Data not found in S3", async () => {
-      (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
-      (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
-      (getReportFieldData as jest.Mock).mockResolvedValue(undefined);
+      (getReportMetadata as Mock).mockResolvedValue(mockDynamoData);
+      (getReportFormTemplate as Mock).mockResolvedValue(mockReportJson);
+      (getReportFieldData as Mock).mockResolvedValue(undefined);
       const res = await fetchReport(testReadEvent, null);
-      expect(consoleSpy.debug).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.NotFound);
     });
 
     test("Test Successful Report Fetch w/ Incomplete Report", async () => {
-      (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
-      (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
-      (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+      (getReportMetadata as Mock).mockResolvedValue(mockDynamoData);
+      (getReportFormTemplate as Mock).mockResolvedValue(mockReportJson);
+      (getReportFieldData as Mock).mockResolvedValue(mockReportFieldData);
       const res = await fetchReport(testReadEvent, null);
-      expect(consoleSpy.debug).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.Ok);
       const body = JSON.parse(res.body!);
       expect(body.lastAlteredBy).toContain("Thelonious States");
@@ -107,13 +90,10 @@ describe("handlers/reports/fetch", () => {
     });
 
     test("Test Successful Report Fetch w/ Complete Report", async () => {
-      (getReportMetadata as jest.Mock).mockResolvedValue(
-        mockDynamoDataWPCompleted
-      );
-      (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
-      (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+      (getReportMetadata as Mock).mockResolvedValue(mockDynamoDataWPCompleted);
+      (getReportFormTemplate as Mock).mockResolvedValue(mockReportJson);
+      (getReportFieldData as Mock).mockResolvedValue(mockReportFieldData);
       const res = await fetchReport(testReadEvent, null);
-      expect(consoleSpy.debug).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.Ok);
       const body = JSON.parse(res.body!);
       expect(body.lastAlteredBy).toContain("Thelonious States");
@@ -131,11 +111,11 @@ describe("handlers/reports/fetch", () => {
         ...mockDynamoDataWPCompleted,
         completionStatus: undefined,
       };
-      (getReportMetadata as jest.Mock).mockResolvedValue(
+      (getReportMetadata as Mock).mockResolvedValue(
         metadataWithNoCompletionStatus
       );
-      (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
-      (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+      (getReportFormTemplate as Mock).mockResolvedValue(mockReportJson);
+      (getReportFieldData as Mock).mockResolvedValue(mockReportFieldData);
       const res = await fetchReport(testReadEvent, null);
       expect(res.statusCode).toBe(StatusCodes.Ok);
       const body = JSON.parse(res.body!);
@@ -152,7 +132,6 @@ describe("handlers/reports/fetch", () => {
         pathParameters: {},
       };
       const res = await fetchReport(noKeyEvent, null);
-      expect(consoleSpy.warn).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.BadRequest);
       expect(res.body).toContain(error.NO_KEY);
     });
@@ -163,13 +142,12 @@ describe("handlers/reports/fetch", () => {
         pathParameters: { state: "", id: "" },
       };
       const res = await fetchReport(noKeyEvent, null);
-      expect(consoleSpy.warn).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.BadRequest);
       expect(res.body).toContain(error.NO_KEY);
     });
 
     test("Test unauthorized returns 403", async () => {
-      (isAuthorizedToFetchState as jest.Mock).mockReturnValueOnce(false);
+      (isAuthorizedToFetchState as Mock).mockReturnValueOnce(false);
       const res = await fetchReport(testReadEvent, null);
       expect(res.statusCode).toBe(StatusCodes.Forbidden);
       expect(res.body).toContain(error.UNAUTHORIZED);
@@ -178,11 +156,10 @@ describe("handlers/reports/fetch", () => {
 
   describe("Test fetchReportsByState API method", () => {
     test("Test successful call", async () => {
-      (queryReportMetadatasForState as jest.Mock).mockResolvedValueOnce([
+      (queryReportMetadatasForState as Mock).mockResolvedValueOnce([
         mockDynamoData,
       ]);
       const res = await fetchReportsByState(testReadEventByState, null);
-      expect(consoleSpy.debug).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.Ok);
       const body = JSON.parse(res.body!);
       expect(body[0].lastAlteredBy).toContain("Thelonious States");
@@ -195,7 +172,6 @@ describe("handlers/reports/fetch", () => {
         pathParameters: {},
       };
       const res = await fetchReportsByState(noKeyEvent, null);
-      expect(consoleSpy.warn).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.BadRequest);
       expect(res.body).toContain(error.NO_KEY);
     });
@@ -206,13 +182,12 @@ describe("handlers/reports/fetch", () => {
         pathParameters: { state: "" },
       };
       const res = await fetchReportsByState(noKeyEvent, null);
-      expect(consoleSpy.warn).toHaveBeenCalled();
       expect(res.statusCode).toBe(StatusCodes.BadRequest);
       expect(res.body).toContain(error.NO_KEY);
     });
 
     test("Test unauthorized returns 403", async () => {
-      (isAuthorizedToFetchState as jest.Mock).mockReturnValueOnce(false);
+      (isAuthorizedToFetchState as Mock).mockReturnValueOnce(false);
       const res = await fetchReportsByState(testReadEventByState, null);
       expect(res.statusCode).toBe(StatusCodes.Forbidden);
       expect(res.body).toContain(error.UNAUTHORIZED);

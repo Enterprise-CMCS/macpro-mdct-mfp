@@ -7,7 +7,7 @@ import {
   formatColumns,
 } from "./ExportEntityDetailsTable";
 //utils
-import { mockSARFullReport } from "utils/testing/setupJest";
+import { mockSARFullReport } from "utils/testing/setupTest";
 import { AnyObject, EntityShape, EntityType } from "types";
 import { testA11yAct } from "utils/testing/commonTests";
 
@@ -61,7 +61,7 @@ const entity: EntityShape = {
 describe("<ExportEntityDetailsTable />", () => {
   describe("Test table functions specific for Expenditures", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("Test formatHeaderLabel functionality", () => {

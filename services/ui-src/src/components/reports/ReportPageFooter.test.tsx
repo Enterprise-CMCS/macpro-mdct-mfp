@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 // components
 import { ReportPageFooter } from "components";
@@ -6,13 +7,13 @@ import {
   mockForm,
   mockReportStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockReportStore);
 
 const mockRoutes = {
@@ -20,14 +21,15 @@ const mockRoutes = {
   nextRoute: "/mock-next-route",
 };
 
-const mockUseNavigate = jest.fn();
+const mockUseNavigate = vi.fn();
 
-jest.mock("react-router", () => ({
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
 }));
 
-jest.mock("utils", () => ({
-  ...jest.requireActual("utils"),
+vi.mock("utils", async (importOriginal) => ({
+  ...(await importOriginal()),
   useFindRoute: () => mockRoutes,
 }));
 

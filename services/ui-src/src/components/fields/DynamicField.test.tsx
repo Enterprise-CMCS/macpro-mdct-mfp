@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { useEffect } from "react";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -12,7 +13,7 @@ import {
   mockStateUserStore,
   mockWPReport,
   mockWpReportContext,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const mockEntityType = "mock-entity-type";
@@ -35,18 +36,18 @@ mockReport.fieldData["mock-entity-type"] = [
   },
 ];
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue({
   ...mockStateUserStore,
   report: mockReport,
   selectedEntity: {
     type: mockEntityType,
   },
-  setAutosaveState: jest.fn(),
+  setAutosaveState: vi.fn(),
 });
 
-const mockUpdateReport = jest.fn();
+const mockUpdateReport = vi.fn();
 const mockedReportContext = {
   ...mockWpReportContext,
   updateReport: mockUpdateReport,
@@ -76,7 +77,7 @@ const MockForm = ({
     <ReportContext.Provider value={mockedReportContext}>
       <EntityProvider>
         <FormProvider {...form}>
-          <form id="uniqueId" onSubmit={form.handleSubmit(jest.fn())}>
+          <form id="uniqueId" onSubmit={form.handleSubmit(vi.fn())}>
             <DynamicField
               autosave={true}
               dynamicLabel={dynamicLabel}
@@ -111,7 +112,7 @@ const DynamicFieldComponent = ({
 
 describe("<DynamicField />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   describe("Test DynamicField component", () => {
     beforeEach(() => {

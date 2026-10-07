@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -14,21 +15,19 @@ import {
   mockUseSARStore,
   mockWPFullReport,
   mockWpReportContext,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useBreakpoint, useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-(mockedUseStore as any).getState = jest.fn(() => mockedUseStore());
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+(mockedUseStore as any).getState = vi.fn(() => mockedUseStore());
 
-jest.mock("utils/other/useBreakpoint");
-const mockUseBreakpoint = useBreakpoint as jest.MockedFunction<
-  typeof useBreakpoint
->;
+vi.mock("utils/other/useBreakpoint");
+const mockUseBreakpoint = useBreakpoint as MockedFunction<typeof useBreakpoint>;
 
-const mockSetSidebarHidden = jest.fn();
+const mockSetSidebarHidden = vi.fn();
 
 const { dashboardSubtitle, dashboardTitle, enterEntityDetailsButtonText } =
   mockDynamicModalOverlayReportPageJson.verbiage;
@@ -51,7 +50,7 @@ describe("<DynamicModalOverlayReportPage />", () => {
     mockUseBreakpoint.mockReturnValue({ isMobile: false, isTablet: false });
   });
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("renders desktop table", () => {
@@ -81,7 +80,7 @@ describe("<DynamicModalOverlayReportPage />", () => {
   test("opens and closes overlay", async () => {
     mockedUseStore.mockReturnValue({
       ...mockUseSARStore,
-      setSelectedEntity: jest.fn(),
+      setSelectedEntity: vi.fn(),
     });
     render(dynamicModalOverlayReportPageComponent());
     const enterDetailsButton = screen.getByRole("button", {
@@ -106,8 +105,8 @@ describe("<DynamicModalOverlayReportPage />", () => {
       ...mockStateUser,
       ...mockWpReportContext,
       editable: true,
-      setAutosaveState: jest.fn(),
-      setSelectedEntity: jest.fn(),
+      setAutosaveState: vi.fn(),
+      setSelectedEntity: vi.fn(),
       selectedEntity: mockReportFieldData.entityType[0],
     });
     render(dynamicModalOverlayReportPageComponent());
@@ -164,8 +163,8 @@ describe("<DynamicModalOverlayReportPage />", () => {
       ...mockAdminUser,
       ...mockWpReportContext,
       editable: true,
-      setAutosaveState: jest.fn(),
-      setSelectedEntity: jest.fn(),
+      setAutosaveState: vi.fn(),
+      setSelectedEntity: vi.fn(),
     });
     render(dynamicModalOverlayReportPageComponent());
     const enterDetailsButton = screen.getByRole("button", {

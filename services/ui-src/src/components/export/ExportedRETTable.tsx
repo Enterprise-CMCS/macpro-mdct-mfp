@@ -277,7 +277,7 @@ export const truncateTable = (table: TableContentShape, maxColumn: number) => {
   return splitTables;
 };
 
-export const ExportRETTable = ({ section }: Props) => {
+export const ExportRETTable = ({ section, heading }: Props) => {
   const report = useStore().report;
   const form: FormJson = (section as AnyObject)?.form;
 
@@ -353,6 +353,7 @@ export const ExportRETTable = ({ section }: Props) => {
       rows[0] = formatLabelForRET(form?.id, rows[0], report!);
       return rows;
     });
+    table.caption = heading;
   }
   //split the table if there are >= 3 Other columns
   const tables: TableContentShape[] = truncateTable(table, 7);
@@ -381,6 +382,7 @@ export const ExportRETTable = ({ section }: Props) => {
 
 export interface Props {
   section: ReportPageShapeBase;
+  heading?: string;
 }
 
 const sx = {
@@ -407,8 +409,8 @@ const sx = {
       border: "1px solid",
       borderColor: "black",
       color: "black",
-      lineHeight: "normal",
-      fontWeight: "bold",
+      lineHeight: "body_sm",
+      fontWeight: "heading_md",
       minWidth: "100px",
       width: "100px",
       ".tablet &, .mobile &": {
@@ -422,11 +424,11 @@ const sx = {
       textAlign: "center",
       wordWrap: "break-word",
       border: "1px solid black",
-      fontWeight: "normal",
+      fontWeight: "body_md",
     },
     "td:first-of-type, tfoot th:first-of-type": {
       background: "gray_lightest",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
       color: "black",
     },
     "tbody tr": {
@@ -434,7 +436,7 @@ const sx = {
     },
     ":last-of-type tbody tr td:last-child, tfoot th": {
       background: "secondary_lightest",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
   },
   // RE&T warning message

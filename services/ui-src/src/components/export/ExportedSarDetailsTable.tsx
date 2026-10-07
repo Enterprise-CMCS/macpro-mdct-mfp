@@ -19,6 +19,7 @@ export const ExportedSarDetailsTable = ({ verbiage }: Props) => {
           verbiage.reportPage.sarDetailsTable.headers.response,
         ],
         bodyRows: bodyRowContent(verbiage.reportPage.sarDetailsTable, report),
+        caption: "Report details",
       }}
     />
   );
@@ -48,7 +49,7 @@ const sx = {
   table: {
     ...sxSharedExportStyles.table,
     "td:nth-of-type(1)": {
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
   },
 };

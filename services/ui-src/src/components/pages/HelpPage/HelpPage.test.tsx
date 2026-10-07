@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { HelpPage } from "components/pages/HelpPage/HelpPage";
 import { testA11yAct } from "utils/testing/commonTests";
 // utils
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupTest";
 // verbiage
 import verbiage from "verbiage/pages/help";
 

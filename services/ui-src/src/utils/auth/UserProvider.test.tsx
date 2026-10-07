@@ -1,24 +1,25 @@
+import { MockedFunction } from "vitest";
 import { useContext } from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // utils
 import { UserContext, UserProvider, useStore } from "utils";
-import { mockUseStore, RouterWrappedComponent } from "utils/testing/setupJest";
+import { mockUseStore, RouterWrappedComponent } from "utils/testing/setupTest";
 
-const mockAuthenticateWithIDM = jest.fn();
-const mockGetTokens = jest.fn();
-const mockLogoutUser = jest.fn();
+const mockAuthenticateWithIDM = vi.fn();
+const mockGetTokens = vi.fn();
+const mockLogoutUser = vi.fn();
 
-jest.mock("utils/api/apiLib", () => ({
+vi.mock("utils/api/apiLib", () => ({
   authenticateWithIDM: () => mockAuthenticateWithIDM(),
   getTokens: () => mockGetTokens(),
   logoutUser: () => mockLogoutUser(),
 }));
 
-jest.mock("utils/state/useStore");
+vi.mock("utils/state/useStore");
 
-const mockSetUser = jest.fn();
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockSetUser = vi.fn();
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue({
   ...mockUseStore,
   setUser: mockSetUser,
@@ -58,10 +59,19 @@ const testComponent = (
 );
 
 // HELPERS
-// window.location is non-configurable in JSDOM, so we use the reconfigure
-// helper exposed by the custom test environment to change the URL.
-const setWindowOrigin = (origin: string) => {
-  (window as any).reconfigureJsdomLocation(`http://${origin}/`);
+let originalLocation: any;
+
+const setWindowOrigin = (windowOrigin: string) => {
+  if (!originalLocation) {
+    originalLocation = window.location;
+  }
+  delete (window as any).location;
+  (window as any).location = {
+    assign: vi.fn(),
+    pathname: "/",
+    href: `${windowOrigin}/`,
+    origin: windowOrigin,
+  };
 };
 
 // TESTS
@@ -124,8 +134,8 @@ describe("<UserProvider />", () => {
 
   describe("Test UserProvider error handling", () => {
     test("Logs error to console if logout throws error", async () => {
-      jest.spyOn(console, "log").mockImplementation(jest.fn());
-      const spy = jest.spyOn(console, "log");
+      vi.spyOn(console, "log").mockImplementation(vi.fn());
+      const spy = vi.spyOn(console, "log");
 
       mockLogoutUser.mockImplementation(() => {
         throw new Error("Some error message");

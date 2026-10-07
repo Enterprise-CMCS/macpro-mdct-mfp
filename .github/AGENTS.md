@@ -93,11 +93,11 @@ yarn test:e2e-stable     # Exclude @flaky tests
 ```
 /
 ├── services/
-│   ├── app-api/         # Lambda API handlers (Jest tests)
+│   ├── app-api/         # Lambda API handlers (Vitest tests)
 │   │   ├── handlers/    # API endpoint handlers (banners/, reports/, kafka/)
 │   │   ├── storage/     # DynamoDB client utilities
 │   │   └── utils/       # Shared utilities, types, constants
-│   ├── ui-src/          # React frontend (Vite, Jest tests)
+│   ├── ui-src/          # React frontend (Vite, Vitest tests)
 │   │   └── src/
 │   │       ├── components/  # React components
 │   │       ├── forms/       # Form definitions (JSON schemas)
@@ -185,6 +185,6 @@ See [agents/code-style.md](agents/code-style.md) for detailed coding conventions
 - TypeScript patterns (interfaces, types, enums)
 - React component patterns (ui-src)
 - API/backend patterns (app-api)
-- Testing patterns (Jest, React Testing Library)
+- Testing patterns (Vitest, React Testing Library)
 - Validation schemas (Yup)
 - State management (Zustand)

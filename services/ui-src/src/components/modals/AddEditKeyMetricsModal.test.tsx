@@ -10,12 +10,12 @@ import {
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { ReportContext } from "components/reports/ReportProvider";
 import { EntityType, ReportShape, ReportStatus } from "types";
 
-const mockCloseHandler = jest.fn();
-const mockUpdateReport = jest.fn();
+const mockCloseHandler = vi.fn();
+const mockUpdateReport = vi.fn();
 const mockCurrentEntityId = "mockCurrentEntityId";
 
 const getReport = (
@@ -79,7 +79,7 @@ const modalComponent = (
 
 describe("AddEditKeyMetricsModal", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("state user - add", () => {

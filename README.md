@@ -82,7 +82,7 @@ Authentication during local development uses the Cognito user pool deployed to A
 
 ### Unit Testing
 
-We use Jest for unit tests.
+We use Vitest for unit tests. If you're familiar with Jest, have no fear - the API is nearly identical.
 
 To run all frontend unit tests:
 
@@ -104,10 +104,11 @@ In either of these directories you can also check code coverage with
 yarn coverage
 ```
 
-Live reload all tests
+By default, `yarn test` will watch files for changes.
+To run tests once and exit:
 
 ```
-yarn test --watch
+yarn test --run
 ```
 
 ### Integration Testing
@@ -118,7 +119,7 @@ We use Playwright for integration tests. See additional info in the [Playwright 
 
 We use [axe](https://www.deque.com/axe/) and [pa11y](https://github.com/pa11y/pa11y) for primary accessibility testing.
 
-Unit tests can use [jest-axe](https://github.com/nickcolley/jest-axe), [pa11y](https://github.com/pa11y/pa11y), and [HTML Code Sniffer](https://squizlabs.github.io/HTML_CodeSniffer/).
+Unit tests can use [jest-axe](https://github.com/nickcolley/jest-axe) and [HTML Code Sniffer](https://squizlabs.github.io/HTML_CodeSniffer/).
 
 Integration tests use [@axe-core/playwright](https://github.com/dequelabs/axe-core-npm/tree/develop/packages/playwright) for automated accessibility testing within our Playwright test suite.
 

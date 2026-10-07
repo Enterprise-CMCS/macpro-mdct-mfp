@@ -18,7 +18,8 @@ export const addEditFinancialReport: FormJson = {
       type: ReportFormFieldType.DROPDOWN,
       validation: ValidationType.DROPDOWN_OPTIONAL,
       props: {
-        label: "If you want to copy an existing report, select one (optional)",
+        styleAsOptional: true,
+        label: "If you want to copy an existing report, select one",
         hint: "This will pre-populate any fields you’ve added and settings you’ve applied, but will not copy quarterly financial data.",
         options: [],
       },

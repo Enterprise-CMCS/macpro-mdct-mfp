@@ -13,7 +13,7 @@ import {
 import { convertDateEtToUtc } from "utils/other/time";
 
 describe("flattenReportRoutesArray", () => {
-  describe("Should find all form routes, including nested ones", () => {
+  test("Should find all form routes, including nested ones", () => {
     const reportRoutes: ReportRoute[] = [
       {
         name: "foo",

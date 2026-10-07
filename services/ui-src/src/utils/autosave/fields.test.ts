@@ -17,7 +17,7 @@ import {
   mockFormId,
   mockTableId,
   mockTempDynamicFieldId,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 
 const fieldValue = 123;
 const percentageShare = 107.01;

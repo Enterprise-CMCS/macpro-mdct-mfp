@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-
+import { useFlags } from "launchdarkly-react-client-sdk";
+import { MockedFunction } from "vitest";
 // components
 import { AppRoutes, ReportContext } from "components";
 // utils
@@ -10,11 +11,16 @@ import {
   mockBannerStore,
   mockReportStore,
   mockWpReportContext,
-  mockLDFlags,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("launchdarkly-react-client-sdk");
+const mockFlags = vi.mocked(useFlags);
+mockFlags.mockReturnValue({
+  abcdReport: true,
+});
+
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue({
   ...mockStateUserStore,
   ...mockBannerStore,
@@ -77,7 +83,9 @@ describe("<AppRoutes />", () => {
 
   describe("Test Financial Report route behind flag", () => {
     test("renders /financial-report route when abcdReport flag is true", () => {
-      mockLDFlags.set({ abcdReport: true });
+      mockFlags.mockReturnValue({
+        abcdReport: true,
+      });
 
       render(appRoutesComponent("/financial-report"));
 
@@ -86,7 +94,9 @@ describe("<AppRoutes />", () => {
     });
 
     test("does not render /financial-report route when abcdReport flag is false", () => {
-      mockLDFlags.set({ abcdReport: false });
+      mockFlags.mockReturnValue({
+        abcdReport: false,
+      });
 
       render(appRoutesComponent("/financial-report"));
 

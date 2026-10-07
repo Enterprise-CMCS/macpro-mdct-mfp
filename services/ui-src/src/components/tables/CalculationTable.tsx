@@ -5,14 +5,8 @@ import {
   Button,
   Heading,
   Image,
-  Table,
-  TableCaption,
-  Tbody,
   Text,
-  Tfoot,
-  Thead,
   useDisclosure,
-  VisuallyHidden,
 } from "@chakra-ui/react";
 import {
   AddEditCalculationModal,
@@ -30,6 +24,7 @@ import {
   parseCustomHtml,
   translate,
 } from "utils";
+import { ResponsiveTable } from "./ResponsiveTable";
 
 export const CalculationTable = ({
   bodyRows,
@@ -71,7 +66,7 @@ export const CalculationTable = ({
     : 100;
   const missingPercentage = Boolean(!formPercentage);
   const percentageDisplay = missingPercentage
-    ? "[auto-populated]%"
+    ? "Not provided"
     : `${formPercentage}%`;
 
   // Show error once if in a loop
@@ -130,6 +125,53 @@ export const CalculationTable = ({
     });
   };
 
+  const tableData = {
+    id: tableId,
+    title: verbiage?.title,
+    headers: headRows.map((row, rowIndex: number) =>
+      generateRows({
+        cellPropsCallback,
+        row,
+        rowIndex,
+        section: "thead",
+        ...sharedCellProps,
+      })
+    ),
+    rows: bodyRows.map((row, rowIndex: number) =>
+      generateRows({
+        cellPropsCallback,
+        isTotalsRow: isTotalsRow(row),
+        row,
+        rowIndex,
+        section: "tbody",
+        ...sharedCellProps,
+      })
+    ),
+    dynamicRows:
+      dynamicRowsTemplate &&
+      DynamicTableRows(
+        tableId,
+        formPercentage,
+        isDisabled,
+        dynamicRowsTemplate,
+        hasDynamicModalForm,
+        bodyRows.length > 0,
+        formData,
+        openModal,
+        verbiage?.emptyTableMessage,
+        updatedFieldsCallback
+      ),
+    foot: footRows.map((row, rowIndex: number) =>
+      generateRows({
+        cellPropsCallback,
+        row,
+        rowIndex,
+        section: "tfoot",
+        ...sharedCellProps,
+      })
+    ),
+  };
+
   return (
     <Box sx={sx.box}>
       {verbiage?.errorMessage && showError && (
@@ -179,60 +221,7 @@ export const CalculationTable = ({
           )}
         </>
       )}
-
-      <Table id={tableId} sx={sx.table}>
-        <TableCaption placement="top" sx={sx.captionBox}>
-          <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
-        </TableCaption>
-        <Thead>
-          {headRows.map((row, rowIndex: number) =>
-            generateRows({
-              cellPropsCallback,
-              row,
-              rowIndex,
-              section: "thead",
-              ...sharedCellProps,
-            })
-          )}
-        </Thead>
-        <Tbody>
-          {bodyRows.map((row, rowIndex: number) =>
-            generateRows({
-              cellPropsCallback,
-              isTotalsRow: isTotalsRow(row),
-              row,
-              rowIndex,
-              section: "tbody",
-              ...sharedCellProps,
-            })
-          )}
-          {dynamicRowsTemplate && (
-            <DynamicTableRows
-              disabled={isDisabled}
-              dynamicRowsTemplate={dynamicRowsTemplate}
-              emptyTableMessage={verbiage?.emptyTableMessage}
-              formData={formData}
-              formPercentage={formPercentage}
-              hasDynamicModalForm={hasDynamicModalForm}
-              hasStaticRows={bodyRows.length > 0}
-              openModal={openModal}
-              tableId={tableId}
-              updatedFieldsCallback={updatedFieldsCallback}
-            />
-          )}
-        </Tbody>
-        <Tfoot>
-          {footRows.map((row, rowIndex: number) =>
-            generateRows({
-              cellPropsCallback,
-              row,
-              rowIndex,
-              section: "tfoot",
-              ...sharedCellProps,
-            })
-          )}
-        </Tfoot>
-      </Table>
+      {ResponsiveTable(tableData)}
     </Box>
   );
 };
@@ -246,7 +235,7 @@ interface Props extends Omit<FormTable, "tableType"> {
 
 export const sx = {
   error: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     marginBottom: "spacer4",
     a: {
       color: "primary",
@@ -254,7 +243,7 @@ export const sx = {
   },
   box: {
     h2: {
-      fontSize: "2xl",
+      fontSize: "heading_2xl",
       marginBottom: "spacer2",
       marginTop: "spacer4",
       paddingBottom: 0,
@@ -262,7 +251,7 @@ export const sx = {
   },
   percentageText: {
     color: "gray_dark",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     paddingBottom: "spacer2",
   },
   subtitle: {
@@ -285,59 +274,5 @@ export const sx = {
     margin: 0,
     padding: 0,
     height: 0,
-  },
-  table: {
-    marginBottom: "spacer5",
-    marginTop: "spacer1",
-    width: "58rem",
-    tbody: {
-      "tr:nth-of-type(even)": {
-        td: {
-          backgroundColor: "gray_lightest_highlight",
-        },
-      },
-      "tr.totals-row": {
-        td: {
-          backgroundColor: "gray_lightest",
-          border: "none",
-          fontWeight: "bold",
-          paddingInlineEnd: "spacer2",
-          paddingInlineStart: "spacer2",
-        },
-      },
-      td: {
-        border: "none",
-        paddingBottom: "spacer1",
-        paddingInlineEnd: "spacer2",
-        paddingInlineStart: "spacer2",
-        paddingTop: "spacer1",
-      },
-      label: {
-        margin: 0,
-      },
-    },
-    tfoot: {
-      td: {
-        backgroundColor: "gray_lighter",
-        border: "none",
-        fontWeight: "bold",
-        paddingInlineEnd: "spacer2",
-        paddingInlineStart: "spacer2",
-      },
-    },
-    thead: {
-      th: {
-        backgroundColor: "primary_darkest",
-        color: "white",
-        fontSize: "lg",
-        letterSpacing: "normal",
-        lineHeight: "normal",
-        paddingBottom: "spacer1",
-        paddingInlineEnd: "spacer2",
-        paddingInlineStart: "spacer2",
-        paddingTop: "spacer1",
-        textTransform: "none",
-      },
-    },
   },
 };

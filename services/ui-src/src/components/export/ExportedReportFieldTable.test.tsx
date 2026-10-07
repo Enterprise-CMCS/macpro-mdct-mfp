@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import {
   mockDrawerReportPageJson,
@@ -6,14 +7,14 @@ import {
   mockStandardReportPageJson,
   mockUseSARStore,
   mockUseStore,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "../../utils";
 import { ExportedReportFieldTable } from "./ExportedReportFieldTable";
 import { DrawerReportPageShape, PageTypes } from "types";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 // Contexts
 const reportJsonFields = [{ ...mockNestedFormField, id: "parent" }];
@@ -99,7 +100,7 @@ const generalInformationComponent = (
 
 describe("<ExportedReportFieldTable />", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("Is present", () => {

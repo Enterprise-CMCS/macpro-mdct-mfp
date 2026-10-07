@@ -76,6 +76,7 @@ export interface ReviewSubmitPageVerbiage {
     };
     table: {
       headRow: string[];
+      caption: string;
     };
   };
   submitted: {

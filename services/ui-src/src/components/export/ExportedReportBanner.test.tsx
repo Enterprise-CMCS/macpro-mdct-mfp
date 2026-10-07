@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ReportContext } from "components";
 import userEvent from "@testing-library/user-event";
@@ -8,13 +9,13 @@ import {
   mockBannerStore,
   mockStateUserStore,
   mockUseStore,
-} from "../../utils/testing/setupJest";
+} from "../../utils/testing/setupTest";
 import { MfpReportState, MfpUserState, ReportShape } from "../../types";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
+vi.mock("utils/state/useStore");
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 let mockPrint: any;
 
@@ -43,7 +44,7 @@ describe("<ExportedReportBanner />", () => {
     mockedUseStore.mockReturnValue(mockUseStore);
 
     mockPrint = window.print;
-    jest.spyOn(window, "print").mockImplementation(() => {});
+    vi.spyOn(window, "print").mockImplementation(() => {});
   });
 
   afterEach(() => {

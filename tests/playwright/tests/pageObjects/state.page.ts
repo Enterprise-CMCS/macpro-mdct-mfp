@@ -152,14 +152,10 @@ export class StatePage extends BasePage {
     await this.page.getByRole("button", { name: "Continue" }).click();
   }
 
-  async completeTransitionBenchmarkStrategy(
-    explanation: string,
-    additionalDetails: string
-  ) {
-    await this.page.locator("#strategy_explaination").fill(explanation);
+  async completeTransitionBenchmarkStrategy(explanation: string) {
     await this.page
-      .locator("#strategy_additionalDetails")
-      .fill(additionalDetails);
+      .getByRole("textbox", { name: "Explain how you formulated" })
+      .fill(explanation);
     const putResp = this.waitForReportResponse("PUT", 200);
     await this.page.getByRole("button", { name: "Continue" }).click();
     await putResp;
@@ -220,7 +216,10 @@ export class StatePage extends BasePage {
 
   async clickEditInitiative(initiativeName: string) {
     const row = this.page.locator("tr").filter({ hasText: initiativeName });
-    await row.getByRole("button", { name: `Edit ${initiativeName}` }).click();
+    await row
+      .getByRole("button", { name: /^Edit\b/i })
+      .last()
+      .click();
   }
 
   async selectTargetPopulations(populations: string[]) {
@@ -280,6 +279,15 @@ export class StatePage extends BasePage {
     };
   }) {
     await this.clickEditInitiative(topic.name);
+    if (
+      await this.page
+        .locator("#defineInitiative_describeInitiative")
+        .isVisible()
+    ) {
+      await this.editFlaggedInitiative(topic);
+      return;
+    }
+
     await this.editDefineInitiativeSection(
       topic.description,
       topic.targetPopulations,
@@ -302,6 +310,48 @@ export class StatePage extends BasePage {
       .getByRole("button", { name: "Return to all initiatives" })
       .nth(1)
       .click();
+  }
+
+  async editFlaggedInitiative(topic: {
+    description: string;
+    targetPopulations: string[];
+    startDate: string;
+    evaluationPlan: {
+      objective: string;
+      additionalDetails: string;
+    };
+    fundingSources: { source: string };
+  }) {
+    await this.page
+      .locator("#defineInitiative_describeInitiative")
+      .fill(topic.description);
+    await this.page
+      .getByRole("textbox", { name: "Key Activity" })
+      .fill(topic.description);
+    await this.selectTargetPopulations(topic.targetPopulations);
+    await this.page.getByRole("radio", { name: "Expected start date" }).check();
+    await this.page
+      .locator(
+        "#defineInitiative_expectedStartDate_value, [name=defineInitiative_expectedStartDate_value]"
+      )
+      .fill(topic.startDate);
+    await this.page
+      .getByRole("textbox", {
+        name: /Enter the date for when the initiative was or will be completed/i,
+      })
+      .fill(topic.startDate);
+    await this.page
+      .locator("#defineInitiative_purposeAndGoals")
+      .fill(topic.evaluationPlan.objective);
+    await this.page
+      .locator("#defineInitiative_qualitativeMethods")
+      .fill(topic.evaluationPlan.additionalDetails);
+    await this.page
+      .getByRole("checkbox", {
+        name: new RegExp(topic.fundingSources.source, "i"),
+      })
+      .check();
+    await this.saveAndReturnButton.click();
   }
 
   async editEvaluationPlanSection(
@@ -385,8 +435,7 @@ export class StatePage extends BasePage {
       workPlan.transitionBenchmarkProjections
     );
     await this.completeTransitionBenchmarkStrategy(
-      workPlan.transitionBenchmarkStrategy.explanation,
-      workPlan.transitionBenchmarkStrategy.additionalDetails
+      workPlan.transitionBenchmarkStrategy.explanation
     );
     await this.completeInitiativesInstructions(
       workPlan.initiativesInstructions.selfDirected,

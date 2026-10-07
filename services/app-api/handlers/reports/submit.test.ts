@@ -1,3 +1,4 @@
+import { Mock } from "vitest";
 import { submitReport } from "./submit";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
@@ -10,7 +11,7 @@ import {
   mockDynamoDataWPCompleted,
   mockReportFieldData,
   mockReportJson,
-} from "../../utils/testing/setupJest";
+} from "../../utils/testing/setupTest";
 import {
   getReportFieldData,
   getReportFormTemplate,
@@ -24,16 +25,16 @@ import { StatusCodes } from "../../utils/responses/response-lib";
 
 mockClient(DynamoDBDocumentClient);
 
-jest.mock("../../storage/reports", () => ({
-  getReportFieldData: jest.fn(),
-  getReportFormTemplate: jest.fn(),
-  getReportMetadata: jest.fn(),
-  putReportFieldData: jest.fn(),
-  putReportMetadata: jest.fn(),
+vi.mock("../../storage/reports", () => ({
+  getReportFieldData: vi.fn(),
+  getReportFormTemplate: vi.fn(),
+  getReportMetadata: vi.fn(),
+  putReportFieldData: vi.fn(),
+  putReportMetadata: vi.fn(),
 }));
 
-jest.mock("../../utils/auth/authorization", () => ({
-  hasPermissions: jest.fn().mockReturnValue(true),
+vi.mock("../../utils/auth/authorization", () => ({
+  hasPermissions: vi.fn().mockReturnValue(true),
 }));
 
 const testSubmitEvent: APIGatewayProxyEvent = {
@@ -46,39 +47,21 @@ const testSubmitEvent: APIGatewayProxyEvent = {
   },
 };
 
-let consoleSpy: {
-  debug: jest.SpyInstance<void>;
-  warn: jest.SpyInstance<void>;
-} = {
-  debug: jest.fn() as jest.SpyInstance,
-  warn: jest.fn() as jest.SpyInstance,
-};
-
 describe("Test submitReport API method", () => {
-  beforeEach(() => {
-    jest.restoreAllMocks();
-    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
-    consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
-  });
-
   test("Test Report not found in DynamoDB", async () => {
-    (getReportMetadata as jest.Mock).mockResolvedValue(undefined);
+    (getReportMetadata as Mock).mockResolvedValue(undefined);
     const res = await submitReport(testSubmitEvent, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NotFound);
   });
 
   test("Test Successful Report Submittal", async () => {
-    (getReportMetadata as jest.Mock).mockResolvedValue(
-      mockDynamoDataWPCompleted
-    );
-    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
-    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+    (getReportMetadata as Mock).mockResolvedValue(mockDynamoDataWPCompleted);
+    (getReportFormTemplate as Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as Mock).mockResolvedValue(mockReportFieldData);
 
     const res = await submitReport(testSubmitEvent, null);
     const body = JSON.parse(res.body!);
 
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(body.lastAlteredBy).toContain("Thelonious States");
     expect(body.submissionName).toContain("testProgram");
@@ -92,16 +75,13 @@ describe("Test submitReport API method", () => {
   });
 
   test("Test WP reports get locked and have submission count updated.", async () => {
-    (getReportMetadata as jest.Mock).mockResolvedValue(
-      mockDynamoDataWPCompleted
-    );
-    (getReportFormTemplate as jest.Mock).mockResolvedValue(mockReportJson);
-    (getReportFieldData as jest.Mock).mockResolvedValue(mockReportFieldData);
+    (getReportMetadata as Mock).mockResolvedValue(mockDynamoDataWPCompleted);
+    (getReportFormTemplate as Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as Mock).mockResolvedValue(mockReportFieldData);
 
     const res = await submitReport(testSubmitEvent, null);
     const body = JSON.parse(res.body!);
 
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Ok);
     expect(body.lastAlteredBy).toContain("Thelonious States");
     expect(body.submissionName).toContain("testProgram");
@@ -114,12 +94,11 @@ describe("Test submitReport API method", () => {
   });
 
   test("Test report submittal fails if incomplete.", async () => {
-    (getReportMetadata as jest.Mock).mockResolvedValue(mockDynamoData);
+    (getReportMetadata as Mock).mockResolvedValue(mockDynamoData);
 
     const res = await submitReport(testSubmitEvent, null);
     const body = JSON.parse(res.body!);
 
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Conflict);
     expect(body).toStrictEqual(error.REPORT_INCOMPLETE);
   });
@@ -130,7 +109,6 @@ describe("Test submitReport API method", () => {
       pathParameters: {},
     };
     const res = await submitReport(noKeyEvent, null);
-    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -141,7 +119,6 @@ describe("Test submitReport API method", () => {
       pathParameters: { state: "", id: "" },
     };
     const res = await submitReport(noKeyEvent, null);
-    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });

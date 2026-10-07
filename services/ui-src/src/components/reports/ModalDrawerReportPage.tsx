@@ -318,7 +318,7 @@ const sx = {
   },
   dashboardTitle: {
     paddingBottom: "0",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     color: "gray",
   },
   addEntityButton: {

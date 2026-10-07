@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -11,12 +12,12 @@ import {
   mockForm,
   mockTablesForm,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockOnSubmit = jest.fn();
+const mockOnSubmit = vi.fn();
 
 const formComponent = (form = mockForm) => (
   <RouterWrappedComponent>
@@ -35,7 +36,7 @@ const formComponent = (form = mockForm) => (
 
 describe("<Form />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   test("Form is visible and disabled by default", () => {
     mockedUseStore.mockReturnValue({});

@@ -1,16 +1,17 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { useStore } from "utils";
 import {
   mockReportStore,
   mockEntityStore,
   mockWpReportContext,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { ReportContext } from "components/reports/ReportProvider";
 import { EntityType } from "types";
 import { ExportedEntityDetailsTable } from "./ExportedEntityDetailsTable";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockEntityStore);
 
 mockedUseStore.mockReturnValue(mockReportStore);

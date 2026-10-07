@@ -1,17 +1,18 @@
+import { MockedFunction } from "vitest";
 // components
 import { renderEntityDetailTables } from "./ExportedEntityDetailsOverlaySection";
 // utils
 import { useStore } from "../../utils";
-import { mockUseStore } from "../../utils/testing/setupJest";
+import { mockUseStore } from "../../utils/testing/setupTest";
 import {
   mockReportFieldData,
   mockWPFullReport,
 } from "../../utils/testing/mockReport";
 import { EntityShape } from "types";
 
-jest.mock("utils/state/useStore");
+vi.mock("utils/state/useStore");
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseStore);
 
 describe("<ExportedEntityDetailsOverlaySection />", () => {

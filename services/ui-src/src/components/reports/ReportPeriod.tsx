@@ -36,6 +36,6 @@ interface Props {
 const sx = {
   periodText: {
     marginTop: "spacer3",
-    fontSize: "2xl",
+    fontSize: "heading_2xl",
   },
 };

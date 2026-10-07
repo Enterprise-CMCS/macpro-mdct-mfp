@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -9,7 +10,7 @@ import {
   mockReportMethods,
   mockUseStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { approveReport, useStore } from "utils";
 // types
 import { ReportStatus, ReportType } from "types";
@@ -18,21 +19,19 @@ import WPReviewVerbiage from "verbiage/pages/wp/wp-review-and-submit";
 import SARReviewVerbiage from "verbiage/pages/sar/sar-review-and-submit";
 import FinancialReportingFormReviewVerbiage from "verbiage/pages/financial-report/financial-report-review-and-submit";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-jest.mock("utils/api/requestMethods/report", () => ({
-  ...jest.requireActual("utils/api/requestMethods/report"),
-  approveReport: jest.fn(),
-  releaseReport: jest.fn(),
+vi.mock("utils/api/requestMethods/report", async (importOriginal) => ({
+  ...(await importOriginal()),
+  approveReport: vi.fn(),
+  releaseReport: vi.fn(),
 }));
-const mockApproveReport = approveReport as jest.MockedFunction<
-  typeof approveReport
->;
+const mockApproveReport = approveReport as MockedFunction<typeof approveReport>;
 
-const mockUseNavigate = jest.fn();
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
+const mockUseNavigate = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
 }));
 
@@ -53,7 +52,7 @@ const ReviewSubmitPage = (verbiage: any) => {
 describe("<AdminReview />", () => {
   describe("MFP WP Review and Submit Page Functionality", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     describe("Review and Submit Page - Admin View", () => {
@@ -93,7 +92,7 @@ describe("<AdminReview />", () => {
       });
 
       test("should not show console errors", () => {
-        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        const consoleSpy = vi.spyOn(console, "error");
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           user: mockAdminUserStore,
@@ -146,7 +145,7 @@ describe("<AdminReview />", () => {
 
   describe("MFP SAR Review and Submit Page Functionality", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     describe("Review and Submit Page - Admin View", () => {
@@ -189,7 +188,7 @@ describe("<AdminReview />", () => {
       });
 
       test("should not show console errors", () => {
-        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        const consoleSpy = vi.spyOn(console, "error");
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {
@@ -206,7 +205,7 @@ describe("<AdminReview />", () => {
 
   describe("MFP Financial Reporting Form Review and Submit Page Functionality", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     describe("Review and Submit Page - Admin View", () => {
@@ -249,7 +248,7 @@ describe("<AdminReview />", () => {
       });
 
       test("should not show console errors", () => {
-        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        const consoleSpy = vi.spyOn(console, "error");
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {

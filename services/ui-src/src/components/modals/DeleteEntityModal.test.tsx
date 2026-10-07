@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 // components
 import { DeleteEntityModal, ReportContext } from "components";
@@ -9,18 +10,18 @@ import {
   mockStateUserStore,
   mockWPFullReport,
   mockWpReportContext,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { EntityType, MfpReportState, MfpUserState } from "types";
 import { useStore } from "../../utils";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockCloseHandler = jest.fn();
-const mockUpdateReport = jest.fn();
+const mockCloseHandler = vi.fn();
+const mockUpdateReport = vi.fn();
 
-jest.mock("utils/state/useStore");
+vi.mock("utils/state/useStore");
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const mockEntity = {
   id: "mock-id-1",
@@ -147,7 +148,7 @@ describe("<DeleteEntityModal />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("DeleteEntityModal shows the contents", () => {

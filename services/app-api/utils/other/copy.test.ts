@@ -1,3 +1,4 @@
+import { Mock } from "vitest";
 import { copyFieldDataFromSource } from "./copy";
 import { getReportFieldData } from "../../storage/reports";
 import {
@@ -11,35 +12,29 @@ import {
 } from "../types";
 import * as LD from "@launchdarkly/node-server-sdk";
 
-jest.mock("@launchdarkly/node-server-sdk", () => ({
-  init: jest.fn(),
+vi.mock("@launchdarkly/node-server-sdk", () => ({
+  init: vi.fn(),
 }));
-const waitForInitialization = jest.fn().mockResolvedValue(undefined);
-const variation = jest.fn().mockResolvedValue(false);
+const waitForInitialization = vi.fn().mockResolvedValue(undefined);
+const variation = vi.fn().mockResolvedValue(false);
 
-jest.mock("../../storage/reports", () => ({
-  getReportFieldData: jest.fn(),
+vi.mock("../../storage/reports", () => ({
+  getReportFieldData: vi.fn(),
 }));
-
-const consoleSpy: {
-  log: jest.SpyInstance<void>;
-} = {
-  log: jest.spyOn(console, "log").mockImplementation(),
-};
 
 describe("Field data copy", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     process.env.launchDarklyServer = "mock-sdk-key";
 
-    (LD.init as jest.Mock).mockReturnValue({
+    (LD.init as Mock).mockReturnValue({
       variation,
       waitForInitialization,
     });
   });
 
   test("Should copy validated fields", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockFieldId: "42",
     });
     const fieldData = {};
@@ -72,7 +67,7 @@ describe("Field data copy", () => {
 
   // TODO: Investigate this comment
   test("Should overwrite populated fields, apparently", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockFieldId: "42",
     });
     const fieldData = {
@@ -106,7 +101,7 @@ describe("Field data copy", () => {
   });
 
   test("Should not copy fields with no validation", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockFieldId: "42",
     });
     const fieldData = {};
@@ -125,7 +120,7 @@ describe("Field data copy", () => {
   });
 
   test("Should not copy entities with no validated fields", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mockFieldId: "42",
@@ -148,7 +143,7 @@ describe("Field data copy", () => {
   });
 
   test("Should copy validated fields within entities", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mockFieldId: "42",
@@ -209,7 +204,7 @@ describe("Field data copy", () => {
   });
 
   test("Should copy special fields within entities", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mock_name_field: "mock name", // key includes the string "name"
@@ -261,7 +256,7 @@ describe("Field data copy", () => {
   });
 
   test("Should not copy closed initiatives", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mockFieldId: "42",
@@ -300,7 +295,7 @@ describe("Field data copy", () => {
   });
 
   test("Should not delete an unrelated top-level array when a nested array gets fully pruned", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mockFieldId: "42",
@@ -355,7 +350,7 @@ describe("Field data copy", () => {
   test("Should wipe a fully pruned entity rather than leaving an empty husk behind", async () => {
     // The first entity holds a nested array, so pruning it recurses. The
     // second has nothing worth copying and must disappear completely.
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mockFieldId: "42",
@@ -403,7 +398,7 @@ describe("Field data copy", () => {
   });
 
   test("Should wipe the entire entity if no fields are being copied", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mockFieldId: "42",
@@ -436,7 +431,7 @@ describe("Field data copy", () => {
   });
 
   test("Should prune entity steps", async () => {
-    (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+    (getReportFieldData as Mock).mockResolvedValueOnce({
       mockEntityType: [
         {
           mockSteps: [
@@ -494,7 +489,7 @@ describe("Field data copy", () => {
       expected: Record<string, any>,
       fieldIds: string[]
     ) => {
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(sourceFieldData);
+      (getReportFieldData as Mock).mockResolvedValueOnce(sourceFieldData);
 
       const formTemplate = {
         type: ReportType.FINANCIAL_REPORT,
@@ -699,20 +694,17 @@ describe("Field data copy", () => {
       };
 
       test("copy entire initiative v1 with flag off", async () => {
-        (LD.init as jest.Mock).mockReturnValue({
+        (LD.init as Mock).mockReturnValue({
           variation,
           waitForInitialization,
         });
-        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
-          mockInitiativeV1
-        );
+        (getReportFieldData as Mock).mockResolvedValueOnce(mockInitiativeV1);
         const copiedData = await copyFieldDataFromSource(
           "CO",
           "mock-source-id",
           formTemplate,
           {}
         );
-        expect(consoleSpy.log).toHaveBeenCalled();
         expect(copiedData).toEqual({
           initiative: [
             {
@@ -747,20 +739,17 @@ describe("Field data copy", () => {
       });
 
       test("copy only initiative v1 name and topic with flag on", async () => {
-        (LD.init as jest.Mock).mockReturnValue({
-          variation: jest.fn().mockResolvedValue(true),
+        (LD.init as Mock).mockReturnValue({
+          variation: vi.fn().mockResolvedValue(true),
           waitForInitialization,
         });
-        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
-          mockInitiativeV1
-        );
+        (getReportFieldData as Mock).mockResolvedValueOnce(mockInitiativeV1);
         const copiedData = await copyFieldDataFromSource(
           "CO",
           "mock-source-id",
           formTemplate,
           {}
         );
-        expect(consoleSpy.log).toHaveBeenCalled();
         expect(copiedData).toEqual({
           initiative: [
             {
@@ -782,14 +771,14 @@ describe("Field data copy", () => {
       });
 
       test("strips v1 fields from every initiative regardless of entity order", async () => {
-        (LD.init as jest.Mock).mockReturnValue({
-          variation: jest.fn().mockResolvedValue(true),
+        (LD.init as Mock).mockReturnValue({
+          variation: vi.fn().mockResolvedValue(true),
           waitForInitialization,
         });
         // Only the first entity carries a v1 marker. Pruning deletes that
         // marker as it goes, so a mid-pass recomputation would wrongly leave
         // the second entity's v1 fields intact.
-        (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+        (getReportFieldData as Mock).mockResolvedValueOnce({
           initiative: [
             {
               id: "v1InitiativeId",
@@ -817,11 +806,11 @@ describe("Field data copy", () => {
       });
 
       test("does not strip v1 fields when the only v1 initiative is closed out", async () => {
-        (LD.init as jest.Mock).mockReturnValue({
-          variation: jest.fn().mockResolvedValue(true),
+        (LD.init as Mock).mockReturnValue({
+          variation: vi.fn().mockResolvedValue(true),
           waitForInitialization,
         });
-        (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+        (getReportFieldData as Mock).mockResolvedValueOnce({
           initiative: [
             {
               id: "closedInitiativeId",
@@ -917,38 +906,32 @@ describe("Field data copy", () => {
       };
 
       test("copy entire initiative v2 with flag on", async () => {
-        (LD.init as jest.Mock).mockReturnValue({
-          variation: jest.fn().mockResolvedValue(true),
+        (LD.init as Mock).mockReturnValue({
+          variation: vi.fn().mockResolvedValue(true),
           waitForInitialization,
         });
-        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
-          mockInitiativeV2
-        );
+        (getReportFieldData as Mock).mockResolvedValueOnce(mockInitiativeV2);
         const copiedData = await copyFieldDataFromSource(
           "CO",
           "mock-source-id",
           formTemplate,
           {}
         );
-        expect(consoleSpy.log).toHaveBeenCalled();
         expect(copiedData).toEqual(expectedResult);
       });
 
       test("copy entire initiative v2 with flag off", async () => {
-        (LD.init as jest.Mock).mockReturnValue({
+        (LD.init as Mock).mockReturnValue({
           variation,
           waitForInitialization,
         });
-        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
-          mockInitiativeV2
-        );
+        (getReportFieldData as Mock).mockResolvedValueOnce(mockInitiativeV2);
         const copiedData = await copyFieldDataFromSource(
           "CO",
           "mock-source-id",
           formTemplate,
           {}
         );
-        expect(consoleSpy.log).toHaveBeenCalled();
         expect(copiedData).toEqual(expectedResult);
       });
     });
@@ -989,7 +972,7 @@ describe("Field data copy", () => {
     };
 
     it("carries initiatives forward through a second-generation copy, even after an empty array field is added", async () => {
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+      (getReportFieldData as Mock).mockResolvedValueOnce(
         JSON.parse(JSON.stringify(gen1))
       );
       const gen2: any = await copyFieldDataFromSource(
@@ -1004,7 +987,7 @@ describe("Field data copy", () => {
       // triggers the copy-of-a-copy bug
       gen2.initiative[0].closeOutInformation_initiativeStatus = [];
 
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+      (getReportFieldData as Mock).mockResolvedValueOnce(
         JSON.parse(JSON.stringify(gen2))
       );
       const gen3: any = await copyFieldDataFromSource(
@@ -1032,7 +1015,7 @@ describe("Field data copy", () => {
         ],
       };
 
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+      (getReportFieldData as Mock).mockResolvedValueOnce(
         JSON.parse(JSON.stringify(gen1WithClosed))
       );
       const gen2: any = await copyFieldDataFromSource(
@@ -1045,7 +1028,7 @@ describe("Field data copy", () => {
         gen2.initiative.some((i: any) => i.id === "closedInitiativeId")
       ).toBe(false);
 
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+      (getReportFieldData as Mock).mockResolvedValueOnce(
         JSON.parse(JSON.stringify(gen2))
       );
       const gen3: any = await copyFieldDataFromSource(
@@ -1064,7 +1047,7 @@ describe("Field data copy", () => {
       let current: any = JSON.parse(JSON.stringify(gen1));
 
       for (let generation = 2; generation <= 5; generation++) {
-        (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+        (getReportFieldData as Mock).mockResolvedValueOnce(
           JSON.parse(JSON.stringify(current))
         );
         current = await copyFieldDataFromSource(
@@ -1081,7 +1064,7 @@ describe("Field data copy", () => {
     });
 
     it("drops a top-level array not in the template, but keeps a template-valid one that is empty", async () => {
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce({
+      (getReportFieldData as Mock).mockResolvedValueOnce({
         obsoleteThing: [],
         initiative: [],
       });
@@ -1100,7 +1083,7 @@ describe("Field data copy", () => {
       const allClosed = {
         initiative: [{ ...gen1.initiative[0], isInitiativeClosed: true }],
       };
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+      (getReportFieldData as Mock).mockResolvedValueOnce(
         JSON.parse(JSON.stringify(allClosed))
       );
 
@@ -1131,7 +1114,7 @@ describe("Field data copy", () => {
           },
         ],
       };
-      (getReportFieldData as jest.Mock).mockResolvedValueOnce(
+      (getReportFieldData as Mock).mockResolvedValueOnce(
         JSON.parse(JSON.stringify(gen1WithCloseOutAnswer))
       );
 

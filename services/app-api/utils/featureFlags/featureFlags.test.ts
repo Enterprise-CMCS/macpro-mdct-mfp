@@ -1,24 +1,18 @@
+import { Mock } from "vitest";
 import {
   getFlagValue,
   getLaunchDarklyClient,
   isFeatureFlagEnabled,
 } from "./featureFlags";
 import * as LD from "@launchdarkly/node-server-sdk";
+import { consoleSpy } from "../testing/setupTest";
 
-jest.mock("@launchdarkly/node-server-sdk", () => ({
-  init: jest.fn(),
+vi.mock("@launchdarkly/node-server-sdk", () => ({
+  init: vi.fn(),
 }));
 
-const waitForInitialization = jest.fn().mockResolvedValue(undefined);
-const variation = jest.fn().mockResolvedValue(true);
-
-const consoleSpy: {
-  error: jest.SpyInstance<void>;
-  log: jest.SpyInstance<void>;
-} = {
-  error: jest.spyOn(console, "error").mockImplementation(),
-  log: jest.spyOn(console, "log").mockImplementation(),
-};
+const waitForInitialization = vi.fn().mockResolvedValue(undefined);
+const variation = vi.fn().mockResolvedValue(true);
 
 describe("utils/featureFlags", () => {
   describe("getLaunchDarklyClient()", () => {
@@ -27,7 +21,7 @@ describe("utils/featureFlags", () => {
     });
 
     test("creates LD client", async () => {
-      (LD.init as jest.Mock).mockReturnValue({
+      (LD.init as Mock).mockReturnValue({
         variation,
         waitForInitialization,
       });
@@ -45,19 +39,19 @@ describe("utils/featureFlags", () => {
       delete process.env.launchDarklyServer;
       await getLaunchDarklyClient();
 
-      const expectedResult = await getFlagValue("mockFlag");
       expect(consoleSpy.error).toHaveBeenCalled();
+      const expectedResult = await getFlagValue("mockFlag");
       expect(expectedResult).toBe(false);
     });
 
     test("uses fallback client for bad SDK key", async () => {
-      (LD.init as jest.Mock).mockImplementation(() => {
+      (LD.init as Mock).mockImplementation(() => {
         throw new Error("Some error message");
       });
       await getLaunchDarklyClient();
 
-      const expectedResult = await getFlagValue("mockFlag");
       expect(consoleSpy.error).toHaveBeenCalled();
+      const expectedResult = await getFlagValue("mockFlag");
       expect(expectedResult).toBe(false);
     });
 
@@ -80,7 +74,7 @@ describe("utils/featureFlags", () => {
     });
 
     test("uses LD client flags - returns true", async () => {
-      (LD.init as jest.Mock).mockReturnValue({
+      (LD.init as Mock).mockReturnValue({
         variation,
         waitForInitialization,
       });
@@ -94,8 +88,8 @@ describe("utils/featureFlags", () => {
     });
 
     test("uses LD client flags - returns false", async () => {
-      (LD.init as jest.Mock).mockReturnValue({
-        variation: jest.fn().mockResolvedValue(false),
+      (LD.init as Mock).mockReturnValue({
+        variation: vi.fn().mockResolvedValue(false),
         waitForInitialization,
       });
       process.env.launchDarklyLocalFlags =
@@ -110,20 +104,22 @@ describe("utils/featureFlags", () => {
 
   describe("isFeatureFlagEnabled()", () => {
     test("returns true", async () => {
-      jest
-        .spyOn(require("./featureFlags"), "getFlagValue")
-        .mockResolvedValue(true);
+      (LD.init as Mock).mockReturnValue({
+        variation: vi.fn().mockResolvedValue(true),
+        waitForInitialization,
+      });
       const expectedResult = await isFeatureFlagEnabled("mockFlag");
-      expect(consoleSpy.log).toHaveBeenCalled();
+      expect(consoleSpy.info).toHaveBeenCalled();
       expect(expectedResult).toBe(true);
     });
 
     test("returns false", async () => {
-      jest
-        .spyOn(require("./featureFlags"), "getFlagValue")
-        .mockResolvedValue(false);
+      (LD.init as Mock).mockReturnValue({
+        variation: vi.fn().mockResolvedValue(false),
+        waitForInitialization,
+      });
       const expectedResult = await isFeatureFlagEnabled("mockFlag");
-      expect(consoleSpy.log).toHaveBeenCalled();
+      expect(consoleSpy.info).toHaveBeenCalled();
       expect(expectedResult).toBe(false);
     });
   });

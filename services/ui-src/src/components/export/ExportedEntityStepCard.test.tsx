@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { OverlayModalStepTypes } from "types";
 import { useStore } from "utils";
@@ -8,11 +9,11 @@ import {
   mockGenericEntity,
   mockUnfinishedGenericFormattedEntityData,
 } from "utils/testing/mockEntities";
-import { mockReportStore } from "utils/testing/setupJest";
+import { mockReportStore } from "utils/testing/setupTest";
 import { ExportedEntityStepCard } from "./ExportedEntityStepCard";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const CompletedExportedEvaluationPlanEntityCardComponent = (
   <ExportedEntityStepCard

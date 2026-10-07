@@ -6,7 +6,7 @@ import { Drawer } from "components";
 import { closeText } from "../../constants";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockOnClose = jest.fn();
+const mockOnClose = vi.fn();
 
 const mockDrawerDisclosure = {
   isOpen: true,

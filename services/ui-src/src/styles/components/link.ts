@@ -8,8 +8,8 @@ const baseStyles = {
 const primaryVariant = {
   color: "primary",
   _visited: {
-    color: "primary",
-    textDecorationColor: "primary",
+    color: "visited",
+    textDecorationColor: "visited",
   },
   ":hover, :visited:hover": {
     color: "primary_darker",
@@ -42,7 +42,7 @@ const unstyledButtonVariant = {
   border: "1px solid",
   padding: "0.5rem 1rem",
   borderRadius: "5px",
-  fontWeight: "bold",
+  fontWeight: "heading_md",
   textDecoration: "none",
   _visited: { color: "primary" },
   ":hover, :visited:hover": {

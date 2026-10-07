@@ -161,7 +161,7 @@ const sx = {
   },
   table: {
     th: {
-      fontWeight: "bold",
+      fontWeight: "heading_md",
       color: "gray",
       paddingLeft: "spacer2",
       paddingRight: "0",
@@ -171,7 +171,7 @@ const sx = {
   },
   backButton: {
     padding: 0,
-    fontWeight: "normal",
+    fontWeight: "body_md",
     color: "primary",
     display: "flex",
     position: "relative",
@@ -199,8 +199,8 @@ const sx = {
     width: "8.25rem",
   },
   textHeading: {
-    fontWeight: "bold",
-    lineHeight: "1.25rem",
+    fontWeight: "heading_md",
+    lineHeight: "heading_md",
   },
   programInfo: {
     ul: {
@@ -209,10 +209,10 @@ const sx = {
       li: {
         wordWrap: "break-word",
         whiteSpace: "break-spaces",
-        fontSize: "xl",
-        lineHeight: "1.75rem",
+        fontSize: "body_xl",
+        lineHeight: "body_xl",
         "&:first-of-type": {
-          fontWeight: "bold",
+          fontWeight: "heading_md",
         },
       },
     },

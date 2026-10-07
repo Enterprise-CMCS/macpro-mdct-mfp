@@ -8,10 +8,8 @@
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "coverage": "jest --coverage",
-    "test": "jest --setupFiles dotenv/config",
-    "watchTest": "jest --setupFiles dotenv/config --watch",
-    "a11y": "pa11y --runner axe --runner htmlcs"
+    "coverage": "vitest run --coverage",
+    "test": "vitest"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.10.9",
@@ -38,29 +36,21 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@babel/core": "^8.0.0",
-    "@babel/plugin-transform-react-jsx": "^7.17.3",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-typescript": "^7.16.7",
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.2.0",
-    "@types/jest": "^29.5.14",
     "@types/jest-axe": "^3.5.3",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
     "@types/react-helmet": "^6.1.6",
-    "@vitejs/plugin-react": "^4.5.1",
-    "babel-jest": "30.4.1",
-    "jest": "30.4.2",
+    "@vitejs/plugin-react": "^5.1.3",
+    "@vitest/coverage-v8": "^4.1.5",
     "jest-axe": "^6.0.0",
-    "jest-environment-jsdom": "30.4.1",
-    "jest-launchdarkly-mock": "^2.0.3",
-    "pa11y": "^9.0.0",
+    "jsdom": "^28.0.0",
     "typescript": "^5.9.3",
-    "vite": "^6.4.3",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite": "^8.1.0",
+    "vitest": "^4.1.5"
   },
   "browserslist": {
     "production": [
@@ -73,48 +63,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/components/**/*.{ts,tsx}",
-      "!src/components/index.ts*",
-      "src/routes/**/*.{ts,tsx}",
-      "!src/routes/index.tsx",
-      "!src/types/index.ts*",
-      "src/utils/**/*.{ts,tsx}",
-      "!src/utils/testing/*",
-      "!src/utils/index.ts*",
-      "!src/utils/**/index.ts*"
-    ],
-    "coverageReporters": [
-      "json",
-      [
-        "lcov",
-        {
-          "projectRoot": "../../"
-        }
-      ],
-      "text",
-      "text-summary"
-    ],
-    "globals": {
-      "_env_": {}
-    },
-    "moduleDirectories": [
-      "node_modules",
-      "src"
-    ],
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|webp|svg|mp4|webm|wav|mp3|m4a)$": "<rootDir>/src/utils/testing/mockAsset.ts",
-      "^.+\\.(css|less|scss)$": "identity-obj-proxy"
-    },
-    "setupFiles": [
-      "jest-launchdarkly-mock"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/utils/testing/setupJest.tsx"
-    ],
-    "testEnvironment": "<rootDir>/src/utils/testing/testEnv.js",
-    "verbose": true
   }
 }

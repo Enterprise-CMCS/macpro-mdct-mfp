@@ -48,7 +48,7 @@ import {
   mockFieldId,
   mockDynamicTemplateId,
   mockTempDynamicFieldId,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 
 const mockFormData = {
   fundingSources_quarters2024Q3: "8.00",

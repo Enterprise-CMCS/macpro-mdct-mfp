@@ -1,6 +1,6 @@
 import sign from "jwt-encode";
 import { ReportMetadataShape, ReportStatus, ReportType } from "../../types";
-import { mockReportKeys } from "../setupJest";
+import { mockReportKeys } from "../setupTest";
 
 export const mockApiKey = sign(
   {

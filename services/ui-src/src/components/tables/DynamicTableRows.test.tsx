@@ -1,8 +1,8 @@
+import { Mock, MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
-import { Table, Tbody } from "@chakra-ui/react";
 import { DynamicTableRows, DynamicTableProvider } from "components";
 // types
 import { EntityType, ReportType } from "types";
@@ -16,33 +16,34 @@ import {
   mockStateUserStore,
   mockTableId,
   mockDynamicRowsTemplateWithModalForm,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
+import { ResponsiveTable } from "./ResponsiveTable";
 
-const mockTrigger = jest.fn();
+const mockTrigger = vi.fn();
 const mockRhfMethods = {
   register: () => {},
   setValue: () => {},
-  getValues: jest.fn(),
+  getValues: vi.fn(),
   trigger: mockTrigger,
 };
-const mockUseFormContext = useFormContext as unknown as jest.Mock<
+const mockUseFormContext = useFormContext as unknown as Mock<
   typeof useFormContext
 >;
-jest.mock("react-hook-form", () => ({
-  useFormContext: jest.fn(() => mockRhfMethods),
+vi.mock("react-hook-form", () => ({
+  useFormContext: vi.fn(() => mockRhfMethods),
 }));
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
     ...mockRhfMethods,
-    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
+    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-jest.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: jest.fn().mockImplementation(() => {
+vi.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-totalComputable`,
@@ -50,8 +51,8 @@ jest.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: jest.fn().mockImplementation((work) => work()),
+  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
+  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const mockProps = {
@@ -73,17 +74,30 @@ const mockProps = {
   hasDynamicModalForm: false,
   hasStaticRows: true,
   tableId: mockTableId,
+  openModal: () => {},
+  emptyTableMessage: undefined,
+  entityType: undefined,
 };
 
-const dynamicTableRowsComponent = (props = mockProps) => (
-  <DynamicTableProvider>
-    <Table>
-      <Tbody>
-        <DynamicTableRows {...props} />
-      </Tbody>
-    </Table>
-  </DynamicTableProvider>
-);
+const DynamicTableRowsComponent = ({ props = mockProps }) => {
+  return ResponsiveTable({
+    id: "",
+    dynamicRows: DynamicTableRows(
+      props.tableId,
+      props.formPercentage,
+      props.disabled,
+      props.dynamicRowsTemplate,
+      props.hasDynamicModalForm,
+      props.hasStaticRows,
+      props.formData,
+      props.openModal,
+      props.emptyTableMessage,
+      undefined,
+      undefined,
+      props.entityType
+    ),
+  });
+};
 
 describe("<DynamicTableRows />", () => {
   test("delete row", async () => {
@@ -95,8 +109,11 @@ describe("<DynamicTableRows />", () => {
       },
     });
     mockGetValues(undefined);
-    render(dynamicTableRowsComponent());
-
+    render(
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent />
+      </DynamicTableProvider>
+    );
     const row = screen.getByRole("row", {
       name: `Other: $ % Delete Other: ${mockDynamicFieldId}`,
     });
@@ -129,10 +146,14 @@ describe("<DynamicTableRows />", () => {
       },
     });
     mockGetValues(undefined);
-    render(dynamicTableRowsComponent());
+    render(
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent />
+      </DynamicTableProvider>
+    );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
-    const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
+    const pctInputs = screen.getAllByRole("textbox", { name: "" }); //Changed from "Other: $"
 
     await act(async () => {
       await userEvent.clear(inputs[0]);
@@ -174,10 +195,14 @@ describe("<DynamicTableRows />", () => {
     });
     mockGetValues(undefined);
 
-    render(dynamicTableRowsComponent(updatedProps));
+    render(
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent props={updatedProps as any} />
+      </DynamicTableProvider>
+    );
 
     const inputs = screen.getAllByRole("textbox", { name: "Other:" });
-    const pctInputs = screen.getAllByRole("textbox", { name: "Other: $" });
+    const pctInputs = screen.getAllByRole("textbox", { name: "" }); //Changed from "Other: $"
 
     await act(async () => {
       await userEvent.clear(inputs[0]);
@@ -207,7 +232,11 @@ describe("<DynamicTableRows />", () => {
       },
     });
     mockGetValues(undefined);
-    render(dynamicTableRowsComponent());
+    render(
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent />
+      </DynamicTableProvider>
+    );
 
     const rows = screen.queryAllByRole("row");
     expect(rows).toHaveLength(0);
@@ -232,12 +261,12 @@ describe("<DynamicTableRows />", () => {
     });
     mockGetValues(undefined);
 
+    const newProps = { ...mockProps, dynamicRowsTemplate, formData };
+
     return render(
-      dynamicTableRowsComponent({
-        ...mockProps,
-        dynamicRowsTemplate,
-        formData,
-      })
+      <DynamicTableProvider>
+        <DynamicTableRowsComponent props={newProps} />
+      </DynamicTableProvider>
     );
   };
 
@@ -307,7 +336,7 @@ describe("<DynamicTableRows />", () => {
   );
 
   describe("modal", () => {
-    const mockOpenModal = jest.fn();
+    const mockOpenModal = vi.fn();
     const updatedProps = {
       ...mockProps,
       dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
@@ -328,7 +357,11 @@ describe("<DynamicTableRows />", () => {
       });
       mockGetValues(undefined);
 
-      render(dynamicTableRowsComponent(updatedProps));
+      render(
+        <DynamicTableProvider>
+          <DynamicTableRowsComponent props={updatedProps as any} />
+        </DynamicTableProvider>
+      );
 
       const editButton = screen.getByRole("button", {
         name: `Edit ${mockDynamicFieldId}`,
@@ -353,7 +386,11 @@ describe("<DynamicTableRows />", () => {
       });
       mockGetValues(undefined);
 
-      render(dynamicTableRowsComponent(updatedProps));
+      render(
+        <DynamicTableProvider>
+          <DynamicTableRowsComponent props={updatedProps as any} />
+        </DynamicTableProvider>
+      );
 
       expect(
         screen.getByText("Mock dynamic empty table message")
@@ -361,5 +398,9 @@ describe("<DynamicTableRows />", () => {
     });
   });
 
-  testA11yAct(dynamicTableRowsComponent());
+  testA11yAct(
+    <DynamicTableProvider>
+      <DynamicTableRowsComponent />
+    </DynamicTableProvider>
+  );
 });

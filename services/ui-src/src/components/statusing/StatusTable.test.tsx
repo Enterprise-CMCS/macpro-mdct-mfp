@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 // components
 import { StatusTable } from "components";
@@ -7,26 +8,25 @@ import { ReportStatus } from "types";
 import {
   mockReportStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { makeMediaQueryClasses, useBreakpoint, useStore } from "utils";
 import userEvent from "@testing-library/user-event";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockUseNavigate = jest.fn();
+const mockUseNavigate = vi.fn();
 
-jest.mock("react-router", () => ({
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
 }));
 
-jest.mock("utils/other/useBreakpoint");
-const mockUseBreakpoint = useBreakpoint as jest.MockedFunction<
-  typeof useBreakpoint
->;
+vi.mock("utils/other/useBreakpoint");
+const mockUseBreakpoint = useBreakpoint as MockedFunction<typeof useBreakpoint>;
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockMakeMediaQueryClasses = makeMediaQueryClasses as jest.MockedFunction<
+const mockMakeMediaQueryClasses = makeMediaQueryClasses as MockedFunction<
   typeof makeMediaQueryClasses
 >;
 
@@ -48,7 +48,7 @@ const StatusTableComponent = (
 
 describe("<StatusTable />", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("should not display anything if not given a report", () => {

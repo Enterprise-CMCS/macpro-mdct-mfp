@@ -4,18 +4,18 @@ import userEvent from "@testing-library/user-event";
 import { LoginCognito } from "components";
 import { testA11yAct } from "utils/testing/commonTests";
 // utils
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupTest";
 
-const mockLoginUser = jest.fn();
+const mockLoginUser = vi.fn();
 
-jest.mock("utils", () => ({
+vi.mock("utils", () => ({
   loginUser: (username: string, password: string) =>
     mockLoginUser(username, password),
 }));
 
-const mockUseNavigate = jest.fn();
+const mockUseNavigate = vi.fn();
 
-jest.mock("react-router", () => ({
+vi.mock("react-router", () => ({
   useNavigate: () => mockUseNavigate,
 }));
 

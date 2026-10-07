@@ -1,4 +1,4 @@
-// Chakra UI theme info: https://chakra-ui.com/docs/styled-system/theming/theme
+// Chakra UI theme info: https://v2.chakra-ui.com/docs/styled-system/theme
 import { extendTheme } from "@chakra-ui/react";
 
 // Global style overrides

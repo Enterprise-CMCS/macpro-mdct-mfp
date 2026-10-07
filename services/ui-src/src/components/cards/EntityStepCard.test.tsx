@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MockedFunction } from "vitest";
 // components
 import {
   mockModalDrawerReportPageJson,
@@ -8,18 +9,18 @@ import {
   mockUnfinishedGenericFormattedEntityData,
   mockUseStore,
   mockUseSARStore,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { EntityStepCard } from "./EntityStepCard";
 import { OverlayModalStepTypes } from "types";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const openAddEditEntityModal = jest.fn();
-const openDeleteEntityModal = jest.fn();
-const mockOpenDrawer = jest.fn();
-jest.mock("utils/state/useStore");
+const openAddEditEntityModal = vi.fn();
+const openDeleteEntityModal = vi.fn();
+const mockOpenDrawer = vi.fn();
+vi.mock("utils/state/useStore");
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseStore);
 
 const {
@@ -157,7 +158,7 @@ describe("<EntityCard />", () => {
       });
 
       afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
       });
 
       test("EntityCard is visible", () => {
@@ -195,7 +196,7 @@ describe("<EntityCard />", () => {
       });
 
       afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
       });
 
       test("EntityCard is visible", () => {
