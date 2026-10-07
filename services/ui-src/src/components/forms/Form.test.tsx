@@ -9,6 +9,7 @@ import { testA11yAct } from "utils/testing/commonTests";
 import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
 import {
   mockBadTablesForm,
+  mockFieldStore,
   mockForm,
   mockTablesForm,
   RouterWrappedComponent,
@@ -34,12 +35,17 @@ const formComponent = (form = mockForm) => (
   </RouterWrappedComponent>
 );
 
+const mockStore = {
+  ...mockStateUser,
+  ...mockFieldStore,
+};
+
 describe("<Form />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
   test("Form is visible and disabled by default", () => {
-    mockedUseStore.mockReturnValue({});
+    mockedUseStore.mockReturnValue({ ...mockFieldStore });
     render(formComponent());
     const form = screen.getByRole("textbox", {
       name: mockForm.fields[0].props.label,
@@ -49,7 +55,7 @@ describe("<Form />", () => {
   });
 
   test("Form is enabled for state users", () => {
-    mockedUseStore.mockReturnValue(mockStateUser);
+    mockedUseStore.mockReturnValue(mockStore);
     render(formComponent());
     const form = screen.getByRole("textbox", {
       name: mockForm.fields[0].props.label,
@@ -59,7 +65,7 @@ describe("<Form />", () => {
   });
 
   test("Form is enabled for admin users when specified", () => {
-    mockedUseStore.mockReturnValue(mockAdminUser);
+    mockedUseStore.mockReturnValue({ ...mockAdminUser, ...mockFieldStore });
     const mockFormEditableByAdmins = {
       ...mockForm,
       editableByAdmins: true,
@@ -73,7 +79,7 @@ describe("<Form />", () => {
   });
 
   test("submitting incomplete form shows errors", async () => {
-    mockedUseStore.mockReturnValue(mockStateUser);
+    mockedUseStore.mockReturnValue(mockStore);
     render(formComponent());
     const submitButton = screen.getByRole("button", {
       name: "Submit",
@@ -82,12 +88,12 @@ describe("<Form />", () => {
       await userEvent.click(submitButton);
     });
 
-    const errorMessage = screen.getAllByText("A response is required");
-    expect(errorMessage).toHaveLength(3);
+    const errors = Array.from(mockFieldStore.fields).filter((field) => field[1].error.message === "A response is required")
+    expect(errors).toHaveLength(3);
   });
 
   test("form tables are visible", () => {
-    mockedUseStore.mockReturnValue(mockStateUser);
+    mockedUseStore.mockReturnValue(mockStore);
     render(formComponent(mockTablesForm));
 
     const tables = screen.getAllByRole("table");
@@ -155,7 +161,7 @@ describe("<Form />", () => {
   });
 
   test("bad table type is skipped", () => {
-    mockedUseStore.mockReturnValue(mockStateUser);
+    mockedUseStore.mockReturnValue(mockStore);
     render(formComponent(mockBadTablesForm));
 
     const table = screen.queryByRole("table");

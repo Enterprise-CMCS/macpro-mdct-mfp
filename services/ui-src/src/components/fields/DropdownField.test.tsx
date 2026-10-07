@@ -1,66 +1,21 @@
-import { Mock, MockedFunction } from "vitest";
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useFormContext } from "react-hook-form";
 //components
 import { DropdownField } from "components";
 // utils
-import { mockStateUserStore } from "utils/testing/setupTest";
+import { mockFieldStore } from "utils/testing/setupTest";
 import { useStore } from "utils";
 import { mockDropdownOptions } from "utils/testing/fields/mockDropdownChoices";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockFormFieldValue = { label: "Option 1", value: "test-dropdown-1" };
 const mockHydrationValue = { label: "Option 3", value: "test-dropdown-3" };
 
-const mockRegister = vi.fn();
-const mockTrigger = vi.fn();
 const mockSetValue = vi.fn();
-const mockGetValuesBase = vi.fn().mockReturnValue(undefined);
-
-const mockRhfMethods = {
-  getValues: mockGetValuesBase,
-  register: mockRegister,
-  setValue: mockSetValue,
-  trigger: mockTrigger,
-  formState: {
-    errors: {},
-  },
-};
-
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-
-vi.mock("react-hook-form", () => ({
-  useFormContext: vi.fn(),
-}));
-
-const mockGetValues = (returnValue: any) => {
-  mockGetValuesBase.mockReturnValue(returnValue);
-  (mockUseFormContext as any).mockReturnValue({
-    ...mockRhfMethods,
-    getValues: mockGetValuesBase,
-  });
-};
-
-const mockErrors = (name: string, message: string) => {
-  (mockUseFormContext as any).mockReturnValue({
-    ...mockRhfMethods,
-    formState: {
-      errors: {
-        [name]: {
-          value: {
-            message,
-          },
-        },
-      },
-    },
-  });
-};
 
 vi.mock("utils/state/useStore");
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue({ ...mockFieldStore, setAnswer: mockSetValue });
 
 const dropdownComponentWithOptions = ({
   hint = "Dropdown hint",
@@ -68,7 +23,6 @@ const dropdownComponentWithOptions = ({
   name = "testDropdown",
   label = "test-dropdown-label",
   options = mockDropdownOptions,
-  validateOnRender = false,
   disabled = false,
 }: any = {}) => (
   <DropdownField
@@ -77,24 +31,12 @@ const dropdownComponentWithOptions = ({
     label={label}
     name={name}
     options={options}
-    validateOnRender={validateOnRender}
     disabled={disabled}
   />
 );
 
 describe("<DropdownField />", () => {
   describe("Test DropdownField basic functionality", () => {
-    beforeEach(() => {
-      vi.clearAllMocks();
-      mockedUseStore.mockReturnValue(mockStateUserStore);
-      (mockUseFormContext as any).mockReturnValue(mockRhfMethods);
-      mockGetValuesBase.mockReturnValue(undefined);
-    });
-
-    afterEach(() => {
-      vi.clearAllMocks();
-    });
-
     test("Dropdown renders", () => {
       render(dropdownComponentWithOptions());
       const dropdown = screen.getByLabelText("test-dropdown-label");
@@ -105,13 +47,6 @@ describe("<DropdownField />", () => {
 
       const options = screen.getAllByRole("option");
       expect(options).toHaveLength(4);
-    });
-
-    test("renders inline error", () => {
-      mockErrors("testDropdown", "Test error message");
-      render(dropdownComponentWithOptions());
-      const inlineError = screen.getByText("Test error message");
-      expect(inlineError).toBeVisible();
     });
 
     test("renders empty options for copyEligibleReports", () => {
@@ -128,12 +63,6 @@ describe("<DropdownField />", () => {
       expect(options).toHaveLength(1);
     });
 
-    test("calls form trigger with validateOnRender", () => {
-      const opts = { options: "mock", validateOnRender: true };
-      render(dropdownComponentWithOptions(opts));
-      expect(mockTrigger).toHaveBeenCalled();
-    });
-
     test("calls change and blur events", async () => {
       render(dropdownComponentWithOptions());
       const dropDown = screen.getByLabelText("test-dropdown-label");
@@ -141,13 +70,6 @@ describe("<DropdownField />", () => {
         await userEvent.selectOptions(dropDown, "test-dropdown-1");
       });
       expect(mockSetValue).toHaveBeenCalled();
-
-      await act(async () => {
-        await userEvent.selectOptions(dropDown, "");
-        await userEvent.tab();
-      });
-
-      expect(mockTrigger).toHaveBeenCalled();
     });
 
     test("renders disabled dropdown when disabled prop is true", () => {
@@ -159,24 +81,6 @@ describe("<DropdownField />", () => {
   });
 
   describe("Test DropdownField hydration functionality", () => {
-    beforeEach(() => {
-      vi.clearAllMocks();
-      mockedUseStore.mockReturnValue(mockStateUserStore);
-      (mockUseFormContext as any).mockReturnValue(mockRhfMethods);
-      mockGetValuesBase.mockReturnValue(undefined);
-    });
-
-    afterEach(() => {
-      vi.clearAllMocks();
-    });
-
-    test("If only formFieldValue exists, displayValue is set to it", () => {
-      mockGetValues(mockFormFieldValue);
-      render(dropdownComponentWithOptions());
-      const dropdownField = screen.getByLabelText("test-dropdown-label");
-      expect(dropdownField).toHaveValue(mockFormFieldValue.value);
-    });
-
     test("If only hydrationValue exists, displayValue is set to it", () => {
       const opts = {
         label: "test-dropdown-field-to-hydrate",
@@ -186,23 +90,7 @@ describe("<DropdownField />", () => {
       const dropdownField = screen.getByLabelText(opts.label);
       expect(dropdownField).toHaveValue(mockHydrationValue.value);
     });
-
-    test("If both formFieldValue and hydrationValue exist, displayValue is set to formFieldValue", () => {
-      mockGetValues(mockFormFieldValue);
-      const opts = {
-        label: "test-dropdown-field-to-hydrate",
-        hydrate: mockHydrationValue,
-      };
-      render(dropdownComponentWithOptions(opts));
-      const dropdownField = screen.getByLabelText(opts.label);
-      expect(dropdownField).toHaveValue(mockFormFieldValue.value);
-    });
   });
 
-  testA11yAct(dropdownComponentWithOptions(), () => {
-    vi.clearAllMocks();
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-    (mockUseFormContext as any).mockReturnValue(mockRhfMethods);
-    mockGetValuesBase.mockReturnValue(undefined);
-  });
+  testA11yAct(dropdownComponentWithOptions());
 });

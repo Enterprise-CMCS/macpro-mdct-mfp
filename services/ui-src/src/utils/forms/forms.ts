@@ -28,7 +28,7 @@ import {
   ReportStatus,
 } from "types";
 // utils
-import { calculateNextQuarter, createTempDynamicId } from "utils";
+import { calculateNextQuarter, createTempDynamicId, FieldInfo } from "utils";
 import {
   getDefaultTargetPopulationNames,
   notAnsweredText,
@@ -42,6 +42,7 @@ export const formFieldFactory = (
     nested?: boolean;
     autosave?: boolean;
     validateOnRender?: boolean;
+    updateFieldValues?: (fieldsToSave: FieldInfo[]) => {};
   }
 ) => {
   // define form field components

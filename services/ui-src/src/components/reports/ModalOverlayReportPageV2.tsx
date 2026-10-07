@@ -40,7 +40,6 @@ import {
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
-  waitForAutosavesAndGetReport,
 } from "utils";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 // assets
@@ -159,7 +158,7 @@ export const ModalOverlayReportPageV2 = ({
   const onSubmit = async (enteredData: AnyObject) => {
     if (userIsEndUser) {
       setSubmitting(true);
-      const latestReport = await waitForAutosavesAndGetReport(report);
+      const latestReport = report;
       const reportKeys = {
         reportType: latestReport.reportType,
         state,

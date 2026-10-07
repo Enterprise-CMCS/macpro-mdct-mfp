@@ -6,6 +6,7 @@ import { AdminDashSelector, ReportContext } from "components";
 // utils
 import {
   mockAdminUserStore,
+  mockFieldStore,
   mockWpReportContext,
   RouterWrappedComponent,
 } from "utils/testing/setupTest";
@@ -22,7 +23,7 @@ import { testA11yAct } from "utils/testing/commonTests";
 vi.mock("utils/state/useStore");
 
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
-mockedUseStore.mockReturnValue(mockAdminUserStore);
+mockedUseStore.mockReturnValue({...mockAdminUserStore, ...mockFieldStore});
 
 const adminDashSelectorView = (
   context: ReportContextShape = mockWpReportContext

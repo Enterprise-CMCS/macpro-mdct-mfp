@@ -8,6 +8,7 @@ import { AddEditOverlayEntityModal } from "./AddEditOverlayEntityModal";
 import {
   EntityShape,
   EntityType,
+  MfpFieldState,
   MfpReportState,
   MfpUserState,
 } from "../../types";
@@ -15,6 +16,7 @@ import {
 import { RouterWrappedComponent } from "../../utils/testing/mockRouter";
 import {
   mockEntityStore,
+  mockFieldStore,
   mockModalDrawerReportPageVerbiage,
   mockModalForm,
   mockOverlayModalPageVerbiage,
@@ -71,7 +73,7 @@ const selectedStepEntity: EntityShape = {
 };
 
 // mock store for WP
-const mockUseStore: MfpReportState & MfpUserState = {
+const mockUseStore: MfpReportState & MfpUserState & MfpFieldState = {
   report: wpReport,
   reportsByState: [mockWPFullReport],
   submittedReportsByState: [mockWPFullReport],
@@ -89,6 +91,7 @@ const mockUseStore: MfpReportState & MfpUserState = {
   setEditable: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
+  ...mockFieldStore,
 };
 
 // mock report context for WP
@@ -99,7 +102,7 @@ const mockedReportContext = {
 };
 
 // mock store for SAR
-const mockSarUseStore: MfpReportState & MfpUserState = {
+const mockSarUseStore: MfpReportState & MfpUserState & MfpFieldState = {
   report: sarReport,
   reportsByState: [mockSARFullReport],
   submittedReportsByState: [mockWPFullReport],
@@ -117,6 +120,7 @@ const mockSarUseStore: MfpReportState & MfpUserState = {
   setEditable: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
+  ...mockFieldStore,
 };
 
 // mock report context for SAR

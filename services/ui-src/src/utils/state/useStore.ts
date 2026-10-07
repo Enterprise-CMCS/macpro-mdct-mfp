@@ -12,7 +12,13 @@ import {
   EntityShape,
   MfpEntityState,
   ErrorVerbiage,
+  MfpFieldState,
+  FIELD_DATA,
+  FIELD_ERROR,
+  AnyObject,
 } from "types";
+import { OptionalObjectSchema, TypeOfShape } from "yup/lib/object";
+import { transformYupErrorsIntoObject } from "utils/autosave/helpers";
 
 // USER STORE
 const userStore = (set: Function) => ({
@@ -72,6 +78,7 @@ const reportStore = (set: Function) => ({
   workPlanToCopyFrom: undefined,
   autosaveState: false,
   editable: true,
+  answers: {},
   // actions
   setReport: (newReport: ReportShape | undefined) =>
     set(() => ({ report: newReport }), false, { type: "setReport" }),
@@ -107,6 +114,10 @@ const reportStore = (set: Function) => ({
     set(() => ({ editable: state }), false, {
       type: "setEditable",
     }),
+  setAnswers: (newAnswers: any) =>
+    set(() => ({ answers: newAnswers }), false, {
+      type: "setAnswers",
+    }),
 });
 
 // ENTITY STORE
@@ -130,17 +141,110 @@ const entityStore = (set: Function) => ({
     }),
 });
 
+// FIELD STORE
+const fieldStore = (set: Function) => ({
+  fields: new Map(),
+  validationSchema: undefined,
+  setField: (id: string, value?: any) =>
+    set(
+      (state: { fields: Map<string, FIELD_DATA> }) => ({
+        fields: new Map(state.fields).set(id, {
+          answer: value ?? undefined,
+          error: { message: "" },
+          validate: false,
+        }),
+      }),
+      false,
+      { type: "setField" }
+    ),
+  setAnswer: (id: string, value: any) =>
+    set(
+      (state: {
+        fields: Map<string, FIELD_DATA>;
+        validationSchema: OptionalObjectSchema<
+          AnyObject,
+          AnyObject,
+          TypeOfShape<AnyObject>
+        >;
+      }) => {
+        const formattedFields = {
+          ...Object.fromEntries(
+            state.fields
+              .keys()
+              .map((key) => [key, state.fields.get(key)?.answer])
+          ),
+          [id]: value,
+        };
+
+        const runValidation = () => {
+          if (state.validationSchema) {
+            try {
+              state.validationSchema.validateSync(formattedFields, {
+                abortEarly: false,
+              });
+            } catch (error: any) {
+              return transformYupErrorsIntoObject(error);
+            }
+          }
+          return { [id]: "" };
+        };
+
+        let validationError = runValidation();
+        const updateFields = new Map(state.fields).set(id, {
+          answer: value,
+          error: (validationError[id] as FIELD_ERROR) ?? "",
+          validate: true,
+        });
+        return { fields: updateFields };
+      },
+      false,
+      { type: "setAnswer" }
+    ),
+  setErrors: (updateErrors: { [key: string]: FIELD_ERROR }) =>
+    set(
+      (state: { fields: Map<string, FIELD_DATA> }) => {
+        const updateFields = new Map(state.fields);
+        for (const [key, value] of Object.entries(updateErrors)) {
+          const data = state.fields.get(key) ?? { answer: undefined };
+          updateFields.set(key, { ...data, error: value, validate: false });
+        }
+        return { fields: updateFields };
+      },
+      false,
+      {
+        type: "setErrors",
+      }
+    ),
+  setValidationSchema: (
+    schema:
+      | OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>>
+      | undefined
+  ) =>
+    set(() => ({ validationSchema: schema }), false, {
+      type: "setValidationSchema",
+    }),
+  setClearFields: () =>
+    set(() => ({ fields: new Map(), validationSchema: {} }), false, {
+      type: "setClearFields",
+    }),
+});
+
 export const useStore = create(
   // devtools is being used for debugging state
   persist(
-    devtools<MfpUserState & AdminBannerState & MfpReportState & MfpEntityState>(
-      (set) => ({
-        ...userStore(set),
-        ...bannerStore(set),
-        ...reportStore(set),
-        ...entityStore(set),
-      })
-    ),
+    devtools<
+      MfpUserState &
+        AdminBannerState &
+        MfpReportState &
+        MfpEntityState &
+        MfpFieldState
+    >((set) => ({
+      ...userStore(set),
+      ...bannerStore(set),
+      ...reportStore(set),
+      ...entityStore(set),
+      ...fieldStore(set),
+    })),
     {
       name: "mfp-store",
       partialize: (state) => ({ report: state.report }),
