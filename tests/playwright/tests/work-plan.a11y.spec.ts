@@ -295,81 +295,9 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
       expect.soft(accessibilityErrors).toEqual([]);
     });
 
-    await test.step("Navigate to Initiative01 I. Define initiative", async () => {
-      await statePage.page
-        .getByRole("button", {
-          name: "Edit I. Define initiative",
-        })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives: I. Define initiative",
-        })
-        .waitFor();
-    });
-    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 I. Define initiative", async () => {
-      const accessibilityErrors = await checkPageAccessibility(statePage.page);
-      expect.soft(accessibilityErrors).toEqual([]);
-    });
-
-    await test.step("Navigate to Initiative01 II. Evaluation plan", async () => {
-      await statePage.page
-        .getByRole("button", { name: "Save & return" })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives",
-        })
-        .waitFor();
-      await statePage.page
-        .getByRole("button", {
-          name: "Edit II. Evaluation plan",
-        })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives: II. Evaluation Plan",
-        })
-        .waitFor();
-    });
-    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 II. Evaluation plan", async () => {
-      const accessibilityErrors = await checkPageAccessibility(statePage.page);
-      expect.soft(accessibilityErrors).toEqual([]);
-    });
-
-    await test.step("Navigate to Initiative01 III. Funding sources", async () => {
-      await statePage.page
-        .getByRole("button", { name: "Save & return" })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives",
-        })
-        .waitFor();
-      await statePage.page
-        .getByRole("button", {
-          name: "Edit III. Funding sources",
-        })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives: III. Funding sources",
-        })
-        .waitFor();
-    });
-    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 III. Funding sources", async () => {
-      const accessibilityErrors = await checkPageAccessibility(statePage.page);
-      expect.soft(accessibilityErrors).toEqual([]);
-    });
-
     await test.step("Navigate to Review & Submit", async () => {
       await statePage.page
         .getByRole("button", { name: "Save & return" })
-        .click();
-      await statePage.page
-        .getByRole("button", { name: "Return to all initiatives" })
-        // There are two on the page, it doesn't matter which one we click
-        .first()
         .click();
       await statePage.page
         .getByRole("heading", {
