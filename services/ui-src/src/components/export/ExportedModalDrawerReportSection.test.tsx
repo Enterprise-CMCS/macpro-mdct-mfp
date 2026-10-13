@@ -1,10 +1,11 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { useStore } from "utils";
 import {
   mockReportStore,
   mockReportFieldData,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { ModalDrawerReportPageVerbiage } from "types";
 import {
   ExportedModalDrawerReportSection,
@@ -12,8 +13,8 @@ import {
 } from "./ExportedModalDrawerReportSection";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const defaultMockProps = {
   section: {

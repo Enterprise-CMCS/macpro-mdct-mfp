@@ -6,7 +6,7 @@ import {
   mockReportPeriod,
   mockReportYear,
   mockStateUserStore,
-} from "../setupJest";
+} from "../setupTest";
 import {
   AdminBannerState,
   MfpReportState,

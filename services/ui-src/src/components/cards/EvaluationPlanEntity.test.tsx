@@ -1,15 +1,16 @@
 import { render, screen } from "@testing-library/react";
+import { MockedFunction } from "vitest";
 import { testA11yAct } from "utils/testing/commonTests";
 import {
   mockEvaluationPlanFormattedEntityData,
   mockEvaluationPlanFormattedEntityDataNoQuarters,
 } from "utils/testing/mockEntities";
 import { EvaluationPlanEntity } from "./EvaluationPlanEntity";
-import { mockReportStore, mockSARReportStore } from "utils/testing/setupJest";
+import { mockReportStore, mockSARReportStore } from "utils/testing/setupTest";
 import { useStore } from "utils";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const evaluationPlanEntity = (
   <EvaluationPlanEntity

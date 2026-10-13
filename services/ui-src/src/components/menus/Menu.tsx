@@ -77,7 +77,7 @@ const sx = {
     borderRadius: 0,
     background: "none",
     color: "white",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     _hover: { color: "secondary", background: "none !important" },
     _active: { background: "none" },
     _focus: {

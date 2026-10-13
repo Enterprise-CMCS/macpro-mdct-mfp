@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import {
   renderServiceTableBody,
   renderFieldTableBody,
@@ -14,8 +15,8 @@ import { useStore } from "utils/state/useStore";
 import { render, screen } from "@testing-library/react";
 import { ReactElement } from "react";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 // Test data
 const formFields: (FormField | FormLayoutElement)[] = [
@@ -92,7 +93,7 @@ const fieldData = (id: string, pct: number) => ({
 
 describe("exportFieldTableHelpers", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("renderServiceTableBody()", () => {

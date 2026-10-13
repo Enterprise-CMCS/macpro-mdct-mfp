@@ -1,17 +1,18 @@
 import { act, render, screen } from "@testing-library/react";
+import { MockedFunction } from "vitest";
 // utils
 import {
   RouterWrappedComponent,
   mockNoUserStore,
   mockUseStore,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore, UserProvider } from "utils";
 //components
 import { App } from "components";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseStore);
 
 const appComponent = (

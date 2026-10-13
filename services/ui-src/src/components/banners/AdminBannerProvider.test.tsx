@@ -1,3 +1,4 @@
+import { Mock } from "vitest";
 import { useContext } from "react";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -6,13 +7,14 @@ import { AdminBannerContext, AdminBannerProvider } from "./AdminBannerProvider";
 // utils
 import { mockBannerData } from "utils/testing/mockBanner";
 import { useStore } from "utils";
+import * as mockAPI from "utils/api/requestMethods/banner";
 // verbiage
 import { bannerErrors } from "verbiage/errors";
 
-jest.mock("utils/api/requestMethods/banner", () => ({
-  deleteBanner: jest.fn(() => {}),
-  getBanners: jest.fn(() => {}),
-  writeBanner: jest.fn(() => {}),
+vi.mock("utils/api/requestMethods/banner", () => ({
+  deleteBanner: vi.fn(() => {}),
+  getBanners: vi.fn(() => {}),
+  writeBanner: vi.fn(() => {}),
 }));
 
 const mockMultiBannerData = [
@@ -25,8 +27,6 @@ const mockMultiBannerData = [
     createdAt: 1704171600000, // Jan 02 2024 00:00:00 UTC
   },
 ];
-
-const mockAPI = require("utils/api/requestMethods/banner");
 
 const TestComponent = () => {
   const { ...context } = useContext(AdminBannerContext);
@@ -58,7 +58,7 @@ describe("<AdminBannerProvider/>", () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   describe("Test AdminBannerProvider fetch banner methods", () => {
     test("fetchAdminBanner method is called on load", async () => {
@@ -76,7 +76,7 @@ describe("<AdminBannerProvider/>", () => {
     });
 
     test("fetchAdminBanner method calls API getBanners method", async () => {
-      mockAPI.getBanners.mockImplementation(() => [mockBannerData]);
+      (mockAPI.getBanners as Mock).mockImplementation(() => [mockBannerData]);
       expect(mockAPI.getBanners).toHaveBeenCalledTimes(1);
       await act(async () => {
         const fetchButton = screen.getByText("Fetch");
@@ -87,7 +87,9 @@ describe("<AdminBannerProvider/>", () => {
     });
 
     test("fetchAdminBanner method calls API getBanners method and filters/sorts without error", async () => {
-      mockAPI.getBanners.mockImplementation(() => mockMultiBannerData);
+      (mockAPI.getBanners as Mock).mockImplementation(
+        () => mockMultiBannerData
+      );
       expect(mockAPI.getBanners).toHaveBeenCalledTimes(1);
       await act(async () => {
         const fetchButton = screen.getByText("Fetch");
@@ -98,7 +100,7 @@ describe("<AdminBannerProvider/>", () => {
     });
 
     test("Shows error if fetchBanner throws error", async () => {
-      mockAPI.getBanners.mockImplementation(() => {
+      (mockAPI.getBanners as Mock).mockImplementation(() => {
         throw new Error("Some error message");
       });
       await act(async () => {
@@ -123,7 +125,7 @@ describe("<AdminBannerProvider/>", () => {
     });
 
     test("Shows error if deleteBanner throws error", async () => {
-      mockAPI.deleteBanner.mockImplementation(() => {
+      (mockAPI.deleteBanner as Mock).mockImplementation(() => {
         throw new Error("Some error message");
       });
       await act(async () => {

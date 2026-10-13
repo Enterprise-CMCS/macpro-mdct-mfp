@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -13,13 +14,13 @@ import {
   mockUseStore,
   mockWPFullReport,
   mockReportStore,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils/state/useStore";
 import { testA11yAct } from "utils/testing/commonTests";
 import { mockStateUser } from "utils/testing/mockUsers";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const mockReportStoreWithoutData = {
   ...mockUseStore,

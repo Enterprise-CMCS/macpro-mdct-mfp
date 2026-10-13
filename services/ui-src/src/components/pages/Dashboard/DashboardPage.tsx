@@ -546,12 +546,12 @@ const sx = {
   },
   headerText: {
     marginBottom: "spacer2",
-    fontSize: "4xl",
-    fontWeight: "normal",
+    fontSize: "heading_3xl",
+    fontWeight: "heading_3xl",
     ".tablet &, .mobile &": {
-      fontSize: "xl",
-      lineHeight: "1.75rem",
-      fontWeight: "bold",
+      fontSize: "heading_xl",
+      lineHeight: "heading_xl",
+      fontWeight: "heading_xl",
     },
   },
   bodyBox: {
@@ -592,9 +592,8 @@ const sx = {
   resetBtn: {
     border: "none",
     marginTop: "spacer2",
-    fontWeight: "none",
     textDecoration: "underline",
-    fontSize: "0.875rem",
+    fontSize: "body_sm",
   },
 };
 
@@ -603,8 +602,8 @@ const sxChildStyles = {
     button: {
       borderRadius: "0.25rem",
       textAlign: "center",
-      fontSize: "md",
-      fontWeight: "700",
+      fontSize: "body_md",
+      fontWeight: "heading_md",
       color: "primary",
     },
   },
@@ -621,35 +620,35 @@ const sxChildStyles = {
     },
   },
   sarSubmissionNameText: {
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "body_md",
+    fontWeight: "heading_md",
     minWidth: "10rem",
     ".tablet &, .mobile &": {
       width: "100%",
     },
-    lineHeight: "1.25rem",
+    lineHeight: "body_md",
   },
   wpSubmissionNameText: {
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "body_md",
+    fontWeight: "heading_md",
     minWidth: "8rem",
     ".tablet &, .mobile &": {
       width: "100%",
     },
-    lineHeight: "1.25rem",
+    lineHeight: "body_md",
   },
   adminActionCell: {
     display: "flex",
     gap: ".5rem",
     button: {
       minWidth: "auto",
-      fontSize: "md",
+      fontSize: "body_md",
     },
   },
   adminActionButton: {
     minWidth: "4.5rem",
-    fontSize: "sm",
-    fontWeight: 700,
+    fontSize: "body_sm",
+    fontWeight: "heading_md",
     padding: 0,
   },
 };

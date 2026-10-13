@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -11,19 +12,17 @@ import {
   mockDynamicModalOverlayReportPageJson,
   mockReportStore,
   mockUseEntityStore,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useBreakpoint, useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-jest.mock("utils/other/useBreakpoint");
-const mockUseBreakpoint = useBreakpoint as jest.MockedFunction<
-  typeof useBreakpoint
->;
+vi.mock("utils/other/useBreakpoint");
+const mockUseBreakpoint = useBreakpoint as MockedFunction<typeof useBreakpoint>;
 
-const mockSetSidebarHidden = jest.fn();
+const mockSetSidebarHidden = vi.fn();
 
 const {
   dashboardSubtitle,
@@ -57,7 +56,7 @@ const dynamicModalOverlayReportPageComponent = (
 
 describe("<DynamicModalOverlayReportPage />", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("renders desktop table", () => {

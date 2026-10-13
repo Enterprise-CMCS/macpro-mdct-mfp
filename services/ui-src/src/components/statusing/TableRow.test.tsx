@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 //components
 import { Table, Tbody } from "@chakra-ui/react";
@@ -12,14 +13,14 @@ import {
   mockTableRowPage,
   mockUseStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-jest.mock("utils/other/useBreakpoint", () => ({
-  useBreakpoint: jest.fn(() => ({
+vi.mock("utils/other/useBreakpoint", () => ({
+  useBreakpoint: vi.fn(() => ({
     isMobile: false,
   })),
 }));

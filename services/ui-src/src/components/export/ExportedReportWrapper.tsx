@@ -21,6 +21,7 @@ import {
 import { ExportedOverlayModalReportSection } from "./ExportedOverlayModalReportSection";
 export const ExportedReportWrapper = ({
   section,
+  heading,
   headingLevel = "h2",
 }: Props) => {
   switch (section.pageType) {
@@ -29,6 +30,7 @@ export const ExportedReportWrapper = ({
         return (
           <ExportRETTable
             section={section as ReportPageShapeBase}
+            heading={heading}
           ></ExportRETTable>
         );
       }
@@ -36,6 +38,7 @@ export const ExportedReportWrapper = ({
         <Box data-testid="exportedStandardReportSection" sx={sx.container}>
           <ExportedReportFieldTable
             section={section as StandardReportPageShape}
+            heading={heading}
             headingLevel={headingLevel}
           />
         </Box>
@@ -45,6 +48,7 @@ export const ExportedReportWrapper = ({
         <Box data-testid="exportedDrawerReportSection" sx={sx.container}>
           <ExportedReportFieldTable
             section={section as DrawerReportPageShape}
+            heading={heading}
             headingLevel={headingLevel}
           />
         </Box>
@@ -82,6 +86,7 @@ export const ExportedReportWrapper = ({
 
 export interface Props {
   section: ReportRouteWithForm;
+  heading?: string;
   headingLevel?: HeadingLevel;
 }
 

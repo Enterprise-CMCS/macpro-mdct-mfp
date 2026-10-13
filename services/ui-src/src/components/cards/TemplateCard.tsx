@@ -1,6 +1,6 @@
 // components
-import { Button, Flex, Heading, Image, Text, Link } from "@chakra-ui/react";
-import { Card, TemplateCardAccordion } from "components";
+import { Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Card, ExternalLink, TemplateCardAccordion } from "components";
 // utils
 import { useNavigate } from "react-router";
 import { useBreakpoint } from "utils";
@@ -48,13 +48,11 @@ export const TemplateCard = ({
           <Heading sx={sx.cardTitleText}>{verbiage.title}</Heading>
           <Text>
             {verbiage.body.available}
-            <Link href={verbiage.linkLocation} isExternal>
-              {verbiage.linkText}
-            </Link>
-            {verbiage.midText}
-            <Link href={verbiage.linkLocation2} isExternal>
-              {verbiage.linkText2}
-            </Link>
+            {verbiage.linkText && (
+              <ExternalLink href={verbiage.linkLocation}>
+                {verbiage.linkText}
+              </ExternalLink>
+            )}
             {verbiage.postLinkText}
           </Text>
           <Flex sx={sx.actionsFlex}>
@@ -115,9 +113,9 @@ const sx = {
   },
   cardTitleText: {
     marginBottom: "spacer1",
-    fontSize: "lg",
-    fontWeight: "bold",
-    lineHeight: "1.5",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
+    lineHeight: "heading_lg",
   },
   actionsFlex: {
     flexFlow: "wrap",

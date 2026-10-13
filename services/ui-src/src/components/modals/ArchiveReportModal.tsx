@@ -56,7 +56,7 @@ export const ArchiveReportModal = ({
       submitButtonDisabled={!isArchivable}
     >
       <Text sx={sx.archiveModalBody}>{modalArchive?.body}</Text>
-      <Text fontWeight="bold">Enter ARCHIVE to confirm.</Text>
+      <Text fontWeight="heading_md">Enter ARCHIVE to confirm.</Text>
       <Input
         id="archive"
         name="archive"
@@ -114,6 +114,6 @@ const sx = {
     marginRight: "spacer2",
   },
   ".mobile &": {
-    fontSize: "sm",
+    fontSize: "body_sm",
   },
 };

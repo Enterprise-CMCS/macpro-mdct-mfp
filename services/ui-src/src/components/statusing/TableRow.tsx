@@ -77,9 +77,9 @@ interface RowProps {
 
 const sx = {
   parent: {
-    fontWeight: "bold",
-    lineHeight: "1.125rem",
-    fontSize: "sm",
+    fontWeight: "heading_sm_bold",
+    lineHeight: "heading_sm",
+    fontSize: "heading_sm",
     paddingTop: "spacer2",
     paddingBottom: "spacer2",
     ".mobile &": {
@@ -90,8 +90,8 @@ const sx = {
   subparent: {
     paddingTop: "spacer2",
     paddingBottom: "spacer2",
-    lineHeight: "1.125rem",
-    fontSize: "sm",
+    lineHeight: "body_sm",
+    fontSize: "body_sm",
   },
   statusColumn: {
     ".mobile &": {

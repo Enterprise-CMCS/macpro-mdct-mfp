@@ -1,17 +1,18 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 // utils
 import {
   mockReportMethods,
   mockUseStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 //components
 import { Header, ReportContext } from "components";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const headerComponent = (
   <RouterWrappedComponent>

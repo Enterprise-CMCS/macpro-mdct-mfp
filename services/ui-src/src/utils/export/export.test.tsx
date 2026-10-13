@@ -13,7 +13,7 @@ import {
   mockNestedFormField,
   mockPlanField,
   mockOptionalFormField,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { render, screen } from "@testing-library/react";
 
 const emailInput: FormField = {
@@ -122,7 +122,7 @@ describe("utils/export", () => {
 
     test("renders optional message", () => {
       render(renderResponseData(mockOptionalFormField, null));
-      expect(screen.getByText("Not answered; optional")).toBeVisible();
+      expect(screen.getByText("Not answered; Optional")).toBeVisible();
     });
   });
 
@@ -197,7 +197,7 @@ describe("utils/export", () => {
           "mockEntityId"
         )
       );
-      expect(screen.getByText("Not answered; optional")).toBeVisible();
+      expect(screen.getByText("Not answered; Optional")).toBeVisible();
     });
   });
 });

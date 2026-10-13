@@ -165,7 +165,9 @@ describe("utils/parsing", () => {
       });
 
       test("Custom element renders correctly", () => {
-        const link = screen.getByRole("link", { name: "with external link" });
+        const link = screen.getByRole("link", {
+          name: "with external link(Opens in a new tab)",
+        });
         expect(link).toBeVisible();
       });
 
@@ -175,7 +177,9 @@ describe("utils/parsing", () => {
       });
 
       test("externalLink type does not get ds-c-link className by default", () => {
-        const link = screen.getByRole("link", { name: "with external link" });
+        const link = screen.getByRole("link", {
+          name: "with external link(Opens in a new tab)",
+        });
         expect(link).not.toHaveClass("ds-c-link");
       });
 
@@ -260,7 +264,7 @@ describe("utils/parsing", () => {
       const fieldText = screen.getByText("field title");
       expect(fieldText).toBeVisible();
 
-      const optionalText = screen.getByText("(optional)");
+      const optionalText = screen.getByText("(Optional)");
       expect(optionalText).toBeVisible();
     });
 
@@ -272,7 +276,7 @@ describe("utils/parsing", () => {
       const fieldText = screen.getByText("field title");
       expect(fieldText).toBeVisible();
 
-      const optionalText = screen.getByText("(optional):");
+      const optionalText = screen.getByText("(Optional):");
       expect(optionalText).toBeVisible();
     });
   });

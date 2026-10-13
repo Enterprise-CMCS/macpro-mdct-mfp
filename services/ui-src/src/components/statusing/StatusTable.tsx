@@ -41,9 +41,9 @@ const sx = {
       borderBottom: "1px solid",
       borderColor: "gray_lighter",
       color: "gray",
-      fontWeight: "600",
-      fontSize: "sm",
-      lineHeight: "1.125rem",
+      fontWeight: "body_sm",
+      fontSize: "body_sm",
+      lineHeight: "body_sm",
       "&:last-of-type": {
         textAlign: "right",
         paddingRight: "spacer5",

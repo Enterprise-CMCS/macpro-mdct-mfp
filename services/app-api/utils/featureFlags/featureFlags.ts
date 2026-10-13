@@ -1,4 +1,5 @@
 import * as LD from "@launchdarkly/node-server-sdk";
+import { logger } from "../debugging/debug-lib";
 
 export const getLaunchDarklyClient = async () => {
   const localFlags = process.env.launchDarklyLocalFlags
@@ -17,7 +18,7 @@ export const getLaunchDarklyClient = async () => {
   const sdkKey = process.env.launchDarklyServer;
 
   if (!sdkKey) {
-    console.error(
+    logger.error(
       "Missing LaunchDarkly SDK server key. Soft failing to local client."
     );
   }
@@ -35,7 +36,7 @@ export const getLaunchDarklyClient = async () => {
     await client.waitForInitialization({ timeout: 60 });
     return client;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return localClient;
   }
 };
@@ -54,7 +55,7 @@ export const isFeatureFlagEnabled = async (flagName: string) => {
 
   const flagValue = await getFlagValue(flagName);
 
-  console.log(
+  logger.info(
     `FEATURE FLAG: ${flagName}, enabled: ${flagValue}, local: ${local}`
   );
   return flagValue;

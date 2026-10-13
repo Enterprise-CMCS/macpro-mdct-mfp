@@ -95,7 +95,8 @@ export const renderFieldTableBody = (
 export const renderCalculationTables = (
   section: any,
   fieldData: any,
-  formPercentage: number
+  formPercentage: number,
+  heading?: string
 ) => {
   const calculationTables = section.form?.tables || [];
   return calculationTables.map((table: any) => {
@@ -134,7 +135,7 @@ export const renderCalculationTables = (
       percentageValue = formPercentage;
     }
 
-    const percentageText = table.verbiage?.percentage || "[auto-populated]%";
+    const percentageText = table.verbiage?.percentage || "Not provided";
     const displayPercentage = percentageText.replace(
       "{{percentage}}",
       `${percentageValue}%`
@@ -156,6 +157,7 @@ export const renderCalculationTables = (
             headRow: headRow,
             bodyRows: bodyRows,
             footRow: footerRow,
+            caption: `${heading} ${table.verbiage?.title ?? ""}`,
           }}
           data-testid={`service-table-${table.id}`}
         />
@@ -176,7 +178,7 @@ export const renderEntityTables = (
 
     const transformedHeadRow = headRow.map((header: string) => {
       if (styleAsOptionalHeadRows.includes(header)) {
-        return `${header}<span style="font-weight: normal;"> (optional)</span>`;
+        return `${header}<span style="font-weight: normal;"> (Optional)</span>`;
       }
       return header;
     });
@@ -311,10 +313,10 @@ export const sx = {
       borderColor: "gray.400",
     },
     "& tbody tr td span": {
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
     "& tfoot tr th": {
-      fontWeight: "bold",
+      fontWeight: "heading_md",
       color: "black",
     },
     "& tfoot tr:first-of-type": {
@@ -327,19 +329,19 @@ export const sx = {
     },
   },
   heading: {
-    fontSize: "xl",
-    fontWeight: "bold",
+    fontSize: "heading_xl",
+    fontWeight: "heading_xl",
     color: "black",
   },
   subHeading: {
-    fontSize: "xl",
+    fontSize: "heading_xl",
     "& + table": {
       marginTop: "spacer2",
     },
   },
   tableSubHeading: {
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     color: "gray_dark",
     marginTop: "spacer2",
   },
@@ -351,20 +353,20 @@ export const sx = {
     marginBottom: 0,
   },
   entityTableSectionHeading: {
-    fontSize: "lg",
-    fontWeight: "bold",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
     marginBottom: "spacer3",
   },
   entityTableHeading: {
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     marginBottom: "spacer2",
   },
   tableCommonStyle: {
     "& th, & td": {
       paddingX: "spacer1",
       paddingY: "spacer1",
-      fontSize: "sm",
+      fontSize: "body_sm",
     },
     "& thead tr": {
       backgroundColor: "gray.50",

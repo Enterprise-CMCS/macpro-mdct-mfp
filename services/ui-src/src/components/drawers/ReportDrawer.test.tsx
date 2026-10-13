@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { MockedFunction } from "vitest";
 //components
 import {
   mockDrawerForm,
@@ -8,7 +9,7 @@ import {
   mockStateUserStore,
   mockUseStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 // utils
 import { useStore } from "utils";
 // constants
@@ -16,16 +17,16 @@ import { saveAndCloseText } from "../../constants";
 import { ReportDrawer } from "./ReportDrawer";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockOnClose = jest.fn();
-const mockOnSubmit = jest.fn();
+const mockOnClose = vi.fn();
+const mockOnSubmit = vi.fn();
 
 const mockDrawerDisclosure = {
   isOpen: true,
   onClose: mockOnClose,
 };
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const drawerComponent = (
   <RouterWrappedComponent>
@@ -51,7 +52,7 @@ const drawerComponentWithoutFormFields = (
 
 describe("<ReportDrawer />", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   test("Should render save text if form is editable", async () => {
     mockUseStore.editable = true;

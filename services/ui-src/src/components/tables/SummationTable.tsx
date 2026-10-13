@@ -1,18 +1,6 @@
 import { useContext, useEffect } from "react";
 // components
-import {
-  Box,
-  Button,
-  Heading,
-  Image,
-  Table,
-  TableCaption,
-  Tbody,
-  Text,
-  Tfoot,
-  Thead,
-  VisuallyHidden,
-} from "@chakra-ui/react";
+import { Box, Button, Heading, Image, Text } from "@chakra-ui/react";
 import { DynamicTableContext, DynamicTableRows } from "components";
 // assets
 import addIcon from "assets/icons/icon_add.png";
@@ -25,6 +13,7 @@ import {
   parseCustomHtml,
   summationTableDynamicTotalsOnSave,
 } from "utils";
+import { ResponsiveTable } from "./ResponsiveTable";
 
 export const SummationTable = ({
   bodyRows,
@@ -79,6 +68,49 @@ export const SummationTable = ({
     });
   };
 
+  const tableData = {
+    id: tableId,
+    title: verbiage?.title,
+    headers: headRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "thead",
+        ...sharedCellProps,
+      })
+    ),
+    rows: bodyRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "tbody",
+        ...sharedCellProps,
+      })
+    ),
+    dynamicRows:
+      dynamicRowsTemplate &&
+      DynamicTableRows(
+        tableId,
+        0,
+        disabled,
+        dynamicRowsTemplate,
+        false,
+        bodyRows.length > 0,
+        formData,
+        () => {},
+        verbiage?.emptyTableMessage,
+        updatedFieldsCallback
+      ),
+    foot: footRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "tfoot",
+        ...sharedCellProps,
+      })
+    ),
+  };
+
   return (
     <Box sx={sx.box}>
       {verbiage?.title && <Heading as="h2">{verbiage.title}</Heading>}
@@ -101,55 +133,7 @@ export const SummationTable = ({
           </Button>
         </>
       )}
-
-      <Table id={tableId} sx={sx.table}>
-        <TableCaption placement="top" sx={sx.captionBox}>
-          <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
-        </TableCaption>
-        <Thead>
-          {headRows.map((row, rowIndex: number) =>
-            generateRows({
-              row,
-              rowIndex,
-              section: "thead",
-              ...sharedCellProps,
-            })
-          )}
-        </Thead>
-        <Tbody>
-          {bodyRows.map((row, rowIndex: number) =>
-            generateRows({
-              row,
-              rowIndex,
-              section: "tbody",
-              ...sharedCellProps,
-            })
-          )}
-          {dynamicRowsTemplate && (
-            <DynamicTableRows
-              disabled={disabled}
-              dynamicRowsTemplate={dynamicRowsTemplate}
-              emptyTableMessage={verbiage?.emptyTableMessage}
-              formData={formData}
-              formPercentage={0}
-              hasDynamicModalForm={false}
-              hasStaticRows={bodyRows.length > 0}
-              tableId={tableId}
-              updatedFieldsCallback={updatedFieldsCallback}
-            />
-          )}
-        </Tbody>
-        <Tfoot>
-          {footRows.map((row, rowIndex: number) =>
-            generateRows({
-              row,
-              rowIndex,
-              section: "tfoot",
-              ...sharedCellProps,
-            })
-          )}
-        </Tfoot>
-      </Table>
+      {ResponsiveTable(tableData)}
     </Box>
   );
 };

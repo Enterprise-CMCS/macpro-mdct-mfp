@@ -1,3 +1,4 @@
+import { Mock } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 //components
@@ -5,24 +6,24 @@ import { RadioField } from "components";
 import { useFormContext } from "react-hook-form";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockTrigger = jest.fn();
-const mockSetValue = jest.fn();
+const mockTrigger = vi.fn();
+const mockSetValue = vi.fn();
 const mockRhfMethods = {
   register: () => {},
   setValue: mockSetValue,
-  getValues: jest.fn(),
+  getValues: vi.fn(),
   trigger: mockTrigger,
 };
-const mockUseFormContext = useFormContext as unknown as jest.Mock<
+const mockUseFormContext = useFormContext as unknown as Mock<
   typeof useFormContext
 >;
-jest.mock("react-hook-form", () => ({
-  useFormContext: jest.fn(() => mockRhfMethods),
+vi.mock("react-hook-form", () => ({
+  useFormContext: vi.fn(() => mockRhfMethods),
 }));
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
     ...mockRhfMethods,
-    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
+    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
 const RadioFieldComponent = (

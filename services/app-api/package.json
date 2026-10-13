@@ -10,10 +10,9 @@
   },
   "main": "handler.js",
   "scripts": {
-    "coverage": "jest --coverage",
     "db:seed": "ts-node db/seed",
-    "test": "jest",
-    "test-watch": "jest --watch"
+    "coverage": "vitest run --coverage",
+    "test": "vitest"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "~3.1012.0",
@@ -29,57 +28,19 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.14",
     "@types/jsdom": "^21.1.7",
     "@types/jwt-encode": "^1.0.0",
     "@types/md5": "^2.3.2",
     "@types/node": "*",
     "@types/object-hash": "^3.0.3",
     "@types/prompts": "^2.4.9",
+    "@vitest/coverage-v8": "^4.1.5",
     "aws-lambda": "^1.0.7",
     "aws-sdk-client-mock": "~4.1.0",
     "dotenv": "^16.4.5",
-    "jest": "30.4.2",
     "prompts": "^2.4.2",
-    "ts-jest": "29.4.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "handlers/**/*.{ts,tsx}",
-      "utils/**/*.{ts,tsx}",
-      "storage/**/*.{ts,tsx}",
-      "!utils/constants/*",
-      "!utils/testing/*",
-      "!utils/types/*"
-    ],
-    "coverageReporters": [
-      "json",
-      [
-        "lcov",
-        {
-          "projectRoot": "../../"
-        }
-      ],
-      "text",
-      "text-summary"
-    ],
-    "globals": {
-      "isolatedModules": true
-    },
-    "moduleDirectories": [
-      "node_modules"
-    ],
-    "moduleNameMapper": {
-      "#node-web-compat": "./node-web-compat-node.js"
-    },
-    "setupFilesAfterEnv": [
-      "<rootDir>/utils/testing/setupJest.ts"
-    ],
-    "transform": {
-      "^.+\\.ts?$": "ts-jest"
-    },
-    "verbose": true
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }

@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
@@ -8,7 +9,7 @@ import {
   mockOtherTargetPopulationEntity,
   mockGenericEntity,
   mockSARReportStore,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 // constants
 import { EntityRow } from "./EntityRow";
@@ -23,20 +24,21 @@ import {
 } from "types";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockUseNavigate = jest.fn();
-jest.mock("react-router", () => ({
+const mockUseNavigate = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
-  useLocation: jest.fn(() => ({
+  useLocation: vi.fn(() => ({
     pathname: "/mock-route",
   })),
 }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockOpenAddEditEntityModal = jest.fn();
-const mockOpenDeleteEntityModal = jest.fn();
-const mockOpenDrawer = jest.fn();
+const mockOpenAddEditEntityModal = vi.fn();
+const mockOpenDeleteEntityModal = vi.fn();
+const mockOpenDrawer = vi.fn();
 
 const verbiage = {
   dashboardTitle:
@@ -157,7 +159,7 @@ describe("<EntityRow />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("should render the view", () => {
@@ -179,7 +181,7 @@ describe("<EntityRow />", () => {
 
   describe("Test EntityRow with closed status", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("should render the correct button text in a work plan", () => {
@@ -216,7 +218,7 @@ describe("<EntityRow />", () => {
 
   describe("EntityRow with initiative", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("show initiative with close-out step", () => {
@@ -355,7 +357,7 @@ describe("<EntityRow />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("should have an incomplete icon on the new entity", () => {

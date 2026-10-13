@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { render } from "@testing-library/react";
 import { ReportContext } from "components";
 import {
@@ -20,14 +21,14 @@ import {
   mockStateName,
   mockUseStore,
   mockWpReportContext,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { ReportType, ReportShape, ReportPageVerbiage, PageTypes } from "types";
 
 import { useStore } from "utils";
 
-jest.mock("utils/state/useStore");
+vi.mock("utils/state/useStore");
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const mockReport = mockUseStore.report;
 

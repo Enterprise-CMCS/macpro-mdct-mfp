@@ -1,3 +1,4 @@
+import { Mock, MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useSearchParams } from "react-router";
@@ -11,20 +12,21 @@ import {
   mockNoFinancialReportStore,
   mockNotStartedFinancialReportStore,
 } from "utils/testing/financial-report/mockFinancialReport";
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupTest";
 // verbiage
 import financialReportVerbiage from "verbiage/pages/financial-report/financial-report-dashboard";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockUseNavigate = jest.fn();
-jest.mock("react-router", () => ({
+const mockUseNavigate = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
-  useLocation: jest.fn(() => ({
+  useLocation: vi.fn(() => ({
     pathname: "/mock-dashboard",
   })),
-  useSearchParams: jest.fn(),
+  useSearchParams: vi.fn(),
 }));
 
 const financialReportDashboardWithNoReports = (
@@ -46,12 +48,12 @@ const financialReportDashboardViewWithReports = (
 );
 
 describe("Test Financial Report Dashboard", () => {
-  const mockSetSearchParams = jest.fn();
-  const mockGetSearchParams = jest.fn();
+  const mockSetSearchParams = vi.fn();
+  const mockGetSearchParams = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useSearchParams as jest.Mock).mockReturnValue([
+    vi.clearAllMocks();
+    (useSearchParams as Mock).mockReturnValue([
       { get: mockGetSearchParams },
       mockSetSearchParams,
     ]);
@@ -102,12 +104,12 @@ describe("Test Financial Report Dashboard", () => {
 });
 
 describe("Test FinancialReportingDashboardPage modal functionality", () => {
-  const mockSetSearchParams = jest.fn();
-  const mockGetSearchParams = jest.fn();
+  const mockSetSearchParams = vi.fn();
+  const mockGetSearchParams = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useSearchParams as jest.Mock).mockReturnValue([
+    vi.clearAllMocks();
+    (useSearchParams as Mock).mockReturnValue([
       { get: mockGetSearchParams },
       mockSetSearchParams,
     ]);

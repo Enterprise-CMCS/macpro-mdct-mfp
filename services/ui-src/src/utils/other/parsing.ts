@@ -5,7 +5,6 @@ import parse from "html-react-parser";
 import { Link as RouterLink } from "react-router";
 import {
   Heading,
-  Link,
   ListItem,
   OrderedList,
   Table,
@@ -18,11 +17,12 @@ import {
   Tr,
   UnorderedList,
 } from "@chakra-ui/react";
+import { ExternalLink } from "components";
 // types
 import { CustomHtmlElement } from "types";
 
 export const customElementMap: any = {
-  externalLink: Link,
+  externalLink: ExternalLink,
   internalLink: RouterLink,
   text: Text,
   heading: Heading,
@@ -123,7 +123,7 @@ export const labelTextWithOptional = (label: string) => {
   const colon = endsWithColon ? ":" : "";
 
   return parseCustomHtml(
-    `${parsedLabel}<span class='optional-text'> (optional)${colon}</span>`
+    `${parsedLabel}<span class='optional-text'> (Optional)${colon}</span>`
   );
 };
 

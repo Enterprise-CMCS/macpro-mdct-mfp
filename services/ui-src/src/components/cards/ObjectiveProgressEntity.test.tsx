@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { mockObjectiveProgressFormattedEntityData } from "utils/testing/setupJest";
+import { mockObjectiveProgressFormattedEntityData } from "utils/testing/setupTest";
 import { ObjectiveProgressEntity } from "./ObjectiveProgressEntity";
 import { testA11yAct } from "utils/testing/commonTests";
 

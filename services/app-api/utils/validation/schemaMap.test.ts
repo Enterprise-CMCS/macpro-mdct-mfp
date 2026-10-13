@@ -392,7 +392,7 @@ describe("utils/validation/schemaMap", () => {
 
       try {
         await testSchema.validate(invalidData, { abortEarly: false });
-        fail("Should have thrown validation error");
+        expect.fail("Should have thrown validation error");
       } catch (error: any) {
         expect(error.errors).toContain("End date can't be before start date");
       }

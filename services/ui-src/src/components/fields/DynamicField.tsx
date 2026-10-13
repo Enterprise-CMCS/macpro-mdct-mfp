@@ -319,10 +319,10 @@ const sx = {
     marginTop: "spacer3",
   },
   legend: {
-    fontSize: "md",
+    fontSize: "body_md",
   },
   legendWithDynamicLabel: {
-    fontSize: "xl",
+    fontSize: "body_xl",
   },
   removeBoxInput: {
     marginBottom: "0.625rem",
