@@ -48,7 +48,7 @@ describe("<Sidebar />", () => {
       const sidebarNav = screen.getByRole("navigation");
       expect(sidebarNav).toHaveClass("closed");
 
-      const sidebarButton = screen.getByLabelText("Sidebar");
+      const sidebarButton = screen.getByRole("button", { name: "Sidebar" });
       expect(sidebarButton).toHaveAttribute("aria-expanded", "false");
       await act(async () => {
         await userEvent.click(sidebarButton);
