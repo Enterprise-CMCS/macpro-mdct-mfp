@@ -1,9 +1,7 @@
-import { Mock, MockedFunction } from "vitest";
-import React from "react";
+import { MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
-import { useFormContext } from "react-hook-form";
 import { CalculationTable, DynamicTableProvider } from "components";
 // types
 import {
@@ -19,39 +17,20 @@ import {
   mockDynamicRowsTemplate,
   mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
-  mockStateUserStore,
   RouterWrappedComponent,
+  mockFieldStore,
 } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockTrigger = vi.fn();
-const mockRhfMethods = {
-  register: vi.fn(),
-  setValue: vi.fn(),
-  getValues: vi.fn(),
-  trigger: mockTrigger,
-};
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-vi.mock("react-hook-form", async (importOriginal) => {
-  return {
-    __esModule: true,
-    ...(await importOriginal()),
-    useFormContext: vi.fn(() => mockRhfMethods),
-  };
-});
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
-  }));
+const mockSetValue = vi.fn();
+const mockAutosave = vi.fn();
 
 vi.mock("utils/state/useStore");
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue({ ...mockFieldStore, setAnswer: mockSetValue });
 
 vi.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: vi.fn().mockImplementation(() => {
+  autoSaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-category`,
@@ -59,8 +38,6 @@ vi.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
-  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const mockProps = {
@@ -216,7 +193,7 @@ const mockProps = {
 
 const tableComponent = (props = mockProps) => (
   <RouterWrappedComponent>
-    <DynamicTableProvider>
+    <DynamicTableProvider updateFieldValues={mockAutosave}>
       <CalculationTable {...props} />
     </DynamicTableProvider>
   </RouterWrappedComponent>
@@ -230,15 +207,8 @@ describe("<CalculationTable />", () => {
       },
     });
   });
-  beforeEach(() => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
-  });
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
 
   test("table is visible", () => {
-    mockGetValues(undefined);
     render(tableComponent());
 
     const table = screen.getByRole("table");
@@ -258,7 +228,6 @@ describe("<CalculationTable />", () => {
   });
 
   test("in-place calculations", async () => {
-    mockGetValues(undefined);
     const updatedProps = {
       ...mockProps,
       report: {
@@ -309,7 +278,6 @@ describe("<CalculationTable />", () => {
   });
 
   test("error message and disabled field", () => {
-    mockGetValues(undefined);
     const updatedProps = {
       ...mockProps,
       options: {
@@ -328,7 +296,6 @@ describe("<CalculationTable />", () => {
 
   describe("dynamic rows", () => {
     test("clicking add button adds row", async () => {
-      mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
         report: {
@@ -370,7 +337,6 @@ describe("<CalculationTable />", () => {
     });
 
     test("clicking remove button removes row", async () => {
-      mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
         report: {
@@ -410,7 +376,6 @@ describe("<CalculationTable />", () => {
     });
 
     test("clicking add button opens modal", async () => {
-      mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
         report: {

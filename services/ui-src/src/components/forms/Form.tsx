@@ -3,24 +3,18 @@ import {
   forwardRef,
   Fragment,
   ReactNode,
-  useImperativeHandle,
-  useLayoutEffect,
+  useContext,
+  useEffect,
 } from "react";
-import {
-  FieldValues,
-  FormProvider,
-  SubmitErrorHandler,
-  useForm,
-} from "react-hook-form";
 import { useLocation } from "react-router";
 import { object as yupSchema } from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 // components
 import { Box, Heading, Text } from "@chakra-ui/react";
 import {
   CalculationTable,
   DynamicTableProvider,
   EntityModalTable,
+  ReportContext,
   SummationTable,
 } from "components";
 // types
@@ -36,6 +30,7 @@ import {
 // utils
 import {
   compileValidationJsonFromFields,
+  FieldInfo,
   formFieldFactory,
   getFieldParts,
   hydrateFormFields,
@@ -45,37 +40,41 @@ import {
   mapValidationTypesToSchema,
   parseCustomHtml,
   sanitizeAndParseHtml,
+  autoSaveFields,
   sortFormErrors,
+  transformYupErrorsIntoObject,
   translate,
   updateRenderFields,
   useStore,
 } from "utils";
 
-export const Form = forwardRef<HTMLFormElement, Props>(function Form(
-  {
-    autosave,
-    className,
-    children,
-    disabled = false,
-    dontReset,
-    formData,
-    formJson,
-    id,
-    nestedForm,
-    onError,
-    onFormChange,
-    onSubmit,
-    reportStatus,
-    validateOnRender,
-    ...props
-  },
-  ref?
-) {
-  const { editableByAdmins, fields, options, tables = [] } = formJson;
+export const Form = forwardRef<HTMLFormElement, Props>(function Form({
+  autosave,
+  className,
+  children,
+  disabled = false,
+  formData,
+  formJson,
+  id,
+  onError,
+  onFormChange,
+  onSubmit,
+  reportStatus,
+  validateOnRender,
+  ...props
+}) {
+  const { editableByAdmins, fields, tables = [] } = formJson;
 
   let location = useLocation();
-  const { report } = useStore();
-  const { userIsEndUser } = useStore().user ?? {};
+  const {
+    report,
+    selectedEntity,
+    setValidationSchema,
+    setErrors,
+    fields: formFields,
+  } = useStore();
+  const { updateReport } = useContext(ReportContext);
+  const { userIsEndUser, full_name } = useStore().user ?? {};
 
   // determine if fields should be disabled (based on admin roles)
   const status = reportStatus || report?.status;
@@ -93,22 +92,33 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   const tableFieldIds = allFields
     .filter(isTableField)
     .map((f: FormField) => f.id);
-  const formValidationJson = compileValidationJsonFromFields(allFields);
+  const formValidationJson = compileValidationJsonFromFields(allFields!);
   const formValidationSchema = mapValidationTypesToSchema(formValidationJson);
   const formResolverSchema = yupSchema(formValidationSchema || {});
 
-  // make form context
-  const form = useForm({
-    resolver: !fieldInputDisabled ? yupResolver(formResolverSchema) : undefined,
-    shouldFocusError: false,
-    mode: "onChange",
-    ...(options as AnyObject),
-  });
+  useEffect(() => {
+    setValidationSchema(formResolverSchema);
+  }, [fields]);
+
+  const validation = (values: {}) => {
+    try {
+      formResolverSchema.validateSync(values, {
+        abortEarly: false,
+      });
+      return {};
+    } catch (error: any) {
+      return transformYupErrorsIntoObject(error);
+    }
+  };
+
+  const buildAnswerObject = () => {
+    return Object.fromEntries(
+      formFields.keys().map((key) => [key, formFields.get(key)?.answer])
+    );
+  };
 
   // will run if any validation errors exist on form submission
-  const onErrorHandler: SubmitErrorHandler<FieldValues> = (
-    errors: AnyObject
-  ) => {
+  const onErrorHandler = (errors: AnyObject) => {
     // sort errors in order of registration/page display
     const sortedErrors: string[] = sortFormErrors(formValidationSchema, errors);
     // focus the first error on the page and scroll to it
@@ -130,6 +140,16 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
 
     fieldToFocus?.scrollIntoView({ behavior: "smooth", block: "center" });
     fieldToFocus?.focus({ preventScroll: true });
+  };
+
+  const updateFieldValues = async (fieldsToSave: FieldInfo[]) => {
+    await autoSaveFields(
+      report!,
+      selectedEntity,
+      fieldsToSave,
+      updateReport,
+      full_name!
+    );
   };
 
   // hydrate and create form fields using formFieldFactory
@@ -175,13 +195,13 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
         });
       return fieldsToRenderWithAriaLabels;
     };
-
     return formFieldFactory(
       updateFieldsToRenderWithAriaLabels(fieldsToRender),
       {
         disabled: fieldInputDisabled,
         autosave,
         validateOnRender,
+        updateFieldValues,
       }
     );
   };
@@ -192,7 +212,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     switch (tableType) {
       case FormTableType.CALCULATION:
         return (
-          <DynamicTableProvider key={id}>
+          <DynamicTableProvider key={id} updateFieldValues={updateFieldValues}>
             <CalculationTable
               disabled={fieldInputDisabled}
               formData={formData}
@@ -206,7 +226,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
 
       case FormTableType.ENTITY_MODAL:
         return (
-          <DynamicTableProvider key={id}>
+          <DynamicTableProvider key={id} updateFieldValues={updateFieldValues}>
             <EntityModalTable
               disabled={fieldInputDisabled}
               formData={formData}
@@ -220,7 +240,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
 
       case FormTableType.SUMMATION:
         return (
-          <DynamicTableProvider key={id}>
+          <DynamicTableProvider key={id} updateFieldValues={updateFieldValues}>
             <SummationTable
               disabled={fieldInputDisabled}
               formData={formData}
@@ -237,22 +257,9 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     }
   };
 
-  /*
-   * useLayoutEffect fires before the browser repaints the screen
-   *
-   * Fixes an issue where some fields registered before the reset and some after.
-   * We want a fresh form state before form fields render and
-   * for every field on the page to register into the form.
-   */
-  useLayoutEffect(() => {
-    if (!dontReset && !validateOnRender) {
-      form?.reset();
-    }
-  }, [location?.pathname]);
-
   const onChange = () => {
     if (onFormChange) {
-      onFormChange(form);
+      onFormChange(buildAnswerObject());
     }
   };
 
@@ -314,72 +321,59 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     return renderedFieldsAndTables;
   };
 
-  const FormTag = nestedForm ? "fieldset" : "form";
   const submit = (e?: BaseSyntheticEvent) => {
     e?.preventDefault();
 
-    form.handleSubmit(
-      (data) => onSubmit(data),
-      (errors: AnyObject) => {
-        const formErrors = Object.keys(errors).filter((key) => {
-          const currentFormData = report?.fieldData?.[formData.type]?.find(
-            (t: AnyObject) => t.id === formData.id
-          );
-          const hasTableError = tableFieldIds.includes(key);
-          const hasTableData = currentFormData?.[key]?.length > 0;
+    const answers = buildAnswerObject();
+    const errors = validation(answers);
+    setErrors(errors);
 
-          if (hasTableError && hasTableData) {
-            // If table has data, clear the error
-            form.clearErrors(key);
-            return false;
-          }
+    const formErrors = Object.keys(errors).filter((key) => {
+      const currentFormData = report?.fieldData?.[formData?.type]?.find(
+        (t: AnyObject) => t.id === formData.id
+      );
+      const hasTableError = tableFieldIds.includes(key);
+      const hasTableData = currentFormData?.[key]?.length > 0;
 
-          return true;
-        });
-
-        if (formErrors.length === 0) {
-          onSubmit(form.getValues());
-          return;
-        }
-
-        onError ? onError(errors) : onErrorHandler(errors);
+      if (hasTableError && hasTableData) {
+        // If table has data, clear the error
+        setErrors({});
+        return false;
       }
-    )(e);
+
+      return true;
+    });
+
+    if (formErrors.length === 0) {
+      onSubmit(buildAnswerObject());
+      return;
+    }
+
+    onError ? onError(errors) : onErrorHandler(errors);
   };
 
-  // Submit fieldset ref like a form
-  useImperativeHandle(
-    ref,
-    () =>
-      ({
-        requestSubmit: submit,
-      }) as any
-  );
-
   return (
-    <FormProvider {...form}>
-      <FormTag
-        id={id}
-        autoComplete="off"
-        onChange={onChange}
-        {...(!nestedForm && { onSubmit: submit })}
-        {...props}
-      >
-        <Box sx={sx}>
-          <Box className={className}>
-            {displayRetError ? (
-              <Text sx={sx.retAlert}>
-                Your associated MFP Work Plan does not contain any target
-                populations.
-              </Text>
-            ) : (
-              renderFieldOrTable(fields, tables)
-            )}
-          </Box>
+    <form
+      id={id}
+      autoComplete="off"
+      onChange={onChange}
+      onSubmit={submit}
+      {...props}
+    >
+      <Box sx={sx}>
+        <Box className={className}>
+          {displayRetError ? (
+            <Text sx={sx.retAlert}>
+              Your associated MFP Work Plan does not contain any target
+              populations.
+            </Text>
+          ) : (
+            renderFieldOrTable(fields, tables)
+          )}
         </Box>
-        {children}
-      </FormTag>
-    </FormProvider>
+      </Box>
+      {children}
+    </form>
   );
 });
 
@@ -392,13 +386,13 @@ interface Props {
   formData?: AnyObject;
   formJson: FormJson;
   id: string;
-  nestedForm?: boolean;
-  onError?: SubmitErrorHandler<FieldValues>;
+  onError?: () => void;
   onFormChange?: Function;
   onSubmit: Function;
   reportStatus?: ReportStatus;
   validateOnRender: boolean;
   [key: string]: any;
+  updateFieldValues: (fieldsToSave: FieldInfo[]) => {};
 }
 
 const sx = {
