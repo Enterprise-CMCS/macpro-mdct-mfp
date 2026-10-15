@@ -37,13 +37,15 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
       sx={sx.root}
       display={isHidden ? "none" : "block"}
       className={isOpen ? "open" : "closed"}
-      role="navigation"
+      as="nav"
+      aria-label="Sidebar"
     >
       <Box
         as="button"
         sx={sx.closeButton}
         onClick={() => toggleSidebar(!isOpen)}
-        aria-label="Open/Close sidebar menu"
+        aria-label="Sidebar"
+        aria-expanded={isOpen}
       >
         <Image
           src={arrowDownIcon}
