@@ -232,22 +232,6 @@ export const DynamicField = ({
 
       {displayValues.map((field: DynamicFieldShape, index: number) => {
         const errorMessage = fieldErrorState?.[index]?.name?.message;
-        const hasError = Boolean(errorMessage);
-
-        let deleteButtonStyle;
-        if (multiline) {
-          if (dynamicLabel) {
-            deleteButtonStyle = hasError
-              ? sx.deleteButtonWithError
-              : sx.deleteButton;
-          } else {
-            deleteButtonStyle = hasError
-              ? sx.removeBoxTextareaError
-              : sx.removeBoxTextarea;
-          }
-        } else {
-          deleteButtonStyle = sx.removeBoxInput;
-        }
 
         return (
           <Flex
@@ -270,9 +254,10 @@ export const DynamicField = ({
               onChange={onChangeHandler}
               rows={rows}
               value={field.name || ""}
+              style={{ anchorName: "--dynamicfield--" }}
             />
-            {!disabled && (
-              <Box sx={deleteButtonStyle}>
+            {!disabled && index > 0 && (
+              <Box sx={sx.deleteButton}>
                 <button type="button" onClick={() => deleteRecord(field)}>
                   <Image
                     sx={
@@ -340,16 +325,10 @@ const sx = {
     alignSelf: "flex-start",
   },
   deleteButton: {
-    marginLeft: "0.625rem",
-    // 3.25rem = label height (1.5rem) + label margin (0.25rem) + input top padding (1.5rem)
-    marginTop: "3.25rem",
-    flexShrink: 0,
-    alignSelf: "flex-start",
-  },
-  deleteButtonWithError: {
-    marginLeft: "0.625rem",
-    // 4.875rem = label height (1.5rem) + error message height (1.625rem) + input top padding with error (1.75rem)
-    marginTop: "4.875rem",
+    position: "absolute",
+    positionAnchor: "--dynamicfield--",
+    positionArea: "center",
+    right: "-2.25rem",
     flexShrink: 0,
     alignSelf: "flex-start",
   },
@@ -370,6 +349,7 @@ const sx = {
     height: "1rem",
   },
   dynamicField: {
+    position: "relative",
     ".desktop &": {
       width: "32rem",
     },
@@ -384,6 +364,7 @@ const sx = {
     },
   },
   dynamicFieldWithDynamicLabel: {
+    position: "relative",
     ".desktop &": {
       width: "32rem",
     },
