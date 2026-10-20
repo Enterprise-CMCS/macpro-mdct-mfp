@@ -10,10 +10,10 @@ test.describe("state user home page", () => {
     statePage,
   }) => {
     await expect(
-      statePage.page.getByRole("button", { name: "Enter Work Plan online" })
+      statePage.page.getByRole("button", { name: "Enter Work Plan" })
     ).toBeVisible();
     await expect(
-      statePage.page.getByRole("button", { name: "Enter SAR online" })
+      statePage.page.getByRole("button", { name: "Enter SAR" })
     ).toBeVisible();
   });
 

@@ -34,7 +34,7 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         response.status() === 200
     );
     await statePage.page
-      .getByRole("button", { name: "Enter Work Plan online" })
+      .getByRole("button", { name: "Enter Work Plan" })
       .click();
     await getReportsResp;
   });
