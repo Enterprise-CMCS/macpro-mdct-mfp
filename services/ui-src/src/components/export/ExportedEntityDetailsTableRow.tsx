@@ -36,7 +36,7 @@ export const ExportedEntityDetailsTableRow = ({
                   optional ? (
                     <Box>
                       {formFieldInfo.label}
-                      <span className="optional-text"> (optional)</span>
+                      <span className="optional-text"> (Optional)</span>
                     </Box>
                   ) : (
                     formFieldInfo.label

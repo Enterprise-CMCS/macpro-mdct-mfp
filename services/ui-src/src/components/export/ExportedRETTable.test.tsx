@@ -241,7 +241,7 @@ describe("<ExportRETTable />", () => {
     render(<ExportRETTable section={optionalSection as any} />);
     const table = screen.queryByRole("table");
     expect(table).toBeVisible;
-    expect(screen.getByText("Not answered; optional")).toBeVisible();
+    expect(screen.getByText("Not answered; Optional")).toBeVisible();
   });
 
   describe("Test ExportedRETTable Component", () => {

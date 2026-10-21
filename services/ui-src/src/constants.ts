@@ -11,7 +11,7 @@ export const dropdownDefaultOptionText = "- Select an option -";
 export const closeText = "Close";
 export const saveAndCloseText = "Save & close";
 export const notAnsweredText = "Not answered";
-export const optionalNotAnsweredText = "Not answered; optional";
+export const optionalNotAnsweredText = "Not answered; Optional";
 export const noEligibleReportsForCopy = "No reports eligible for copy";
 
 // STATES

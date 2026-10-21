@@ -135,7 +135,7 @@ export const renderCalculationTables = (
       percentageValue = formPercentage;
     }
 
-    const percentageText = table.verbiage?.percentage || "[auto-populated]%";
+    const percentageText = table.verbiage?.percentage || "Not provided";
     const displayPercentage = percentageText.replace(
       "{{percentage}}",
       `${percentageValue}%`
@@ -178,7 +178,7 @@ export const renderEntityTables = (
 
     const transformedHeadRow = headRow.map((header: string) => {
       if (styleAsOptionalHeadRows.includes(header)) {
-        return `${header}<span style="font-weight: normal;"> (optional)</span>`;
+        return `${header}<span style="font-weight: normal;"> (Optional)</span>`;
       }
       return header;
     });

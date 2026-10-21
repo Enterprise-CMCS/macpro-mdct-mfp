@@ -66,7 +66,7 @@ export const CalculationTable = ({
     : 100;
   const missingPercentage = Boolean(!formPercentage);
   const percentageDisplay = missingPercentage
-    ? "[auto-populated]%"
+    ? "Not provided"
     : `${formPercentage}%`;
 
   // Show error once if in a loop

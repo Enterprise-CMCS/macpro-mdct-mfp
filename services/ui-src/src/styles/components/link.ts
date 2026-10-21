@@ -8,8 +8,8 @@ const baseStyles = {
 const primaryVariant = {
   color: "primary",
   _visited: {
-    color: "primary",
-    textDecorationColor: "primary",
+    color: "visited",
+    textDecorationColor: "visited",
   },
   ":hover, :visited:hover": {
     color: "primary_darker",

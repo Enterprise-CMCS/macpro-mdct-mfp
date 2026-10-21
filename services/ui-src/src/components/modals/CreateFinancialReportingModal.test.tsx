@@ -234,7 +234,7 @@ describe("<CreateFinancialReportingModal />", () => {
         render(modalComponent);
 
         const copyReportDropdown = screen.getByLabelText(
-          "If you want to copy an existing report, select one (optional)"
+          "If you want to copy an existing report, select one (Optional)"
         ) as HTMLSelectElement;
 
         expect(copyReportDropdown).toBeDisabled();
@@ -268,7 +268,7 @@ describe("<CreateFinancialReportingModal />", () => {
         render(modalComponent);
 
         const copyReportDropdown = screen.getByLabelText(
-          "If you want to copy an existing report, select one (optional)"
+          "If you want to copy an existing report, select one (Optional)"
         ) as HTMLSelectElement;
 
         expect(copyReportDropdown).not.toBeDisabled();
@@ -302,7 +302,7 @@ describe("<CreateFinancialReportingModal />", () => {
           "Reporting period"
         ) as HTMLSelectElement;
         const copyReportDropdown = screen.getByLabelText(
-          "If you want to copy an existing report, select one (optional)"
+          "If you want to copy an existing report, select one (Optional)"
         ) as HTMLSelectElement;
         const submitButton = screen.getByRole("button", {
           name: "Save",
