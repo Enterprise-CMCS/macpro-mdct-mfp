@@ -210,6 +210,19 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
           name: "State or Territory-Specific Initiatives Instructions",
         })
         .waitFor();
+      // Because this is the first page in the nav subsection, there is an animation that plays after page load.
+      // This was causing the accessibility checks to fail due to contrast. This was a false positive, we need
+      // to wait for the animation to finish (`height` becoming `auto`) before running the accessibility checker.
+      const navSubsection = statePage.page
+        .locator("#sidebar .chakra-collapse")
+        .filter({
+          has: statePage.page.locator(
+            'a[href="/wp/state-or-territory-specific-initiatives/instructions"]'
+          ),
+        });
+      await expect
+        .poll(() => navSubsection.evaluate((element) => element.style.height))
+        .toBe("auto");
     });
     await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/instructions", async () => {
       const accessibilityErrors = await checkPageAccessibility(statePage.page);
