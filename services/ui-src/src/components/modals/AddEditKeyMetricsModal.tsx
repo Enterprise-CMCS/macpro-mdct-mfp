@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
 // types
@@ -24,14 +24,19 @@ export const AddEditKeyMetricsModal = ({
   report,
   userIsAdmin = false,
 }: Props) => {
-  const formRef = useRef<HTMLFormElement>(null);
   const { updateReport } = useContext(ReportContext);
 
   const [currentEntityFieldData, setCurrentEntityFieldData] = useState<
     AnyObject[]
   >([]);
   const [currentEntityIndex, setCurrentEntityIndex] = useState<number>(-1);
-  const [formData, setFormData] = useState<AnyObject>({});
+  const [formData, setFormData] = useState<AnyObject>(
+    form.fields.reduce(
+      (acc: any, curr) => ((acc[curr.id] = undefined), acc),
+      {}
+    )
+  );
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -132,13 +137,13 @@ export const AddEditKeyMetricsModal = ({
     modalDisclosure.onClose(true);
   };
 
-  const submitForm = (event: SubmitEvent) => {
-    event.preventDefault();
-    formRef.current?.requestSubmit();
-  };
-
   return (
     <Modal
+      data-testid="add-key-metrics-modal"
+      formId={form.id}
+      modalDisclosure={modalDisclosure}
+      submitting={submitting}
+      submitButtonDisabled={submitting}
       content={{
         heading: isEditing ? form.heading?.edit : form.heading?.add,
         subheading: isEditing
@@ -147,25 +152,19 @@ export const AddEditKeyMetricsModal = ({
         actionButtonText: actionButtonText(submitting, viewOnly),
         closeButtonText: "Cancel",
       }}
-      data-testid="add-key-metrics-modal"
-      formId={form.id}
-      handleSubmit={submitForm}
-      modalDisclosure={modalDisclosure}
-      nestedForm={true}
-      submitButtonDisabled={submitting}
-      submitting={submitting}
     >
       <Form
         data-testid="add-edit-key-metrics-form"
+        id={form.id}
+        formJson={form}
+        formData={form.fields.reduce(
+          (acc: any, curr) => ((acc[curr.id] = undefined), acc),
+          {}
+        )}
+        onSubmit={handleSubmit}
+        validateOnRender={false}
         disabled={viewOnly}
         dontReset={false}
-        formJson={form}
-        formData={formData}
-        id={form.id}
-        nestedForm={true}
-        onSubmit={(data: AnyObject) => handleSubmit(data)}
-        ref={formRef}
-        validateOnRender={false}
       />
     </Modal>
   );

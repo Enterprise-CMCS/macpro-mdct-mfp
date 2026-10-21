@@ -12,7 +12,10 @@ import {
   mockNoFinancialReportStore,
   mockNotStartedFinancialReportStore,
 } from "utils/testing/financial-report/mockFinancialReport";
-import { RouterWrappedComponent } from "utils/testing/setupTest";
+import {
+  mockFieldStore,
+  RouterWrappedComponent,
+} from "utils/testing/setupTest";
 // verbiage
 import financialReportVerbiage from "verbiage/pages/financial-report/financial-report-dashboard";
 
@@ -113,7 +116,10 @@ describe("Test FinancialReportingDashboardPage modal functionality", () => {
       { get: mockGetSearchParams },
       mockSetSearchParams,
     ]);
-    mockedUseStore.mockReturnValue(mockNotStartedFinancialReportStore);
+    mockedUseStore.mockReturnValue({
+      ...mockNotStartedFinancialReportStore,
+      ...mockFieldStore,
+    });
   });
 
   test("Check that modal opens when setModalReport is called with undefined", async () => {

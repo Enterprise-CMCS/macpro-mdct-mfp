@@ -1,11 +1,13 @@
 import {
   AdminBannerData,
+  AnyObject,
   EntityShape,
   ErrorVerbiage,
   MFPUser,
   ReportMetadataShape,
   ReportShape,
 } from "types";
+import { OptionalObjectSchema, TypeOfShape } from "yup/lib/object";
 
 // initial user state
 export interface MfpUserState {
@@ -71,4 +73,27 @@ export interface MfpEntityState {
   // ACTIONS
   setSelectedEntity: (newSelectedEntity: EntityShape | undefined) => void;
   clearSelectedEntity: () => void;
+}
+
+export type FIELD_ERROR = { message?: string; type?: string };
+export type FIELD_DATA = {
+  answer: any;
+  error: FIELD_ERROR;
+  validate: boolean;
+};
+
+export interface MfpFieldState {
+  fields: Map<string, FIELD_DATA>;
+  validationSchema:
+    | OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>>
+    | undefined;
+  setField: (id: string, value?: any) => void;
+  setAnswer: (id: string, answer: any) => void;
+  setValidationSchema: (
+    schema:
+      | OptionalObjectSchema<AnyObject, AnyObject, TypeOfShape<AnyObject>>
+      | undefined
+  ) => void;
+  setErrors: (updateErrors: { [key: string]: FIELD_ERROR }) => void;
+  setClearFields: () => void;
 }

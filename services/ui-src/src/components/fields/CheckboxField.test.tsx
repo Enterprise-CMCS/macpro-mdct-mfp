@@ -1,30 +1,17 @@
-import { Mock } from "vitest";
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 //components
 import { CheckboxField } from "components";
 import userEvent from "@testing-library/user-event";
-import { useFormContext } from "react-hook-form";
 import { testA11yAct } from "utils/testing/commonTests";
+import { mockFieldStore } from "utils/testing/setupTest";
+import { useStore } from "utils";
 
-const mockTrigger = vi.fn();
 const mockSetValue = vi.fn();
-const mockRhfMethods = {
-  register: () => {},
-  setValue: mockSetValue,
-  getValues: vi.fn(),
-  trigger: mockTrigger,
-};
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-vi.mock("react-hook-form", () => ({
-  useFormContext: vi.fn(() => mockRhfMethods),
-}));
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
-  }));
+
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue({ ...mockFieldStore, setAnswer: mockSetValue });
 
 const CheckboxFieldComponent = (
   <div data-testid="test-checkbox-list">
@@ -43,29 +30,22 @@ const CheckboxFieldComponent = (
 
 describe("<CheckboxField />", () => {
   test("CheckboxField renders as Checkbox", () => {
-    mockGetValues(undefined);
     render(CheckboxFieldComponent);
     expect(screen.getByText("Choice 1")).toBeVisible();
     expect(screen.getByTestId("test-checkbox-list")).toBeVisible();
   });
 
   test("CheckboxField allows checking checkbox choices", async () => {
-    mockGetValues(undefined);
     render(CheckboxFieldComponent);
     const firstCheckbox = screen.getByLabelText("Choice 1") as HTMLInputElement;
     await act(async () => {
       await userEvent.click(firstCheckbox);
     });
-    expect(mockSetValue).toHaveBeenCalledWith(
-      "checkbox_choices",
-      [{ key: "Choice 1", value: "A" }],
-      {
-        shouldValidate: true,
-      }
-    );
+
+    expect(mockSetValue).toHaveBeenCalledWith("checkbox_choices", [
+      { key: "Choice 1", value: "A" },
+    ]);
   });
 
-  testA11yAct(CheckboxFieldComponent, () => {
-    mockGetValues(undefined);
-  });
+  testA11yAct(CheckboxFieldComponent, () => {});
 });

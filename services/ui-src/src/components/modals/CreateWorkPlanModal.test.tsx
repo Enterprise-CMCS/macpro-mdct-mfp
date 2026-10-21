@@ -122,14 +122,14 @@ describe("<CreateWorkPlanModal />", () => {
       const mockDate = new Date(2025, 5, 1).getTime();
       mockedDateNow.mockImplementation(() => mockDate);
 
-      await render(modalComponent);
+      render(modalComponent);
       const header = screen.getByRole("heading", { level: 1 });
       expect(header.textContent).toEqual("Add new MFP Work Plan");
       expect(screen.getByTestId("create-work-plan-form")).toBeTruthy();
       await fillForm();
-      await expect(mockCreateReport).toHaveBeenCalledTimes(1);
-      await expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
-      await expect(mockCloseHandler).toHaveBeenCalledTimes(1);
+      expect(mockCreateReport).toHaveBeenCalledTimes(1);
+      expect(mockFetchReportsByState).toHaveBeenCalledTimes(1);
+      expect(mockCloseHandler).toHaveBeenCalledTimes(1);
     });
 
     test("There should only be two options for reportYear if it is 2024", async () => {
@@ -232,7 +232,7 @@ describe("<CreateWorkPlanModal />", () => {
 
     test("Error shows when selected data matches existing report", async () => {
       await act(async () => {
-        await render(modalComponentForResetReport);
+        render(modalComponentForResetReport);
       });
       const header = screen.getByRole("heading", { level: 1 });
       expect(header.textContent).toEqual(

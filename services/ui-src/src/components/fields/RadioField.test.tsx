@@ -1,30 +1,17 @@
-import { Mock } from "vitest";
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 //components
 import { RadioField } from "components";
-import { useFormContext } from "react-hook-form";
 import { testA11yAct } from "utils/testing/commonTests";
+import { mockFieldStore } from "utils/testing/setupTest";
+import { useStore } from "utils";
 
-const mockTrigger = vi.fn();
 const mockSetValue = vi.fn();
-const mockRhfMethods = {
-  register: () => {},
-  setValue: mockSetValue,
-  getValues: vi.fn(),
-  trigger: mockTrigger,
-};
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-vi.mock("react-hook-form", () => ({
-  useFormContext: vi.fn(() => mockRhfMethods),
-}));
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
-  }));
+
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue({ ...mockFieldStore, setAnswer: mockSetValue });
 
 const RadioFieldComponent = (
   <div data-testid="test-radio-list">
@@ -61,27 +48,21 @@ const RadioFieldComponent = (
 
 describe("<RadioField />", () => {
   test("RadioField renders as Radio", () => {
-    mockGetValues(undefined);
     render(RadioFieldComponent);
     expect(screen.getByText("Choice 1")).toBeVisible();
     expect(screen.getByTestId("test-radio-list")).toBeVisible();
   });
 
   test("RadioField allows checking radio choices", async () => {
-    mockGetValues(undefined);
     render(RadioFieldComponent);
     const firstRadio = screen.getByLabelText("Choice 1") as HTMLInputElement;
     await act(async () => {
       await userEvent.click(firstRadio);
     });
-    expect(mockSetValue).toHaveBeenCalledWith(
-      "radio_choices",
-      [{ key: "Choice 1", value: "A" }],
-      { shouldValidate: true }
-    );
+    expect(mockSetValue).toHaveBeenCalledWith("radio_choices", [
+      { key: "Choice 1", value: "A" },
+    ]);
   });
 
-  testA11yAct(RadioFieldComponent, () => {
-    mockGetValues(undefined);
-  });
+  testA11yAct(RadioFieldComponent);
 });

@@ -9,6 +9,7 @@ import { ReportStatus } from "types";
 import {
   RouterWrappedComponent,
   mockDynamicModalOverlayReportPageJson,
+  mockFieldStore,
   mockModalOverlayReportPageJson,
   mockReportFieldData,
   mockSARReportStore,
@@ -104,6 +105,7 @@ describe("<DynamicModalOverlayReportPage />", () => {
     mockedUseStore.mockReturnValue({
       ...mockStateUser,
       ...mockWpReportContext,
+      ...mockFieldStore,
       editable: true,
       setAutosaveState: vi.fn(),
       setSelectedEntity: vi.fn(),
@@ -162,6 +164,7 @@ describe("<DynamicModalOverlayReportPage />", () => {
     mockedUseStore.mockReturnValue({
       ...mockAdminUser,
       ...mockWpReportContext,
+      ...mockFieldStore,
       editable: true,
       setAutosaveState: vi.fn(),
       setSelectedEntity: vi.fn(),
