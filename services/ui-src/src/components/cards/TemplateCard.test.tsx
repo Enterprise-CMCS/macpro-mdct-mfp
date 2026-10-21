@@ -57,7 +57,7 @@ const mockUseStoreNoReports: MfpReportState & MfpUserState = {
 
 const wpTemplateCardComponent = (
   <RouterWrappedComponent>
-    <TemplateCard templateName="WP" verbiage={wpTemplateVerbiage} />
+    <TemplateCard verbiage={wpTemplateVerbiage} />
   </RouterWrappedComponent>
 );
 

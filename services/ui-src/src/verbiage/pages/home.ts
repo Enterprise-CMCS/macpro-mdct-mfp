@@ -23,9 +23,8 @@ export default {
         "https://www.govinfo.gov/content/pkg/PLAW-109publ171/pdf/PLAW-109publ171.pdf",
       postLinkText:
         " as “increasing the use of home and community-based, rather than institutional, long-term care services.”",
-      downloadText: "",
       link: {
-        text: "Enter Work Plan online",
+        text: "Enter Work Plan",
         route: "wp",
       },
       accordion: {
@@ -52,9 +51,8 @@ export default {
         available:
           "The MFP Semi-Annual Progress Report is used to present the recipient’s analysis and the status of the various operational areas in reaching the objectives of the Demonstration. Through the SARs, the recipient will further enumerate how they have, or intend to, meet or align with the recipient’s MFP operational procedures and processes; transition benchmarks; program goals for expanding and enhancing home and community-based services (HCBS); and sustainability plans.",
       },
-      downloadText: "",
       link: {
-        text: "Enter SAR online",
+        text: "Enter SAR",
         route: "sar",
       },
       accordion: {
@@ -68,9 +66,8 @@ export default {
         available:
           "The MFP Financial Reporting Form (formerly referred to as the “ABCD” financial report) is used to report on MFP qualified HCBS expenditures for state plan services and HCBS waiver programs, demonstration services, supplemental services, and administrative activities.",
       },
-      downloadText: "",
       link: {
-        text: "Enter Financial Report online",
+        text: "Enter Financial Report",
         route: "financial-report",
       },
       accordion: {

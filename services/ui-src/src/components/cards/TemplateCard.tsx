@@ -5,27 +5,11 @@ import { Card, ExternalLink, TemplateCardAccordion } from "components";
 import { useNavigate } from "react-router";
 import { useBreakpoint } from "utils";
 import { AnyObject } from "types";
-// assets
-import downloadIcon from "assets/icons/icon_download.png";
+// assets\
 import nextIcon from "assets/icons/icon_next_white.png";
 import spreadsheetIcon from "assets/icons/icon_spreadsheet.svg";
 
-const downloadTemplate = (templateName: string) => {
-  const helpFiles: { [key: string]: string } = {
-    WP: "MFP-Work-Plan-Help-File",
-    SAR: "MFP-Semi-Annual-Rprt-Help-File",
-    FINANCIAL_REPORT: "",
-  };
-  const pdfUrl = `/templates/${helpFiles[templateName]}.pdf`;
-  const link = document.createElement("a");
-  link.setAttribute("target", "_blank");
-  link.setAttribute("href", pdfUrl);
-  link.click();
-  link.remove();
-};
-
 export const TemplateCard = ({
-  templateName,
   verbiage,
   cardprops,
   isHidden,
@@ -56,24 +40,6 @@ export const TemplateCard = ({
             {verbiage.postLinkText}
           </Text>
           <Flex sx={sx.actionsFlex}>
-            {verbiage.downloadText && (
-              <Button
-                variant="transparent"
-                sx={sx.templateDownloadButton}
-                leftIcon={
-                  <Image
-                    src={downloadIcon}
-                    alt="Download Icon"
-                    height="1.5rem"
-                  />
-                }
-                onClick={async () => {
-                  await downloadTemplate(templateName);
-                }}
-              >
-                {verbiage.downloadText}
-              </Button>
-            )}
             {!isHidden && (
               <Button
                 sx={sx.formLink}
@@ -120,8 +86,8 @@ const sx = {
   actionsFlex: {
     flexFlow: "wrap",
     gridGap: "spacer2",
-    justifyContent: "space-between",
-    margin: "1rem 0 0 1rem",
+    justifyContent: "end",
+    margin: "1rem 0 0 0",
     ".mobile &": {
       flexDirection: "column",
     },
