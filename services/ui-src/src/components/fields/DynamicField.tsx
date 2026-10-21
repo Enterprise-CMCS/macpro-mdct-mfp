@@ -232,33 +232,9 @@ export const DynamicField = ({
 
       {displayValues.map((field: DynamicFieldShape, index: number) => {
         const errorMessage = fieldErrorState?.[index]?.name?.message;
-        const hasError = Boolean(errorMessage);
-
-        let deleteButtonStyle;
-        if (multiline) {
-          if (dynamicLabel) {
-            deleteButtonStyle = hasError
-              ? sx.deleteButtonWithError
-              : sx.deleteButton;
-          } else {
-            deleteButtonStyle = hasError
-              ? sx.removeBoxTextareaError
-              : sx.removeBoxTextarea;
-          }
-        } else {
-          deleteButtonStyle = sx.removeBoxInput;
-        }
 
         return (
-          <Flex
-            key={field.id}
-            sx={{
-              ...(dynamicLabel
-                ? sx.dynamicFieldWithDynamicLabel
-                : sx.dynamicField),
-              ...(multiline ? sx.dynamicFieldTextarea : sx.dynamicFieldInput),
-            }}
-          >
+          <Flex key={field.id} sx={sx.dynamicField}>
             <CmsdsTextField
               errorMessage={errorMessage}
               hint={undefined}
@@ -270,14 +246,13 @@ export const DynamicField = ({
               onChange={onChangeHandler}
               rows={rows}
               value={field.name || ""}
+              style={sx.textfield}
             />
-            {!disabled && (
-              <Box sx={deleteButtonStyle}>
+            {!disabled && index > 0 && (
+              <Box sx={sx.deleteButton}>
                 <button type="button" onClick={() => deleteRecord(field)}>
                   <Image
-                    sx={
-                      multiline ? sx.removeImageTextarea : sx.removeImageInput
-                    }
+                    sx={sx.removeImageTextarea}
                     src={cancelIcon}
                     alt={`Delete ${field.name || field.id}`}
                   />
@@ -324,38 +299,17 @@ const sx = {
   legendWithDynamicLabel: {
     fontSize: "body_xl",
   },
-  removeBoxInput: {
-    marginBottom: "0.625rem",
-    marginLeft: "0.625rem",
-  },
-  removeBoxTextarea: {
-    marginLeft: "0.625rem",
-    flexShrink: 0,
-    alignSelf: "flex-start",
-  },
-  removeBoxTextareaError: {
-    marginLeft: "0.625rem",
-    marginTop: "1.625rem",
-    flexShrink: 0,
-    alignSelf: "flex-start",
+  textfield: {
+    anchorName: "--dynamicfield--",
+    width: "93%",
   },
   deleteButton: {
-    marginLeft: "0.625rem",
-    // 3.25rem = label height (1.5rem) + label margin (0.25rem) + input top padding (1.5rem)
-    marginTop: "3.25rem",
+    position: "absolute",
+    positionAnchor: "--dynamicfield--",
+    positionArea: "center",
+    right: "-2rem",
     flexShrink: 0,
     alignSelf: "flex-start",
-  },
-  deleteButtonWithError: {
-    marginLeft: "0.625rem",
-    // 4.875rem = label height (1.5rem) + error message height (1.625rem) + input top padding with error (1.75rem)
-    marginTop: "4.875rem",
-    flexShrink: 0,
-    alignSelf: "flex-start",
-  },
-  removeImageInput: {
-    width: "1.25rem",
-    height: "1.25rem",
   },
   removeImageTextarea: {
     width: "1.5rem",
@@ -370,6 +324,7 @@ const sx = {
     height: "1rem",
   },
   dynamicField: {
+    position: "relative",
     ".desktop &": {
       width: "32rem",
     },
@@ -379,25 +334,5 @@ const sx = {
     ".ds-u-clearfix": {
       width: "100%",
     },
-    "&:not(:first-of-type)": {
-      paddingTop: "2rem",
-    },
-  },
-  dynamicFieldWithDynamicLabel: {
-    ".desktop &": {
-      width: "32rem",
-    },
-    ".tablet &": {
-      width: "29rem",
-    },
-    ".ds-u-clearfix": {
-      width: "100%",
-    },
-  },
-  dynamicFieldInput: {
-    alignItems: "flex-end",
-  },
-  dynamicFieldTextarea: {
-    alignItems: "stretch",
   },
 };

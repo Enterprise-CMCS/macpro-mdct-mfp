@@ -299,13 +299,17 @@ export const ExportRETTable = ({ section, heading }: Props) => {
           )?.children
       );
       //clean up the children value to a usable array for lookup
-      const childIds = childrens?.map((child: AnyObject) => {
-        return {
-          label: child?.props?.label,
-          id: [child?.id],
-          parentId: child?.validation?.parentOptionId,
-        };
-      });
+      const childIds = childrens
+        ?.filter(
+          (child: AnyObject) => child.id !== "otherReasons-otherText" // don't give other text an integer column; it's included in the label
+        )
+        ?.map((child: AnyObject) => {
+          return {
+            label: child?.props?.label,
+            id: [child?.id],
+            parentId: child?.validation?.parentOptionId,
+          };
+        });
       //generate the row with the correct checkedbox inputs
       checkboxList?.forEach((checkbox: AnyObject) => {
         const parentId = checkbox.key.split("-")[1];

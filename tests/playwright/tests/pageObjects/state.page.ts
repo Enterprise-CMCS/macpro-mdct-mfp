@@ -30,9 +30,7 @@ export class StatePage extends BasePage {
   async navigateToWorkPlanDashboard() {
     await this.page.goto("/");
     const getReportsResp = this.waitForReportResponse("GET", 200);
-    await this.page
-      .getByRole("button", { name: "Enter Work Plan online" })
-      .click();
+    await this.page.getByRole("button", { name: "Enter Work Plan" }).click();
     await getReportsResp;
   }
 

@@ -20,6 +20,9 @@ const baseStyles = {
         paddingRight: 0,
       },
     },
+    ".ds-c-inline-error": {
+      color: "error_dark !important",
+    },
   },
 };
 

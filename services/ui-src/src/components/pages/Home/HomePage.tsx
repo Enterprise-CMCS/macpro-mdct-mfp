@@ -63,19 +63,10 @@ export const HomePage = () => {
               </Text>
               <Text></Text>
             </Box>
-            <TemplateCard
-              templateName="WP"
-              verbiage={cards.WP}
-              cardprops={sx.card}
-            />
-            <TemplateCard
-              templateName="SAR"
-              verbiage={cards.SAR}
-              cardprops={sx.card}
-            />
+            <TemplateCard verbiage={cards.WP} cardprops={sx.card} />
+            <TemplateCard verbiage={cards.SAR} cardprops={sx.card} />
             {financialReport && (
               <TemplateCard
-                templateName="FINANCIAL_REPORT"
                 verbiage={cards.FINANCIAL_REPORT}
                 cardprops={sx.card}
               />
