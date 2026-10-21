@@ -180,8 +180,12 @@ describe("<EntityDetailsOverlayV2 />", () => {
     const inputs = screen.getAllByRole("textbox");
 
     for (const input of inputs) {
+      const value =
+        (input as HTMLInputElement).name == "defineInitiative_endDate"
+          ? "2/2/2026"
+          : "123";
       await act(async () => {
-        await userEvent.type(input, "123");
+        await userEvent.type(input, value);
       });
     }
 

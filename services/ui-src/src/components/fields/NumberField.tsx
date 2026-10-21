@@ -56,6 +56,7 @@ export const NumberField = ({
       mask,
       decimalPlacesToRoundTo
     ).maskedValue;
+    setDisplayValue(hydrationValue);
     setField(name, hydrationValue);
   }, []);
 
@@ -107,7 +108,7 @@ export const NumberField = ({
   };
 
   // prepare error message, hint, and classes
-  const errorMessage = fields.get(name)?.error.message as ReactNode;
+  const errorMessage = fields?.get(name)?.error.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;

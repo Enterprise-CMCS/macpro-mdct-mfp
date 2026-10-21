@@ -98,7 +98,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
   useEffect(() => {
     setValidationSchema(formResolverSchema);
-  }, [fields]);
+  }, [formJson]);
 
   const validation = (values: {}) => {
     try {

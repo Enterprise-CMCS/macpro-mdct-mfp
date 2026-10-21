@@ -80,7 +80,7 @@ export const DropdownField = ({
   };
 
   // prepare error message, hint, and classes
-  const errorMessage = fields.get(name)?.error.message as ReactNode;
+  const errorMessage = fields?.get(name)?.error.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
   const ariaDescribedBy = `${name}__error${parsedHint ? ` ${name}-hint` : ""}`;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";

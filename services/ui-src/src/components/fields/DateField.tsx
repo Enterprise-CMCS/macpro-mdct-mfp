@@ -58,7 +58,7 @@ export const DateField = ({
   };
 
   // prepare error message, hint, and classes
-  const errorMessage = fields.get(name)?.error.message as ReactNode;
+  const errorMessage = fields?.get(name)?.error.message as ReactNode;
   const parsedHint = hint && parseCustomHtml(hint);
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
   const labelClass = !label ? "no-label" : "";

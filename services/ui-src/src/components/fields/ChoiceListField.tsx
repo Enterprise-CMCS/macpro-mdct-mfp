@@ -30,19 +30,30 @@ export const ChoiceListField = ({
   autosave,
   sxOverride,
   styleAsOptional,
+  clear,
   updateFieldValues,
   ...props
 }: Props) => {
   const defaultValue: Choice[] = [];
-  const [displayValue, setDisplayValue] = useState<Choice[]>(
-    props?.hydrate ?? defaultValue
-  );
+  const [displayValue, setDisplayValue] = useState<Choice[]>(defaultValue);
   const { editable, setAnswer, fields: formFields, setField } = useStore();
   //closeout will disables only certain parts of an active form
   const shouldDisableChildFields = !editable || !!props?.disabled;
+  const hydrationValue = props?.hydrate;
 
   useEffect(() => {
     setField(name, displayValue);
+
+    if (hydrationValue) {
+      if (clear) {
+        clear = false;
+        setDisplayValue(defaultValue);
+        setField(name, defaultValue);
+      } else {
+        setDisplayValue(hydrationValue);
+        setField(name, hydrationValue);
+      }
+    }
   }, []);
 
   // format choices with nested child fields to render (if any)
