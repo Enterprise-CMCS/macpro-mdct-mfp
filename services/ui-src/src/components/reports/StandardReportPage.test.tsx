@@ -47,7 +47,7 @@ describe("<StandardReportPage />", () => {
     mockedUseStore.mockReturnValue({ ...mockReportStore, ...mockFieldStore });
     render(standardPageSectionComponent);
     expect(
-      screen.getByText(mockStandardReportPageJson.verbiage.intro.section),
+      screen.getByText(mockStandardReportPageJson.verbiage.intro.section)
     ).toBeVisible();
   });
 

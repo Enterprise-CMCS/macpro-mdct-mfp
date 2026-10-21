@@ -88,7 +88,9 @@ describe("<Form />", () => {
       await userEvent.click(submitButton);
     });
 
-    const errors = Array.from(mockFieldStore.fields).filter((field) => field[1].error.message === "A response is required")
+    const errors = Array.from(mockFieldStore.fields).filter(
+      (field) => field[1].error.message === "A response is required"
+    );
     expect(errors).toHaveLength(3);
   });
 

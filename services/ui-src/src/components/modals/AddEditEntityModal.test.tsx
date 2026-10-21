@@ -73,7 +73,7 @@ const mockUseStore: MfpReportState & MfpUserState = {
   setEditable: () => {},
   // We need to add the user store, as that is where the "lastAlteredBy" field is fetched from
   ...mockStateUserStore,
-  ...mockFieldStore
+  ...mockFieldStore,
 };
 
 const mockedReportContext = {

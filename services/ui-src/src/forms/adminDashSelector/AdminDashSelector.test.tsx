@@ -23,7 +23,7 @@ import { testA11yAct } from "utils/testing/commonTests";
 vi.mock("utils/state/useStore");
 
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
-mockedUseStore.mockReturnValue({...mockAdminUserStore, ...mockFieldStore});
+mockedUseStore.mockReturnValue({ ...mockAdminUserStore, ...mockFieldStore });
 
 const adminDashSelectorView = (
   context: ReportContextShape = mockWpReportContext
