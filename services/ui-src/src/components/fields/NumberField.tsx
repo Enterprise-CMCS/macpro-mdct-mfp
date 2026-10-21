@@ -45,15 +45,18 @@ export const NumberField = ({
   sxOverride,
   updateFieldValues,
 }: Props) => {
-  const defaultValue = hydrate ?? initialValue;
-  const [displayValue, setDisplayValue] = useState<string>(
-    applyMask(defaultValue, mask, decimalPlacesToRoundTo).maskedValue
-  );
+  const defaultValue = initialValue;
+  const [displayValue, setDisplayValue] = useState<string>(defaultValue);
 
   const { report, selectedEntity, setAnswer, fields, setField } = useStore();
 
   useEffect(() => {
-    setField(name, defaultValue);
+    const hydrationValue = applyMask(
+      hydrate || defaultValue,
+      mask,
+      decimalPlacesToRoundTo
+    ).maskedValue;
+    setField(name, hydrationValue);
   }, []);
 
   // update form data on change, but do not mask
