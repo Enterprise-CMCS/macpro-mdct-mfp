@@ -5,6 +5,7 @@ import { Table } from "components";
 import {
   AnyObject,
   ReportMetadataShape,
+  ReportStatus,
   ReportType,
   SxObject,
   TableContentShape,
@@ -213,8 +214,12 @@ export const EditReportButton = ({
   report,
   openCreateReportModal,
 }: EditReportProps) => {
-  const actionText = "Edit reporting";
-  const reportLabel = report.submissionName;
+  const { status, submissionName } = report;
+  const isViewOnly =
+    status === ReportStatus.SUBMITTED ||
+    status === ReportStatus.APPROVED ||
+    status === ReportStatus.ARCHIVED;
+  const actionText = isViewOnly ? "View reporting" : "Edit reporting";
 
   return (
     <Button
@@ -222,7 +227,7 @@ export const EditReportButton = ({
       onClick={() => openCreateReportModal(report)}
       variant="link"
       sx={sx.editReporting}
-      aria-label={`${actionText} of ${reportLabel}`}
+      aria-label={`${actionText} of ${submissionName}`}
     >
       {actionText}
     </Button>
