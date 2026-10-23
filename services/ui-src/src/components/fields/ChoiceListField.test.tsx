@@ -5,9 +5,18 @@ import { ChoiceListField, ReportContext, TextField } from "components";
 import { mockWpReportContext } from "../../utils/testing/mockReport";
 import { ReportStatus } from "../../types";
 import { testA11yAct } from "utils/testing/commonTests";
+import { useStore } from "utils";
+import { MockedFunction } from "vitest";
+import { mockFieldStore } from "utils/testing/setupTest";
 
 const mockSetValue = vi.fn();
-
+const mockSetAnswer = vi.fn();
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue({
+  ...mockFieldStore,
+  setAnswer: mockSetAnswer,
+});
 const mockChoices = [
   {
     id: "Choice1",
@@ -404,12 +413,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice1)
       const firstCheckboxData = [{ key: "Choice1", value: "Choice1" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "checkboxField",
-        firstCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        firstCheckboxData
       );
 
       // Now uncheck the first checkbox to trigger the onChangeHandler
@@ -427,12 +433,9 @@ describe("<ChoiceListField />", () => {
       fireEvent.blur(firstCheckbox);
 
       // Make sure the form value is set to default state
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "checkboxField",
-        firstCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        firstCheckboxData
       );
     });
 
@@ -465,12 +468,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice1)
       const firstRadioOptionOptionData = [{ key: "Choice1", value: "Choice1" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "radioField",
-        firstRadioOptionOptionData,
-        {
-          shouldValidate: true,
-        }
+        firstRadioOptionOptionData
       );
 
       // Now check the second radio option to trigger the onChangeHandler
@@ -488,12 +488,9 @@ describe("<ChoiceListField />", () => {
       fireEvent.blur(firstRadioOption);
 
       // Make sure the form value is set to default state
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "radioField",
-        firstRadioOptionOptionData,
-        {
-          shouldValidate: true,
-        }
+        firstRadioOptionOptionData
       );
     });
 
@@ -523,12 +520,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice3)
       const parentCheckboxData = [{ key: "Choice3", value: "Choice3" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "checkboxFieldWithNestedChildren",
-        parentCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        parentCheckboxData
       );
 
       const childTextBox: HTMLInputElement = wrapper.container.querySelector(
@@ -545,12 +539,9 @@ describe("<ChoiceListField />", () => {
       fireEvent.blur(childTextBox);
 
       // Make sure the form value is set to with new child text
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "Choice3-otherText",
-        "Added Text",
-        {
-          shouldValidate: true,
-        }
+        "Added Text"
       );
 
       // Now uncheck the parent
@@ -608,12 +599,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice3)
       const parentCheckboxData = [{ key: "Choice3", value: "Choice3" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "checkboxFieldWithNestedChildren",
-        parentCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        parentCheckboxData
       );
 
       // Now check the child radio field
@@ -632,12 +620,9 @@ describe("<ChoiceListField />", () => {
       const childRadioData = [
         { key: "test-nested-child-radio-Choice4", value: "Choice4" },
       ];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "test-nested-child-radio",
-        childRadioData,
-        {
-          shouldValidate: true,
-        }
+        childRadioData
       );
 
       // Now uncheck the parent
@@ -693,12 +678,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice3)
       const parentRadioData = [{ key: "Choice3", value: "Choice3" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "radioFieldWithNestedChildren",
-        parentRadioData,
-        {
-          shouldValidate: true,
-        }
+        parentRadioData
       );
 
       // Now check the child radio field
@@ -717,12 +699,9 @@ describe("<ChoiceListField />", () => {
       const childCheckboxData = [
         { key: "test-nested-child-checkbox-Choice6", value: "Choice6" },
       ];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "test-nested-child-checkbox",
-        childCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        childCheckboxData
       );
 
       const otherRadio = wrapper.getByRole("radio", { name: "Choice1" });
