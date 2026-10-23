@@ -323,7 +323,18 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
           name: "Review & Submit",
         })
         .waitFor();
+
+      // Wait for button disabled to enabled animation to complete
+      const submitButton = statePage.page.getByRole("button", {
+        name: "Submit MFP Work Plan",
+      });
+      await expect(submitButton).toBeEnabled();
+      await expect(submitButton).toHaveCSS(
+        "background-color",
+        "rgb(0, 113, 188)" // --mdct-colors-primary
+      );
     });
+
     await test.step("WCAG checks on /wp/review-and-submit", async () => {
       const accessibilityErrors = await checkPageAccessibility(statePage.page);
       expect.soft(accessibilityErrors).toEqual([]);
@@ -369,11 +380,11 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
       await statePage.page
         .getByRole("button", { name: "Submit MFP Work Plan" })
         .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "Successfully Submitted",
-        })
-        .waitFor();
+      // Scroll so heading is visible on page
+      await statePage.page.evaluate(() => window.scrollTo(0, 0));
+      await statePage.page.getByRole("heading", {
+        name: "Successfully Submitted",
+      });
     });
     await test.step("WCAG checks on /wp/review-and-submit successfully submitted", async () => {
       const accessibilityErrors = await checkPageAccessibility(statePage.page);
