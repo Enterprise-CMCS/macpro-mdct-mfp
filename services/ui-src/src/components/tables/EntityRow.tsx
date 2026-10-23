@@ -169,55 +169,55 @@ export const EntityRow = ({
               ></Table>
             )}
           </Box>
-          <Box
-            sx={sx.actionContainer}
-            pt={isMobile ? "1rem" : "0"}
-            justifyContent={isMobile ? "flex-start" : "flex-end"}
-            display={"inline-block"}
-          >
-            {isNewAndOptional && openAddEditEntityModal && (
-              <Button
-                sx={sx.editNameButton}
-                id={editNameButtonId}
-                variant="none"
-                onClick={() => openAddEditEntityModal(entity)}
-                aria-labelledby={`${editNameButtonId} ${rowId}`}
-                pl={isMobile ? "0" : "1rem"}
-                pr={isMobile ? "1.5rem" : "2.5rem"}
-              >
-                {viewOnly
-                  ? verbiage.readOnlyEntityButtonText
-                  : verbiage.editEntityButtonText}
-              </Button>
-            )}
+        </Box>
+      </Td>
+      <Td>
+        <Box
+          sx={sx.actionContainer}
+          pt={isMobile ? "1rem" : "0"}
+          justifyContent={isMobile ? "flex-start" : "flex-end"}
+          display={"inline-block"}
+        >
+          {isNewAndOptional && openAddEditEntityModal && (
             <Button
-              sx={
-                isNewAndOptional
-                  ? sx.editOtherEntityButton
-                  : sx.editEntityButton
-              }
-              id={editButtonId}
-              onClick={() => openOverlayOrDrawer(entity)}
-              variant="outline"
-              disabled={entityStatus === EntityStatuses.DISABLED}
-              aria-labelledby={`${editButtonId} ${rowId}`}
+              sx={sx.editNameButton}
+              id={editNameButtonId}
+              variant="none"
+              onClick={() => openAddEditEntityModal(entity)}
+              aria-labelledby={`${editNameButtonId} ${rowId}`}
+              pl={isMobile ? "0" : "1rem"}
+              pr={isMobile ? "1.5rem" : "2.5rem"}
             >
               {viewOnly
-                ? verbiage.readOnlyEntityDetailsButtonText
-                : verbiage.enterEntityDetailsButtonText}
+                ? verbiage.readOnlyEntityButtonText
+                : verbiage.editEntityButtonText}
             </Button>
-            {isNewAndOptional && openDeleteEntityModal && (
-              <Button
-                sx={sx.deleteButton}
-                id={deleteButtonId}
-                data-testid="delete-entity"
-                onClick={() => openDeleteEntityModal(entity)}
-                aria-labelledby={`${deleteButtonId} ${rowId}`}
-              >
-                <Image src={deleteIcon} alt="Delete" boxSize="3x3" />
-              </Button>
-            )}
-          </Box>
+          )}
+          <Button
+            sx={
+              isNewAndOptional ? sx.editOtherEntityButton : sx.editEntityButton
+            }
+            id={editButtonId}
+            onClick={() => openOverlayOrDrawer(entity)}
+            variant="outline"
+            disabled={entityStatus === EntityStatuses.DISABLED}
+            aria-labelledby={`${editButtonId} ${rowId}`}
+          >
+            {viewOnly
+              ? verbiage.readOnlyEntityDetailsButtonText
+              : verbiage.enterEntityDetailsButtonText}
+          </Button>
+          {isNewAndOptional && openDeleteEntityModal && (
+            <Button
+              sx={sx.deleteButton}
+              id={deleteButtonId}
+              data-testid="delete-entity"
+              onClick={() => openDeleteEntityModal(entity)}
+              aria-labelledby={`${deleteButtonId} ${rowId}`}
+            >
+              <Image src={deleteIcon} alt="Delete" boxSize="3x3" />
+            </Button>
+          )}
         </Box>
       </Td>
     </Tr>

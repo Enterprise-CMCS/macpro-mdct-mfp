@@ -188,7 +188,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   };
 
   const tableHeaders = {
-    headRow: ["", ""],
+    headRow: ["Status", "Population", "Actions"],
   };
 
   const defaultsPopsNotSelected = (targetPopulations: AnyObject[]) => {
@@ -205,6 +205,11 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
       return isDefault && isApplicable === "No";
     });
     return filteredPopulations.length === defaultPopulationNames.length;
+  };
+
+  //used to fix a11y type of transition benchmark projections
+  const setHeadingType = () => {
+    return verbiage.intro.section ? "h3" : "h2";
   };
 
   useEffect(() => {
@@ -227,7 +232,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
       )}
       <ErrorAlert error={pageError} sxOverride={sx.pageErrorAlert} />
       <Box>
-        <Heading as="h3" sx={sx.dashboardTitle}>
+        <Heading as={setHeadingType()} sx={sx.dashboardTitle}>
           {verbiage.dashboardTitle}
         </Heading>
         <Box>
@@ -320,6 +325,7 @@ const sx = {
     paddingBottom: "0",
     fontWeight: "heading_md",
     color: "gray",
+    fontSize: "18px",
   },
   addEntityButton: {
     marginTop: "spacer3",
@@ -336,7 +342,7 @@ const sx = {
       borderBottom: "1px solid",
       borderColor: "gray_light",
       "&:nth-of-type(1)": {
-        width: "2.5rem",
+        width: "5rem",
       },
       "&:nth-of-type(3)": {
         width: "260px",
