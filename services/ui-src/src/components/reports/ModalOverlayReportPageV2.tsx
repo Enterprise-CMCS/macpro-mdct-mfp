@@ -240,12 +240,14 @@ export const ModalOverlayReportPageV2 = ({
             title={errorMessage.title}
           />
         )}
-        <Heading as="h3" sx={sx.dashboardTitle}>
+        <Heading as="h2" sx={sx.dashboardTitle}>
           {dashTitle}
         </Heading>
-        <Heading as="h2" sx={sx.subsectionHeading}>
-          {dashSubTitle}
-        </Heading>
+        {dashSubTitle && (
+          <Heading as="h3" sx={sx.subsectionHeading}>
+            {dashSubTitle}
+          </Heading>
+        )}
         {hasEntities ? (
           <Table content={tableHeaders()} sx={sx.table}>
             {reportFieldDataEntities.map((entity: EntityShape) => (
