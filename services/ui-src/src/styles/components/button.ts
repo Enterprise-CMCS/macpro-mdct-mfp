@@ -12,9 +12,6 @@ const baseStyles = {
     backgroundColor: "gray_lighter",
     opacity: "1",
   },
-  img: {
-    height: "1rem",
-  },
 };
 
 const primaryVariant = {
@@ -51,6 +48,9 @@ const outlineVariant = {
     color: "gray_lighter",
     borderColor: "gray_lighter",
     backgroundColor: "transparent",
+  },
+  img: {
+    height: "1rem",
   },
 };
 
