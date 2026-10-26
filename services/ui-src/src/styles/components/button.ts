@@ -12,6 +12,9 @@ const baseStyles = {
     backgroundColor: "gray_lighter",
     opacity: "1",
   },
+  img: {
+    height: "1rem",
+  },
 };
 
 const primaryVariant = {
