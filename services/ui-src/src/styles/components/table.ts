@@ -13,7 +13,6 @@ const baseStyles = {
       fontSize: "heading_sm",
     },
     td: {
-      paddingLeft: 0,
       borderColor: "gray_light",
       textAlign: "left",
       "&:last-of-type": {
