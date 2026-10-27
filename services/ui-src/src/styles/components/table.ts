@@ -90,14 +90,17 @@ const dashboardVariant = {
       borderColor: "gray_light",
     },
     th: {
-      ":not(:first-child)": {
-        padding: "8px 16px",
+      ":not(:last-child)": {
+        padding: "8px 16px 8px 0px",
       },
     },
     tbody: {
       th: {
         color: "base",
         fontSize: "16px",
+      },
+      "th, td": {
+        padding: "8px 16px 8px 0px",
       },
     },
   },
