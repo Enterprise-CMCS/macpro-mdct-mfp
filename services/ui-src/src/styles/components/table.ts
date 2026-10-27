@@ -82,8 +82,30 @@ const calculationVariant = {
   },
 };
 
+const dashboardVariant = {
+  table: {
+    tr: {
+      paddingLeft: 0,
+      borderBottom: "1px solid",
+      borderColor: "gray_light",
+    },
+    th: {
+      ":not(:first-child)": {
+        padding: "8px 16px",
+      },
+    },
+    tbody: {
+      th: {
+        color: "base",
+        fontSize: "16px",
+      },
+    },
+  },
+};
+
 const variants = {
   calculation: calculationVariant,
+  dashboard: dashboardVariant,
 };
 
 const sizes = {};
