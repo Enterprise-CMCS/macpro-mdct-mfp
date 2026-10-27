@@ -6,6 +6,7 @@ import {
   Button,
   Heading,
   Image,
+  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -188,7 +189,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   };
 
   const tableHeaders = {
-    headRow: ["", ""],
+    headRow: ["Status", "Population", "Actions"],
   };
 
   const defaultsPopsNotSelected = (targetPopulations: AnyObject[]) => {
@@ -205,6 +206,11 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
       return isDefault && isApplicable === "No";
     });
     return filteredPopulations.length === defaultPopulationNames.length;
+  };
+
+  //used to fix a11y type of transition benchmark projections
+  const setHeadingType = () => {
+    return verbiage.intro.section ? "h3" : "h2";
   };
 
   useEffect(() => {
@@ -225,41 +231,36 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
       {verbiage.intro && (
         <ReportPageIntro text={verbiage.intro} accordion={verbiage.accordion} />
       )}
-      <ErrorAlert error={pageError} sxOverride={sx.pageErrorAlert} />
-      <Box>
-        <Heading as="h3" sx={sx.dashboardTitle}>
+      <ErrorAlert error={pageError} />
+      <Stack gap="spacer3">
+        <Heading as={setHeadingType()} variant="grayBold">
           {verbiage.dashboardTitle}
         </Heading>
-        <Box>
-          <Table sx={sx.table} content={tableHeaders}>
-            {reportFieldDataEntities.map((entity: EntityShape) => (
-              <EntityRow
-                key={entity.id}
-                entity={entity}
-                entityInfo={entityInfo}
-                verbiage={verbiage}
-                openAddEditEntityModal={openAddEditEntityModal}
-                openDeleteEntityModal={openDeleteEntityModal}
-                openOverlayOrDrawer={openDrawer}
-                entityType={entityType as EntityType}
-              />
-            ))}
-          </Table>
-          <Button
-            sx={sx.addEntityButton}
-            variant="outline"
-            onClick={addEditEntityModalOnOpenHandler}
-            leftIcon={<Image sx={sx.buttonIcons} src={addIcon} alt="Add" />}
-          >
-            {verbiage.addEntityButtonText}
-          </Button>
-        </Box>
-        <Box>
-          <Text sx={sx.reviewPdfHint}>
-            {parseCustomHtml(verbiage.reviewPdfHint)}
-          </Text>
-          <PrintButton sxOverride={sx.reviewPdfButton} />
-        </Box>
+        <Table content={tableHeaders}>
+          {reportFieldDataEntities.map((entity: EntityShape) => (
+            <EntityRow
+              key={entity.id}
+              entity={entity}
+              entityInfo={entityInfo}
+              verbiage={verbiage}
+              openAddEditEntityModal={openAddEditEntityModal}
+              openDeleteEntityModal={openDeleteEntityModal}
+              openOverlayOrDrawer={openDrawer}
+              entityType={entityType as EntityType}
+            />
+          ))}
+        </Table>
+        <Button
+          variant="outline"
+          onClick={addEditEntityModalOnOpenHandler}
+          leftIcon={<Image src={addIcon} alt="Add" />}
+        >
+          {verbiage.addEntityButtonText}
+        </Button>
+        <Text sx={sx.reviewPdfHint}>
+          {parseCustomHtml(verbiage.reviewPdfHint)}
+        </Text>
+        <PrintButton />
         {/* MODALS */}
         <AddEditEntityModal
           entityType={entityType as EntityType}
@@ -301,7 +302,7 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           validateOnRender={validateOnRender}
           data-testid="report-drawer"
         />
-      </Box>
+      </Stack>
       <ReportPageFooter />
     </Box>
   );
@@ -313,41 +314,7 @@ interface Props {
 }
 
 const sx = {
-  buttonIcons: {
-    height: "1rem",
-  },
-  dashboardTitle: {
-    paddingBottom: "0",
-    fontWeight: "heading_md",
-    color: "gray",
-  },
-  addEntityButton: {
-    marginTop: "spacer3",
-    marginBottom: "spacer4",
-  },
-  table: {
-    tableLayout: "fixed",
-    br: {
-      marginBottom: "spacer_half",
-    },
-    th: {
-      paddingLeft: "spacer2",
-      paddingRight: "0",
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      "&:nth-of-type(1)": {
-        width: "2.5rem",
-      },
-      "&:nth-of-type(3)": {
-        width: "260px",
-      },
-    },
-  },
-  pageErrorAlert: {
-    marginBottom: "spacer3",
-  },
   reviewPdfHint: {
     color: "gray",
   },
-  reviewPdfButton: { marginTop: "spacer3" },
 };

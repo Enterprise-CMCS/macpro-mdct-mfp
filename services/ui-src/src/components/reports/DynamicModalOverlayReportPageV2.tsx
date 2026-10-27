@@ -158,7 +158,7 @@ export const DynamicModalOverlayReportPageV2 = ({
             {parseCustomHtml(dashSubTitle)}
           </Heading>
         )}
-        <Table content={tableHeaders()} sx={sx.table}>
+        <Table content={tableHeaders()}>
           {reportFieldDataEntities.map((entity: EntityShape) => (
             <EntityRow
               entering={entering}
@@ -248,40 +248,5 @@ const sx = {
       paddingBottom: "0",
     },
     paddingBottom: "spacer2",
-  },
-  table: {
-    tableLayout: "fixed",
-    br: {
-      marginBottom: "spacer_half",
-    },
-    th: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      color: "gray",
-      fontWeight: "heading_md",
-      paddingLeft: "spacer2",
-      paddingRight: "0",
-      ".tablet &, .mobile &": {
-        border: "0",
-      },
-      "&:nth-of-type(1)": {
-        width: "4rem",
-      },
-      "&:nth-of-type(2)": {
-        width: "280px",
-      },
-    },
-    tr: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      ul: {
-        margin: "0.3rem 1rem 0.3rem auto",
-      },
-      "&:last-of-type": {
-        td: {
-          border: "0",
-        },
-      },
-    },
   },
 };
