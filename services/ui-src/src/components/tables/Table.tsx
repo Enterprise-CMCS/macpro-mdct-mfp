@@ -26,7 +26,6 @@ export const normalizeHeaderCell = (
 export const Table = ({
   content,
   variant,
-  border,
   sxOverride,
   ariaOverride,
   children,
@@ -60,7 +59,6 @@ export const Table = ({
                     scope="col"
                     colSpan={colSpan}
                     sx={{
-                      ...sx.tableHeader,
                       ...sxOverride,
                       ...(align && { textAlign: align }),
                     }}
@@ -84,7 +82,6 @@ export const Table = ({
               <Td
                 key={`${cell}${rowIndex}-body-cell`}
                 sx={{
-                  tableCell: border ? sx.tableCellBorder : sx.tableCell,
                   color: cell == notAnsweredText ? "error_darker" : "",
                 }}
                 aria-label={ariaOverride?.bodyRows?.[index][rowIndex]}
@@ -104,7 +101,7 @@ export const Table = ({
                   <Th
                     key={`${rowIndex}-foot-cell`}
                     scope="col"
-                    sx={{ ...sx.tableHeader, ...sxOverride }}
+                    sx={{ ...sxOverride }}
                     aria-label={ariaOverride?.footRow?.[index][rowIndex]}
                   >
                     {isValidElement(headerCell)
@@ -124,7 +121,6 @@ export const Table = ({
 interface Props {
   content: TableContentShape;
   variant?: string;
-  border?: boolean;
   sxOverride?: SystemStyleObject;
   ariaOverride?: TableContentShape;
   children?: ReactNode;
@@ -139,34 +135,6 @@ const sx = {
     margin: 0,
     padding: 0,
     height: 0,
-  },
-  tableHeader: {
-    padding: "0.75rem 0.5rem",
-    fontSize: "heading_sm",
-    fontWeight: "heading_sm_bold",
-    borderColor: "gray_lighter",
-    textTransform: "none",
-    letterSpacing: "normal",
-    ".mobile &": {
-      fontSize: "heading_xs",
-    },
-  },
-  tableCell: {
-    padding: "0.75rem 0.5rem",
-    borderStyle: "none",
-    fontWeight: "body_xs",
-    ".mobile &": {
-      fontSize: "body_xs",
-    },
-  },
-  tableCellBorder: {
-    padding: "0.75rem 0.5rem",
-    borderBottom: "1px solid",
-    borderColor: "gray_lighter",
-    fontWeight: "body_xs",
-    ".mobile &": {
-      fontSize: "body_xs",
-    },
   },
   ".two-column &": {}, // TODO: add additional styling for two-column dynamic field tables if needed
   notAnswered: {
