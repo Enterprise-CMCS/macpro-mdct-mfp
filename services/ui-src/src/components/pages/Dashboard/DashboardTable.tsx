@@ -1,5 +1,5 @@
 // components
-import { Button, HStack, Td, Tr, Spinner, Text } from "@chakra-ui/react";
+import { Button, HStack, Td, Tr, Spinner, Text, Th } from "@chakra-ui/react";
 import { Table } from "components";
 // types
 import {
@@ -42,7 +42,7 @@ export const DashboardTable = ({
   };
 
   return (
-    <Table content={tableBody(body.table, isAdmin)} sx={sx.table}>
+    <Table content={tableBody(body.table, isAdmin)} variant="dashboard">
       {reportsByState.map((report: ReportMetadataShape) => {
         const showEditReportButton = reportType !== ReportType.WP && !isAdmin;
         const showAdminReleaseButton = isAdmin;
@@ -56,15 +56,15 @@ export const DashboardTable = ({
             {reportType === ReportType.WP ||
             reportType === ReportType.FINANCIAL_REPORT ? (
               <>
-                <Td sx={sxOverride.wpSubmissionNameText}>
+                <Th scope="row" sx={sxOverride.wpSubmissionNameText}>
                   {report.submissionName}
                   {copyOverSubText(report, reportsByState)}
-                </Td>
+                </Th>
               </>
             ) : (
-              <Td sx={sxOverride.sarSubmissionNameText}>
+              <Th scope="row" sx={sxOverride.sarSubmissionNameText}>
                 {report.submissionName}
-              </Td>
+              </Th>
             )}
             {/* Target populations */}
             {!isAdmin &&
@@ -359,40 +359,6 @@ interface AdminReleaseButtonProps {
 }
 
 const sx = {
-  table: {
-    marginBottom: "spacer5",
-    th: {
-      padding: "0.5rem 0.5rem 0.5rem 0",
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      color: "gray",
-      fontWeight: "heading_md",
-    },
-    tr: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-    },
-    td: {
-      minWidth: "6rem",
-      padding: "0.5rem 0.75rem",
-      paddingLeft: 0,
-      borderTop: "1px solid",
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      textAlign: "left",
-      "&:last-of-type": {
-        paddingRight: 0,
-      },
-      "&:first-of-type": {
-        minWidth: "2rem",
-      },
-    },
-    "td[data-testid='dashboard-submission-count']": {
-      minWidth: "2rem",
-      width: "2rem",
-      maxWidth: "2rem",
-    },
-  },
   copyOverText: {
     fontSize: "body_xs",
     fontWeight: "body_xs",

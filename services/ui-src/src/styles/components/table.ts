@@ -101,6 +101,30 @@ const calculationVariant = {
   },
 };
 
+const dashboardVariant = {
+  table: {
+    tr: {
+      paddingLeft: 0,
+      borderBottom: "1px solid",
+      borderColor: "gray_light",
+    },
+    th: {
+      ":not(:last-child)": {
+        padding: "8px 16px 8px 0px",
+      },
+    },
+    tbody: {
+      th: {
+        color: "base",
+        fontSize: "16px",
+      },
+      "th, td": {
+        padding: "8px 16px 8px 0px",
+      },
+    },
+  },
+};
+
 const initiativeVariant = {
   table: {
     borderBottom: "1px solid",
@@ -133,6 +157,7 @@ const initiativeVariant = {
 const variants = {
   calculation: calculationVariant,
   initiative: initiativeVariant,
+  dashboard: dashboardVariant,
 };
 
 const sizes = {};
