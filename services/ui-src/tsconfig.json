@@ -2,7 +2,12 @@
   "compilerOptions": {
     "incremental": true,
     "target": "ESNext",
-    "types": ["vite/client"],
+    "types": [
+      "vite/client",
+      "vitest/globals",
+      // This allows us to expect(...).toBeVisible() (etc) without TS complaints
+      "@testing-library/jest-dom"
+    ],
     "lib": ["esnext", "dom", "dom.iterable", "ES2021.String"],
     "jsx": "react-jsx",
     "sourceMap": true,

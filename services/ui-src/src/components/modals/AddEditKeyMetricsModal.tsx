@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import uuid from "react-uuid";
 // components
 import { Form, Modal, ReportContext } from "components";
 // types
@@ -67,7 +66,7 @@ export const AddEditKeyMetricsModal = ({
 
   const handleSubmit = async (enteredData: AnyObject) => {
     if (viewOnly) {
-      modalDisclosure.onClose();
+      modalDisclosure.onClose(false);
       return;
     }
 
@@ -83,7 +82,7 @@ export const AddEditKeyMetricsModal = ({
       return data;
     }, {} as AnyObject);
 
-    const dynamicFieldId = currentEntityId || uuid();
+    const dynamicFieldId = currentEntityId || crypto.randomUUID();
 
     const updatedEntity = {
       id: dynamicFieldId,
@@ -130,7 +129,7 @@ export const AddEditKeyMetricsModal = ({
     setIsEditing(false);
     setSubmitting(false);
 
-    modalDisclosure.onClose();
+    modalDisclosure.onClose(true);
   };
 
   const submitForm = (event: SubmitEvent) => {
@@ -180,7 +179,7 @@ interface Props {
   form: FormJson;
   modalDisclosure: {
     isOpen: boolean;
-    onClose: any;
+    onClose: Function;
   };
   report?: ReportShape;
   parentEntityId?: string;

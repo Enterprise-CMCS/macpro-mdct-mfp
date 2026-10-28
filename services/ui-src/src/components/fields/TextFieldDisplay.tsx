@@ -95,7 +95,7 @@ interface Props {
 
 const sx = {
   fieldHeading: {
-    fontSize: "28px",
+    fontSize: "heading_2xl",
     paddingTop: "spacer3",
   },
 };

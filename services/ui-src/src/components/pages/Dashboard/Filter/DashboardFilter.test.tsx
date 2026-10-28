@@ -1,19 +1,20 @@
+import { Mock } from "vitest";
 import { render, screen, act, waitFor } from "@testing-library/react";
 import { DashboardFilter } from "./DashboardFilter";
 import { useSearchParams } from "react-router";
 import userEvent from "@testing-library/user-event";
 
-jest.mock("react-router", () => ({
-  useSearchParams: jest.fn(),
+vi.mock("react-router", () => ({
+  useSearchParams: vi.fn(),
 }));
 
 describe("DashboardFilter", () => {
-  const mockSetSearchParams = jest.fn();
-  const mockGetSearchParams = jest.fn();
+  const mockSetSearchParams = vi.fn();
+  const mockGetSearchParams = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useSearchParams as jest.Mock).mockReturnValue([
+    vi.clearAllMocks();
+    (useSearchParams as Mock).mockReturnValue([
       { get: mockGetSearchParams },
       mockSetSearchParams,
     ]);

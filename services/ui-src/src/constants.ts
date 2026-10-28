@@ -1,13 +1,17 @@
 // HOST DOMAIN
 export const PRODUCTION_HOST_DOMAIN = "mdctmfp.cms.gov";
 
+// REPORT
+export const APP_TITLE = "MFP";
+export const FULL_APP_TITLE = "Money Follows the Person";
+
 // FIELDS
 export const dropdownDefaultOptionText = "- Select an option -";
 
 export const closeText = "Close";
 export const saveAndCloseText = "Save & close";
 export const notAnsweredText = "Not answered";
-export const optionalNotAnsweredText = "Not answered; optional";
+export const optionalNotAnsweredText = "Not answered; Optional";
 export const noEligibleReportsForCopy = "No reports eligible for copy";
 
 // STATES

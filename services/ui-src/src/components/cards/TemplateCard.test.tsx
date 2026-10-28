@@ -1,5 +1,6 @@
-import { act, render, screen, within } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MockedFunction } from "vitest";
 // components
 import { TemplateCard } from "components";
 // utils
@@ -7,27 +8,28 @@ import {
   mockStateUserStore,
   mockUseStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/home";
 import { MfpReportState, MfpUserState } from "../../types";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/other/useBreakpoint", () => ({
-  useBreakpoint: jest.fn(() => ({
+vi.mock("utils/other/useBreakpoint", () => ({
+  useBreakpoint: vi.fn(() => ({
     isDesktop: true,
   })),
 }));
 
-jest.mock("utils/auth/useUser");
-jest.mock("utils/state/useStore");
+vi.mock("utils/auth/useUser");
+vi.mock("utils/state/useStore");
 
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockUseNavigate = jest.fn();
+const mockUseNavigate = vi.fn();
 
-jest.mock("react-router", () => ({
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
 }));
 
@@ -55,7 +57,7 @@ const mockUseStoreNoReports: MfpReportState & MfpUserState = {
 
 const wpTemplateCardComponent = (
   <RouterWrappedComponent>
-    <TemplateCard templateName="WP" verbiage={wpTemplateVerbiage} />
+    <TemplateCard verbiage={wpTemplateVerbiage} />
   </RouterWrappedComponent>
 );
 
@@ -72,29 +74,6 @@ describe("<TemplateCard />", () => {
     test("WP TemplateCard image is visible on desktop", () => {
       const imageAltText = "Spreadsheet icon";
       expect(screen.getByAltText(imageAltText)).toBeVisible();
-    });
-
-    test("WP TemplateCard help file link is correct", async () => {
-      const wpHeading = screen.getAllByRole("heading", {
-        name: wpTemplateVerbiage.title,
-      })[0];
-      const wpCard = wpHeading.closest("div")!;
-
-      const downloadButton = within(wpCard).getByRole("button", {
-        name: wpTemplateVerbiage.downloadText,
-      });
-
-      await act(async () => {
-        await userEvent.click(downloadButton);
-      });
-
-      const downloadLink = wpCard.querySelector("a[href]") as HTMLAnchorElement;
-
-      expect(downloadLink).toBeVisible();
-      expect(downloadLink).toHaveAttribute(
-        "href",
-        wpTemplateVerbiage.linkLocation
-      );
     });
 
     test("WP TemplateCard link is visible on desktop", () => {

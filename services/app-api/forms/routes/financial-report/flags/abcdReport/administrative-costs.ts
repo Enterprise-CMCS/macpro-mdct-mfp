@@ -10,9 +10,12 @@ import {
 } from "../../../../../utils/types";
 // utils
 import {
+  buildServiceFields,
+  serviceFieldDynamicRowsTemplateBuilder,
+} from "../../../../../utils/routes/tables";
+import {
   administrativeCosts,
   administrativeCostsHeaders,
-  buildServiceFields,
   capacityBuilding,
   personnelHeaders,
   subRecipientsHeaders,
@@ -59,44 +62,36 @@ const budgetCategoryDynamicBodyList = [
   },
 ];
 const budgetCategoryDynamicFieldsToReturn = [
-  ServiceFieldType.CATEGORY,
+  ServiceFieldType.NAME,
   ...budgetCategoryFieldsToReturn,
 ];
-const budgetCategoryDynamicRowsTemplate = {
-  forTableOnly: true,
-  id: budgetCategoryDynamicRowId,
-  props: {
-    label: "Miscellaneous Costs",
-    dynamicFields: budgetCategoryDynamicBodyList.flatMap((service) =>
-      buildServiceFields(service, budgetCategoryDynamicFieldsToReturn, {
-        dynamicLabel: "Misc. Costs:",
-      })
-    ),
-  },
-  type: ReportFormFieldType.DYNAMIC_OBJECT,
-  validation: {
-    type: ValidationType.DYNAMIC_OPTIONAL,
-    options: {
-      dynamicFieldValidations: {
-        category: ValidationType.TEXT_OPTIONAL,
-        totalComputable: ValidationType.NUMBER_OPTIONAL,
-        percentageOverride: {
-          type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
-          options: {
-            boundary: 100,
-            comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
-          },
-        },
-        totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
-        totalFederalShare: ValidationType.NUMBER_OPTIONAL,
-      },
+const budgetCategoryDynamicRowsTemplate =
+  serviceFieldDynamicRowsTemplateBuilder({
+    dynamicFieldsBodyList: budgetCategoryDynamicBodyList,
+    dynamicFieldsSettings: {
+      dynamicLabel: "Misc. Costs:",
     },
-  },
-  verbiage: {
-    buttonText: "Add miscellaneous cost",
-    hint: "To add an additional budget category, click the “Add miscellaneous cost” button below.",
-  },
-};
+    dynamicFieldsToReturn: budgetCategoryDynamicFieldsToReturn,
+    dynamicFieldValidations: {
+      name: ValidationType.TEXT_OPTIONAL,
+      totalComputable: ValidationType.NUMBER_OPTIONAL,
+      percentageOverride: {
+        type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+        options: {
+          boundary: 100,
+          comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
+        },
+      },
+      totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+      totalFederalShare: ValidationType.NUMBER_OPTIONAL,
+    },
+    dynamicRowId: budgetCategoryDynamicRowId,
+    label: "Miscellaneous Costs",
+    verbiage: {
+      buttonText: "Add miscellaneous cost",
+      hint: "To add an additional budget category, click the “Add miscellaneous cost” button below.",
+    },
+  });
 
 // Capacity Building table
 const capacityBuildingBodyList = capacityBuilding(capacityBuildingTableId);
@@ -193,7 +188,7 @@ const subRecipientModalFieldsSettings = {
   },
   [ServiceFieldType.DESCRIPTION]: {
     props: {
-      hint: "Describe in 100 characters or less the type of work this sub recipient does for your state or territory. Include the scope of their work, including which MFP populations the sub recipient supports, and the activities and deliverables the sub recipient completes. Note how the sub recipient’s work supports the goals of the MFP program.",
+      hint: "Provide a brief description of the work this subrecipient performs for your state or territory (100 characters or fewer). Include key details about the scope of their work, MFP populations served, activities performed, and deliverables completed. If you reach the character limit, alternatively reference the section of MFP Worksheet for Proposed Budget where this information is described.",
       label: "Describe Statement of Work (SOW)",
       maxLength: 100,
     },
@@ -226,55 +221,39 @@ const subRecipientModalFieldsSettings = {
     },
   },
 };
-
-const subRecipientsDynamicRowsTemplate = {
-  forTableOnly: true,
-  id: subRecipientsDynamicRowId,
-  props: {
-    label: "Sub Recipients",
-    dynamicFields: subRecipientsDynamicBodyList.flatMap((service) =>
-      buildServiceFields(service, subRecipientsDynamicFieldsToReturn)
-    ),
-    dynamicModalForm: {
-      id: "add-sub-recipient-form",
-      heading: {
-        add: "Add Sub Recipient",
-        edit: "Edit Sub Recipient",
-      },
-      fields: subRecipientsModalList.flatMap((service) =>
-        buildServiceFields(
-          service,
-          subRecipientsModalFieldsToReturn,
-          subRecipientModalFieldsSettings
-        )
-      ),
-    },
-  },
-  type: ReportFormFieldType.DYNAMIC_OBJECT,
-  validation: {
-    type: ValidationType.DYNAMIC_OPTIONAL,
-    options: {
-      dynamicFieldValidations: {
-        name: ValidationType.TEXT_OPTIONAL,
-        description: ValidationType.TEXT_OPTIONAL,
-        totalComputable: ValidationType.NUMBER_OPTIONAL,
-        percentageOverride: {
-          type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
-          options: {
-            boundary: 100,
-            comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
-          },
+const subRecipientsDynamicRowsTemplate = serviceFieldDynamicRowsTemplateBuilder(
+  {
+    dynamicFieldsBodyList: subRecipientsDynamicBodyList,
+    dynamicFieldsToReturn: subRecipientsDynamicFieldsToReturn,
+    dynamicFieldValidations: {
+      name: ValidationType.TEXT_OPTIONAL,
+      description: ValidationType.TEXT_OPTIONAL,
+      totalComputable: ValidationType.NUMBER_OPTIONAL,
+      percentageOverride: {
+        type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
+        options: {
+          boundary: 100,
+          comparator: ValidationComparator.LESS_THAN_OR_EQUAL_PERCENTAGE,
         },
-        totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
-        totalFederalShare: ValidationType.NUMBER_OPTIONAL,
       },
+      totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+      totalFederalShare: ValidationType.NUMBER_OPTIONAL,
     },
-  },
-  verbiage: {
-    buttonText: "Add sub recipient",
-    hint: "To add a sub recipient, click the “Add sub recipient” button below.",
-  },
-};
+    dynamicModalList: subRecipientsModalList,
+    dynamicModalFieldsToReturn: subRecipientsModalFieldsToReturn,
+    dynamicModalFieldsSettings: subRecipientModalFieldsSettings,
+    dynamicModalVerbiage: {
+      add: "Add Sub Recipient",
+      edit: "Edit Sub Recipient",
+    },
+    dynamicRowId: subRecipientsDynamicRowId,
+    label: "Sub Recipients",
+    verbiage: {
+      buttonText: "Add sub recipient",
+      hint: "To add a sub recipient, click the “Add sub recipient” button below.",
+    },
+  }
+);
 
 // Personnel table
 const personnelFootList = [
@@ -299,35 +278,24 @@ const personnelDynamicBodyList = [
   },
 ];
 const personnelDynamicFieldsToReturn = [
-  ServiceFieldType.TITLE,
+  ServiceFieldType.NAME,
   ...personnelFieldsToReturn,
 ];
-const personnelDynamicRowsTemplate = {
-  forTableOnly: true,
-  id: personnelDynamicRowId,
-  props: {
-    label: "Positions",
-    dynamicFields: personnelDynamicBodyList.flatMap((service) =>
-      buildServiceFields(service, personnelDynamicFieldsToReturn)
-    ),
+const personnelDynamicRowsTemplate = serviceFieldDynamicRowsTemplateBuilder({
+  dynamicFieldsBodyList: personnelDynamicBodyList,
+  dynamicFieldsToReturn: personnelDynamicFieldsToReturn,
+  dynamicFieldValidations: {
+    name: ValidationType.TEXT_OPTIONAL,
+    budgetedFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
+    filledFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
   },
-  type: ReportFormFieldType.DYNAMIC_OBJECT,
-  validation: {
-    type: ValidationType.DYNAMIC_OPTIONAL,
-    options: {
-      dynamicFieldValidations: {
-        name: ValidationType.TEXT_OPTIONAL,
-        title: ValidationType.TEXT_OPTIONAL,
-        budgetedFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
-        filledFullTimeEmployees: ValidationType.NUMBER_OPTIONAL,
-      },
-    },
-  },
+  dynamicRowId: personnelDynamicRowId,
+  label: "Positions",
   verbiage: {
     buttonText: "Add personnel",
     hint: "To add more types of roles, click the “Add personnel” button below.",
   },
-};
+});
 
 // Administrative Costs route
 export const administrativeCostsRoute: FormTablesRoute = {
@@ -345,12 +313,17 @@ export const administrativeCostsRoute: FormTablesRoute = {
         {
           type: "p",
           content:
-            "Enter your total computable costs for each service during the reporting period. If a service is used but you incurred no costs, enter “0”. For services that are not used, leave the field blank. If you incurred expenses for a qualified budget category that is not listed, use the “Add other budget category” to add it to the table.",
+            "Enter your total computable costs for each service during the reporting period. If a service is used but you incurred no costs, enter “0”. For services that are not used, leave the field blank. If you incurred expenses for a qualified budget category that is not listed, use the “Add miscellaneous cost” to add it to the table.",
         },
         {
           type: "p",
           content:
             "The Administrative FMAP percentage defaults to 100%. If a recipient must claim less than 100% enter the new rate in the “Override” column.",
+        },
+        {
+          type: "p",
+          content:
+            "Previously this information was reported in Form C (Admin) in the excel version of the MFP Financial Reporting Form.",
         },
       ],
     },
@@ -427,7 +400,7 @@ export const administrativeCostsRoute: FormTablesRoute = {
             {
               type: "p",
               content:
-                "In the table below, include the amount of capacity building funds that your state or territory spent during this reporting period. Do not include funds that have not been spent, even if the MFP recipient has plans and received CMS approval to spend the funds on specific initiatives or activities. CMS expects that MFP recipients will claim 100% of MFP funding for capacity building; however, if an MFP recipient is claiming less than 100%, enter the relevant rate in the Override % column and provide further explanation in the Narrative field.",
+                "In the table below, include the amount of capacity building funds that your state or territory spent during this reporting period. Do not include funds that have not been spent, even if the MFP recipient has plans and has received CMS approval to spend the funds on specific initiatives or activities. CMS expects that MFP recipients will claim 100% of MFP funding for capacity building; however, if an MFP recipient is claiming less than 100%, enter the relevant rate in the Override % column and provide further explanation in the Narrative field.",
             },
           ],
         },

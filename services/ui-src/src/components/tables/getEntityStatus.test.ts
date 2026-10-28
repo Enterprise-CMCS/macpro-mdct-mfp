@@ -25,7 +25,7 @@ import {
   mockSARReportWithOverlays,
   mockWPFullReport,
   mockWPReportWithOverlays,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 
 describe("tables/getEntityStatus", () => {
   describe("getValidationList()", () => {
@@ -68,6 +68,106 @@ describe("tables/getEntityStatus", () => {
       const result = getValidationList(fields, entity);
 
       expect(result).toEqual(["field1", "field2", "nestedField3"]);
+    });
+
+    test("should not throw when entity field values are null", () => {
+      // typeof null === "object", so null values must be filtered out
+      // before accessing `.key` on them.
+      const fields = [
+        {
+          id: "field1",
+          type: ReportFormFieldType.TEXT,
+          validation: ValidationType.TEXT,
+        },
+        {
+          id: "field2",
+          type: ReportFormFieldType.RADIO,
+          validation: ValidationType.RADIO,
+          props: {
+            choices: [
+              {
+                id: "choice1",
+                children: [
+                  {
+                    id: "nestedField3",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ];
+      const entity = {
+        id: "entity1",
+        type: EntityType.INITIATIVE,
+        field1: null,
+        field2: [{ key: "choice1key" }],
+      };
+
+      expect(getValidationList(fields, entity)).toEqual([
+        "field1",
+        "field2",
+        "nestedField3",
+      ]);
+    });
+
+    test("should not require nested children with optional validation", () => {
+      const fields = [
+        {
+          id: "closeOutInformation_closeOut",
+          type: ReportFormFieldType.RADIO,
+          validation: ValidationType.RADIO,
+          props: {
+            choices: [
+              {
+                id: "closeOutInitiativeYes",
+                children: [
+                  {
+                    id: "closeOutInformation_actualEndDate",
+                    type: ReportFormFieldType.DATE,
+                    validation: {
+                      type: ValidationType.DATE_OPTIONAL,
+                      nested: true,
+                    },
+                  },
+                  {
+                    id: "closeOutInformation_initiativeStatus",
+                    type: ReportFormFieldType.RADIO,
+                    validation: {
+                      type: "radioOptional",
+                      nested: true,
+                    },
+                  },
+                  {
+                    id: "requiredChild",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
+                  },
+                ],
+              },
+              {
+                id: "closeOutInitiativeNo",
+              },
+            ],
+          },
+        },
+      ];
+      const entity = {
+        id: "entity1",
+        type: EntityType.INITIATIVE,
+        closeOutInformation_closeOut: [
+          {
+            key: "closeOutInformation_closeOut-closeOutInitiativeYes",
+            value: "Yes",
+          },
+        ],
+      };
+
+      // only the parent field and the required child block completion
+      expect(getValidationList(fields, entity)).toEqual([
+        "closeOutInformation_closeOut",
+        "requiredChild",
+      ]);
     });
   });
 
@@ -253,6 +353,151 @@ describe("tables/getEntityStatus", () => {
       const entityType = "mockEntityType";
 
       const result = getEntityStatus(report, entity, entityType);
+
+      expect(result).toBe(EntityStatuses.COMPLETE);
+    });
+
+    test("ignores unanswered copyover-only fields for non-copied entities", () => {
+      const report = {
+        formTemplate: {
+          flatRoutes: [
+            {
+              entityType: "mockEntityType",
+              form: {
+                fields: [
+                  {
+                    id: "field1",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
+                  },
+                  {
+                    id: "closeOutField",
+                    forCopyoverOnly: true,
+                    type: ReportFormFieldType.RADIO,
+                    validation: ValidationType.RADIO,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      } as ReportShape;
+      const entity = {
+        id: "mockEntityId",
+        type: EntityType.INITIATIVE,
+        field1: "mock text data",
+      };
+      const entityType = "mockEntityType";
+
+      const result = getEntityStatus(report, entity, entityType);
+
+      expect(result).toBe(EntityStatuses.COMPLETE);
+    });
+
+    test("requires copyover-only fields for copied entities", () => {
+      const report = {
+        formTemplate: {
+          flatRoutes: [
+            {
+              entityType: "mockEntityType",
+              form: {
+                fields: [
+                  {
+                    id: "field1",
+                    type: ReportFormFieldType.TEXT,
+                    validation: ValidationType.TEXT,
+                  },
+                  {
+                    id: "closeOutField",
+                    forCopyoverOnly: true,
+                    type: ReportFormFieldType.RADIO,
+                    validation: ValidationType.RADIO,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      } as ReportShape;
+      const entity = {
+        id: "mockEntityId",
+        type: EntityType.INITIATIVE,
+        isCopied: true,
+        field1: "mock text data",
+      };
+      const entityType = "mockEntityType";
+
+      const result = getEntityStatus(report, entity, entityType);
+
+      expect(result).toBe(EntityStatuses.INCOMPLETE);
+    });
+
+    test("returns complete status when only optional close-out children are blank", () => {
+      const report = {
+        formTemplate: {
+          flatRoutes: [
+            {
+              entityType: "initiative",
+              overlayForm: {
+                fields: [
+                  {
+                    id: "closeOutInformation_closeOut",
+                    type: ReportFormFieldType.RADIO,
+                    validation: ValidationType.RADIO,
+                    props: {
+                      choices: [
+                        {
+                          id: "closeOutInitiativeYes",
+                          children: [
+                            {
+                              id: "closeOutInformation_actualEndDate",
+                              type: ReportFormFieldType.DATE,
+                              validation: {
+                                type: ValidationType.DATE_OPTIONAL,
+                                nested: true,
+                              },
+                            },
+                            {
+                              id: "closeOutInformation_initiativeStatus",
+                              type: ReportFormFieldType.RADIO,
+                              validation: {
+                                type: "radioOptional",
+                                nested: true,
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          id: "closeOutInitiativeNo",
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      } as unknown as ReportShape;
+      const entity = {
+        id: "mockEntityId",
+        type: EntityType.INITIATIVE,
+        closeOutInformation_closeOut: [
+          {
+            key: "closeOutInformation_closeOut-closeOutInitiativeYes",
+            value: "Yes",
+          },
+        ],
+        closeOutInformation_initiativeStatus: [
+          {
+            key: "closeOutInformation_initiativeStatus-FhAF0lzeuB4wLalyXv2BeG", //pragma: allowlist secret
+            value: "Completed initiative",
+          },
+        ],
+        closeOutInformation_actualEndDate: "",
+      };
+
+      const result = getEntityStatus(report, entity, "initiative");
 
       expect(result).toBe(EntityStatuses.COMPLETE);
     });

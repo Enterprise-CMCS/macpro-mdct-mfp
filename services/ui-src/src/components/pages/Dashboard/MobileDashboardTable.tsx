@@ -1,11 +1,9 @@
 // components
-import { Box, Button, Flex, Image, Text, Spinner } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, Spinner } from "@chakra-ui/react";
 // types
 import { ReportMetadataShape, ReportType, SxObject } from "types";
 // utils
 import { convertDateUtcToEt, isArchivable, prettifyChoices } from "utils";
-// assets
-import editIcon from "assets/icons/icon_edit_square_gray.png";
 import { getStatus, copyOverSubText } from "./DashboardTable";
 
 export const MobileDashboardTable = ({
@@ -27,19 +25,10 @@ export const MobileDashboardTable = ({
       <Box data-testid="mobile-row" sx={sx.mobileTable} key={report.id}>
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>{"Submission name"}</Text>
-          <Flex alignContent="flex-start">
-            {reportType !== ReportType.WP && (
-              <Box sx={sxOverride.editReport}>
-                <button onClick={() => openCreateReportModal(report)}>
-                  <Image src={editIcon} alt="Edit Report" />
-                </button>
-              </Box>
-            )}
-            <Text sx={sxOverride.submissionNameText}>
-              {report.submissionName}
-            </Text>
-            {copyOverSubText(report, reportsByState)}
-          </Flex>
+          <Text sx={sxOverride.submissionNameText}>
+            {report.submissionName}
+          </Text>
+          {copyOverSubText(report, reportsByState)}
         </Box>
         {!isAdmin && reportType === ReportType.SAR && report?.populations && (
           <Box sx={sx.labelGroup}>
@@ -76,14 +65,7 @@ export const MobileDashboardTable = ({
         </Box>
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>Status</Text>
-          <Text>
-            {getStatus(
-              reportType as ReportType,
-              report.status,
-              report.archived,
-              report.submissionCount
-            )}
-          </Text>
+          <Text>{getStatus(report.status, report.archived)}</Text>
         </Box>
         {/* Admin: Submission count */}
         {isAdmin && (
@@ -98,7 +80,24 @@ export const MobileDashboardTable = ({
         )}
         <Box sx={sx.labelGroup}>
           <Text sx={sx.label}>Actions</Text>
-          <Flex alignContent="flex-start" gap={2}>
+          <Flex
+            alignItems="center"
+            gap={2}
+            flexWrap="nowrap"
+            marginTop="spacer_half"
+          >
+            {reportType !== ReportType.WP && !isAdmin && (
+              <Box>
+                <Button
+                  onClick={() => openCreateReportModal(report)}
+                  variant="link"
+                  sx={sx.editReporting}
+                  aria-label={`Edit reporting ${report.reportYear} period ${report.reportPeriod}`}
+                >
+                  Edit reporting
+                </Button>
+              </Box>
+            )}
             <Box sx={sxOverride.editReportButtonCell}>
               <Button
                 variant="outline"
@@ -119,7 +118,6 @@ export const MobileDashboardTable = ({
                 <>
                   <AdminReleaseButton
                     report={report}
-                    reportType={reportType}
                     reportId={reportId}
                     releaseReport={releaseReport}
                     releasing={releasing}
@@ -128,11 +126,7 @@ export const MobileDashboardTable = ({
                   {isArchivable(reportType) && !report?.associatedSar && (
                     <AdminArchiveButton
                       report={report}
-                      reportType={reportType}
-                      reportId={reportId}
                       archive={archive}
-                      releaseReport={releaseReport}
-                      releasing={releasing}
                       sxOverride={sxOverride}
                     />
                   )}
@@ -195,12 +189,7 @@ const AdminReleaseButton = ({
   sxOverride,
 }: AdminReleaseButtonProps) => {
   //unlock is enabled when status: approved and submitted, all other times, it is disabled
-  const reportStatus = getStatus(
-    report.reportType as ReportType,
-    report.status,
-    report.archived,
-    report.submissionCount
-  );
+  const reportStatus = getStatus(report.status, report.archived);
   const isDisabled = !(reportStatus === "Submitted");
 
   return (
@@ -242,17 +231,12 @@ const AdminArchiveButton = ({
 
 interface AdminArchiveButtonProps {
   report: ReportMetadataShape;
-  reportType: string;
-  reportId: string | undefined;
   archive: Function;
-  releasing?: boolean;
-  releaseReport?: Function;
   sxOverride: SxObject;
 }
 
 interface AdminReleaseButtonProps {
   report: ReportMetadataShape;
-  reportType: string;
   reportId: string | undefined;
   releasing?: boolean;
   releaseReport?: Function;
@@ -269,17 +253,23 @@ const sx = {
     marginBottom: "spacer1",
   },
   label: {
-    fontSize: "sm",
-    fontWeight: "bold",
+    fontSize: "body_sm",
+    fontWeight: "heading_md",
     color: "gray",
   },
   editDate: {
     marginRight: "spacer6",
   },
   archivedText: {
-    fontSize: "sm",
+    fontSize: "body_md",
     paddingLeft: 2,
     display: "flex",
     alignItems: "center",
+  },
+  editReporting: {
+    textDecoration: "underline",
+    color: "primary",
+    fontSize: "body_md",
+    fontWeight: "body_md",
   },
 };

@@ -1,19 +1,21 @@
-import { useContext, useState } from "react";
+import {
+  BaseSyntheticEvent,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useFormContext } from "react-hook-form";
 // components
 import {
   Box,
   Button,
   Heading,
   Image,
-  Table,
-  TableCaption,
-  Tbody,
   Text,
-  Tfoot,
-  Thead,
   useDisclosure,
-  VisuallyHidden,
 } from "@chakra-ui/react";
+import { InlineError } from "@cmsgov/design-system";
 import {
   AddEditKeyMetricsModal,
   DeleteEntityModal,
@@ -31,7 +33,8 @@ import {
   ReportShape,
 } from "types";
 // utils
-import { parseCustomHtml } from "utils";
+import { parseCustomHtml, shimComponent } from "utils";
+import { ResponsiveTable } from "./ResponsiveTable";
 
 export const EntityModalTable = ({
   bodyRows,
@@ -45,6 +48,30 @@ export const EntityModalTable = ({
   styleAsOptionalHeadRows,
   verbiage,
 }: Props) => {
+  const form = useFormContext();
+  const formErrorState = form?.formState?.errors || {};
+  const [errorMessage, setErrorMessage] = useState<ReactNode>(undefined);
+  const errorId = `${tableId}__error`;
+  const ariaProps = errorMessage ? { "aria-describedby": errorId } : {};
+  const InlineErrorShim = shimComponent(InlineError);
+
+  useEffect(() => {
+    const errorKey = Object.keys(formErrorState).find((key) =>
+      key.startsWith(tableId)
+    );
+    const currentFormData = report?.fieldData?.[formData?.type]?.find(
+      (t: AnyObject) => t.id === formData?.id
+    );
+
+    if (!errorKey || currentFormData?.[errorKey]?.length > 0) {
+      setErrorMessage(undefined);
+      return;
+    }
+
+    const message = formErrorState[errorKey]?.message as ReactNode;
+    setErrorMessage(message);
+  }, [formData, formErrorState, tableId]);
+
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
   const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
@@ -65,7 +92,8 @@ export const EntityModalTable = ({
     setCurrentEntityId(entityId);
     keyMetricsModalOnOpenHandler();
   };
-  const closeModal = () => {
+  const closeModal = (closedAfterSave?: boolean | BaseSyntheticEvent) => {
+    if (closedAfterSave === true) setErrorMessage(undefined);
     setCurrentEntityId(undefined);
     keyMetricsModalOnCloseHandler();
   };
@@ -92,7 +120,25 @@ export const EntityModalTable = ({
   };
 
   // Dynamic rows
-  const { generateRows } = useContext(DynamicTableContext);
+  const { generateRows, localFieldData } = useContext(DynamicTableContext);
+
+  // Determine if the user has added any dynamic rows.
+  // Only ENTITY_MODAL tables use this component, which currently is just Key Metrics.
+  const getDynamicRowEntries = (): AnyObject[] => {
+    if (!dynamicRowsTemplate) return [];
+    // For entity-scoped tables, rows live on the matching entity; otherwise at the top level.
+    const source = formData?.type
+      ? localFieldData?.[formData.type]?.find(
+          (entity: AnyObject) => entity.id === formData?.id
+        )
+      : localFieldData;
+    return source?.[dynamicRowsTemplate.id] || [];
+  };
+  const dynamicRowEntries = getDynamicRowEntries();
+
+  // Hide the table for a dynamic-rows table until at least one row is added
+  const showTable =
+    !dynamicRowsTemplate || bodyRows.length > 0 || dynamicRowEntries.length > 0;
 
   const sharedCellProps = {
     columnCount: headRows?.[0].length || 0,
@@ -118,6 +164,54 @@ export const EntityModalTable = ({
     ];
   };
 
+  const tableData = {
+    id: tableId,
+    title: verbiage?.title,
+    headers: headRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "thead",
+        styleAsOptionalHeadRows: styleAsOptionalHeadRows,
+        ...sharedCellProps,
+      })
+    ),
+    rows: bodyRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "tbody",
+        ...sharedCellProps,
+      })
+    ),
+    dynamicRows:
+      dynamicRowsTemplate &&
+      DynamicTableRows(
+        tableId,
+        0,
+        disabled,
+        dynamicRowsTemplate,
+        hasDynamicModalForm,
+        bodyRows.length > 0,
+        formData,
+        openModal,
+        verbiage?.emptyTableMessage,
+        updatedFieldsCallback,
+        hasDynamicModalForm,
+        formData?.type,
+        openDeleteEntityModal
+      ),
+    foot: footRows.map((row, rowIndex: number) =>
+      generateRows({
+        row,
+        rowIndex,
+        section: "tfoot",
+        ...sharedCellProps,
+      })
+    ),
+    ariaProps,
+  };
+
   return (
     <Box sx={sx.box}>
       {verbiage?.sectionTitle && (
@@ -131,62 +225,11 @@ export const EntityModalTable = ({
       {verbiage?.subtitle && (
         <Box sx={sx.subtitle}>{parseCustomHtml(verbiage.subtitle)}</Box>
       )}
-
-      <Table id={tableId} sx={sx.table}>
-        <TableCaption placement="top" sx={sx.captionBox}>
-          <VisuallyHidden>{verbiage?.title}</VisuallyHidden>
-        </TableCaption>
-        <Thead>
-          {headRows.map((row, rowIndex: number) =>
-            generateRows({
-              row,
-              rowIndex,
-              section: "thead",
-              styleAsOptionalHeadRows: styleAsOptionalHeadRows,
-              ...sharedCellProps,
-            })
-          )}
-        </Thead>
-        <Tbody>
-          {bodyRows.map((row, rowIndex: number) =>
-            generateRows({
-              row,
-              rowIndex,
-              section: "tbody",
-              ...sharedCellProps,
-            })
-          )}
-          {dynamicRowsTemplate && (
-            <DynamicTableRows
-              disabled={disabled}
-              dynamicRowsTemplate={dynamicRowsTemplate}
-              emptyTableMessage={verbiage?.emptyTableMessage}
-              entityType={formData?.type}
-              formData={formData}
-              formPercentage={0}
-              hasDynamicModalForm={hasDynamicModalForm}
-              hasStaticRows={bodyRows.length > 0}
-              openDeleteEntityModal={openDeleteEntityModal}
-              openModal={openModal}
-              showEditColumn={hasDynamicModalForm}
-              tableId={tableId}
-              updatedFieldsCallback={updatedFieldsCallback}
-            />
-          )}
-        </Tbody>
-        {footRows.length > 0 && (
-          <Tfoot>
-            {footRows.map((row, rowIndex: number) =>
-              generateRows({
-                row,
-                rowIndex,
-                section: "tfoot",
-                ...sharedCellProps,
-              })
-            )}
-          </Tfoot>
-        )}
-      </Table>
+      <InlineErrorShim id={errorId}>{errorMessage}</InlineErrorShim>
+      {!showTable && (
+        <Text sx={sx.emptyTableMessage}>{verbiage?.emptyTableMessage}</Text>
+      )}
+      {showTable && ResponsiveTable(tableData)}
 
       {dynamicRowsTemplate && hasDynamicModalForm && (
         <>
@@ -243,7 +286,7 @@ interface Props extends Omit<FormTable, "tableType"> {
 
 export const sx = {
   error: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     marginBottom: "spacer4",
     a: {
       color: "primary",
@@ -251,7 +294,7 @@ export const sx = {
   },
   box: {
     ".table-title": {
-      fontSize: "xl",
+      fontSize: "heading_xl",
       marginBottom: "spacer2",
       marginTop: "spacer4",
       paddingBottom: 0,
@@ -259,7 +302,7 @@ export const sx = {
   },
   percentageText: {
     color: "gray_dark",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     paddingBottom: "spacer2",
   },
   subtitle: {
@@ -282,6 +325,11 @@ export const sx = {
     margin: 0,
     padding: 0,
     height: 0,
+  },
+  emptyTableMessage: {
+    fontWeight: "heading_md",
+    marginBottom: "spacer5",
+    marginTop: "spacer1",
   },
   table: {
     marginBottom: "spacer5",
@@ -308,7 +356,7 @@ export const sx = {
       td: {
         backgroundColor: "gray_lighter",
         border: "none",
-        fontWeight: "bold",
+        fontWeight: "heading_md",
         paddingInlineEnd: "spacer2",
         paddingInlineStart: "spacer2",
       },
@@ -318,9 +366,9 @@ export const sx = {
         backgroundColor: "secondary_lightest",
         border: "none",
         color: "base",
-        fontSize: "lg",
+        fontSize: "body_lg",
         letterSpacing: "normal",
-        lineHeight: "normal",
+        lineHeight: "body_lg",
         paddingBottom: "spacer1",
         paddingInlineEnd: "spacer2",
         paddingInlineStart: "spacer2",

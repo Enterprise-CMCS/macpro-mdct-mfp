@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -16,19 +17,20 @@ import {
   mockObjectiveProgress,
   mockUseSARStore,
   mockObjectiveProgressEntityStore,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockUseNavigate = jest.fn();
-jest.mock("react-router", () => ({
+const mockUseNavigate = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
-  useLocation: jest.fn(() => ({
+  useLocation: vi.fn(() => ({
     pathname: "/mock-route",
   })),
 }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const {
   addEntityButtonText,
@@ -58,7 +60,7 @@ describe("<OverlayModalPage />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("overlayModalPage should render the view", () => {
@@ -130,7 +132,7 @@ describe("<OverlayModalPage />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("overlayModalPage should render the view", () => {

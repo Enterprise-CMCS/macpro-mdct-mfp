@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { ComponentClass, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Box, Heading } from "@chakra-ui/react";
 import {
@@ -21,6 +22,7 @@ import {
 } from "types";
 // utils
 import {
+  getPageTitle,
   getReportVerbiage,
   parseCustomHtml,
   useBreakpoint,
@@ -36,6 +38,8 @@ export const DynamicModalOverlayReportPage = ({
   route,
   setSidebarHidden,
 }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   // Route Information
   const { entityType, verbiage, entityInfo, initiatives } = route;
   // Context Information
@@ -76,7 +80,7 @@ export const DynamicModalOverlayReportPage = ({
   );
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
-    return { headRow: ["", verbiage.tableHeader] };
+    return { headRow: verbiage.tableHeaders };
   };
 
   // Open/Close overlay action methods
@@ -103,6 +107,10 @@ export const DynamicModalOverlayReportPage = ({
 
   return (
     <Box>
+      {/* page title */}
+      <Helmet>
+        <title>{report && getPageTitle(report.reportType, route.name)}</title>
+      </Helmet>
       {isEntityDetailsOpen && selectedEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
@@ -172,8 +180,8 @@ const sx = {
     },
   },
   dashboardTitle: {
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     color: "gray",
     textAlign: "left",
     ".tablet &, .mobile &": {
@@ -181,8 +189,8 @@ const sx = {
     },
   },
   subsectionHeading: {
-    fontSize: "md",
-    fontWeight: "normal",
+    fontSize: "body_md",
+    fontWeight: "body_md",
     color: "gray_dark",
     textAlign: "left",
     ".tablet &, .mobile &": {
@@ -196,7 +204,7 @@ const sx = {
       marginBottom: "spacer_half",
     },
     th: {
-      fontWeight: "bold",
+      fontWeight: "heading_md",
       color: "gray",
       paddingLeft: "spacer2",
       paddingRight: "0",

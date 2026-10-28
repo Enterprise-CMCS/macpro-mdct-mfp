@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router";
+import { ComponentClass } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Button, Heading, Link, Text } from "@chakra-ui/react";
 import { PageTemplate, Table } from "components";
@@ -8,6 +10,7 @@ import verbiage from "verbiage/pages/profile";
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
   const { email, given_name, family_name, userRole, state, userIsAdmin } =
     useStore().user ?? {};
@@ -27,6 +30,9 @@ export const ProfilePage = () => {
 
   return (
     <PageTemplate sx={sx.layout} data-testid="profile-view">
+      <Helmet>
+        <title>{verbiage.title}</title>
+      </Helmet>
       <Heading as="h1" sx={sx.headerText}>
         {intro.header}
       </Heading>
@@ -60,15 +66,14 @@ const sx = {
   },
   headerText: {
     marginBottom: "spacer4",
-    fontSize: "2rem",
-    fontWeight: "normal",
+    fontSize: "heading_3xl",
+    fontWeight: "heading_3xl",
   },
   table: {
     marginTop: "spacer4",
     maxWidth: "100%",
     "tr td:first-of-type": {
       width: "8rem",
-      fontWeight: "semibold",
     },
     "tr:nth-of-type(2n+1)": {
       background: "#EDF2F7",

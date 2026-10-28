@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -7,13 +8,13 @@ import {
   mockEntityDetailsOverlayJson,
   mockReportMethods,
   mockWPFullReport,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 import { EntityType } from "types";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue({
   report: {
     ...mockWPFullReport,
@@ -28,7 +29,7 @@ mockedUseStore.mockReturnValue({
   },
 });
 
-const mockCloseHandler = jest.fn();
+const mockCloseHandler = vi.fn();
 
 const mockEntityName = "mock-name";
 
@@ -69,7 +70,7 @@ describe("<CloseEntityModal />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("CloseEntityModal shows the contents", () => {

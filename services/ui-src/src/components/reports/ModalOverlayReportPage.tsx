@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { ComponentClass, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Box, Button, Heading, useDisclosure, Image } from "@chakra-ui/react";
 import {
@@ -23,6 +24,7 @@ import {
 } from "types";
 // utils
 import {
+  getPageTitle,
   getReportVerbiage,
   resetClearProp,
   useBreakpoint,
@@ -36,6 +38,8 @@ import addIcon from "assets/icons/icon_add_white.png";
  * @deprecated No longer used as of Report Year 2026, Period 2
  */
 export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   // Route Information
   const { entityType, verbiage, modalForm, dashboard, entityInfo } = route;
   // Context Information
@@ -64,7 +68,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
   const dashSubTitle = (verbiage as AnyObject)?.dashboardSubtitle;
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
-    return { headRow: ["", verbiage.tableHeader] };
+    return { headRow: verbiage.tableHeaders };
   };
 
   // Add/edit entity modal disclosure and methods
@@ -117,6 +121,10 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
 
   return (
     <Box>
+      {/* page title */}
+      <Helmet>
+        <title>{report && getPageTitle(report.reportType, route.name)}</title>
+      </Helmet>
       {dashboard && isEntityDetailsOpen && selectedEntity ? (
         <EntityProvider>
           <EntityDetailsDashboardOverlay
@@ -149,7 +157,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
             {reportFieldDataEntities.length === 0 ? (
               <Box>{verbiage.emptyDashboardText}</Box>
             ) : (
-              <Table sx={sx.table} content={tableHeaders()}>
+              <Table content={tableHeaders()} variant="initiative">
                 {reportFieldDataEntities.map((entity: EntityShape) => (
                   <EntityRow
                     key={entity.id}
@@ -221,8 +229,8 @@ const sx = {
   },
   dashboardTitle: {
     marginTop: "spacer2",
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     color: "gray",
     textAlign: "left",
     ".tablet &, .mobile &": {
@@ -230,41 +238,14 @@ const sx = {
     },
   },
   subsectionHeading: {
-    fontSize: "md",
-    fontWeight: "normal",
+    fontSize: "body_md",
+    fontWeight: "body_md",
     color: "gray_dark",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
     paddingBottom: "spacer2",
-  },
-  table: {
-    tableLayout: "fixed",
-    br: {
-      marginBottom: "spacer_half",
-    },
-    th: {
-      fontWeight: "bold",
-      color: "gray",
-      paddingLeft: "spacer2",
-      paddingRight: "0",
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      ".tablet &, .mobile &": {
-        border: "none",
-      },
-      "&:nth-of-type(1)": {
-        width: "2.5rem",
-      },
-      "&:nth-of-type(3)": {
-        width: "260px",
-      },
-    },
-    tr: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-    },
   },
   addEntityButton: {
     marginTop: "spacer4",

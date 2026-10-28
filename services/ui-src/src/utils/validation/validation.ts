@@ -41,7 +41,10 @@ export const mapValidationTypesToSchema = (fieldValidationTypes: AnyObject) => {
 // return created endDate schema
 export const makeEndDateFieldSchema = (fieldValidationObject: AnyObject) => {
   const { dependentFieldName } = fieldValidationObject;
-  return endDate(dependentFieldName);
+  const fields = Array.isArray(dependentFieldName)
+    ? dependentFieldName
+    : [dependentFieldName];
+  return endDate(fields);
 };
 
 // return created nested field schema
@@ -57,9 +60,10 @@ export const makeNestedFieldSchema = (fieldValidationObject: AnyObject) => {
     );
   } else {
     const correspondingSchema = schemaMap[type];
-    const fieldValidationSchema = options
-      ? correspondingSchema(options)
-      : correspondingSchema;
+    const fieldValidationSchema =
+      typeof correspondingSchema === "function"
+        ? correspondingSchema(options)
+        : correspondingSchema;
 
     return nested(() => fieldValidationSchema, parentFieldName, parentOptionId);
   }

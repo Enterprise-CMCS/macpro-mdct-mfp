@@ -1,35 +1,36 @@
+import { Mock, MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 //components
 import { useFormContext } from "react-hook-form";
 import { DateField, ReportContext } from "components";
 import { useStore } from "utils";
-import { mockUseStore, mockWpReportContext } from "utils/testing/setupJest";
+import { mockUseStore, mockWpReportContext } from "utils/testing/setupTest";
 import { ReportStatus } from "../../types";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockTrigger = jest.fn();
+const mockTrigger = vi.fn();
 const mockRhfMethods = {
   register: () => {},
   setValue: () => {},
-  getValues: jest.fn(),
+  getValues: vi.fn(),
   trigger: mockTrigger,
 };
-const mockUseFormContext = useFormContext as unknown as jest.Mock<
+const mockUseFormContext = useFormContext as unknown as Mock<
   typeof useFormContext
 >;
-jest.mock("react-hook-form", () => ({
-  useFormContext: jest.fn(() => mockRhfMethods),
+vi.mock("react-hook-form", () => ({
+  useFormContext: vi.fn(() => mockRhfMethods),
 }));
 
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
     ...mockRhfMethods,
-    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
+    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const dateFieldComponent = (
   <DateField name="testDateField" label="test-date-field" />
@@ -166,7 +167,7 @@ describe("<DateField />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("Autosaves entered date when state user, autosave true, and field is valid", async () => {
@@ -227,7 +228,7 @@ describe("<DateField />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("Blanking field triggers form validation", async () => {

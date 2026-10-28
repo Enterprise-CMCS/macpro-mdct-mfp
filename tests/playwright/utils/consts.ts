@@ -9,6 +9,11 @@ export const stateAbbreviation = process.env.SEED_STATE || "PR";
 export const stateName = process.env.SEED_STATE_NAME || "Puerto Rico";
 export const reportType = "WP";
 
+// Toggle Playwright-only feature flags here for easy maintenance.
+export const workPlanFeatureFlags = {
+  wpSarRelease2025: true,
+} as const;
+
 export const firstPeriod: number = 1;
 export const secondPeriod: number = 2;
 
@@ -161,7 +166,6 @@ export type WorkPlan = {
   }>;
   transitionBenchmarkStrategy: {
     explanation: string;
-    additionalDetails: string;
   };
   initiativesInstructions: {
     selfDirected: boolean;
@@ -178,7 +182,6 @@ export type WorkPlan = {
       description: string;
       targets: string;
       quantitativeTargets: boolean;
-      additionalDetails: string;
     };
     fundingSources: {
       source: string;
@@ -193,7 +196,6 @@ export const fillWorkPlanTestData: WorkPlan = {
   transitionBenchmarkProjections: wpTransitionBenchmarkTestData,
   transitionBenchmarkStrategy: {
     explanation: faker.lorem.sentence(),
-    additionalDetails: faker.lorem.paragraph(),
   },
   initiativesInstructions: {
     selfDirected: false,

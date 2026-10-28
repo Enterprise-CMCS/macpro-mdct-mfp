@@ -9,15 +9,15 @@ import {
   submitReport,
 } from "./report";
 // utils
-import { mockReportKeys, mockWPReport } from "utils/testing/setupJest";
+import { mockReportKeys, mockWPReport } from "utils/testing/setupTest";
 import { initAuthManager } from "utils/auth/authLifecycle";
 
-const mockDelete = jest.fn();
-const mockGet = jest.fn();
-const mockPost = jest.fn();
-const mockPut = jest.fn();
+const mockDelete = vi.fn();
+const mockGet = vi.fn();
+const mockPost = vi.fn();
+const mockPut = vi.fn();
 
-jest.mock("utils", () => ({
+vi.mock("utils", () => ({
   del: () => mockDelete(),
   get: () => mockGet(),
   post: () => mockPost(),
@@ -26,10 +26,10 @@ jest.mock("utils", () => ({
 
 describe("utils/requestMethods/report", () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     initAuthManager();
-    jest.runAllTimers();
-    jest.clearAllMocks();
+    vi.runAllTimers();
+    vi.clearAllMocks();
   });
 
   test("approveReport()", async () => {

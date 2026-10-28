@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -17,7 +18,7 @@ import {
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils/state/useStore";
 import { testA11yAct } from "utils/testing/commonTests";
 // constants
@@ -26,27 +27,26 @@ import {
   saveAndCloseText,
 } from "../../constants";
 
-const mockUseNavigate = jest.fn();
-jest.mock("react-router", () => ({
+const mockUseNavigate = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
-  useLocation: jest.fn(() => ({
+  useLocation: vi.fn(() => ({
     pathname: "/mock-route",
   })),
 }));
 
 // Prevent async animation timers in Chakra Collapse from triggering act warnings.
-jest.mock("@chakra-ui/react", () => {
-  const actual = jest.requireActual("@chakra-ui/react");
-
+vi.mock("@chakra-ui/react", async (importOriginal) => {
   return {
-    ...actual,
+    ...(await importOriginal()),
     Collapse: ({ in: isOpen, children }: any) =>
       isOpen ? <div>{children}</div> : null,
   };
 });
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const {
   addEntityButtonText,
@@ -130,7 +130,7 @@ describe("<ModelDrawerReportPage />", () => {
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("Test ModalDrawerReportPage without entities", () => {

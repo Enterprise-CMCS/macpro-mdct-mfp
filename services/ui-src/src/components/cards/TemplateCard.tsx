@@ -1,31 +1,15 @@
 // components
-import { Button, Flex, Heading, Image, Text, Link } from "@chakra-ui/react";
-import { Card, TemplateCardAccordion } from "components";
+import { Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Card, ExternalLink, TemplateCardAccordion } from "components";
 // utils
 import { useNavigate } from "react-router";
 import { useBreakpoint } from "utils";
 import { AnyObject } from "types";
-// assets
-import downloadIcon from "assets/icons/icon_download.png";
+// assets\
 import nextIcon from "assets/icons/icon_next_white.png";
-import spreadsheetIcon from "assets/icons/icon_spreadsheet.png";
-
-const downloadTemplate = (templateName: string) => {
-  const helpFiles: { [key: string]: string } = {
-    WP: "MFP-Work-Plan-Help-File",
-    SAR: "MFP-Semi-Annual-Rprt-Help-File",
-    FINANCIAL_REPORT: "",
-  };
-  const pdfUrl = `/templates/${helpFiles[templateName]}.pdf`;
-  const link = document.createElement("a");
-  link.setAttribute("target", "_blank");
-  link.setAttribute("href", pdfUrl);
-  link.click();
-  link.remove();
-};
+import spreadsheetIcon from "assets/icons/icon_spreadsheet.svg";
 
 export const TemplateCard = ({
-  templateName,
   verbiage,
   cardprops,
   isHidden,
@@ -48,34 +32,14 @@ export const TemplateCard = ({
           <Heading sx={sx.cardTitleText}>{verbiage.title}</Heading>
           <Text>
             {verbiage.body.available}
-            <Link href={verbiage.linkLocation} isExternal>
-              {verbiage.linkText}
-            </Link>
-            {verbiage.midText}
-            <Link href={verbiage.linkLocation2} isExternal>
-              {verbiage.linkText2}
-            </Link>
+            {verbiage.linkText && (
+              <ExternalLink href={verbiage.linkLocation}>
+                {verbiage.linkText}
+              </ExternalLink>
+            )}
             {verbiage.postLinkText}
           </Text>
           <Flex sx={sx.actionsFlex}>
-            {verbiage.downloadText && (
-              <Button
-                variant="transparent"
-                sx={sx.templateDownloadButton}
-                leftIcon={
-                  <Image
-                    src={downloadIcon}
-                    alt="Download Icon"
-                    height="1.5rem"
-                  />
-                }
-                onClick={async () => {
-                  await downloadTemplate(templateName);
-                }}
-              >
-                {verbiage.downloadText}
-              </Button>
-            )}
             {!isHidden && (
               <Button
                 sx={sx.formLink}
@@ -115,15 +79,15 @@ const sx = {
   },
   cardTitleText: {
     marginBottom: "spacer1",
-    fontSize: "lg",
-    fontWeight: "bold",
-    lineHeight: "1.5",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
+    lineHeight: "heading_lg",
   },
   actionsFlex: {
     flexFlow: "wrap",
     gridGap: "spacer2",
-    justifyContent: "space-between",
-    margin: "1rem 0 0 1rem",
+    justifyContent: "end",
+    margin: "1rem 0 0 0",
     ".mobile &": {
       flexDirection: "column",
     },

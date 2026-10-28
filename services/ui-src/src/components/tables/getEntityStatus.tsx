@@ -7,7 +7,9 @@ import {
   EntityDetailsStepTypes,
   EntityShape,
   EntityStatuses,
+  FormField,
   FormJson,
+  FormLayoutElement,
   OverlayModalPageShape,
   OverlayModalTypes,
   ReportShape,
@@ -30,12 +32,10 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
     .filter(Boolean);
 
   //Loop through the user entered entity to see which nested id the user had selected
-  const entityNestedSelection: AnyObject[] = [];
-  Object.values(entity).forEach((field: AnyObject) => {
-    if (typeof field === "object") {
-      entityNestedSelection.push(field);
-    }
-  });
+  // typeof null === "object", so we need to guard against null field values
+  const entityNestedSelection = Object.values(entity).filter(
+    (field) => field !== null && typeof field === "object"
+  );
 
   //Strip it to only the key information
   const entityNestedKeys = entityNestedSelection
@@ -45,6 +45,15 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
     })
     .filter(Boolean);
 
+  /*
+   * A nested child only blocks completion if its own validation is required;
+   * children with explicitly optional validation (e.g. dateOptional) may be
+   * left blank even when their parent choice is selected.
+   */
+  const childIsOptional = (child: AnyObject) =>
+    Boolean(child?.validation) &&
+    isFieldValidationOptional(child as FormField | FormLayoutElement);
+
   //look for the relevant child id for the selected nested values in the formTemplate data
   entityNestedKeys.forEach((key) => {
     const found = fieldsNestedChoices.find((choice) =>
@@ -52,7 +61,7 @@ export const getValidationList = (fields: AnyObject[], entity: AnyObject) => {
     );
     if (found && found.children) {
       found.children.forEach((child: AnyObject) => {
-        validationIdList.push(child.id);
+        if (!childIsOptional(child)) validationIdList.push(child.id);
       });
     }
   });
@@ -76,6 +85,7 @@ export const getEntityStatus = (
   const nonOptionalFields = routes.flatMap((route) =>
     formTypes
       .flatMap((formType) => route[formType]?.fields || [])
+      .filter((field) => !(field.forCopyoverOnly && !entity.isCopied))
       .filter((field) => !isFieldValidationOptional(field))
   );
 

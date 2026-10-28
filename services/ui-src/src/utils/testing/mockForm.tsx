@@ -233,6 +233,7 @@ export const mockBadTablesForm = {
   ...mockTablesForm,
   tables: [
     {
+      ...mockTablesForm.tables[0],
       tableType: "badType",
     },
   ],
@@ -551,7 +552,7 @@ export const mockModalOverlayReportPageVerbiage = {
   dashboardSubtitle: "Mock dashboard subtitle",
   addEditModalHint: "Mock modal hint",
   countEntitiesInTitle: true,
-  tableHeader: "Mock table header",
+  tableHeaders: ["Mock table header"],
   addEntityButtonText: "Mock add entity button text",
   emptyDashboardText: "Mock empty dashboard text",
   editEntityButtonText: "Mock edit entity button text",
@@ -589,14 +590,17 @@ export const mockModalOverlayForm = {
       id: "closeOutInformation_projectedEndDate",
       type: ReportFormFieldType.DATE,
       validation: ValidationType.DATE_OPTIONAL,
+      forCopyoverOnly: true,
       props: {
         label: "mock projected end date field",
+        title: "Close-out {{initiativeName}}",
       },
     },
     {
       id: "closeOutInformation_actualEndDate",
       type: ReportFormFieldType.DATE,
       validation: ValidationType.DATE_OPTIONAL,
+      forCopyoverOnly: true,
       props: {
         label: "mock close out actual end date field",
       },
@@ -847,7 +851,6 @@ export const mockDynamicRowsTemplate = {
     type: ValidationType.DYNAMIC_OPTIONAL,
     options: {
       dynamicFieldValidations: {
-        category: ValidationType.TEXT_OPTIONAL,
         percentageOverride: ValidationType.NUMBER_OPTIONAL,
         totalComputable: ValidationType.NUMBER_OPTIONAL,
       },

@@ -11,6 +11,9 @@ export default [
       ".sar-reports",
       ".sar-form",
       ".sar-form-template",
+      ".financial-reports",
+      ".financial-form",
+      ".financial-form-template",
     ],
   },
 ];

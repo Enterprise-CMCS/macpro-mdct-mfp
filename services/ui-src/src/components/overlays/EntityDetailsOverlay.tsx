@@ -39,7 +39,7 @@ import {
 // assets
 import closeIcon from "assets/icons/icon_cancel_x_white.png";
 import closeGrayIcon from "assets/icons/icon_cancel_x_gray.png";
-import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
+import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.svg";
 
 /**
  * @deprecated No longer used as of Report Year 2026, Period 2
@@ -321,7 +321,7 @@ interface Props {
 const sx = {
   backButton: {
     padding: 0,
-    fontWeight: "normal",
+    fontWeight: "body_md",
     color: "primary",
     display: "flex",
     position: "relative",
@@ -359,8 +359,8 @@ const sx = {
     width: "1.375rem",
   },
   subsectionHeading: {
-    fontWeight: "normal",
-    fontSize: "4xl",
+    fontWeight: "heading_3xl",
+    fontSize: "heading_3xl",
     marginTop: "spacer1",
   },
   infoTextBox: {

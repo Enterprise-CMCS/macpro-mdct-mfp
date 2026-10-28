@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { ComponentClass, useContext, useEffect, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Box, Button, Heading, Image, useDisclosure } from "@chakra-ui/react";
 import {
@@ -30,13 +31,16 @@ import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  getPageTitle,
   getReportVerbiage,
   isClosedInitiative,
   isFieldElement,
+  isTableField,
   resetClearProp,
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
+  waitForAutosavesAndGetReport,
 } from "utils";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 // assets
@@ -46,6 +50,8 @@ export const ModalOverlayReportPageV2 = ({
   route,
   setSidebarHidden,
 }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   // Route Information
   const { entityInfo, entityType, modalForm, overlayForm, verbiage } = route;
   // Context Information
@@ -65,7 +71,7 @@ export const ModalOverlayReportPageV2 = ({
     selectedEntity,
     setSelectedEntity,
   } = useStore();
-  const isDisabled = Boolean(userIsAdmin || userIsReadOnly);
+  const isDisabled = Boolean(userIsAdmin || userIsReadOnly || !editable);
 
   // Display route
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
@@ -88,7 +94,7 @@ export const ModalOverlayReportPageV2 = ({
 
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
-    return { headRow: ["", verbiage.tableHeader] };
+    return { headRow: verbiage.tableHeaders };
   };
 
   // Add/edit entity modal disclosure and methods
@@ -153,18 +159,21 @@ export const ModalOverlayReportPageV2 = ({
   const onSubmit = async (enteredData: AnyObject) => {
     if (userIsEndUser) {
       setSubmitting(true);
+      const latestReport = await waitForAutosavesAndGetReport(report);
       const reportKeys = {
-        reportType: report.reportType,
+        reportType: latestReport.reportType,
         state,
-        id: report.id,
+        id: latestReport.id,
       };
-      const currentEntities = [...(report.fieldData[entityType] || [])];
-      const selectedEntityIndex = report.fieldData[entityType].findIndex(
+      const currentEntities = [...(latestReport.fieldData[entityType] || [])];
+      const selectedEntityIndex = currentEntities.findIndex(
         (entity: EntityShape) => entity.id === selectedEntity?.id
       );
       const nonTableFields = form.fields
         .filter(isFieldElement)
-        .filter((f) => !f.forTableOnly);
+        .filter((f) => !isTableField(f))
+        // close-out fields are saved from the close-out modal, not this form
+        .filter((f) => !f.forCopyoverOnly);
       const filteredFormData = filterFormData(enteredData, nonTableFields);
       const entriesToClear = getEntriesToClear(enteredData, nonTableFields);
       const closeOutInitiative = isClosedInitiative(enteredData)
@@ -185,7 +194,7 @@ export const ModalOverlayReportPageV2 = ({
         entriesToClear
       );
       const shouldSave = entityWasUpdated(
-        reportFieldDataEntities[selectedEntityIndex],
+        currentEntities[selectedEntityIndex],
         newEntity
       );
       if (shouldSave) {
@@ -219,6 +228,10 @@ export const ModalOverlayReportPageV2 = ({
   const tablePage = () => {
     return (
       <Box sx={sx.content}>
+        {/* page title */}
+        <Helmet>
+          <title>{report && getPageTitle(report.reportType, route.name)}</title>
+        </Helmet>
         <ReportPageIntro accordion={verbiage.accordion} text={verbiage.intro} />
         {showAlert && (
           <Alert
@@ -227,14 +240,16 @@ export const ModalOverlayReportPageV2 = ({
             title={errorMessage.title}
           />
         )}
-        <Heading as="h3" sx={sx.dashboardTitle}>
+        <Heading as="h2" sx={sx.dashboardTitle}>
           {dashTitle}
         </Heading>
-        <Heading as="h2" sx={sx.subsectionHeading}>
-          {dashSubTitle}
-        </Heading>
+        {dashSubTitle && (
+          <Heading as="h3" sx={sx.subsectionHeading}>
+            {dashSubTitle}
+          </Heading>
+        )}
         {hasEntities ? (
-          <Table content={tableHeaders()} sx={sx.table}>
+          <Table content={tableHeaders()} variant="initiative">
             {reportFieldDataEntities.map((entity: EntityShape) => (
               <EntityRow
                 entering={entering}
@@ -324,8 +339,8 @@ const sx = {
   },
   dashboardTitle: {
     color: "gray",
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     marginTop: "spacer2",
     textAlign: "left",
     ".tablet &, .mobile &": {
@@ -334,40 +349,13 @@ const sx = {
   },
   subsectionHeading: {
     color: "gray_dark",
-    fontSize: "md",
-    fontWeight: "normal",
+    fontSize: "body_md",
+    fontWeight: "body_md",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
     paddingBottom: "spacer2",
-  },
-  table: {
-    tableLayout: "fixed",
-    br: {
-      marginBottom: "spacer_half",
-    },
-    th: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      color: "gray",
-      fontWeight: "bold",
-      paddingLeft: "spacer2",
-      paddingRight: "0",
-      ".tablet &, .mobile &": {
-        border: "0",
-      },
-      "&:nth-of-type(1)": {
-        width: "2.5rem",
-      },
-      "&:nth-of-type(3)": {
-        width: "260px",
-      },
-    },
-    tr: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-    },
   },
   addEntityButton: {
     marginTop: "spacer4",

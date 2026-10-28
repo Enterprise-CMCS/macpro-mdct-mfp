@@ -1,7 +1,6 @@
 // components
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
-import uuid from "react-uuid";
 // components
 import {
   ExportedEntityDetailsTable,
@@ -88,7 +87,7 @@ export function getEntityTableComponents(
     (entityStep as any)?.form?.fields || (entityStep?.slice(3) as FormField[]);
   const updatedEntityStepFields = updateRenderFields(report, entityStepFields);
   return (
-    <Box key={uuid()}>
+    <Box key={crypto.randomUUID()}>
       <Box>
         <Heading as={headingLevel} sx={sx.stepName}>
           {title}
@@ -99,10 +98,10 @@ export function getEntityTableComponents(
       </Box>
       {closed && (
         <Box sx={sx.sectionHeading}>
-          <Text sx={sx.tableIndex} fontSize={"sm"}>
+          <Text sx={sx.tableIndex} fontSize={"body_sm"}>
             Closed by
           </Text>
-          <Text fontSize={"sm"}>{entity.closedBy}</Text>
+          <Text fontSize={"body_sm"}>{entity.closedBy}</Text>
         </Box>
       )}
       {tableSection && (
@@ -175,18 +174,18 @@ export function renderEntityDetailTables(
 const sx = {
   tableIndex: {
     color: "gray",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
   },
   stepName: {
-    fontSize: "18px",
+    fontSize: "body_lg",
     paddingBottom: "0.75rem",
-    lineHeight: "130%",
+    lineHeight: "body_lg",
   },
   stepHint: {
-    fontSize: "16px",
-    fontWeight: "normal",
+    fontSize: "body_md",
+    fontWeight: "body_md",
     color: "gray_dark",
-    lineHeight: "1.5rem",
+    lineHeight: "body_md",
   },
   sectionHeading: {
     padding: "1.5rem 0 0 0",

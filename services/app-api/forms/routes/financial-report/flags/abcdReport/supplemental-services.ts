@@ -10,9 +10,9 @@ import {
 // utils
 import {
   buildServiceFields,
-  supplementalServices,
-  supplementalServicesHeaders,
-} from "./utils";
+  serviceFieldDynamicRowsTemplateBuilder,
+} from "../../../../../utils/routes/tables";
+import { supplementalServices, supplementalServicesHeaders } from "./utils";
 
 const categoryTableId = "supplementalServices_category";
 
@@ -43,37 +43,28 @@ const categoryDynamicBodyList = [
   },
 ];
 const categoryDynamicFieldsToReturn = [
-  ServiceFieldType.CATEGORY,
+  ServiceFieldType.NAME,
   ...categoryFieldsToReturn,
 ];
-const categoryDynamicRowsTemplate = {
-  forTableOnly: true,
-  id: categoryDynamicRowId,
-  props: {
-    label: "Other Categories",
-    dynamicFields: categoryDynamicBodyList.flatMap((service) =>
-      buildServiceFields(service, categoryDynamicFieldsToReturn, {
-        dynamicLabel: "Other:",
-      })
-    ),
+const categoryDynamicRowsTemplate = serviceFieldDynamicRowsTemplateBuilder({
+  dynamicFieldsBodyList: categoryDynamicBodyList,
+  dynamicFieldsSettings: {
+    dynamicLabel: "Other:",
   },
-  type: ReportFormFieldType.DYNAMIC_OBJECT,
-  validation: {
-    type: ValidationType.DYNAMIC_OPTIONAL,
-    options: {
-      dynamicFieldValidations: {
-        category: ValidationType.TEXT_OPTIONAL,
-        totalComputable: ValidationType.NUMBER_OPTIONAL,
-        totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
-        totalFederalShare: ValidationType.NUMBER_OPTIONAL,
-      },
-    },
+  dynamicFieldsToReturn: categoryDynamicFieldsToReturn,
+  dynamicFieldValidations: {
+    name: ValidationType.TEXT_OPTIONAL,
+    totalComputable: ValidationType.NUMBER_OPTIONAL,
+    totalStateTerritoryShare: ValidationType.NUMBER_OPTIONAL,
+    totalFederalShare: ValidationType.NUMBER_OPTIONAL,
   },
+  dynamicRowId: categoryDynamicRowId,
+  label: "Other Categories",
   verbiage: {
     buttonText: "Add other category",
     hint: "To add an additional category, click the “Add other category” button below.",
   },
-};
+});
 
 export const supplementalServicesRoute: FormTablesRoute = {
   name: "Supplemental Services",

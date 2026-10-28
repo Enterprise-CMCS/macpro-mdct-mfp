@@ -15,10 +15,10 @@ export const keyMetricsTableId = "defineInitiative_keyMetrics";
 export const keyMetricsHeaders = [
   "Performance Indicator",
   "Data Source",
-  "Baseline",
+  "Baseline Value",
   "Baseline Period",
-  "Target/Benchmark",
-  "Projected Date to Achieve Benchmark",
+  "Target/Benchmark Value",
+  "Projected Date to Achieve Benchmark Value",
 ];
 
 // Key Metrics table - dynamic rows
@@ -177,10 +177,11 @@ const keyMetricsDynamicRowsTemplate = tableFieldDynamicRowsTemplateBuilder({
   dynamicModalVerbiage: {
     add: "Add Key Metric",
     edit: "Edit Key Metric",
+    subheading:
+      "Describe the metric your state or territory will use to measure progress and performance for this initiative.",
   },
   dynamicRowId: keyMetricsDynamicRowId,
   label: "Key Metrics",
-  // TODO: Change to true when table statusing is figured out
   required: false,
   verbiage: {
     buttonText: "Add key metric",
@@ -208,6 +209,13 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         tableType: FormTableType.ENTITY_MODAL,
         verbiage: {
           emptyTableMessage: "No Performance Indicators",
+          subtitle: [
+            {
+              type: "p",
+              content:
+                "If you are not measuring this initiative quantitatively, please detail the qualitative measures in the section below.",
+            },
+          ],
           title: "Key Metrics",
         },
       },
@@ -236,8 +244,9 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         props: {
           dynamicButtonText: "Add key activity",
           dynamicLabel: "Key Activity",
-          hint: "List the key activities currently in progress or planned for future implementation that must occur within the timeframe for starting and completing the initiative. Potential activities could include, but are not limited to, data collection and analysis to inform the initiative, coordination with internal divisions/agencies and external partners, any training required for the initiative (ex., training care coordinators), establishment of new contracts required for the initiative, and gathering data (through key metrics, informational interviews, surveys, etc.) to evaluate the success of the initiative. An initiative must have been implemented, tested, and evaluated to be considered completed.",
+          hint: "List the key activities currently in progress or planned for future implementation that must occur within the timeframe for starting and completing the initiative. Potential activities could include, but are not limited to, data collection and analysis to inform the initiative, coordination with internal divisions/agencies and external partners, any training required for the initiative (ex., training care coordinators), establishment of new contracts required for the initiative, and gathering data (through informational interviews or surveys) to evaluate the success of the initiative. An initiative must have been implemented, tested, and evaluated to be considered completed.",
           label: "Key Activities",
+          multiline: true,
         },
       },
       {
@@ -329,7 +338,10 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         type: ReportFormFieldType.DATE,
         validation: {
           type: ValidationType.END_DATE,
-          dependentFieldName: "defineInitiative_expectedStartDate_value",
+          dependentFieldName: [
+            "defineInitiative_actualStartDate_value",
+            "defineInitiative_expectedStartDate_value",
+          ],
         },
         props: {
           label:
@@ -383,7 +395,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         validation: ValidationType.CHECKBOX,
         props: {
           label: "Identify funding source(s):",
-          hint: "Select the funding sources used for this initiative. Cooperative Agreement is an alternative assistance instrument used whenever substantial federal involvement with the recipient during performance is anticipated. The difference between grants and cooperative agreements is the degree of federal programmatic involvement rather than the type of administrative requirements imposed. MFP recipients will no longer need to provide projected quarterly expenditures for each initiative. Actual quarterly expenditures will be reported in the recipient’s MFP Semi-Annual Progress Report (SAR).",
+          hint: "Select the funding sources used for this initiative. Cooperative Agreement is an alternative assistance instrument used whenever substantial federal involvement with the recipient during performance is anticipated. The difference between grants and cooperative agreements is the degree of federal programmatic involvement rather than the type of administrative requirements imposed. MFP recipients will no longer need to provide projected quarterly expenditures for each initiative.",
           title: "Funding Sources",
           choices: [
             {
@@ -414,80 +426,121 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
       // Close-out
       {
         forCopyoverOnly: true,
-        id: "closeOutInformation_projectedEndDate",
-        type: ReportFormFieldType.DATE,
-        validation: ValidationType.DATE_OPTIONAL,
+        id: "closeOutInformation_closeOut",
+        type: ReportFormFieldType.RADIO,
+        validation: ValidationType.RADIO,
         props: {
-          disabled: true,
-          hint: "Auto-populates from “I. Define initiative”.",
-          label: "Projected end date",
-          styleAsOptional: true,
-          styleTitleAsOptional: true,
-          subtitle:
-            "Complete for initiatives that end during the upcoming semi-annual reporting period.",
-          title: "Close-out {{initiativeName}}",
-        },
-      },
-      {
-        forCopyoverOnly: true,
-        id: "closeOutInformation_actualEndDate",
-        type: ReportFormFieldType.DATE,
-        validation: ValidationType.DATE_OPTIONAL,
-        props: {
-          label: "Actual end date",
-          styleAsOptional: true,
-        },
-      },
-      {
-        forCopyoverOnly: true,
-        id: "closeOutInformation_initiativeStatus",
-        type: ReportFormFieldType.CHECKBOX,
-        validation: ValidationType.CHECKBOX_OPTIONAL,
-        props: {
-          hint: "Select all that apply.",
-          label:
-            "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, indicate the status below:",
-          styleAsOptional: true,
+          label: "Do you want to close out this initiative?",
+          title: "Close-out status for {{initiativeName}}",
+          modalTitle: "Update close-out status for {{initiativeName}}",
+          hint: "Complete this status check for the upcoming semi-annual reporting period to indicate whether your initiative will close or remain open. Closing out an initiative cannot be undone, so only select “Yes” in the modal if ready to close out.",
+          modalHint:
+            "To close this initiative select “Yes” below. Please note closing out an initiative is a final action and the initiative will no longer be available for reporting in future Work Plans.",
           choices: [
             {
-              id: "FhAF0lzeuB4wLalyXv2BeG",
-              label: "Completed initiative",
-            },
-            {
-              id: "GUcwKDPBs8K6LY4yT1hPGD",
-              label: "Discontinued initiative",
+              id: "closeOutInitiativeYes",
+              label: "Yes",
               children: [
                 {
-                  id: "closeOutInformation_initiativeStatus-terminationReason",
-                  props: {
-                    label: "Indicate reason for termination",
-                  },
-                  type: ReportFormFieldType.TEXTAREA,
+                  forCopyoverOnly: true,
+                  id: "closeOutInformation_projectedEndDate",
+                  type: ReportFormFieldType.DATE,
                   validation: {
-                    type: ValidationType.TEXT,
+                    type: ValidationType.DATE_OPTIONAL,
                     nested: true,
-                    parentFieldName: "closeOutInformation_initiativeStatus",
+                    parentFieldName: "closeOutInformation_closeOut",
+                    parentOptionId: "closeOutInitiativeYes",
+                  },
+                  props: {
+                    disabled: true,
+                    hint: "Auto-populates from “I. Define initiative”.",
+                    label: "Projected end date",
+                    styleAsOptional: true,
+                  },
+                },
+                {
+                  forCopyoverOnly: true,
+                  id: "closeOutInformation_actualEndDate",
+                  type: ReportFormFieldType.DATE,
+                  validation: {
+                    type: ValidationType.DATE_OPTIONAL,
+                    nested: true,
+                    parentFieldName: "closeOutInformation_closeOut",
+                    parentOptionId: "closeOutInitiativeYes",
+                  },
+                  props: {
+                    label: "Actual end date",
+                    styleAsOptional: true,
+                  },
+                },
+                {
+                  forCopyoverOnly: true,
+                  id: "closeOutInformation_initiativeStatus",
+                  type: ReportFormFieldType.RADIO,
+                  validation: {
+                    type: ValidationType.RADIO_OPTIONAL,
+                    nested: true,
+                    parentFieldName: "closeOutInformation_closeOut",
+                    parentOptionId: "closeOutInitiativeYes",
+                  },
+                  props: {
+                    label:
+                      "For initiatives that will no longer be sustained with MFP funding or state or territory-equivalent funding, indicate the status below:",
+                    styleAsOptional: true,
+                    choices: [
+                      {
+                        id: "FhAF0lzeuB4wLalyXv2BeG",
+                        label: "Completed initiative",
+                      },
+                      {
+                        id: "GUcwKDPBs8K6LY4yT1hPGD",
+                        label: "Discontinued initiative",
+                        children: [
+                          {
+                            id: "closeOutInformation_initiativeStatus-terminationReason",
+                            props: {
+                              label: "Indicate reason for termination",
+                            },
+                            type: ReportFormFieldType.TEXTAREA,
+                            validation: {
+                              type: ValidationType.TEXT,
+                              nested: true,
+                              parentFieldName:
+                                "closeOutInformation_initiativeStatus",
+                              parentOptionId: "GUcwKDPBs8K6LY4yT1hPGD",
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        id: "86SG3qhFfsZ0CAu3G4SxM5",
+                        label:
+                          "Sustaining initiative through a Medicaid authority",
+                        children: [
+                          {
+                            id: "closeOutInformation_initiativeStatus-alternateFunding",
+                            props: {
+                              label: "Indicate alternative funding source",
+                            },
+                            type: ReportFormFieldType.TEXTAREA,
+                            validation: {
+                              type: ValidationType.TEXT,
+                              nested: true,
+                              parentFieldName:
+                                "closeOutInformation_initiativeStatus",
+                              parentOptionId: "86SG3qhFfsZ0CAu3G4SxM5",
+                            },
+                          },
+                        ],
+                      },
+                    ],
                   },
                 },
               ],
             },
             {
-              id: "86SG3qhFfsZ0CAu3G4SxM5",
-              label: "Sustaining initiative through a Medicaid authority",
-              children: [
-                {
-                  id: "closeOutInformation_initiativeStatus-alternateFunding",
-                  props: {
-                    label: "Indicate alternative funding source",
-                  },
-                  type: ReportFormFieldType.TEXTAREA,
-                  validation: {
-                    type: ValidationType.TEXT,
-                    nested: true,
-                    parentFieldName: "closeOutInformation_initiativeStatus",
-                  },
-                },
-              ],
+              id: "closeOutInitiativeNo",
+              label: "No",
             },
           ],
         },
@@ -575,10 +628,6 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
               label: "Stakeholder engagement",
             },
             {
-              id: "2qjBuLtpA5pDvUM1HSHMVq",
-              label: "Equity and social determinants of health (SDOH)",
-            },
-            {
               id: "18Wb9b2zMIF13pZwWstdJF",
               label: "Other, specify",
               children: [
@@ -616,9 +665,6 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
           content: "previous page",
           props: {
             to: "/wp/state-or-territory-specific-initiatives/instructions",
-            style: {
-              textDecoration: "underline",
-            },
           },
         },
         {
@@ -661,6 +707,10 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
     enterEntityDetailsButtonText: "Edit",
     readOnlyEntityButtonText: "View name/topic",
     readOnlyEntityDetailsButtonText: "View",
-    tableHeader: "Initiative name <br/> MFP Work Plan topic",
+    tableHeaders: [
+      "Status",
+      "Initiative name <br/> MFP Work Plan topic",
+      "Actions",
+    ],
   },
 };

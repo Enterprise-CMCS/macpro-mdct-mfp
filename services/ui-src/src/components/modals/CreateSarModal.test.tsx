@@ -3,15 +3,15 @@ import userEvent from "@testing-library/user-event";
 import {
   mockSARReportContext,
   RouterWrappedComponent,
-} from "../../utils/testing/setupJest";
+} from "../../utils/testing/setupTest";
 import { ReportContext } from "../reports/ReportProvider";
 import { CreateSarModal } from "./CreateSarModal";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockCreateReport = jest.fn();
-const mockUpdateReport = jest.fn();
-const mockFetchReportsByState = jest.fn();
-const mockCloseHandler = jest.fn();
+const mockCreateReport = vi.fn();
+const mockUpdateReport = vi.fn();
+const mockFetchReportsByState = vi.fn();
+const mockCloseHandler = vi.fn();
 
 const mockedSARReportContext = {
   ...mockSARReportContext,
@@ -89,7 +89,7 @@ const fillForm = async (option: string) => {
 
 describe("<CreateSarModal />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("New SAR", () => {

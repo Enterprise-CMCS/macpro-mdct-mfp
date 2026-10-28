@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { ComponentClass, useEffect } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
+import { useFlags } from "launchdarkly-react-client-sdk";
 // components
-import { Box, Collapse, Heading, Link, Text } from "@chakra-ui/react";
+import { Box, Collapse, Heading, Text } from "@chakra-ui/react";
 import {
   AdminDashSelector,
   Banner,
+  ExternalLink,
   PageTemplate,
   TemplateCard,
 } from "components";
@@ -11,12 +14,14 @@ import {
 import { checkDateRangeStatus, useStore } from "utils";
 // verbiage
 import verbiage from "verbiage/pages/home";
-import { useFlags } from "launchdarkly-react-client-sdk";
+import { FULL_APP_TITLE } from "../../../constants";
 
 export const HomePage = () => {
   const { bannerData, bannerActive, setBannerActive } = useStore();
   const { userIsEndUser } = useStore().user ?? {};
   const financialReport = useFlags()?.abcdReport;
+
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
   useEffect(() => {
     let bannerActivity = false;
@@ -34,6 +39,9 @@ export const HomePage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{FULL_APP_TITLE}</title>
+      </Helmet>
       <Collapse in={showBanner}>
         <Banner bannerData={bannerData} />
       </Collapse>
@@ -46,26 +54,19 @@ export const HomePage = () => {
               </Heading>
               <Text>
                 {intro.body.preLinkText}
-                <Link href={intro.body.linkLocation} isExternal>
-                  {intro.body.linkText}
-                </Link>
+                {intro.body.linkText && (
+                  <ExternalLink href={intro.body.linkLocation}>
+                    {intro.body.linkText}
+                  </ExternalLink>
+                )}
                 {intro.body.postLinkText}
               </Text>
               <Text></Text>
             </Box>
-            <TemplateCard
-              templateName="WP"
-              verbiage={cards.WP}
-              cardprops={sx.card}
-            />
-            <TemplateCard
-              templateName="SAR"
-              verbiage={cards.SAR}
-              cardprops={sx.card}
-            />
+            <TemplateCard verbiage={cards.WP} cardprops={sx.card} />
+            <TemplateCard verbiage={cards.SAR} cardprops={sx.card} />
             {financialReport && (
               <TemplateCard
-                templateName="FINANCIAL_REPORT"
                 verbiage={cards.FINANCIAL_REPORT}
                 cardprops={sx.card}
               />
@@ -91,8 +92,8 @@ const sx = {
   },
   headerText: {
     marginBottom: "spacer2",
-    fontSize: "2rem",
-    fontWeight: "normal",
+    fontSize: "heading_3xl",
+    fontWeight: "heading_3xl",
   },
   card: {
     marginBottom: "spacer4",

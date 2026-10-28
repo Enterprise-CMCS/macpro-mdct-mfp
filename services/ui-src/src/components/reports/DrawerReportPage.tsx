@@ -1,4 +1,5 @@
-import { useState, useContext } from "react";
+import { ComponentClass, useState, useContext } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import {
   Box,
@@ -25,6 +26,7 @@ import {
   setClearedEntriesToDefaultValue,
   parseCustomHtml,
   useStore,
+  getPageTitle,
 } from "utils";
 
 import { ReportContext, ReportDrawer } from "components";
@@ -32,6 +34,8 @@ import { ReportPageIntro } from "./ReportPageIntro";
 import completedIcon from "assets/icons/icon_check_circle.png";
 
 export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { entityType, verbiage, drawerForm } = route;
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
@@ -135,6 +139,10 @@ export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
 
   return (
     <Box>
+      {/* page title */}
+      <Helmet>
+        <title>{report && getPageTitle(report.reportType, route.name)}</title>
+      </Helmet>
       {verbiage.intro && <ReportPageIntro text={verbiage.intro} />}
       <Heading as="h3" sx={sx.dashboardTitle}>
         {verbiage.dashboardTitle}
@@ -182,8 +190,8 @@ const sx = {
     paddingBottom: "0.75rem",
     borderBottom: "1.5px solid var(--mdct-colors-gray_lighter)",
     color: "gray",
-    fontSize: "lg",
-    fontWeight: "bold",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
   },
   entityRow: {
     justifyContent: "space-between",
@@ -194,14 +202,14 @@ const sx = {
     borderBottom: "1.5px solid var(--mdct-colors-gray_lighter)",
   },
   entityName: {
-    fontSize: "lg",
-    fontWeight: "bold",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
     flexGrow: 1,
     marginLeft: "2.25rem",
   },
   missingEntityMessage: {
     paddingTop: "spacer2",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     a: {
       color: "primary",
       textDecoration: "underline",
@@ -213,7 +221,7 @@ const sx = {
   enterButton: {
     width: "4.25rem",
     height: "1.75rem",
-    fontSize: "md",
-    fontWeight: "normal",
+    fontSize: "body_md",
+    fontWeight: "body_md",
   },
 };

@@ -1,3 +1,5 @@
+import { MockedFunction } from "vitest";
+import { useEffect } from "react";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { FormProvider, useForm } from "react-hook-form";
@@ -11,7 +13,7 @@ import {
   mockStateUserStore,
   mockWPReport,
   mockWpReportContext,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const mockEntityType = "mock-entity-type";
@@ -34,32 +36,48 @@ mockReport.fieldData["mock-entity-type"] = [
   },
 ];
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue({
   ...mockStateUserStore,
   report: mockReport,
   selectedEntity: {
     type: mockEntityType,
   },
-  setAutosaveState: jest.fn(),
+  setAutosaveState: vi.fn(),
 });
 
-const mockUpdateReport = jest.fn();
+const mockUpdateReport = vi.fn();
 const mockedReportContext = {
   ...mockWpReportContext,
   updateReport: mockUpdateReport,
 };
 
-const MockForm = ({ dynamicLabel, hint, hydrationValue }: any) => {
+const MockForm = ({
+  dynamicLabel,
+  error,
+  hint,
+  hydrationValue,
+  multiline,
+}: any) => {
   const form = useForm({
     shouldFocusError: false,
   });
+
+  useEffect(() => {
+    if (error) {
+      form.setError(`${mockDynamicField}.0.name`, {
+        type: "required",
+        message: "A response is required",
+      });
+    }
+  }, []);
+
   return (
     <ReportContext.Provider value={mockedReportContext}>
       <EntityProvider>
         <FormProvider {...form}>
-          <form id="uniqueId" onSubmit={form.handleSubmit(jest.fn())}>
+          <form id="uniqueId" onSubmit={form.handleSubmit(vi.fn())}>
             <DynamicField
               autosave={true}
               dynamicLabel={dynamicLabel}
@@ -67,6 +85,7 @@ const MockForm = ({ dynamicLabel, hint, hydrationValue }: any) => {
               hydrate={hydrationValue}
               label={mockFieldLabel}
               name={mockDynamicField}
+              multiline={multiline}
             />
           </form>
         </FormProvider>
@@ -75,17 +94,25 @@ const MockForm = ({ dynamicLabel, hint, hydrationValue }: any) => {
   );
 };
 
-const DynamicFieldComponent = ({ dynamicLabel, hint, hydrationValue }: any) => (
+const DynamicFieldComponent = ({
+  dynamicLabel,
+  error,
+  hint,
+  hydrationValue,
+  multiline,
+}: any) => (
   <MockForm
     dynamicLabel={dynamicLabel}
+    error={error}
     hint={hint}
     hydrationValue={hydrationValue}
+    multiline={multiline}
   />
 );
 
 describe("<DynamicField />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   describe("Test DynamicField component", () => {
     beforeEach(() => {
@@ -139,8 +166,8 @@ describe("<DynamicField />", () => {
 
       // click remove
       const removeButtons = screen.getAllByRole("button", { name: /Delete/ });
-      const removeButton = removeButtons[1];
-      expect(removeButtons).toHaveLength(2);
+      const removeButton = removeButtons[0];
+      expect(removeButtons).toHaveLength(1);
 
       await act(async () => {
         await userEvent.click(removeButton);
@@ -163,17 +190,13 @@ describe("<DynamicField />", () => {
       const inputBoxLabel = within(fieldset).getAllByRole("textbox");
       expect(inputBoxLabel).toHaveLength(1);
 
-      // click remove
-      const removeButton = screen.getAllByRole("button", { name: /Delete/ })[0];
-      await act(async () => {
-        await userEvent.click(removeButton);
-      });
-      expect(mockUpdateReport).toHaveBeenCalledTimes(1);
-
       // verify that there is still one field available
       const inputBoxLabelAfterRemove = within(fieldset).getAllByRole("textbox");
       expect(inputBoxLabelAfterRemove).toHaveLength(1);
-      expect(removeButton).not.toBeVisible();
+
+      expect(
+        screen.queryByRole("button", { name: /Delete/ })
+      ).not.toBeInTheDocument();
     });
 
     test("DynamicField accepts input", async () => {
@@ -217,6 +240,27 @@ describe("<DynamicField />", () => {
         })
       );
       expect(firstDynamicField).toHaveValue("test user input");
+    });
+  });
+  describe("Error handling", () => {
+    test("input clears existing error", async () => {
+      render(<DynamicFieldComponent error={true} />);
+
+      const fieldset = screen.getByRole("group", {
+        name: mockFieldLabel,
+      });
+
+      const firstDynamicField = within(fieldset).getByRole("textbox");
+
+      const error = screen.getByText("A response is required");
+      expect(error).toBeVisible();
+
+      await act(async () => {
+        await userEvent.type(firstDynamicField, "123");
+      });
+
+      const updatedError = screen.queryByText("A response is required");
+      expect(updatedError).not.toBeInTheDocument();
     });
   });
 

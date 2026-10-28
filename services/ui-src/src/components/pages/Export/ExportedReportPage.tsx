@@ -18,8 +18,13 @@ import {
   ReportType,
 } from "types";
 // utils
-import { useStore, displayLongformPeriod, getReportVerbiage } from "utils";
-import { assertExhaustive } from "utils/other/typing";
+import {
+  assertExhaustive,
+  useStore,
+  displayLongformPeriod,
+  getReportVerbiage,
+} from "utils";
+import { APP_TITLE } from "../../../constants";
 
 export const SAR_RET = "Recruitment, Enrollment, and Transitions";
 export const WP_SAR_STATE_TERRITORY_INITIATIVES =
@@ -39,7 +44,10 @@ export const ExportedReportPage = () => {
   const { exportVerbiage } = getReportVerbiage(reportType);
   const { metadata, reportPage } = exportVerbiage;
 
+  // page title
   const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+  const pageTitle =
+    reportType === ReportType.FINANCIAL_REPORT ? "FRF" : reportType;
 
   return (
     <Box sx={sx.container}>
@@ -47,7 +55,7 @@ export const ExportedReportPage = () => {
         <Box sx={sx.innerContainer}>
           {/* pdf metadata */}
           <Helmet>
-            <title>{reportTitle(reportType, report, reportPage)}</title>
+            <title>{`Export - ${pageTitle} - ${APP_TITLE}`}</title>
             <meta name="author" content={metadata.author} />
             <meta name="subject" content={metadata.subject} />
             <meta name="language" content={metadata.language} />
@@ -185,6 +193,7 @@ export const renderReportSections = (
             />
             <ExportedReportWrapper
               section={section as ReportRouteWithForm}
+              heading={sectionHeading}
               headingLevel={nextHeadingLevel as HeadingLevel}
             />
           </Box>
@@ -229,9 +238,9 @@ const sx = {
     },
   },
   heading: {
-    fontWeight: "300",
-    lineHeight: "lineHeights.heading",
-    fontSize: "4xl",
+    fontWeight: "heading_3xl",
+    lineHeight: "heading_3xl",
+    fontSize: "heading_3xl",
   },
 };
 
@@ -244,7 +253,7 @@ export const sxSharedExportStyles = {
     "tr, th": {
       borderBottom: "1px solid",
       borderColor: "gray_lighter",
-      lineHeight: "base",
+      lineHeight: "body_sm",
       verticalAlign: "top",
     },
     thead: {
@@ -254,16 +263,16 @@ export const sxSharedExportStyles = {
     td: {
       border: 0,
       color: "base",
-      fontWeight: "normal",
+      fontWeight: "body_sm",
       padding: "spacer",
       paddingLeft: 0,
       // indicator or response text
       p: {
-        lineHeight: "1.25rem",
+        lineHeight: "body_sm",
         // hint text
         "& + div": {
           marginTop: "spacer_half",
-          lineHeight: "1.25rem",
+          lineHeight: "body_sm",
         },
       },
       ".shrink &": {
@@ -271,13 +280,13 @@ export const sxSharedExportStyles = {
         paddingY: "spacer_half",
       },
       ".mobile &": {
-        fontSize: "xs",
+        fontSize: "body_xs",
       },
     },
     th: {
       color: "gray",
-      fontWeight: "bold",
-      lineHeight: "lg",
+      fontWeight: "heading_sm_bold",
+      lineHeight: "heading_sm",
       padding: 0,
       paddingBottom: "spacer_half",
       paddingRight: "spacer1",

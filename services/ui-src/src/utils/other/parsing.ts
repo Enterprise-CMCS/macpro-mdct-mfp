@@ -5,7 +5,6 @@ import parse from "html-react-parser";
 import { Link as RouterLink } from "react-router";
 import {
   Heading,
-  Link,
   ListItem,
   OrderedList,
   Table,
@@ -18,12 +17,12 @@ import {
   Tr,
   UnorderedList,
 } from "@chakra-ui/react";
+import { ExternalLink } from "components";
 // types
 import { CustomHtmlElement } from "types";
-import uuid from "react-uuid";
 
 export const customElementMap: any = {
-  externalLink: Link,
+  externalLink: ExternalLink,
   internalLink: RouterLink,
   text: Text,
   heading: Heading,
@@ -55,7 +54,7 @@ export const parseCustomHtml = (element: CustomHtmlElement[] | string) => {
       let { type, content, as, props } = element;
       const elementType: string = customElementMap[type] || type;
       const elementProps = {
-        key: type + uuid(),
+        key: type + crypto.randomUUID(),
         as,
         ...props,
       };
@@ -85,8 +84,9 @@ export function createElementWithChildren(
   const { type, content, as, props } = element;
   const elementType: string = customElementMap[type] || type;
   const elementProps = {
-    key: type + uuid(),
+    key: type + crypto.randomUUID(),
     as,
+    className: type === "internalLink" ? "ds-c-link" : "",
     ...props,
   };
   if (element.children) {
@@ -123,6 +123,31 @@ export const labelTextWithOptional = (label: string) => {
   const colon = endsWithColon ? ":" : "";
 
   return parseCustomHtml(
-    `${parsedLabel}<span class='optional-text'> (optional)${colon}</span>`
+    `${parsedLabel}<span class='optional-text'> (Optional)${colon}</span>`
   );
+};
+
+/** Parse HTML string, sanitize, and return React elements. */
+export const parseAllowedHtml = (html: string) => {
+  const sanitizedHtml = DOMPurify.sanitize(html, {
+    // Only these tags will be allowed through
+    ALLOWED_TAGS: [
+      "ul",
+      "ol",
+      "li",
+      "a",
+      "#text",
+      "strong",
+      "b",
+      "em",
+      "i",
+      "p",
+    ],
+    // On those tags, only these attributes are allowed
+    ALLOWED_ATTR: ["href", "target"],
+    // If a tag is removed, so will all its child elements & text
+    KEEP_CONTENT: false,
+  });
+  const parsedHtml = parse(sanitizedHtml);
+  return parsedHtml;
 };

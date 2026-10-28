@@ -1,8 +1,13 @@
+import { Mock, MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { useFormContext } from "react-hook-form";
-import { DynamicTableProvider, EntityModalTable } from "components";
+import {
+  DynamicTableProvider,
+  EntityModalTable,
+  ReportContext,
+} from "components";
 // types
 import {
   EntityType,
@@ -18,42 +23,47 @@ import {
   mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
   mockStateUserStore,
+  mockWpReportContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockTrigger = jest.fn();
-const openDeleteEntityModal = jest.fn();
+const mockTrigger = vi.fn();
+const openDeleteEntityModal = vi.fn();
 const mockRhfMethods = {
-  register: jest.fn(),
-  setValue: jest.fn(),
-  getValues: jest.fn(),
+  register: vi.fn(),
+  setValue: vi.fn(),
+  getValues: vi.fn(),
   trigger: mockTrigger,
+  formState: {
+    errors: {
+      mockTable_mockServices_errorTable: {
+        message: "Mock error message",
+      },
+    },
+  },
 };
-const mockUseFormContext = useFormContext as unknown as jest.Mock<
+const mockUseFormContext = useFormContext as unknown as Mock<
   typeof useFormContext
 >;
-jest.mock("react-hook-form", () => {
-  const actual = jest.requireActual("react-hook-form");
+vi.mock("react-hook-form", async (importOriginal) => {
   return {
     __esModule: true,
-    ...actual,
-    useFormContext: jest.fn(() => mockRhfMethods),
+    ...(await importOriginal()),
+    useFormContext: vi.fn(() => mockRhfMethods),
   };
 });
 const mockGetValues = (returnValue: any) =>
   mockUseFormContext.mockImplementation((): any => ({
     ...mockRhfMethods,
-    getValues: jest.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
+    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
   }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-jest.mock("react-uuid", () => jest.fn(() => mockDynamicFieldId));
-
-jest.mock("utils/autosave/autosave", () => ({
-  getAutosaveFields: jest.fn().mockImplementation(() => {
+vi.mock("utils/autosave/autosave", () => ({
+  getAutosaveFields: vi.fn().mockImplementation(() => {
     return [
       {
         name: `tempDynamicField_mockFormId_mockTableId_mockDynamicFieldId_123a-456b-789c-category`,
@@ -61,7 +71,8 @@ jest.mock("utils/autosave/autosave", () => ({
       },
     ];
   }),
-  autosaveFieldData: jest.fn().mockImplementation(() => Promise.resolve("")),
+  autosaveFieldData: vi.fn().mockImplementation(() => Promise.resolve("")),
+  enqueueWrite: vi.fn().mockImplementation((work) => work()),
 }));
 
 const mockProps = {
@@ -215,15 +226,24 @@ const mockProps = {
 
 const tableComponent = (props = mockProps) => (
   <RouterWrappedComponent>
-    <DynamicTableProvider>
-      <EntityModalTable {...props} />
-    </DynamicTableProvider>
+    <ReportContext.Provider value={mockWpReportContext}>
+      <DynamicTableProvider>
+        <EntityModalTable {...props} />
+      </DynamicTableProvider>
+    </ReportContext.Provider>
   </RouterWrappedComponent>
 );
 
 describe("<EntityModalTable />", () => {
+  beforeAll(() => {
+    Object.defineProperty(globalThis, "crypto", {
+      value: {
+        randomUUID: vi.fn(() => mockDynamicFieldId),
+      },
+    });
+  });
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("table is visible", () => {
@@ -410,6 +430,148 @@ describe("<EntityModalTable />", () => {
           expect(closedModal).not.toBeVisible();
         });
       });
+    });
+  });
+
+  describe("conditional table display", () => {
+    test("hides the table and shows the empty message when there are no entries", () => {
+      const report = { fieldData: {} };
+      mockedUseStore.mockReturnValue({ report });
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        bodyRows: [],
+        footRows: [],
+        report,
+        verbiage: {
+          ...mockProps.verbiage,
+          emptyTableMessage: "No Performance Indicators",
+        },
+        dynamicRowsTemplate:
+          mockDynamicRowsTemplateForKeyMetricsTableWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      expect(screen.queryByText("Heading 1")).not.toBeInTheDocument();
+      expect(screen.getByText("No Performance Indicators")).toBeVisible();
+    });
+
+    test("shows the table once a dynamic row has been added", () => {
+      const report = {
+        fieldData: {
+          [mockDynamicTemplateId]: [
+            {
+              id: mockDynamicFieldId,
+              name: "Mock metric",
+            },
+          ],
+        },
+      };
+      mockedUseStore.mockReturnValue({ report });
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        bodyRows: [],
+        footRows: [],
+        report,
+        verbiage: {
+          ...mockProps.verbiage,
+          emptyTableMessage: "No Performance Indicators",
+        },
+        dynamicRowsTemplate:
+          mockDynamicRowsTemplateForKeyMetricsTableWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      expect(screen.getByText("Heading 1")).toBeVisible();
+      expect(
+        screen.queryByText("No Performance Indicators")
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  describe("error message", () => {
+    test("table shows error message", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const errorMessage = screen.getByText("Mock error message");
+      expect(errorMessage).toBeVisible();
+    });
+
+    test("table does not show error message", () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        formData: {
+          id: "mockId",
+          type: "mockTable_mockServices",
+        },
+        report: {
+          fieldData: {
+            mockTable_mockServices: [
+              {
+                id: "mockId",
+                type: "mockTable_mockServices",
+                mockTable_mockServices_errorTable: [
+                  {
+                    id: "mockErrorId",
+                    type: "mockTable_mockServices_errorTable",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const errorMessage = screen.queryByText("Mock error message");
+      expect(errorMessage).not.toBeInTheDocument();
+    });
+
+    test("saving in modal clears error message", async () => {
+      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockGetValues(undefined);
+      const updatedProps = {
+        ...mockProps,
+        dynamicRowsTemplate: mockDynamicRowsTemplateWithModalForm,
+      };
+
+      render(tableComponent(updatedProps));
+
+      const errorMessage = screen.getByText("Mock error message");
+      expect(errorMessage).toBeVisible();
+
+      const button = screen.getByRole("button", {
+        name: "Mock dynamic row button",
+      });
+      await userEvent.click(button);
+
+      const modal = screen.getByRole("dialog", { name: "Add mock heading" });
+      await waitFor(() => {
+        expect(modal).toBeVisible();
+      });
+
+      const saveButton = screen.getByRole("button", {
+        name: "Save",
+      });
+      await act(async () => {
+        await userEvent.click(saveButton);
+      });
+
+      expect(errorMessage).not.toBeInTheDocument();
     });
   });
 

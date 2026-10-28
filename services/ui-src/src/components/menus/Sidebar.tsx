@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link as RouterLink, useLocation } from "react-router";
 // components
 import { Box, Collapse, Flex, Image, Link, Text } from "@chakra-ui/react";
-
 // utils
 import { useBreakpoint, useStore } from "utils";
 // assets
@@ -38,14 +37,15 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
       sx={sx.root}
       display={isHidden ? "none" : "block"}
       className={isOpen ? "open" : "closed"}
-      role="navigation"
-      aria-label="Sidebar menu"
+      as="nav"
+      aria-label="Sidebar"
     >
       <Box
         as="button"
         sx={sx.closeButton}
         onClick={() => toggleSidebar(!isOpen)}
-        aria-label="Open/Close sidebar menu"
+        aria-label="Sidebar"
+        aria-expanded={isOpen}
       >
         <Image
           src={arrowDownIcon}
@@ -59,7 +59,12 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
       </Box>
       <Box sx={sx.navSectionsBox} className="nav-sections-box">
         {reportJson.routes.map((section) => (
-          <NavSection key={section.name} section={section} level={1} />
+          <NavSection
+            key={section.name}
+            section={section}
+            level={1}
+            sidebarOpen={isOpen}
+          />
         ))}
       </Box>
     </Box>
@@ -67,12 +72,12 @@ export const Sidebar = ({ isHidden }: SidebarProps) => {
 };
 
 interface NavSectionProps {
-  key: string;
   section: LinkItemProps;
   level: number;
+  sidebarOpen: boolean;
 }
 
-const NavSection = ({ section, level }: NavSectionProps) => {
+const NavSection = ({ section, level, sidebarOpen }: NavSectionProps) => {
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -84,7 +89,7 @@ const NavSection = ({ section, level }: NavSectionProps) => {
 
   const { name, path, children } = section;
   return (
-    <React.Fragment key={path}>
+    <Box key={path} inert={!sidebarOpen}>
       {children ? (
         <Box
           as="button"
@@ -105,6 +110,7 @@ const NavSection = ({ section, level }: NavSectionProps) => {
           to={path}
           variant="unstyled"
           sx={sx.navLinkSansChildren}
+          aria-current={path === pathname}
         >
           <NavItem
             name={name}
@@ -121,11 +127,12 @@ const NavSection = ({ section, level }: NavSectionProps) => {
               key={section.name}
               section={section}
               level={level + 1}
+              sidebarOpen={sidebarOpen}
             />
           ))}
         </Collapse>
       )}
-    </React.Fragment>
+    </Box>
   );
 };
 
@@ -190,9 +197,9 @@ const sx = {
     borderBottom: "1px solid var(--mdct-colors-gray_lighter)",
   },
   title: {
-    fontSize: "xl",
-    fontWeight: "bold",
-    lineHeight: "1.33",
+    fontSize: "body_xl",
+    fontWeight: "heading_md",
+    lineHeight: "body_xl",
     width: "15rem",
     padding: "1rem 1rem",
     ".desktop &": {
@@ -232,12 +239,12 @@ const sx = {
     align: "center",
     role: "group",
     borderBottom: "1px solid var(--mdct-colors-gray_lighter)",
-    fontSize: "0.875rem",
+    fontSize: "body_sm",
     ".ds-c-icon--arrow": {
       position: "absolute",
       top: "10px",
       right: "spacer1",
-      fontSize: "13px",
+      fontSize: "body_sm",
       color: "gray",
     },
     "&.selected": {
@@ -267,7 +274,7 @@ const sx = {
   },
   navItemTitle: {
     marginRight: "spacer5",
-    fontSize: "14px",
+    fontSize: "body_sm",
     marginY: "10px",
     textAlign: "left",
     "&.level-1": {

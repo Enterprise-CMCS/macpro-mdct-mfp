@@ -1,3 +1,4 @@
+import { Mock } from "vitest";
 import {
   getReportPeriod,
   getReportYear,
@@ -10,9 +11,9 @@ import {
 } from "../../storage/reports";
 import { ReportMetadataShape, ReportStatus, ReportType } from "../types";
 
-jest.mock("../../storage/reports", () => ({
-  getReportFieldData: jest.fn(),
-  queryReportMetadatasForState: jest.fn(),
+vi.mock("../../storage/reports", () => ({
+  getReportFieldData: vi.fn(),
+  queryReportMetadatasForState: vi.fn(),
 }));
 
 const mockWPData = {
@@ -42,7 +43,7 @@ const mockUnvalidatedMetadata = {
 describe("API utility functions", () => {
   describe("getReportYear", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it("should return the report year for a new work plan", () => {
@@ -113,7 +114,7 @@ describe("API utility functions", () => {
 
   describe("getReportPeriod", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it("should return the report period for a new work plan", () => {
@@ -185,7 +186,7 @@ describe("API utility functions", () => {
 
   describe("getEligibleWorkPlan", () => {
     it("Should retrieve the oldest eligible work plan", async () => {
-      (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+      (queryReportMetadatasForState as Mock).mockResolvedValue([
         {
           status: ReportStatus.IN_PROGRESS,
           associatedSar: undefined,
@@ -219,7 +220,7 @@ describe("API utility functions", () => {
         },
       ]);
       const mockFieldData = { id: "just-right-data" };
-      (getReportFieldData as jest.Mock).mockResolvedValue(mockFieldData);
+      (getReportFieldData as Mock).mockResolvedValue(mockFieldData);
 
       const result = await getEligibleWorkPlan("CO");
 
@@ -228,7 +229,7 @@ describe("API utility functions", () => {
     });
 
     it("Should return undefined if no work plans are eligible", async () => {
-      (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+      (queryReportMetadatasForState as Mock).mockResolvedValue([
         {
           status: ReportStatus.IN_PROGRESS,
           associatedSar: undefined,
@@ -252,7 +253,7 @@ describe("API utility functions", () => {
 
   describe("createReportName", () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it("should create a work plan report name", () => {

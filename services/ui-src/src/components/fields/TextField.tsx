@@ -13,6 +13,7 @@ import { EntityContext } from "components/reports/EntityProvider";
 // utils
 import {
   autosaveFieldData,
+  enqueueWrite,
   getAutosaveFields,
   labelTextWithOptional,
   parseCustomHtml,
@@ -53,7 +54,7 @@ export const TextField = ({
   const form = useFormContext();
   const fieldIsRegistered = name in form.getValues();
   const { full_name, state } = useStore().user ?? {};
-  const { report, selectedEntity, setAutosaveState } = useStore();
+  const { report, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
 
@@ -101,8 +102,6 @@ export const TextField = ({
 
     // submit field data to database (inline validation is run prior to API call)
     if (autosave) {
-      // track the state of autosave in state management
-      setAutosaveState(true);
       const fields = getAutosaveFields({
         name,
         type: ReportFormFieldType.TEXT,
@@ -110,7 +109,12 @@ export const TextField = ({
         defaultValue,
         hydrationValue,
       });
-      const fieldsToSave = updatedTextFields(fields, report?.fieldData);
+
+      const entityFieldData = selectedEntity
+        ? { ...report?.fieldData, ...selectedEntity }
+        : report?.fieldData;
+
+      const fieldsToSave = updatedTextFields(fields, entityFieldData);
 
       const reportArgs = {
         id: report?.id,
@@ -119,18 +123,18 @@ export const TextField = ({
       };
       const user = { userName: full_name, state };
 
-      await autosaveFieldData({
-        form,
-        fields: fieldsToSave,
-        report: reportArgs,
-        user,
-        entityContext: {
-          selectedEntity,
-          prepareEntityPayload,
-        },
-      }).then(() => {
-        setAutosaveState(false);
-      });
+      await enqueueWrite(() =>
+        autosaveFieldData({
+          form,
+          fields: fieldsToSave,
+          report: reportArgs,
+          user,
+          entityContext: {
+            selectedEntity,
+            prepareEntityPayload,
+          },
+        })
+      );
     }
   };
 

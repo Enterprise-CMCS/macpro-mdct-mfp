@@ -1,6 +1,6 @@
 import { useMemo, useId } from "react";
 // components
-import { Box, Button, Image, Td, Tr, Text } from "@chakra-ui/react";
+import { Box, Button, Image, Td, Tr, Text, HStack } from "@chakra-ui/react";
 import { EntityStatusIcon, Table } from "components";
 // types
 import {
@@ -123,11 +123,8 @@ export const EntityRow = ({
   };
 
   return (
-    <Tr sx={sx.content}>
-      <Td
-        pt={isMobile ? "1.5rem" : "0.5rem"}
-        verticalAlign={isMobile ? "baseline" : "middle"}
-      >
+    <Tr>
+      <Td>
         <EntityStatusIcon entityStatus={entityStatus} />
       </Td>
       <Td sx={sx.entityName}>
@@ -157,64 +154,61 @@ export const EntityRow = ({
                 content={{
                   headRow: ["Actual end date", "Closed by"],
                   bodyRows: [
-                    [entity.closeOutInformation_actualEndDate, closedBy],
+                    [
+                      entity.closeOutInformation_actualEndDate ??
+                        "No response (Optional)",
+                      closedBy,
+                    ],
                   ],
                 }}
                 variant="none"
-                sxOverride={sx.table}
               ></Table>
             )}
           </Box>
-          <Box
-            sx={sx.actionContainer}
-            pt={isMobile ? "1rem" : "0"}
-            justifyContent={isMobile ? "flex-start" : "flex-end"}
-            display={"inline-block"}
-          >
-            {isNewAndOptional && openAddEditEntityModal && (
-              <Button
-                sx={sx.editNameButton}
-                id={editNameButtonId}
-                variant="none"
-                onClick={() => openAddEditEntityModal(entity)}
-                aria-labelledby={`${editNameButtonId} ${rowId}`}
-                pl={isMobile ? "0" : "1rem"}
-                pr={isMobile ? "1.5rem" : "2.5rem"}
-              >
-                {viewOnly
-                  ? verbiage.readOnlyEntityButtonText
-                  : verbiage.editEntityButtonText}
-              </Button>
-            )}
+        </Box>
+      </Td>
+      <Td>
+        <HStack gap="1rem">
+          {isNewAndOptional && openAddEditEntityModal && (
             <Button
-              sx={
-                isNewAndOptional
-                  ? sx.editOtherEntityButton
-                  : sx.editEntityButton
-              }
-              id={editButtonId}
-              onClick={() => openOverlayOrDrawer(entity)}
-              variant="outline"
-              disabled={entityStatus === EntityStatuses.DISABLED}
-              aria-labelledby={`${editButtonId} ${rowId}`}
+              sx={sx.editNameButton}
+              id={editNameButtonId}
+              variant="none"
+              onClick={() => openAddEditEntityModal(entity)}
+              aria-labelledby={`${editNameButtonId} ${rowId}`}
             >
               {viewOnly
-                ? verbiage.readOnlyEntityDetailsButtonText
-                : verbiage.enterEntityDetailsButtonText}
+                ? verbiage.readOnlyEntityButtonText
+                : verbiage.editEntityButtonText}
             </Button>
-            {isNewAndOptional && openDeleteEntityModal && (
-              <Button
-                sx={sx.deleteButton}
-                id={deleteButtonId}
-                data-testid="delete-entity"
-                onClick={() => openDeleteEntityModal(entity)}
-                aria-labelledby={`${deleteButtonId} ${rowId}`}
-              >
-                <Image src={deleteIcon} alt="Delete" boxSize="3x3" />
-              </Button>
-            )}
-          </Box>
-        </Box>
+          )}
+          <Button
+            sx={
+              isNewAndOptional ? sx.editOtherEntityButton : sx.editEntityButton
+            }
+            id={editButtonId}
+            onClick={() => openOverlayOrDrawer(entity)}
+            variant="outline"
+            disabled={entityStatus === EntityStatuses.DISABLED}
+            aria-labelledby={`${editButtonId} ${rowId}`}
+            className="editAction"
+          >
+            {viewOnly
+              ? verbiage.readOnlyEntityDetailsButtonText
+              : verbiage.enterEntityDetailsButtonText}
+          </Button>
+          {isNewAndOptional && openDeleteEntityModal && (
+            <Button
+              sx={sx.deleteButton}
+              id={deleteButtonId}
+              data-testid="delete-entity"
+              onClick={() => openDeleteEntityModal(entity)}
+              aria-labelledby={`${deleteButtonId} ${rowId}`}
+            >
+              <Image src={deleteIcon} alt="Delete" boxSize="3x3" />
+            </Button>
+          )}
+        </HStack>
       </Td>
     </Tr>
   );
@@ -232,15 +226,9 @@ interface Props {
 }
 
 const sx = {
-  content: {
-    td: {
-      borderColor: "gray_light",
-      paddingRight: 0,
-    },
-  },
   errorText: {
     color: "error_dark",
-    fontSize: "0.75rem",
+    fontSize: "body_xs",
     marginBottom: "spacer1",
   },
   entityName: {
@@ -249,7 +237,7 @@ const sx = {
       margin: "0.3rem auto",
       padding: 0,
       listStyleType: "none",
-      lineHeight: "1.3rem",
+      lineHeight: "body_md",
       ".mobile &": {
         margin: "auto",
       },
@@ -257,8 +245,8 @@ const sx = {
         wordWrap: "break-word",
         whiteSpace: "break-spaces",
         "&:first-of-type": {
-          fontWeight: "bold",
-          fontSize: "md",
+          fontWeight: "heading_md",
+          fontSize: "body_md",
           marginBottom: "0rem",
         },
       },
@@ -267,28 +255,20 @@ const sx = {
       paddingY: "spacer3",
     },
   },
-  actionContainer: {
-    paddingLeft: "spacer3",
-    alignItems: "center",
-    display: "flex",
-    ".mobile &": {
-      paddingLeft: 0,
-    },
-  },
   editNameButton: {
-    fontWeight: "normal",
+    fontWeight: "body_md",
     textDecoration: "underline",
     color: "primary",
+    padding: "0",
   },
   editEntityButton: {
     padding: 0,
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     width: "5rem",
-    marginRight: "2.875rem",
   },
   editOtherEntityButton: {
     padding: 0,
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     minWidth: "5rem",
   },
   deleteButton: {
@@ -297,25 +277,9 @@ const sx = {
     width: "1.5rem",
     minWidth: "1.5rem",
     padding: 0,
-    marginLeft: "spacer2",
-    marginRight: "0.4rem",
-    marginBottom: "spacer_half",
     background: "white",
     "&:hover, &:hover:disabled, :disabled": {
       background: "white",
-    },
-  },
-  table: {
-    td: {
-      paddingTop: "0rem",
-      paddingLeft: "0rem",
-    },
-    th: {
-      paddingLeft: "0rem",
-      border: "none",
-      fontWeight: "bold",
-      color: "gray",
-      width: "2rem",
     },
   },
 };

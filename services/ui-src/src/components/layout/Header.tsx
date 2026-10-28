@@ -22,67 +22,71 @@ export const Header = () => {
   return (
     <Box sx={sx.root} id="header">
       <UsaBanner />
-      <Flex sx={sx.headerBar} role="banner">
-        <Container sx={sx.headerContainer}>
-          <Flex sx={sx.headerFlex}>
-            <Link as={RouterLink} to="/" variant="unstyled">
-              <Image src={appLogo} alt="MFP logo" sx={sx.appLogo} />
-            </Link>
-            <Flex sx={sx.menuFlex}>
-              <Link
-                as={RouterLink}
-                to="/help"
-                variant="unstyled"
-                aria-label="Get Help"
-              >
-                <MenuOption
-                  icon={getHelpIcon}
-                  text="Get Help"
-                  altText="Help"
-                  role="group"
-                  hideText={isMobile}
-                />
+      <Box role="banner">
+        <Flex sx={sx.headerBar} as="nav" aria-label="main">
+          <Container sx={sx.headerContainer}>
+            <Flex sx={sx.headerFlex}>
+              <Link as={RouterLink} to="/" variant="unstyled">
+                <Image src={appLogo} alt="MFP logo" sx={sx.appLogo} />
               </Link>
-              <Menu />
-            </Flex>
-          </Flex>
-        </Container>
-      </Flex>
-      {isReportPage && (
-        <Flex sx={sx.subnavBar}>
-          <Container sx={sx.subnavContainer}>
-            <Flex sx={sx.subnavFlex}>
-              <Flex>
-                <Text sx={sx.submissionNameText}>{report?.submissionName}</Text>
-              </Flex>
-              <Flex sx={sx.subnavFlexRight}>
-                {lastSavedTime && (
-                  <>
-                    <Image
-                      src={checkIcon}
-                      alt="gray checkmark icon"
-                      sx={sx.checkIcon}
-                    />
-                    <Text sx={sx.saveStatusText}>{saveStatusText}</Text>
-                  </>
-                )}
+              <Flex sx={sx.menuFlex}>
                 <Link
                   as={RouterLink}
-                  to={report?.formTemplate.basePath || "/"}
-                  sx={sx.leaveFormLink}
-                  variant="outlineButton"
+                  to="/help"
+                  variant="unstyled"
+                  aria-label="Get Help"
                 >
-                  {!isMobile ? (
-                    <>Leave form</>
-                  ) : (
-                    <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
-                  )}
+                  <MenuOption
+                    icon={getHelpIcon}
+                    text="Get Help"
+                    altText="Help"
+                    role="group"
+                    hideText={isMobile}
+                  />
                 </Link>
+                <Menu />
               </Flex>
             </Flex>
           </Container>
         </Flex>
-      )}
+        {isReportPage && (
+          <Flex sx={sx.subnavBar}>
+            <Container sx={sx.subnavContainer}>
+              <Flex sx={sx.subnavFlex}>
+                <Flex>
+                  <Text sx={sx.submissionNameText}>
+                    {report?.submissionName}
+                  </Text>
+                </Flex>
+                <Flex sx={sx.subnavFlexRight}>
+                  {lastSavedTime && (
+                    <>
+                      <Image
+                        src={checkIcon}
+                        alt="gray checkmark icon"
+                        sx={sx.checkIcon}
+                      />
+                      <Text sx={sx.saveStatusText}>{saveStatusText}</Text>
+                    </>
+                  )}
+                  <Link
+                    as={RouterLink}
+                    to={report?.formTemplate.basePath || "/"}
+                    sx={sx.leaveFormLink}
+                    variant="outlineButton"
+                  >
+                    {!isMobile ? (
+                      <>Leave form</>
+                    ) : (
+                      <Image src={closeIcon} alt="Close" sx={sx.closeIcon} />
+                    )}
+                  </Link>
+                </Flex>
+              </Flex>
+            </Container>
+          </Flex>
+        )}
+      </Box>
     </Box>
   );
 };
@@ -136,7 +140,7 @@ const sx = {
     alignItems: "center",
   },
   submissionNameText: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
   },
   subnavFlexRight: {
     alignItems: "center",
@@ -150,7 +154,7 @@ const sx = {
     },
   },
   saveStatusText: {
-    fontSize: "sm",
+    fontSize: "body_sm",
     ".mobile &": {
       width: "5rem",
       textAlign: "right",

@@ -1,5 +1,5 @@
 import { States } from "../../constants";
-import { DropdownOptions } from "types";
+import { DropdownOptions, ReportType } from "types";
 
 // create dropdown options
 const dropdownOptions: DropdownOptions[] = Object.keys(States).map((value) => {
@@ -12,15 +12,15 @@ const dropdownOptions: DropdownOptions[] = Object.keys(States).map((value) => {
 // create radio options
 const reportChoices = [
   {
-    id: "WP",
+    id: ReportType.WP,
     label: "MFP Work Plan",
   },
   {
-    id: "SAR",
+    id: ReportType.SAR,
     label: "MFP Semi-Annual Progress Report (SAR)",
   },
   {
-    id: "Financial Reporting",
+    id: ReportType.FINANCIAL_REPORT,
     label: "MFP Financial Reporting Form",
   },
 ];

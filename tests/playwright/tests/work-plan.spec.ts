@@ -13,6 +13,7 @@ import {
   stateAbbreviation,
   stateName,
   testWorkPlan,
+  workPlanFeatureFlags,
 } from "../utils/consts";
 import { fillWorkPlan, newWorkPlan } from "../../seeds/fixtures/work-plan";
 
@@ -66,7 +67,7 @@ test.describe("Work Plan Page", () => {
     }) => {
       const wpReport = newWorkPlan({}, stateName, currentYear, 1);
       const reportId = await postReport(wpReport, stateAbbreviation);
-      const updatedData = fillWorkPlan({}, currentYear, 1);
+      const updatedData = fillWorkPlan(workPlanFeatureFlags, currentYear, 1);
       await updateReport(reportId, updatedData, reportType, stateAbbreviation);
       await submitReport(reportId, reportType, stateAbbreviation);
       await adminPage.page.goto("/");

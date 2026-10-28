@@ -1,6 +1,7 @@
 import { ReviewSubmitPageVerbiage } from "types";
 
 const submitReviewVerbiage: ReviewSubmitPageVerbiage = {
+  title: "Review & Submit - SAR - MFP",
   print: {
     printPageUrl: "/sar/export",
     printButtonText: "Review PDF",
@@ -24,7 +25,8 @@ const submitReviewVerbiage: ReviewSubmitPageVerbiage = {
       ],
     },
     table: {
-      headRow: ["Section", "Status", ""],
+      headRow: ["Section", "Status", "Actions"],
+      caption: "Section Review",
     },
     modal: {
       structure: {

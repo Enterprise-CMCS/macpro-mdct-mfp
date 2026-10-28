@@ -27,36 +27,37 @@ describe("financialReportingLogic", () => {
 
   describe("generateReportYearOptions", () => {
     beforeAll(() => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
     });
 
     afterAll(() => {
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
 
-    it("should generate options for between launch year (2025) and current year + 1", () => {
-      jest.setSystemTime(new Date("2025-06-15"));
+    it("should generate options for between launch year (2026) and current year + 1", () => {
+      vi.setSystemTime(new Date("2026-06-15"));
       const options = generateReportYearOptions();
 
-      expect(options).toHaveLength(2);
-      expect(options[0].value).toBe("2026");
-      expect(options[1].value).toBe("2025");
+      expect(options).toHaveLength(3);
+      expect(options[0].value).toBe("2028");
+      expect(options[1].value).toBe("2027");
+      expect(options[2].value).toBe("2026");
     });
 
     it("should generate correct option structure", () => {
-      jest.setSystemTime(new Date("2026-05-05"));
+      vi.setSystemTime(new Date("2026-05-05"));
       const options = generateReportYearOptions();
 
       expect(options[0]).toEqual({
-        id: "reportYear-2027",
-        label: "2027",
-        name: "2027",
-        value: "2027",
+        id: "reportYear-2028",
+        label: "2028",
+        name: "2028",
+        value: "2028",
       });
     });
 
     it("should return options in descending order", () => {
-      jest.setSystemTime(new Date("2027-01-01"));
+      vi.setSystemTime(new Date("2027-01-01"));
       const options = generateReportYearOptions();
 
       const years = options.map((opt) => parseInt(opt.value));

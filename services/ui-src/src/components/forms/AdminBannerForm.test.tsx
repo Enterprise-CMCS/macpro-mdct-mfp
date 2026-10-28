@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
@@ -7,15 +8,15 @@ import { RouterWrappedComponent } from "utils/testing/mockRouter";
 import { testA11yAct } from "utils/testing/commonTests";
 import { convertDateTimeEtToUtc, useStore } from "utils";
 import { mockBannerData } from "utils/testing/mockBanner";
-import { mockBannerStore } from "utils/testing/setupJest";
+import { mockBannerStore } from "utils/testing/setupTest";
 
-const mockWriteAdminBanner = jest.fn();
-const mockWriteAdminBannerWithError = jest.fn(() => {
+const mockWriteAdminBanner = vi.fn();
+const mockWriteAdminBannerWithError = vi.fn(() => {
   throw new Error("Some error message");
 });
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const mockBannerOverlappingDates = {
   ...mockBannerData,
@@ -59,7 +60,7 @@ const fillOutForm = async (form: any) => {
 
 describe("<AdminBannerForm />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   test("AdminBannerForm is visible", () => {
     mockedUseStore.mockReturnValue(emptyBannerStore);

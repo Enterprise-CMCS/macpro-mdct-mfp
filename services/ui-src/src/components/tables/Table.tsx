@@ -15,14 +15,17 @@ import {
 // utils
 import { sanitizeAndParseHtml } from "utils";
 // types
-import { TableContentShape } from "types";
+import { TableContentShape, TableHeaderCellShape } from "types";
 // constants
 import { notAnsweredText } from "../../constants";
+
+export const normalizeHeaderCell = (
+  cell: string | TableHeaderCellShape
+): TableHeaderCellShape => (typeof cell === "string" ? { title: cell } : cell);
 
 export const Table = ({
   content,
   variant,
-  border,
   sxOverride,
   ariaOverride,
   children,
@@ -42,16 +45,30 @@ export const Table = ({
         <Thead>
           {/* Head Row */}
           <Tr>
-            {content.headRow.map((headerCell: string, index: number) => (
-              <Th
-                key={`${index}-head-cell`}
-                scope="col"
-                sx={{ ...sx.tableHeader, ...sxOverride }}
-                aria-label={ariaOverride?.headRow?.[index]}
-              >
-                {sanitizeAndParseHtml(headerCell)}
-              </Th>
-            ))}
+            {content.headRow.map(
+              (headerCell: string | TableHeaderCellShape, index: number) => {
+                const { title, colSpan, align } =
+                  normalizeHeaderCell(headerCell);
+                const ariaLabel = ariaOverride?.headRow?.[index]
+                  ? normalizeHeaderCell(ariaOverride.headRow[index]).title
+                  : undefined;
+
+                return (
+                  <Th
+                    key={`${index}-head-cell`}
+                    scope="col"
+                    colSpan={colSpan}
+                    sx={{
+                      ...sxOverride,
+                      ...(align && { textAlign: align }),
+                    }}
+                    aria-label={ariaLabel}
+                  >
+                    {sanitizeAndParseHtml(title)}
+                  </Th>
+                );
+              }
+            )}
           </Tr>
         </Thead>
       )}
@@ -65,7 +82,6 @@ export const Table = ({
               <Td
                 key={`${cell}${rowIndex}-body-cell`}
                 sx={{
-                  tableCell: border ? sx.tableCellBorder : sx.tableCell,
                   color: cell == notAnsweredText ? "error_darker" : "",
                 }}
                 aria-label={ariaOverride?.bodyRows?.[index][rowIndex]}
@@ -85,7 +101,7 @@ export const Table = ({
                   <Th
                     key={`${rowIndex}-foot-cell`}
                     scope="col"
-                    sx={{ ...sx.tableHeader, ...sxOverride }}
+                    sx={{ ...sxOverride }}
                     aria-label={ariaOverride?.footRow?.[index][rowIndex]}
                   >
                     {isValidElement(headerCell)
@@ -105,7 +121,6 @@ export const Table = ({
 interface Props {
   content: TableContentShape;
   variant?: string;
-  border?: boolean;
   sxOverride?: SystemStyleObject;
   ariaOverride?: TableContentShape;
   children?: ReactNode;
@@ -120,34 +135,6 @@ const sx = {
     margin: 0,
     padding: 0,
     height: 0,
-  },
-  tableHeader: {
-    padding: "0.75rem 0.5rem",
-    fontSize: "sm",
-    fontWeight: "semibold",
-    borderColor: "gray_lighter",
-    textTransform: "none",
-    letterSpacing: "normal",
-    ".mobile &": {
-      fontSize: "xs",
-    },
-  },
-  tableCell: {
-    padding: "0.75rem 0.5rem",
-    borderStyle: "none",
-    fontWeight: "normal",
-    ".mobile &": {
-      fontSize: "xs",
-    },
-  },
-  tableCellBorder: {
-    padding: "0.75rem 0.5rem",
-    borderBottom: "1px solid",
-    borderColor: "gray_lighter",
-    fontWeight: "normal",
-    ".mobile &": {
-      fontSize: "xs",
-    },
   },
   ".two-column &": {}, // TODO: add additional styling for two-column dynamic field tables if needed
   notAnswered: {

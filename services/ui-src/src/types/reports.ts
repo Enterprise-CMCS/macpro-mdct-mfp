@@ -227,7 +227,7 @@ export interface ModalOverlayReportPageVerbiage extends ReportPageVerbiage {
   editEntityHint?: string;
   dashboardTitle: string;
   countEntitiesInTitle: boolean;
-  tableHeader: string;
+  tableHeaders: string[];
   addEditModalHint: string;
   emptyDashboardText?: string;
   accordion?: AnyObject;

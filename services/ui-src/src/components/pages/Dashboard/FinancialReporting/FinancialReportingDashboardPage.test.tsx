@@ -1,3 +1,4 @@
+import { Mock, MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useSearchParams } from "react-router";
@@ -11,20 +12,21 @@ import {
   mockNoFinancialReportStore,
   mockNotStartedFinancialReportStore,
 } from "utils/testing/financial-report/mockFinancialReport";
-import { RouterWrappedComponent } from "utils/testing/setupJest";
+import { RouterWrappedComponent } from "utils/testing/setupTest";
 // verbiage
 import financialReportVerbiage from "verbiage/pages/financial-report/financial-report-dashboard";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockUseNavigate = jest.fn();
-jest.mock("react-router", () => ({
+const mockUseNavigate = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
-  useLocation: jest.fn(() => ({
+  useLocation: vi.fn(() => ({
     pathname: "/mock-dashboard",
   })),
-  useSearchParams: jest.fn(),
+  useSearchParams: vi.fn(),
 }));
 
 const financialReportDashboardWithNoReports = (
@@ -46,12 +48,12 @@ const financialReportDashboardViewWithReports = (
 );
 
 describe("Test Financial Report Dashboard", () => {
-  const mockSetSearchParams = jest.fn();
-  const mockGetSearchParams = jest.fn();
+  const mockSetSearchParams = vi.fn();
+  const mockGetSearchParams = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useSearchParams as jest.Mock).mockReturnValue([
+    vi.clearAllMocks();
+    (useSearchParams as Mock).mockReturnValue([
       { get: mockGetSearchParams },
       mockSetSearchParams,
     ]);
@@ -67,12 +69,12 @@ describe("Test Financial Report Dashboard", () => {
     ).toBeVisible();
     expect(
       screen.queryByText(financialReportVerbiage.body.table.caption)
-    ).toBeInTheDocument();
+    ).toBeVisible();
 
     //Check that the empty table message is present
     expect(
       screen.queryByText(financialReportVerbiage.body.empty)
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   test("Check that Financial Report Dashboard view renders with reports", () => {
@@ -85,14 +87,14 @@ describe("Test Financial Report Dashboard", () => {
     ).toBeVisible();
     expect(
       screen.queryByText(financialReportVerbiage.body.table.caption)
-    ).toBeInTheDocument();
+    ).toBeVisible();
 
     //Check that the report data is present
     expect(
       screen.getByText(
         "Financial Report Submission Period: 1 Year: 2024 Status: Not started"
       )
-    ).toBeInTheDocument();
+    ).toBeVisible();
 
     //Check that the empty table message is NOT present
     expect(
@@ -102,12 +104,12 @@ describe("Test Financial Report Dashboard", () => {
 });
 
 describe("Test FinancialReportingDashboardPage modal functionality", () => {
-  const mockSetSearchParams = jest.fn();
-  const mockGetSearchParams = jest.fn();
+  const mockSetSearchParams = vi.fn();
+  const mockGetSearchParams = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useSearchParams as jest.Mock).mockReturnValue([
+    vi.clearAllMocks();
+    (useSearchParams as Mock).mockReturnValue([
       { get: mockGetSearchParams },
       mockSetSearchParams,
     ]);
@@ -119,7 +121,7 @@ describe("Test FinancialReportingDashboardPage modal functionality", () => {
 
     const callToAction = financialReportVerbiage.body.callToAction;
     const addButton = screen.getByRole("button", { name: callToAction });
-    expect(addButton).toBeInTheDocument();
+    expect(addButton).toBeVisible();
 
     await act(async () => {
       await userEvent.click(addButton);
@@ -128,17 +130,19 @@ describe("Test FinancialReportingDashboardPage modal functionality", () => {
     await waitFor(() => {
       expect(
         screen.getByRole("heading", {
-          name: /Add new MFP Financial Reporting Form submission/i,
+          name: "Start MFP Financial Report",
         })
-      ).toBeInTheDocument();
+      ).toBeVisible();
     });
   });
 
   test("Check that modal opens when setModalReport is called with a report", async () => {
     render(financialReportDashboardViewWithReports);
 
-    const editModalButton = screen.getByRole("img", { name: /edit/i });
-    expect(editModalButton).toBeInTheDocument();
+    const editModalButton = screen.getByRole("button", {
+      name: "Edit reporting of Financial Report Submission Period: 1 Year: 2024 Status: Not started",
+    });
+    expect(editModalButton).toBeVisible();
 
     await act(async () => {
       await userEvent.click(editModalButton);
@@ -147,9 +151,9 @@ describe("Test FinancialReportingDashboardPage modal functionality", () => {
     await waitFor(() => {
       expect(
         screen.getByRole("heading", {
-          name: /Edit MFP Financial Reporting Form submission/i,
+          name: "Edit MFP Financial Report",
         })
-      ).toBeInTheDocument();
+      ).toBeVisible();
     });
   });
 });

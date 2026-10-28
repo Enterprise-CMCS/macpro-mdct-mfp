@@ -1,4 +1,6 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 // components
 import { ReportContext } from "components";
 import { AdminReview } from "./AdminReview";
@@ -8,8 +10,8 @@ import {
   mockReportMethods,
   mockUseStore,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
-import { useStore } from "utils";
+} from "utils/testing/setupTest";
+import { approveReport, useStore } from "utils";
 // types
 import { ReportStatus, ReportType } from "types";
 // verbiage
@@ -17,8 +19,21 @@ import WPReviewVerbiage from "verbiage/pages/wp/wp-review-and-submit";
 import SARReviewVerbiage from "verbiage/pages/sar/sar-review-and-submit";
 import FinancialReportingFormReviewVerbiage from "verbiage/pages/financial-report/financial-report-review-and-submit";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+
+vi.mock("utils/api/requestMethods/report", async (importOriginal) => ({
+  ...(await importOriginal()),
+  approveReport: vi.fn(),
+  releaseReport: vi.fn(),
+}));
+const mockApproveReport = approveReport as MockedFunction<typeof approveReport>;
+
+const mockUseNavigate = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useNavigate: () => mockUseNavigate,
+}));
 
 const ReviewSubmitPage = (verbiage: any) => {
   return (
@@ -37,7 +52,7 @@ const ReviewSubmitPage = (verbiage: any) => {
 describe("<AdminReview />", () => {
   describe("MFP WP Review and Submit Page Functionality", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     describe("Review and Submit Page - Admin View", () => {
@@ -77,7 +92,7 @@ describe("<AdminReview />", () => {
       });
 
       test("should not show console errors", () => {
-        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        const consoleSpy = vi.spyOn(console, "error");
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           user: mockAdminUserStore,
@@ -87,11 +102,50 @@ describe("<AdminReview />", () => {
         expect(consoleSpy).not.toHaveBeenCalled();
       });
     });
+
+    describe("Review and Submit Page - Approval submission", () => {
+      const wpSubmittedReport = {
+        reportType: ReportType.WP,
+        status: ReportStatus.SUBMITTED,
+        state: "AL",
+        id: "mock-report-id",
+        formTemplate: { basePath: "/mfp/wp" },
+      };
+
+      const openApproveModal = async () => {
+        // open the approve confirmation modal
+        await userEvent.click(screen.getByRole("button", { name: "Approve" }));
+        // type the required confirmation text to enable the modal button
+        await userEvent.type(screen.getByRole("textbox"), "APPROVE");
+      };
+
+      test("Shows an error alert and re-enables the button when approval fails", async () => {
+        mockApproveReport.mockRejectedValueOnce(new Error("Request Failed"));
+        mockedUseStore.mockReturnValue({
+          ...mockUseStore,
+          report: wpSubmittedReport,
+          user: mockAdminUserStore,
+        });
+        render(ReviewSubmitPage(WPReviewVerbiage));
+
+        await openApproveModal();
+        const modalApproveButton = screen.getByTestId("modal-approve-button");
+        await userEvent.click(modalApproveButton);
+
+        expect(mockApproveReport).toHaveBeenCalledTimes(1);
+        expect(mockUseNavigate).not.toHaveBeenCalled();
+        expect(
+          await screen.findByText("Report could not be approved")
+        ).toBeInTheDocument();
+        // button re-enabled so the admin can retry
+        expect(modalApproveButton).toBeEnabled();
+      });
+    });
   });
 
   describe("MFP SAR Review and Submit Page Functionality", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     describe("Review and Submit Page - Admin View", () => {
@@ -134,7 +188,7 @@ describe("<AdminReview />", () => {
       });
 
       test("should not show console errors", () => {
-        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        const consoleSpy = vi.spyOn(console, "error");
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {
@@ -151,7 +205,7 @@ describe("<AdminReview />", () => {
 
   describe("MFP Financial Reporting Form Review and Submit Page Functionality", () => {
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     describe("Review and Submit Page - Admin View", () => {
@@ -194,7 +248,7 @@ describe("<AdminReview />", () => {
       });
 
       test("should not show console errors", () => {
-        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        const consoleSpy = vi.spyOn(console, "error");
         mockedUseStore.mockReturnValue({
           ...mockUseStore,
           report: {

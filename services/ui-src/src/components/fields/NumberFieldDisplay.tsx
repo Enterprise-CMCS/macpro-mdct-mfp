@@ -35,7 +35,10 @@ export const NumberFieldDisplay = ({
   };
 
   return (
-    <Box sx={{ ...sx, ...sxOverride }} className={`${nestedChildClasses}`}>
+    <Box
+      sx={{ ...sx, ...sxOverride, ...errorStyling(errorMessage) }}
+      className={`${nestedChildClasses}`}
+    >
       <Box sx={sx.numberFieldContainer} className={maskClass}>
         <CmsdsTextField
           autoComplete={autoComplete}
@@ -103,12 +106,21 @@ interface SymbolOverlayProps {
   disabled: boolean;
 }
 
+const errorStyling = (errorMessage?: ReactNode) => ({
+  ".ds-c-inline-error": {
+    marginBottom: errorMessage ? "0.5rem" : "0",
+  },
+});
+
 const sx = {
   ".ds-c-field": {
     maxWidth: "15rem",
     paddingLeft: "spacer1",
     paddingRight: "spacer1",
     margin: "0",
+  },
+  ".ds-c-label": {
+    width: "max-content",
   },
   numberFieldContainer: {
     position: "relative",
@@ -126,8 +138,8 @@ const sx = {
   },
   symbolOverlay: {
     position: "absolute",
-    fontSize: "lg",
-    fontWeight: "700",
+    fontSize: "body_lg",
+    fontWeight: "heading_lg",
     "&.nested": {
       bottom: "15px",
       left: "245px",

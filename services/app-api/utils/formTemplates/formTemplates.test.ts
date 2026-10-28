@@ -1,9 +1,4 @@
-// Mock flags before imports to avoid ReferenceError
-const mockFlag = { basePath: "/mock" };
-jest.mock("../../forms/routes/wp/flags", () => ({
-  mockFlag,
-}));
-
+import { Mock } from "vitest";
 import { createHash } from "node:crypto";
 import {
   compileValidationJsonFromRoutes,
@@ -12,13 +7,14 @@ import {
   getOrCreateFormTemplate,
   isFieldElement,
   isLayoutElement,
+  isLegacySAR,
 } from "./formTemplates";
 // forms
 import { wpReportJson as wp, sarReportJson as sar } from "../../forms";
 // flagged routes
 import * as wpFlags from "../../forms/routes/wp/flags";
 // mocks
-import { mockReportJson, mockWPMetadata } from "../testing/setupJest";
+import { mockReportJson, mockWPMetadata } from "../testing/setupTest";
 // types
 import {
   AnyObject,
@@ -45,16 +41,23 @@ import {
 } from "../../storage/reports";
 import { isFeatureFlagEnabled } from "../featureFlags/featureFlags";
 
-jest.mock("../../storage/reports", () => ({
-  getReportFormTemplate: jest.fn(),
-  putFormTemplateVersion: jest.fn(),
-  putReportFormTemplate: jest.fn(),
-  queryFormTemplateVersionByHash: jest.fn(),
-  queryLatestFormTemplateVersionNumber: jest.fn(),
+const { mockFlag } = vi.hoisted(() => ({
+  mockFlag: { basePath: "/mock" },
+}));
+vi.mock("../../forms/routes/wp/flags", () => ({
+  mockFlag,
 }));
 
-jest.mock("../featureFlags/featureFlags", () => ({
-  isFeatureFlagEnabled: jest.fn(),
+vi.mock("../../storage/reports", () => ({
+  getReportFormTemplate: vi.fn(),
+  putFormTemplateVersion: vi.fn(),
+  putReportFormTemplate: vi.fn(),
+  queryFormTemplateVersionByHash: vi.fn(),
+  queryLatestFormTemplateVersionNumber: vi.fn(),
+}));
+
+vi.mock("../featureFlags/featureFlags", () => ({
+  isFeatureFlagEnabled: vi.fn(),
 }));
 
 const mockWorkPlanFieldData = mockWPMetadata.fieldData;
@@ -84,12 +87,12 @@ const generateReportHash = (
 
 describe("Test getOrCreateFormTemplate WP", () => {
   beforeEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("should create a new form template if none exist", async () => {
-    (queryFormTemplateVersionByHash as jest.Mock).mockResolvedValue(undefined);
-    (queryLatestFormTemplateVersionNumber as jest.Mock).mockResolvedValue(0);
+    (queryFormTemplateVersionByHash as Mock).mockResolvedValue(undefined);
+    (queryLatestFormTemplateVersionNumber as Mock).mockResolvedValue(0);
     const expectedFormInformation = {
       type: "WP",
       name: "MFP Work Plan",
@@ -117,14 +120,14 @@ describe("Test getOrCreateFormTemplate WP", () => {
   });
 
   it("should return the right form and formTemplateVersion if it matches the most recent form", async () => {
-    (getReportFormTemplate as jest.Mock).mockResolvedValue(wp);
+    (getReportFormTemplate as Mock).mockResolvedValue(wp);
     const currentWPFormHash = generateReportHash(
       wp,
       reportYear,
       reportPeriod,
       mockWorkPlanFieldData
     );
-    (queryFormTemplateVersionByHash as jest.Mock).mockResolvedValue({
+    (queryFormTemplateVersionByHash as Mock).mockResolvedValue({
       id: "ghi.json",
       md5Hash: currentWPFormHash,
       versionNumber: 3,
@@ -141,8 +144,8 @@ describe("Test getOrCreateFormTemplate WP", () => {
   });
 
   it("should create a new form if it doesn't match the most recent form", async () => {
-    (queryFormTemplateVersionByHash as jest.Mock).mockResolvedValue(undefined);
-    (queryLatestFormTemplateVersionNumber as jest.Mock).mockResolvedValue(3);
+    (queryFormTemplateVersionByHash as Mock).mockResolvedValue(undefined);
+    (queryLatestFormTemplateVersionNumber as Mock).mockResolvedValue(3);
     const currentWPFormHash = generateReportHash(
       wp,
       reportYear,
@@ -165,11 +168,11 @@ describe("Test getOrCreateFormTemplate WP", () => {
 
 describe("Test getOrCreateFormTemplate SAR", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   it("should create a new form template if none exist", async () => {
-    (queryFormTemplateVersionByHash as jest.Mock).mockResolvedValue(undefined);
-    (queryLatestFormTemplateVersionNumber as jest.Mock).mockResolvedValue(0);
+    (queryFormTemplateVersionByHash as Mock).mockResolvedValue(undefined);
+    (queryLatestFormTemplateVersionNumber as Mock).mockResolvedValue(0);
     const expectedFormInformation = {
       type: "SAR",
       name: "MFP Semi-Annual Progress Report (SAR)",
@@ -203,8 +206,8 @@ describe("Test getOrCreateFormTemplate SAR", () => {
       reportPeriod,
       mockWorkPlanFieldData
     );
-    (getReportFormTemplate as jest.Mock).mockResolvedValue(sar);
-    (queryFormTemplateVersionByHash as jest.Mock).mockResolvedValue({
+    (getReportFormTemplate as Mock).mockResolvedValue(sar);
+    (queryFormTemplateVersionByHash as Mock).mockResolvedValue({
       formTemplateId: "foo",
       id: "mockReportJson",
       md5Hash: currentSARFormHash,
@@ -230,8 +233,8 @@ describe("Test getOrCreateFormTemplate SAR", () => {
       reportPeriod - 1,
       mockWorkPlanFieldData
     );
-    (queryFormTemplateVersionByHash as jest.Mock).mockResolvedValue(undefined);
-    (queryLatestFormTemplateVersionNumber as jest.Mock).mockResolvedValue(3);
+    (queryFormTemplateVersionByHash as Mock).mockResolvedValue(undefined);
+    (queryLatestFormTemplateVersionNumber as Mock).mockResolvedValue(3);
 
     const result = await getOrCreateFormTemplate(
       ReportType.SAR,
@@ -316,10 +319,44 @@ describe("Test form contents", () => {
   });
 
   test("returns flagged routes", async () => {
-    (isFeatureFlagEnabled as jest.Mock).mockResolvedValue(true);
+    (isFeatureFlagEnabled as Mock).mockResolvedValue(true);
     const template = await formTemplateForReportType(ReportType.WP);
-    expect(wpFlags).toEqual({ default: { mockFlag }, mockFlag });
+    expect(wpFlags).toEqual({ mockFlag });
     expect(template).toEqual(mockFlag);
+  });
+});
+
+describe("Test formTemplateForReportType legacy WP & SAR", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns legacy SAR template (with initiatives) when workPlanFieldData is from a legacy WP", async () => {
+    const legacyFieldData = { strategy_additionalDetails: "some value" };
+    const template = await formTemplateForReportType(
+      ReportType.SAR,
+      legacyFieldData
+    );
+    expect(isLegacySAR(template)).toBe(true);
+  });
+
+  it("returns new SAR template when workPlanFieldData lacks 'strategy_additionalDetails'", async () => {
+    (isFeatureFlagEnabled as Mock).mockResolvedValue(true);
+    const modernFieldData = { someOtherKey: "value" };
+    const template = await formTemplateForReportType(
+      ReportType.SAR,
+      modernFieldData
+    );
+    expect(isLegacySAR(template)).toBe(false);
+  });
+
+  it("does not short-circuit feature flagged templates when workPlanFieldData is absent", async () => {
+    (isFeatureFlagEnabled as Mock).mockResolvedValue(false);
+    await formTemplateForReportType(ReportType.WP);
+    expect(isFeatureFlagEnabled).toHaveBeenCalled();
+
+    await formTemplateForReportType(ReportType.SAR);
+    expect(isFeatureFlagEnabled).toHaveBeenCalled();
   });
 });
 

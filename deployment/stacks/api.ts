@@ -234,8 +234,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
       ...commonProps.environment,
       topicNamespace: isDev ? `--${project}--${stage}--` : "",
     },
-    tables: tables.filter(
-      (table) => table.node.id === "SarReports" || table.node.id === "WpReports"
+    tables: tables.filter((table) =>
+      ["SarReports", "WpReports", "FinancialReports"].includes(table.node.id)
     ),
   });
 

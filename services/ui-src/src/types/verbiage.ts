@@ -1,5 +1,5 @@
 // types
-import { CustomHtmlElement, ErrorVerbiage } from "types";
+import { CustomHtmlElement, ErrorVerbiage, TableHeaderCellShape } from "types";
 
 type ReviewAdminModal = {
   actionButtonText: string;
@@ -57,6 +57,7 @@ type SubmittedIntro = {
 };
 
 export interface ReviewSubmitPageVerbiage {
+  title: string;
   alertBox: {
     description: string;
     title: string;
@@ -75,6 +76,7 @@ export interface ReviewSubmitPageVerbiage {
     };
     table: {
       headRow: string[];
+      caption: string;
     };
   };
   submitted: {
@@ -173,7 +175,7 @@ export interface DashboardPageVerbiage {
   body: {
     table: {
       caption: string;
-      headRow: string[];
+      headRow: (string | TableHeaderCellShape)[];
     };
     empty: string;
     callToAction: string;

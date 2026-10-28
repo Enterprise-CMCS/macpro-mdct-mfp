@@ -20,7 +20,7 @@ export const ExportedReportBanner = () => {
   };
 
   return (
-    <Box data-testid="exportedReportBanner" sx={sx.container}>
+    <Box as="header" data-testid="exportedReportBanner" sx={sx.container}>
       <Text>{reportBanner.intro}</Text>
       <Button sx={sx.pdfButton} onClick={onClickHandler}>
         <Image src={pdfIcon} w={5} alt="PDF Icon" />
@@ -51,10 +51,10 @@ const sx = {
     },
     p: {
       marginBottom: "spacer2",
-      fontSize: "xl",
-      fontWeight: "bold",
+      fontSize: "body_xl",
+      fontWeight: "heading_xl",
       ".mobile &": {
-        fontSize: "lg",
+        fontSize: "body_lg",
       },
     },
   },

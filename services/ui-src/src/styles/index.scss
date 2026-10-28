@@ -43,7 +43,7 @@ a {
     color: var(--mdct-colors-gray_light);
   }
   &:visited {
-    color: inherit;
+    color: var(--mdct-colors-visited);
   }
 }
 
@@ -112,6 +112,12 @@ select.ds-c-field {
   &:focus-visible {
     @include tabbed-focus;
   }
+  [tabindex="-1"]:focus {
+    outline: none;
+  }
+  [tabindex="-1"]:focus-visible {
+    @include tabbed-focus;
+  }
 }
 
 a:focus,
@@ -176,4 +182,19 @@ button {
 .ds-c-alert {
   margin-top: var(--mdct-space-spacer3);
   margin-bottom: var(--mdct-space-spacer5);
+}
+
+.ds-c-hint {
+  font-size: 14px;
+}
+
+// EXTERNAL LINK ICON
+
+.external-link-icon.ds-c-icon {
+  color: inherit;
+  flex-shrink: 0;
+  font-size: 1em;
+  margin-left: 0.25em;
+  height: 1em;
+  width: 1em;
 }

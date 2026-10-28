@@ -1,10 +1,11 @@
 import React, {
+  ComponentClass,
   MouseEventHandler,
   useContext,
   useEffect,
   useState,
 } from "react";
-import { AdminReview } from "./AdminReview";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import {
   Box,
@@ -18,6 +19,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import {
+  AdminReview,
   Alert,
   Modal,
   PrintButton,
@@ -48,6 +50,8 @@ export const ReviewSubmitPage = () => {
     useState<boolean>(false);
 
   const { state, userIsEndUser, userIsAdmin } = useStore().user ?? {};
+
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
   // get report type, state, and id from context or storage
   const reportType = (report?.reportType ||
@@ -99,6 +103,10 @@ export const ReviewSubmitPage = () => {
 
   return (
     <>
+      {/* page title */}
+      <Helmet>
+        <title>{reviewAndSubmitVerbiage.title}</title>
+      </Helmet>
       {(hasError || report?.status === ReportStatus.NOT_STARTED) && (
         <Box sx={sx.alert}>
           <Alert
@@ -339,8 +347,8 @@ const sx = {
   },
   headerText: {
     marginBottom: "spacer2",
-    fontSize: "4xl",
-    fontWeight: "normal",
+    fontSize: "heading_3xl",
+    fontWeight: "heading_3xl",
   },
   infoTextBox: {
     marginTop: "spacer4",
@@ -350,7 +358,7 @@ const sx = {
     },
   },
   infoHeading: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     marginBottom: "spacer1",
   },
   infoParagraph: {
@@ -368,7 +376,7 @@ const sx = {
   },
   additionalInfoHeader: {
     color: "gray",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
   },
   additionalInfo: {
     paddingTop: "spacer3",

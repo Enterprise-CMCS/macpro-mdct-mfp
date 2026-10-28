@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 // components
 import { ReportContext, ReportPageWrapper } from "components";
@@ -12,20 +13,21 @@ import {
   mockUseEntityStore,
   mockWpReportContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils/state/useStore";
 import { testA11yAct } from "utils/testing/commonTests";
 import userEvent from "@testing-library/user-event";
 
-const mockUseNavigate = jest.fn();
-const mockUseLocation = jest.fn();
-jest.mock("react-router", () => ({
+const mockUseNavigate = vi.fn();
+const mockUseLocation = vi.fn();
+vi.mock("react-router", async (importOriginal) => ({
+  ...(await importOriginal()),
   useNavigate: () => mockUseNavigate,
   useLocation: () => mockUseLocation(),
 }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 mockedUseStore.mockReturnValue(mockUseEntityStore);
 
 const mockLocations = {
@@ -181,7 +183,7 @@ describe("<ReportPageWrapper />", () => {
   });
 
   describe("Test ReportPageWrapper functionality", () => {
-    afterEach(() => jest.clearAllMocks());
+    afterEach(() => vi.clearAllMocks());
 
     test("ReportPageWrapper doesn't display report if no matching report route template", () => {
       mockUseLocation.mockReturnValue({ pathname: "" });

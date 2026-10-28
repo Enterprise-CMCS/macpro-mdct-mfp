@@ -2,7 +2,7 @@ import React from "react";
 // components
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 // assets
-import greenSpreadsheetIcon from "../../assets/icons/icon_spreadsheet_green.png";
+import greenSpreadsheetIcon from "../../assets/icons/icon_spreadsheet_green.svg";
 
 export const SpreadsheetWidget = ({ description, ...props }: Props) => {
   return (
@@ -53,7 +53,7 @@ const sx = {
     color: "success_darkest",
   },
   description: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     color: "success_darkest",
   },
 };

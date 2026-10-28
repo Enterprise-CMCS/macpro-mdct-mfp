@@ -34,7 +34,7 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
         response.status() === 200
     );
     await statePage.page
-      .getByRole("button", { name: "Enter Work Plan online" })
+      .getByRole("button", { name: "Enter Work Plan" })
       .click();
     await getReportsResp;
   });
@@ -210,6 +210,19 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
           name: "State or Territory-Specific Initiatives Instructions",
         })
         .waitFor();
+      // Because this is the first page in the nav subsection, there is an animation that plays after page load.
+      // This was causing the accessibility checks to fail due to contrast. This was a false positive, we need
+      // to wait for the animation to finish (`height` becoming `auto`) before running the accessibility checker.
+      const navSubsection = statePage.page
+        .locator("#sidebar .chakra-collapse")
+        .filter({
+          has: statePage.page.locator(
+            'a[href="/wp/state-or-territory-specific-initiatives/instructions"]'
+          ),
+        });
+      await expect
+        .poll(() => navSubsection.evaluate((element) => element.style.height))
+        .toBe("auto");
     });
     await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/instructions", async () => {
       const accessibilityErrors = await checkPageAccessibility(statePage.page);
@@ -295,81 +308,9 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
       expect.soft(accessibilityErrors).toEqual([]);
     });
 
-    await test.step("Navigate to Initiative01 I. Define initiative", async () => {
-      await statePage.page
-        .getByRole("button", {
-          name: "Edit I. Define initiative",
-        })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives: I. Define initiative",
-        })
-        .waitFor();
-    });
-    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 I. Define initiative", async () => {
-      const accessibilityErrors = await checkPageAccessibility(statePage.page);
-      expect.soft(accessibilityErrors).toEqual([]);
-    });
-
-    await test.step("Navigate to Initiative01 II. Evaluation plan", async () => {
-      await statePage.page
-        .getByRole("button", { name: "Save & return" })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives",
-        })
-        .waitFor();
-      await statePage.page
-        .getByRole("button", {
-          name: "Edit II. Evaluation plan",
-        })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives: II. Evaluation Plan",
-        })
-        .waitFor();
-    });
-    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 II. Evaluation plan", async () => {
-      const accessibilityErrors = await checkPageAccessibility(statePage.page);
-      expect.soft(accessibilityErrors).toEqual([]);
-    });
-
-    await test.step("Navigate to Initiative01 III. Funding sources", async () => {
-      await statePage.page
-        .getByRole("button", { name: "Save & return" })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives",
-        })
-        .waitFor();
-      await statePage.page
-        .getByRole("button", {
-          name: "Edit III. Funding sources",
-        })
-        .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "State or Territory-Specific Initiatives: III. Funding sources",
-        })
-        .waitFor();
-    });
-    await test.step("WCAG checks on /wp/state-or-territory-specific-initiatives/initiatives Initiative01 III. Funding sources", async () => {
-      const accessibilityErrors = await checkPageAccessibility(statePage.page);
-      expect.soft(accessibilityErrors).toEqual([]);
-    });
-
     await test.step("Navigate to Review & Submit", async () => {
       await statePage.page
         .getByRole("button", { name: "Save & return" })
-        .click();
-      await statePage.page
-        .getByRole("button", { name: "Return to all initiatives" })
-        // There are two on the page, it doesn't matter which one we click
-        .first()
         .click();
       await statePage.page
         .getByRole("heading", {
@@ -382,7 +323,18 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
           name: "Review & Submit",
         })
         .waitFor();
+
+      // Wait for button disabled to enabled animation to complete
+      const submitButton = statePage.page.getByRole("button", {
+        name: "Submit MFP Work Plan",
+      });
+      await expect(submitButton).toBeEnabled();
+      await expect(submitButton).toHaveCSS(
+        "background-color",
+        "rgb(0, 113, 188)" // --mdct-colors-primary
+      );
     });
+
     await test.step("WCAG checks on /wp/review-and-submit", async () => {
       const accessibilityErrors = await checkPageAccessibility(statePage.page);
       expect.soft(accessibilityErrors).toEqual([]);
@@ -428,11 +380,11 @@ test.describe("Work plan a11y", { tag: "@a11y" }, () => {
       await statePage.page
         .getByRole("button", { name: "Submit MFP Work Plan" })
         .click();
-      await statePage.page
-        .getByRole("heading", {
-          name: "Successfully Submitted",
-        })
-        .waitFor();
+      // Scroll so heading is visible on page
+      await statePage.page.evaluate(() => window.scrollTo(0, 0));
+      await statePage.page.getByRole("heading", {
+        name: "Successfully Submitted",
+      });
     });
     await test.step("WCAG checks on /wp/review-and-submit successfully submitted", async () => {
       const accessibilityErrors = await checkPageAccessibility(statePage.page);

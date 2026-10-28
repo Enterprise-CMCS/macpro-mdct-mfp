@@ -31,7 +31,7 @@ describe("S3 helper functions", () => {
     it("should return undefined for non-string objects", async () => {
       const response = {
         Body: {
-          transformToString: jest.fn().mockResolvedValue(""),
+          transformToString: vi.fn().mockResolvedValue(""),
         } as any,
       } as GetObjectCommandOutput;
       const parsed = await parseS3Response(response);
@@ -41,7 +41,7 @@ describe("S3 helper functions", () => {
     it("should parse JSON objects it finds", async () => {
       const response = {
         Body: {
-          transformToString: jest.fn().mockResolvedValue(`{"foo":"bar"}`),
+          transformToString: vi.fn().mockResolvedValue(`{"foo":"bar"}`),
         } as any,
       } as GetObjectCommandOutput;
       const parsed = await parseS3Response(response);

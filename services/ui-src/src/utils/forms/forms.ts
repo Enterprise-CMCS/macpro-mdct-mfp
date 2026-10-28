@@ -549,6 +549,10 @@ export function isLayoutElement(
    */
   return (field as FormField).validation === undefined;
 }
+
+export const isTableField = (field: FormField | FormLayoutElement) =>
+  Boolean(field.forTableOnly);
+
 export const isFieldValidationOptional = (
   formField: FormField | FormLayoutElement
 ) => {

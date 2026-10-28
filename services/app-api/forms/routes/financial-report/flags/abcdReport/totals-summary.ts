@@ -5,11 +5,8 @@ import {
   PageTypes,
 } from "../../../../../utils/types";
 // utils
-import {
-  buildServiceFields,
-  totalsSummary,
-  totalsSummaryHeaders,
-} from "./utils";
+import { buildServiceFields } from "../../../../../utils/routes/tables";
+import { totalsSummary, totalsSummaryHeaders } from "./utils";
 
 const totalsSummaryTableId = "totals_totalsSummary";
 const totalsSummaryServicesList = totalsSummary(totalsSummaryTableId);
@@ -30,16 +27,7 @@ export const totalsSummaryRoute: FormTablesRoute = {
     intro: {
       section: "",
       subsection: "Totals",
-    },
-    accordion: {
-      buttonLabel: "Instructions",
-      intro: [
-        {
-          type: "p",
-          content:
-            "The table below displays the total computable amount, state/territory share, and federal share based on the amounts that you entered. If any value appears incorrect, return to the page for that service and double-check your entries.",
-        },
-      ],
+      info: "The table below displays the total computable amount, state/territory share, and federal share based on the amounts that you entered. If any value appears incorrect, return to the page for that service and double-check your entries.",
     },
   },
   form: {
@@ -58,6 +46,9 @@ export const totalsSummaryRoute: FormTablesRoute = {
         }),
         headRows: [totalsSummaryHeaders],
         tableType: FormTableType.CALCULATION,
+        verbiage: {
+          title: "Totals",
+        },
       },
     ],
     fields: [

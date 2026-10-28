@@ -9,7 +9,6 @@ const dashboardPageVerbiage: DashboardPageVerbiage = {
     table: {
       caption: "Caption",
       headRow: [
-        "",
         "Report name",
         "Reporting year",
         "Reporting period",
@@ -17,13 +16,13 @@ const dashboardPageVerbiage: DashboardPageVerbiage = {
         "Edited by",
         "Status",
         "#",
-        "",
+        { title: "Actions", colSpan: 2, align: "center" },
       ],
     },
     empty:
       "All MFP Financial Reporting Forms that are in progress or were previously submitted can be found here.",
-    callToAction: "Add new MFP Financial Reporting Form submission",
-    callToActionAdditions: "Add new MFP Financial Reporting Form submission",
+    callToAction: "Start MFP Financial Report",
+    callToActionAdditions: "Start MFP Financial Report",
   },
   modalUnlock: {
     heading: "You unlocked this Financial Report",

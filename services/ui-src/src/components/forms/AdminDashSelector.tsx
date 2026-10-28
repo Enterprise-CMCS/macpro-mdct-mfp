@@ -34,7 +34,10 @@ export const AdminDashSelector = ({ verbiage }: Props) => {
 
   const onSubmit = (formData: AnyObject) => {
     let selectedReport = formData["report"][0].key;
-    selectedReport = selectedReport.replace("report-", "").toLowerCase();
+    selectedReport = selectedReport
+      .replace("report-", "")
+      .toLowerCase()
+      .replaceAll("_", "-");
     localStorage.setItem("selectedReportType", selectedReport);
     const selectedState = formData["state"].value;
     localStorage.setItem("selectedState", selectedState);
@@ -70,13 +73,13 @@ interface Props {
 const sx = {
   root: {
     ".ds-c-field__hint": {
-      fontSize: "md",
+      fontSize: "body_md",
       color: "base",
     },
   },
   headerText: {
-    fontSize: "2rem",
-    fontWeight: "normal",
+    fontSize: "heading_3xl",
+    fontWeight: "heading_3xl",
   },
   navigationButton: {
     padding: "1.5rem 0 2rem 0",

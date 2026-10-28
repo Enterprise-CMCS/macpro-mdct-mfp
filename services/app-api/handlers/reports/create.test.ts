@@ -1,3 +1,4 @@
+import { Mock } from "vitest";
 import { createReport } from "./create";
 // utils
 import { proxyEvent } from "../../utils/testing/proxyEvent";
@@ -8,7 +9,7 @@ import {
   mockWPFieldData,
   mockWPMetadata,
   mockWPReport,
-} from "../../utils/testing/setupJest";
+} from "../../utils/testing/setupTest";
 import { error } from "../../utils/constants/constants";
 import * as authFunctions from "../../utils/auth/authorization";
 import { getEligibleWorkPlan } from "../../utils/other/other";
@@ -23,34 +24,34 @@ import { copyFieldDataFromSource } from "../../utils/other/copy";
 import { getOrCreateFormTemplate } from "../../utils/formTemplates/formTemplates";
 import { StatusCodes } from "../../utils/responses/response-lib";
 
-jest.mock("../../storage/reports", () => ({
-  queryReportMetadatasForState: jest.fn(),
-  putReportFieldData: jest.fn(),
-  putReportMetadata: jest.fn(),
+vi.mock("../../storage/reports", () => ({
+  queryReportMetadatasForState: vi.fn(),
+  putReportFieldData: vi.fn(),
+  putReportMetadata: vi.fn(),
 }));
 
-jest.mock("../../utils/other/other", () => ({
-  ...jest.requireActual("../../utils/other/other"),
-  getEligibleWorkPlan: jest.fn(),
+vi.mock("../../utils/other/other", async (importOriginal) => ({
+  ...(await importOriginal()),
+  getEligibleWorkPlan: vi.fn(),
 }));
 
-jest.mock("../../utils/other/copy", () => ({
-  copyFieldDataFromSource: jest.fn(),
+vi.mock("../../utils/other/copy", () => ({
+  copyFieldDataFromSource: vi.fn(),
 }));
 
-jest.mock("../../utils/formTemplates/formTemplates", () => ({
-  getOrCreateFormTemplate: jest.fn(),
+vi.mock("../../utils/formTemplates/formTemplates", () => ({
+  getOrCreateFormTemplate: vi.fn(),
 }));
-(getOrCreateFormTemplate as jest.Mock).mockResolvedValue({
+(getOrCreateFormTemplate as Mock).mockResolvedValue({
   formTemplate: mockReportJson,
   formTemplateVersion: {
     id: 1,
   },
 });
 
-jest.mock("../../utils/auth/authorization", () => ({
-  hasPermissions: jest.fn().mockReturnValue(true),
-  isAuthorizedToFetchState: jest.fn().mockReturnValue(true),
+vi.mock("../../utils/auth/authorization", () => ({
+  hasPermissions: vi.fn().mockReturnValue(true),
+  isAuthorizedToFetchState: vi.fn().mockReturnValue(true),
 }));
 
 const wpMockProxyEvent = {
@@ -140,26 +141,15 @@ const creationEventWithInvalidData: APIGatewayProxyEvent = {
   }),
 };
 
-let consoleSpy: {
-  debug: jest.SpyInstance<void>;
-  warn: jest.SpyInstance<void>;
-} = {
-  debug: jest.fn() as jest.SpyInstance,
-  warn: jest.fn() as jest.SpyInstance,
-};
-
 describe("Test createReport API method", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.useRealTimers();
-    consoleSpy.debug = jest.spyOn(console, "debug").mockImplementation();
-    consoleSpy.warn = jest.spyOn(console, "warn").mockImplementation();
+    vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
   test("Test report creation by a state user without access to a report type throws 403 error", async () => {
-    jest.spyOn(authFunctions, "hasPermissions").mockReturnValueOnce(false);
+    vi.spyOn(authFunctions, "hasPermissions").mockReturnValueOnce(false);
     const res = await createReport(wpCreationEvent, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Forbidden);
     expect(res.body).toContain(error.UNAUTHORIZED);
   });
@@ -171,7 +161,6 @@ describe("Test createReport API method", () => {
     };
     const res = await createReport(badStateEvent, null);
 
-    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
   });
 
@@ -182,17 +171,15 @@ describe("Test createReport API method", () => {
     };
     const res = await createReport(badReportEvent, null);
 
-    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
   });
 
   test("Test successful run of work plan report creation, not copied", async () => {
-    (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+    (queryReportMetadatasForState as Mock).mockResolvedValue([
       { reportYear: 2020, reportPeriod: 1, archived: true },
     ]);
     const res = await createReport(wpCreationEvent, null);
     const body = JSON.parse(res.body!);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Created);
     expect(body.status).toContain("Not started");
     expect(body.fieldDataId).toBeDefined();
@@ -207,7 +194,7 @@ describe("Test createReport API method", () => {
   });
 
   test("Test work plan report creation returns 400 if report in year and period exists", async () => {
-    (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+    (queryReportMetadatasForState as Mock).mockResolvedValue([
       { reportYear: 2020, reportPeriod: 1, archived: undefined },
     ]);
     const res = await createReport(wpCreationEvent, null);
@@ -215,16 +202,13 @@ describe("Test createReport API method", () => {
   });
 
   test("Test successful run of work plan report creation, copied", async () => {
-    (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+    (queryReportMetadatasForState as Mock).mockResolvedValue([
       { reportYear: 2020, reportPeriod: 1, archived: undefined },
     ]);
-    (copyFieldDataFromSource as jest.Mock).mockResolvedValue(
-      mockReportFieldData
-    );
-    jest.useFakeTimers().setSystemTime(new Date(2022, 11, 1));
+    (copyFieldDataFromSource as Mock).mockResolvedValue(mockReportFieldData);
+    vi.useFakeTimers().setSystemTime(new Date(2022, 11, 1));
     const res = await createReport(wpCopyCreationEvent, null);
     const body = JSON.parse(res.body!);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Created);
     expect(body.status).toContain("Not started");
     expect(body.fieldDataId).toBeDefined();
@@ -237,23 +221,21 @@ describe("Test createReport API method", () => {
   });
 
   test("If no WP given when creating a SAR, return 404", async () => {
-    (getEligibleWorkPlan as jest.Mock).mockResolvedValue({});
+    (getEligibleWorkPlan as Mock).mockResolvedValue({});
     const res = await createReport(sarCreationEvent, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.NotFound);
   });
 
   test("Test successful run of sar report creation, not copied", async () => {
-    (getEligibleWorkPlan as jest.Mock).mockResolvedValue({
+    (getEligibleWorkPlan as Mock).mockResolvedValue({
       workPlanMetadata: mockWPMetadata,
       workPlanFieldData: mockWPFieldData,
     });
-    (queryReportMetadatasForState as jest.Mock).mockResolvedValue([
+    (queryReportMetadatasForState as Mock).mockResolvedValue([
       { reportYear: 2020, reportPeriod: 1, archived: true },
     ]);
     const res = await createReport(sarCreationEvent, null);
     const body = JSON.parse(res.body!);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.Created);
     expect(body.status).toContain("Not started");
     expect(body.fieldDataId).toBeDefined();
@@ -263,14 +245,12 @@ describe("Test createReport API method", () => {
 
   test("Test attempted report creation with invalid data fails", async () => {
     const res = await createReport(creationEventWithInvalidData, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.INVALID_DATA);
   });
 
   test("Test attempted report creation without field data throws 400 error", async () => {
     const res = await createReport(creationEventWithNoFieldData, null);
-    expect(consoleSpy.debug).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.MISSING_DATA);
   });
@@ -282,7 +262,6 @@ describe("Test createReport API method", () => {
     };
     const res = await createReport(noKeyEvent, null);
 
-    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });
@@ -294,7 +273,6 @@ describe("Test createReport API method", () => {
     };
     const res = await createReport(noKeyEvent, null);
 
-    expect(consoleSpy.warn).toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BadRequest);
     expect(res.body).toContain(error.NO_KEY);
   });

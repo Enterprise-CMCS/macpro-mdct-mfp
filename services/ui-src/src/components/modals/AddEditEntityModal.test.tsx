@@ -1,3 +1,4 @@
+import { MockedFunction } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 //components
 import { AddEditEntityModal, ReportContext } from "components";
@@ -10,21 +11,20 @@ import {
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 import { useStore } from "utils";
 import userEvent from "@testing-library/user-event";
 import { EntityType, MfpReportState, MfpUserState } from "../../types";
 import { alertVerbiage } from "./AddEditEntityModal";
 import { testA11yAct } from "utils/testing/commonTests";
 
-const mockCloseHandler = jest.fn();
-const mockUpdateReport = jest.fn();
-const mockSetError = jest.fn();
+const mockCloseHandler = vi.fn();
+const mockUpdateReport = vi.fn();
+const mockSetError = vi.fn();
 
-jest.mock("react-uuid", () => jest.fn(() => "mock-id-2"));
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
-jest.mock("utils/auth/useUser");
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+vi.mock("utils/auth/useUser");
 
 const mockEntityName = "mock-name";
 
@@ -141,6 +141,14 @@ const modalComponentWithSelectedEntity = (
 );
 
 describe("<AddEditEntityModal />", () => {
+  beforeAll(() => {
+    Object.defineProperty(globalThis, "crypto", {
+      value: {
+        randomUUID: vi.fn(() => "mock-id-2"),
+      },
+    });
+  });
+
   describe("Test AddEditEntityModal", () => {
     beforeEach(async () => {
       mockedUseStore.mockReturnValue(mockUseStore);
@@ -150,7 +158,7 @@ describe("<AddEditEntityModal />", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     test("AddEditEntityModal shows the contents", () => {
@@ -193,7 +201,7 @@ describe("<AddEditEntityModal />", () => {
     afterEach(() => {
       // reset report back to baseline with only the mockEntity
       report.fieldData.targetPopulations = [mockEntity];
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     const fillAndSubmitForm = async (form: any) => {

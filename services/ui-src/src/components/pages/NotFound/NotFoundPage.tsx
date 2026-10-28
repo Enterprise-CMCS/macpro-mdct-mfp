@@ -1,3 +1,5 @@
+import { ComponentClass } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Flex, Heading, Image, Link, Text } from "@chakra-ui/react";
 import { PageTemplate } from "components";
@@ -8,11 +10,17 @@ import warningIcon from "assets/icons/icon_warning.png";
 import verbiage from "verbiage/pages/not-found";
 
 export const NotFoundPage = () => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   const { header, subHeading, emailText, body } = verbiage;
   const { preLinkText, cmsEmail, postLinkText } = emailText;
 
   return (
     <PageTemplate data-testid="404-view" sxOverride={sx.layout}>
+      {/* page title */}
+      <Helmet>
+        <title>{verbiage.title}</title>
+      </Helmet>
       <Flex sx={sx.heading}>
         <Image src={warningIcon} alt="warning icon" sx={sx.warningIcon} />
         <Heading as="h1" sx={sx.headerText}>
@@ -51,21 +59,21 @@ const sx = {
     },
   },
   headerText: {
-    fontSize: "4xl",
-    fontWeight: "normal",
+    fontSize: "heading_3xl",
+    fontWeight: "heading_3xl",
     ".mobile &": {
-      fontSize: "2xl",
+      fontSize: "heading_2xl",
     },
   },
   subHeadingText: {
-    fontSize: "lg",
-    fontWeight: "bold",
+    fontSize: "heading_lg",
+    fontWeight: "heading_lg",
     marginBottom: "spacer2",
     ".mobile &": {
       marginBottom: "spacer3",
     },
   },
   descriptionText: {
-    fontSize: "md",
+    fontSize: "body_md",
   },
 };

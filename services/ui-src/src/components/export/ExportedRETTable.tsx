@@ -277,7 +277,7 @@ export const truncateTable = (table: TableContentShape, maxColumn: number) => {
   return splitTables;
 };
 
-export const ExportRETTable = ({ section }: Props) => {
+export const ExportRETTable = ({ section, heading }: Props) => {
   const report = useStore().report;
   const form: FormJson = (section as AnyObject)?.form;
 
@@ -299,13 +299,17 @@ export const ExportRETTable = ({ section }: Props) => {
           )?.children
       );
       //clean up the children value to a usable array for lookup
-      const childIds = childrens?.map((child: AnyObject) => {
-        return {
-          label: child?.props?.label,
-          id: [child?.id],
-          parentId: child?.validation?.parentOptionId,
-        };
-      });
+      const childIds = childrens
+        ?.filter(
+          (child: AnyObject) => child.id !== "otherReasons-otherText" // don't give other text an integer column; it's included in the label
+        )
+        ?.map((child: AnyObject) => {
+          return {
+            label: child?.props?.label,
+            id: [child?.id],
+            parentId: child?.validation?.parentOptionId,
+          };
+        });
       //generate the row with the correct checkedbox inputs
       checkboxList?.forEach((checkbox: AnyObject) => {
         const parentId = checkbox.key.split("-")[1];
@@ -332,15 +336,28 @@ export const ExportRETTable = ({ section }: Props) => {
   let ariaOverride: TableContentShape = {};
   if (Object.keys(rows).length > 0) {
     table = generateMainTable(rows, formattedFieldData, section.name);
-    formatFooterForRET(form?.id, report!, table.footRow!, table.headRow!);
+    // Extract header titles for formatFooterForRET
+    const headerTitles = table.headRow?.map((cell) =>
+      typeof cell === "string" ? cell : cell.title
+    );
+    if (table.footRow && headerTitles) {
+      formatFooterForRET(form?.id, report!, table.footRow, headerTitles);
+    }
     //copying the current table before label truncating; these are the desired aria-labels
     ariaOverride = structuredClone(table);
     //truncating the table labels
-    table.headRow = table.headRow?.map((label) => formatHeaderForRET(label));
+    table.headRow = table.headRow?.map((cell) => {
+      const label = typeof cell === "string" ? cell : cell.title;
+      const formattedLabel = formatHeaderForRET(label);
+      return typeof cell === "string"
+        ? formattedLabel
+        : { ...cell, title: formattedLabel };
+    });
     table.bodyRows = table.bodyRows?.map((rows) => {
       rows[0] = formatLabelForRET(form?.id, rows[0], report!);
       return rows;
     });
+    table.caption = heading;
   }
   //split the table if there are >= 3 Other columns
   const tables: TableContentShape[] = truncateTable(table, 7);
@@ -369,6 +386,7 @@ export const ExportRETTable = ({ section }: Props) => {
 
 export interface Props {
   section: ReportPageShapeBase;
+  heading?: string;
 }
 
 const sx = {
@@ -395,8 +413,8 @@ const sx = {
       border: "1px solid",
       borderColor: "black",
       color: "black",
-      lineHeight: "normal",
-      fontWeight: "bold",
+      lineHeight: "body_sm",
+      fontWeight: "heading_md",
       minWidth: "100px",
       width: "100px",
       ".tablet &, .mobile &": {
@@ -410,11 +428,11 @@ const sx = {
       textAlign: "center",
       wordWrap: "break-word",
       border: "1px solid black",
-      fontWeight: "normal",
+      fontWeight: "body_md",
     },
     "td:first-of-type, tfoot th:first-of-type": {
       background: "gray_lightest",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
       color: "black",
     },
     "tbody tr": {
@@ -422,7 +440,7 @@ const sx = {
     },
     ":last-of-type tbody tr td:last-child, tfoot th": {
       background: "secondary_lightest",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
   },
   // RE&T warning message

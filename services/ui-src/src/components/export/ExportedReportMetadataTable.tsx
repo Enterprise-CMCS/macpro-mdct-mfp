@@ -18,6 +18,7 @@ export const ExportedReportMetadataTable = ({
         content={{
           headRow: headerRowLabels(reportType, verbiage),
           bodyRows: bodyRowContent(reportType, report),
+          caption: "Report details",
         }}
       />
       {reportType === ReportType.SAR && (
@@ -102,7 +103,7 @@ const sx = {
     th: {
       border: 0,
       color: "gray",
-      fontWeight: "bold",
+      fontWeight: "heading_md",
       padding: 0,
       paddingRight: "spacer1",
       textAlign: "left",

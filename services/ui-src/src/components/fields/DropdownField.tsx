@@ -7,7 +7,6 @@ import {
   Label,
 } from "@cmsgov/design-system";
 import { Box, SystemStyleObject } from "@chakra-ui/react";
-import uuid from "react-uuid";
 // utils
 import { labelTextWithOptional, parseCustomHtml, shimComponent } from "utils";
 // types
@@ -106,8 +105,9 @@ export const DropdownField = ({
   const formErrorState: AnyObject = form?.formState?.errors;
   const errorMessage = formErrorState?.[name]?.value?.message as ReactNode;
   const parsedHint = hint ? parseCustomHtml(hint) : undefined;
-  const ariaDescribedBy = parsedHint ? `${name}-hint` : undefined;
+  const ariaDescribedBy = `${name}__error${parsedHint ? ` ${name}-hint` : ""}`;
   const nestedChildClasses = nested ? "nested ds-c-choice__checkedChild" : "";
+  const selectClasses = `ds-c-field${errorMessage ? " ds-c-field--error" : ""}`;
   const labelClass = !label ? "no-label" : "";
   const labelText =
     label && styleAsOptional ? labelTextWithOptional(label) : label;
@@ -120,21 +120,21 @@ export const DropdownField = ({
         {labelText || ""}
       </Label>
       {parsedHint && <Hint id={`${name}-hint`}>{parsedHint}</Hint>}
-      {errorMessage && <InlineErrorShim>{errorMessage}</InlineErrorShim>}
+      <InlineErrorShim id={`${name}__error`}>{errorMessage}</InlineErrorShim>
       <select
         name={name}
         id={name}
         aria-describedby={ariaDescribedBy}
         aria-label={ariaLabel}
-        aria-invalid="false"
+        aria-invalid={!!errorMessage}
         onChange={onChangeHandler}
         onBlur={onBlurHandler}
         value={displayValue?.value}
-        className="ds-c-field"
+        className={selectClasses}
         disabled={disabled}
       >
         {formattedOptions.map((option) => (
-          <option key={uuid()} value={option.value}>
+          <option key={crypto.randomUUID()} value={option.value}>
             {option.label}
           </option>
         ))}

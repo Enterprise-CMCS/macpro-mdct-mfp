@@ -1,9 +1,9 @@
 import { mixed, string, number as yupNumber } from "yup";
 // utils
 import {
-  endDate as schamaMapEndDate,
-  isEndDateAfterStartDate as schamaMapIsEndDateAfterStartDate,
-  nested as schamaMapEndDateNested,
+  endDate as schemaMapEndDate,
+  isEndDateAfterStartDate as schemaMapIsEndDateAfterStartDate,
+  nested as schemaMapEndDateNested,
   schemaMap,
 } from "./schemaMap";
 
@@ -136,19 +136,18 @@ export const ratio = () =>
     });
 
 // DATE
-export const endDate = (startDateField: string) =>
-  schamaMapEndDate(startDateField);
+export const endDate = (fields: string[]) => schemaMapEndDate(fields);
 export const isEndDateAfterStartDate = (
   startDateField: string,
   endDateString: string
-) => schamaMapIsEndDateAfterStartDate(startDateField, endDateString);
+) => schemaMapIsEndDateAfterStartDate(startDateField, endDateString);
 
 // NESTED
 export const nested = (
   fieldSchema: Function,
   parentFieldName: string,
   parentOptionId: string
-) => schamaMapEndDateNested(fieldSchema, parentFieldName, parentOptionId);
+) => schemaMapEndDateNested(fieldSchema, parentFieldName, parentOptionId);
 
 // SCHEMA MAP
 export const completionSchemaMap: any = {

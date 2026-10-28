@@ -37,7 +37,7 @@ export interface FormJson {
 
 export interface DependentFieldValidation {
   type: string;
-  dependentFieldName: string;
+  dependentFieldName: string | string[];
   parentOptionId?: never;
 }
 
@@ -50,7 +50,7 @@ export interface NestedFieldValidation {
 
 export interface NestedDependentFieldValidation {
   type: string;
-  dependentFieldName: string;
+  dependentFieldName: string | string[];
   nested: true;
   parentFieldName: string;
   parentOptionId: string;

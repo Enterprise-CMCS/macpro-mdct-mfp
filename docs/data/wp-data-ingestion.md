@@ -1,5 +1,9 @@
 # Work Plan Kafka Ingestion Guide
 
+_Last updated: 2026-06-17_
+
+The following content represents the most current version of the Work Plan, but the report content can change based on organizational needs. For a full changelog of yearly updates to the Work Plan in MDCT, see [Work Plan Form Template documentation in CMS Confluence](https://confluenceent.cms.gov/spaces/CMDCT/pages/1245101522/Work+Plan+Form+Template).
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -116,14 +120,14 @@ The user-entered data for a report submission. This is unique to each state and 
 | `isInitiativeClosed`                                                               | boolean       | —                  |           |         | Set on initiative close-out                                    |
 | `closedBy`                                                                         | text          | —                  |           |         | Full name of user who closed the initiative                    |
 
-#### Notes:
+#### Notes
 
 - Radio/checkbox fields are arrays of `{ key, value }` objects.
 - `quarterlyProjections{YYYY}Q{1-4}` is dynamically generated based on the Work Plan's `reportYear` and `reportPeriod`. For report year 2026, this expands to `2026Q1` - `2028Q4`.
 - Target populations marked `applicableToMfpDemonstration = "No"` will not have quarterly projection fields.
 - `generalInformation_resubmissionInformation` is only present when the Work Plan is a resubmission.
 - Performance indicator entries inside `defineInitiative_keyMetrics_performanceIndicators` are stored with **unprefixed** keys (`name`, `dataSource`, `baselineValue`, etc.). The prefixed `defineInitiative_keyMetrics_performanceIndicators-*` IDs only exist in the form template definition.
-- `closeOutInformation_*` fields are marked `forCopyoverOnly` in the form template (so values copy from a WP into the next WP/SAR). On a WP they appear only when an initiative has been closed out by the user; in that case the initiative will also have `isInitiativeClosed: true` and `closedBy` information.
+- `closeOutInformation_*` fields are marked `forCopyoverOnly` in the form template, which controls when they render/validate (only on copied reports). They are shown once an initiative has been closed out by the user; in that case the initiative will also have `isInitiativeClosed: true` and `closedBy` information. Close-out answers are cleared when copying a WP into the next WP (see `pruneEntityData` in `copy.ts`); they are still carried into a SAR.
 - `submitterName`, `submitterEmailAddress`, and `reportSubmissionDate` are added on form submission.
 - When a WP is created by copying a previous WP, the copied entities, child option values, key activities, and performance indicators are tagged with `isCopied: true`.
 
@@ -245,7 +249,7 @@ wp-form-template message key: formTemplates/template-789.json
 }
 ```
 
-#### Notes:
+#### Notes
 
 - `createdAt` and `lastAltered` are epoch milliseconds.
 - `associatedSar` is only present if a user has created a SAR from the WP.
@@ -424,6 +428,6 @@ wp-form-template message key: formTemplates/template-789.json
 }
 ```
 
-#### Notes:
+#### Notes
 
 - `defineInitiative_keyMetrics_performanceIndicators` may be an empty array if the user has not yet entered any indicators.

@@ -1,5 +1,6 @@
-import { useState, useContext, useEffect } from "react";
+import { ComponentClass, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Box, Text } from "@chakra-ui/react";
 import {
@@ -22,6 +23,7 @@ import {
   addDynamicTableRowsValidation,
   filterFormData,
   filterResubmissionData,
+  getPageTitle,
   isFieldElement,
   parseCustomHtml,
   useFindRoute,
@@ -32,6 +34,8 @@ export const StandardReportPage = ({
   route,
   validateOnRender = false,
 }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   const [form, setForm] = useState<FormJson>({} as FormJson);
   const [formData, setFormData] = useState<AnyObject>({});
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -83,6 +87,10 @@ export const StandardReportPage = ({
 
   return (
     <Box>
+      {/* page title */}
+      <Helmet>
+        <title>{report && getPageTitle(report.reportType, route.name)}</title>
+      </Helmet>
       {route.verbiage.intro && (
         <ReportPageIntro
           accordion={route.verbiage.accordion}

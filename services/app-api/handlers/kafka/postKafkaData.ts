@@ -9,6 +9,9 @@ import {
 } from "./kafkaLib";
 import { createClient } from "../../storage/s3-lib";
 
+// Kafka rejects messages at 1 MB and above.
+const MAX_KAFKA_S3_PAYLOAD_BYTES = 1_000_000;
+
 const getConfig: GetKafkaConfig = () => {
   const { brokerString, STAGE } = process.env;
 
@@ -38,7 +41,7 @@ const getConfig: GetKafkaConfig = () => {
 
 const getDynamoTopic: GetDynamoTopic = (record) => {
   const namespace = process.env.topicNamespace ?? "";
-  const tables = ["wp-reports", "sar-reports"];
+  const tables = ["wp-reports", "sar-reports", "financial-reports"];
 
   const table = tables.find((t) =>
     record.eventSourceARN.includes(`/${process.env.STAGE}-${t}/`)
@@ -74,6 +77,16 @@ const getS3Topic: GetS3Topic = (record) => {
       folder: "formTemplates/",
       topic: "sar-form-template",
     },
+    {
+      bucket: reportBuckets.FINANCIAL_REPORT,
+      folder: "fieldData/",
+      topic: "financial-form",
+    },
+    {
+      bucket: reportBuckets.FINANCIAL_REPORT,
+      folder: "formTemplates/",
+      topic: "financial-form-template",
+    },
   ];
 
   const bucket = record.s3.bucket.name;
@@ -87,6 +100,14 @@ const getS3Topic: GetS3Topic = (record) => {
 
   if (!matchingRule) {
     console.warn(`Ignoring record: no matching s3 rule. ${bucket}#${key}`);
+    return undefined;
+  }
+
+  const objectSize = Number(record.s3.object.size);
+  if (Number.isFinite(objectSize) && objectSize >= MAX_KAFKA_S3_PAYLOAD_BYTES) {
+    console.warn(
+      `Ignoring record: oversized S3 object ${bucket}#${key} (${objectSize} bytes); Kafka rejects 1MB+ messages.`
+    );
     return undefined;
   }
 

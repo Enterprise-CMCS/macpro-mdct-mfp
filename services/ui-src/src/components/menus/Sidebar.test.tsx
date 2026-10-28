@@ -1,20 +1,21 @@
+import { MockedFunction } from "vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   RouterWrappedComponent,
   mockReportStore,
-} from "utils/testing/setupJest";
+} from "utils/testing/setupTest";
 //components
 import { Sidebar } from "components";
 import { useStore } from "utils";
 import { testA11yAct } from "utils/testing/commonTests";
 
-jest.mock("utils/reports/routing", () => ({
-  isReportFormPage: jest.fn(() => true),
+vi.mock("utils/reports/routing", () => ({
+  isReportFormPage: vi.fn(() => true),
 }));
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const sidebarComponent = (
   <RouterWrappedComponent>
@@ -47,11 +48,13 @@ describe("<Sidebar />", () => {
       const sidebarNav = screen.getByRole("navigation");
       expect(sidebarNav).toHaveClass("closed");
 
-      const sidebarButton = screen.getByLabelText("Open/Close sidebar menu");
+      const sidebarButton = screen.getByRole("button", { name: "Sidebar" });
+      expect(sidebarButton).toHaveAttribute("aria-expanded", "false");
       await act(async () => {
         await userEvent.click(sidebarButton);
       });
       expect(sidebarNav).toHaveClass("open");
+      expect(sidebarButton).toHaveAttribute("aria-expanded", "true");
     });
 
     test("Sidebar section click opens and closes section", async () => {

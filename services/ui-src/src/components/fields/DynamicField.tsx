@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import uuid from "react-uuid";
 import { useFieldArray, useFormContext } from "react-hook-form";
 // components
 import { TextField as CmsdsTextField } from "@cmsgov/design-system";
@@ -15,7 +14,12 @@ import {
   ReportStatus,
 } from "types";
 // utils
-import { autosaveFieldData, getAutosaveFields, useStore } from "utils";
+import {
+  autosaveFieldData,
+  enqueueWrite,
+  getAutosaveFields,
+  useStore,
+} from "utils";
 // assets
 import addIcon from "assets/icons/icon_add.png";
 import cancelIcon from "assets/icons/icon_cancel_x_circle.png";
@@ -28,10 +32,12 @@ export const DynamicField = ({
   hint,
   hydrate,
   label,
+  multiline = false,
   name,
+  rows = 3,
 }: Props) => {
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
-  const { report, selectedEntity, setAutosaveState } = useStore();
+  const { report, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { prepareEntityPayload } = useContext(EntityContext);
   const [displayValues, setDisplayValues] = useState<DynamicFieldShape[]>([]);
@@ -80,10 +86,17 @@ export const DynamicField = ({
   };
 
   // update display value on change
-  const onChangeHandler = async (event: InputChangeEvent) => {
+  const onChangeHandler = (event: InputChangeEvent) => {
     const { id, value } = event.target;
-    const currentEntity = displayValues.find((entity) => entity.id === id);
-    const currentEntityIndex = displayValues.indexOf(currentEntity!);
+    const currentEntityIndex = displayValues.findIndex(
+      (entity) => entity.id === id
+    );
+
+    // Clear error on input
+    if (value.trim() && fieldErrorState?.[currentEntityIndex]?.name) {
+      form.clearErrors(`${name}.${currentEntityIndex}.name`);
+    }
+
     const newDisplayValues = [...displayValues];
     newDisplayValues[currentEntityIndex].name = value;
     setDisplayValues(newDisplayValues);
@@ -95,7 +108,6 @@ export const DynamicField = ({
     form.trigger(name);
 
     if (autosave) {
-      setAutosaveState(true);
       const fields = getAutosaveFields({
         name,
         type: ReportFormFieldType.DYNAMIC,
@@ -114,23 +126,23 @@ export const DynamicField = ({
         fieldData,
       };
       const user = { userName: full_name, state };
-      await autosaveFieldData({
-        form,
-        fields,
-        report: reportArgs,
-        user,
-        entityContext: {
-          selectedEntity,
-          prepareEntityPayload,
-        },
-      }).then(() => {
-        setAutosaveState(false);
-      });
+      await enqueueWrite(() =>
+        autosaveFieldData({
+          form,
+          fields,
+          report: reportArgs,
+          user,
+          entityContext: {
+            selectedEntity,
+            prepareEntityPayload,
+          },
+        })
+      );
     }
   };
 
   const appendNewRecord = () => {
-    const newRecord = { id: uuid(), name: "" };
+    const newRecord = { id: crypto.randomUUID(), name: "" };
     append(newRecord);
     const newDisplayValues = [...displayValues, newRecord];
     setDisplayValues(newDisplayValues);
@@ -175,7 +187,7 @@ export const DynamicField = ({
     let newDisplayValues = [...displayValues];
     newDisplayValues.splice(index, 1);
     if (newDisplayValues.length === 0) {
-      const newEntity = { id: uuid(), name: "" };
+      const newEntity = { id: crypto.randomUUID(), name: "" };
       append(newEntity);
       newDisplayValues = [newEntity];
     }
@@ -219,28 +231,29 @@ export const DynamicField = ({
       )}
 
       {displayValues.map((field: DynamicFieldShape, index: number) => {
+        const errorMessage = fieldErrorState?.[index]?.name?.message;
+
         return (
-          <Flex
-            key={field.id}
-            sx={
-              dynamicLabel ? sx.dynamicFieldWithDynamicLabel : sx.dynamicField
-            }
-          >
+          <Flex key={field.id} sx={sx.dynamicField}>
             <CmsdsTextField
-              id={field.id}
-              name={`${name}[${index}]`}
+              errorMessage={errorMessage}
               hint={undefined}
+              id={field.id}
               label={dynamicLabel}
-              errorMessage={fieldErrorState?.[index]?.name?.message}
-              onChange={onChangeHandler}
+              multiline={multiline}
+              name={`${name}[${index}]`}
               onBlur={onBlurHandler}
+              onChange={onChangeHandler}
+              rows={rows}
               value={field.name || ""}
+              style={sx.textfield}
+              disabled={disabled}
             />
-            {!disabled && (
-              <Box sx={sx.removeBox}>
+            {!disabled && index > 0 && (
+              <Box sx={sx.deleteButton}>
                 <button type="button" onClick={() => deleteRecord(field)}>
                   <Image
-                    sx={sx.removeImage}
+                    sx={sx.removeImageTextarea}
                     src={cancelIcon}
                     alt={`Delete ${field.name || field.id}`}
                   />
@@ -272,7 +285,9 @@ interface Props {
   hint?: string;
   hydrate?: DynamicFieldShape[];
   label: string;
+  multiline?: boolean;
   name: string;
+  rows?: number;
 }
 
 const sx = {
@@ -280,18 +295,26 @@ const sx = {
     marginTop: "spacer3",
   },
   legend: {
-    fontSize: "md",
+    fontSize: "body_md",
   },
   legendWithDynamicLabel: {
-    fontSize: "xl",
+    fontSize: "body_xl",
   },
-  removeBox: {
-    marginBottom: "0.625rem",
-    marginLeft: "0.625rem",
+  textfield: {
+    anchorName: "--dynamicfield--",
+    width: "93%",
   },
-  removeImage: {
-    width: "1.25rem",
-    height: "1.25rem",
+  deleteButton: {
+    position: "absolute",
+    positionAnchor: "--dynamicfield--",
+    positionArea: "center",
+    right: "-2rem",
+    flexShrink: 0,
+    alignSelf: "flex-start",
+  },
+  removeImageTextarea: {
+    width: "1.5rem",
+    height: "1.5rem",
   },
   appendButton: {
     width: "12.5rem",
@@ -302,22 +325,7 @@ const sx = {
     height: "1rem",
   },
   dynamicField: {
-    alignItems: "flex-end",
-    ".desktop &": {
-      width: "32rem",
-    },
-    ".tablet &": {
-      width: "29rem",
-    },
-    ".ds-u-clearfix": {
-      width: "100%",
-    },
-    "&:not(:first-of-type)": {
-      paddingTop: "2rem",
-    },
-  },
-  dynamicFieldWithDynamicLabel: {
-    alignItems: "flex-end",
+    position: "relative",
     ".desktop &": {
       width: "32rem",
     },

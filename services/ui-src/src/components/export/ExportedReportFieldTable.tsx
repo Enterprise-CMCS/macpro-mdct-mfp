@@ -15,14 +15,16 @@ import {
 // utils
 import {
   getReportVerbiage,
-  useStore,
-  sx,
-  renderFieldTableBody,
+  isTableField,
   renderCalculationTables,
+  renderFieldTableBody,
+  sx,
+  useStore,
 } from "utils";
 
 export const ExportedReportFieldTable = ({
   section,
+  heading,
   headingLevel = "h3",
 }: Props) => {
   const { report } = useStore();
@@ -69,7 +71,7 @@ export const ExportedReportFieldTable = ({
     );
   }
 
-  const nonTableFields = formFields.filter((f) => !f.forTableOnly);
+  const nonTableFields = formFields.filter((f) => !isTableField(f));
   const currentLevel = parseInt(headingLevel.charAt(1), 10);
   const nextLevel = currentLevel + 1;
   const nextHeadingLevel = `h${nextLevel}`;
@@ -79,7 +81,7 @@ export const ExportedReportFieldTable = ({
   return (
     <>
       {calculationTables.length > 0 &&
-        renderCalculationTables(section, fieldData, formPercentage)}
+        renderCalculationTables(section, fieldData, formPercentage, heading)}
 
       {!isTableWithNoFormFields && (
         <>
@@ -93,6 +95,7 @@ export const ExportedReportFieldTable = ({
             className={formHasOnlyDynamicFields ? "two-column" : ""}
             content={{
               headRow: headRowItems,
+              caption: `${heading} ${nonTableFields?.[0]?.props?.title ?? ""}`,
             }}
             data-testid="exportTable"
           >
@@ -189,6 +192,6 @@ export const renderGeneralInformation = (
 };
 export interface Props {
   section: StandardReportPageShape | DrawerReportPageShape;
-  showHintText?: boolean;
+  heading?: string;
   headingLevel?: HeadingLevel;
 }

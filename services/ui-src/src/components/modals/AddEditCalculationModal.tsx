@@ -10,7 +10,6 @@ import {
   ReportStatus,
 } from "types";
 // utils
-import uuid from "react-uuid";
 import { actionButtonText } from "./modalLogic";
 import { calculationTableDynamicTotalsOnChange, getFieldParts } from "utils";
 
@@ -68,7 +67,7 @@ export const AddEditCalculationModal = ({
       return data;
     }, {} as AnyObject);
 
-    const dynamicFieldId = selectedId || uuid();
+    const dynamicFieldId = selectedId || crypto.randomUUID();
     const percentage = submissionData.percentageOverride || 100;
 
     const totals = calculationTableDynamicTotalsOnChange({

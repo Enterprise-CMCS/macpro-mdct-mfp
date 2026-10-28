@@ -1,19 +1,23 @@
-import { render, screen, within } from "@testing-library/react";
+import { MockedFunction } from "vitest";
+import { act, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+// components
 import { Form } from "components";
+// utils
+import { useStore } from "utils";
+import { testA11yAct } from "utils/testing/commonTests";
+import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
 import {
   mockBadTablesForm,
   mockForm,
   mockTablesForm,
   RouterWrappedComponent,
-} from "utils/testing/setupJest";
-import { testA11yAct } from "utils/testing/commonTests";
-import { mockAdminUser, mockStateUser } from "utils/testing/mockUsers";
-import { useStore } from "utils";
+} from "utils/testing/setupTest";
 
-jest.mock("utils/state/useStore");
-const mockedUseStore = useStore as jest.MockedFunction<typeof useStore>;
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockOnSubmit = jest.fn();
+const mockOnSubmit = vi.fn();
 
 const formComponent = (form = mockForm) => (
   <RouterWrappedComponent>
@@ -32,7 +36,7 @@ const formComponent = (form = mockForm) => (
 
 describe("<Form />", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   test("Form is visible and disabled by default", () => {
     mockedUseStore.mockReturnValue({});
@@ -68,7 +72,22 @@ describe("<Form />", () => {
     expect(form).toBeEnabled();
   });
 
+  test("submitting incomplete form shows errors", async () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
+    render(formComponent());
+    const submitButton = screen.getByRole("button", {
+      name: "Submit",
+    });
+    await act(async () => {
+      await userEvent.click(submitButton);
+    });
+
+    const errorMessage = screen.getAllByText("A response is required");
+    expect(errorMessage).toHaveLength(3);
+  });
+
   test("form tables are visible", () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
     render(formComponent(mockTablesForm));
 
     const tables = screen.getAllByRole("table");
@@ -129,13 +148,14 @@ describe("<Form />", () => {
     expect(entityModalInput).toBeVisible();
 
     const fieldHeading = screen.getByRole("heading", {
-      level: 3,
+      level: 2,
       name: "Mock field title",
     });
     expect(fieldHeading).toBeVisible();
   });
 
   test("bad table type is skipped", () => {
+    mockedUseStore.mockReturnValue(mockStateUser);
     render(formComponent(mockBadTablesForm));
 
     const table = screen.queryByRole("table");

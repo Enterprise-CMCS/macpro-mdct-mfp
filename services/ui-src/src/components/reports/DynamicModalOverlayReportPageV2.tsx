@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { ComponentClass, useContext, useEffect, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import { Box, Heading } from "@chakra-ui/react";
 import {
@@ -24,17 +25,22 @@ import {
   entityWasUpdated,
   filterFormData,
   getEntriesToClear,
+  getPageTitle,
   isFieldElement,
+  isTableField,
   parseCustomHtml,
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
+  waitForAutosavesAndGetReport,
 } from "utils";
 
 export const DynamicModalOverlayReportPageV2 = ({
   route,
   setSidebarHidden,
 }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   // Route Information
   const { entityInfo, entityType, overlayForm, verbiage } = route;
 
@@ -55,7 +61,7 @@ export const DynamicModalOverlayReportPageV2 = ({
     selectedEntity,
     setSelectedEntity,
   } = useStore();
-  const isDisabled = Boolean(userIsAdmin || userIsReadOnly);
+  const isDisabled = Boolean(userIsAdmin || userIsReadOnly || !editable);
 
   // Display Variables
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
@@ -64,7 +70,7 @@ export const DynamicModalOverlayReportPageV2 = ({
 
   const tableHeaders = () => {
     if (isTablet || isMobile) return { headRow: ["", ""] };
-    return { headRow: ["", verbiage.tableHeader] };
+    return { headRow: verbiage.tableHeaders };
   };
 
   // Open/Close overlay action methods
@@ -85,32 +91,33 @@ export const DynamicModalOverlayReportPageV2 = ({
   const onSubmit = async (enteredData: AnyObject) => {
     if (userIsEndUser) {
       setSubmitting(true);
+      const latestReport = await waitForAutosavesAndGetReport(report);
       const reportKeys = {
-        reportType: report.reportType,
+        reportType: latestReport.reportType,
         state,
-        id: report.id,
+        id: latestReport.id,
       };
-      const currentEntities = [...(report.fieldData[entityType] || [])];
-      const selectedEntityIndex = report.fieldData[entityType].findIndex(
+      const currentEntities = [...(latestReport.fieldData[entityType] || [])];
+      const selectedEntityIndex = currentEntities.findIndex(
         (entity: EntityShape) => entity.id === selectedEntity?.id
       );
       const nonTableFields = form.fields
         .filter(isFieldElement)
-        .filter((f) => !f.forTableOnly);
+        .filter((f) => !isTableField(f));
       const filteredFormData = filterFormData(enteredData, nonTableFields);
       const entriesToClear = getEntriesToClear(enteredData, nonTableFields);
       const newEntity = {
         ...currentEntities[selectedEntityIndex],
         ...filteredFormData,
       };
-      const newEntities = currentEntities;
+      const newEntities = [...currentEntities];
       newEntities[selectedEntityIndex] = newEntity;
       newEntities[selectedEntityIndex] = setClearedEntriesToDefaultValue(
         newEntities[selectedEntityIndex],
         entriesToClear
       );
       const shouldSave = entityWasUpdated(
-        reportFieldDataEntities[selectedEntityIndex],
+        currentEntities[selectedEntityIndex],
         newEntity
       );
       if (shouldSave) {
@@ -138,6 +145,10 @@ export const DynamicModalOverlayReportPageV2 = ({
   const tablePage = () => {
     return (
       <Box sx={sx.content}>
+        {/* page title */}
+        <Helmet>
+          <title>{report && getPageTitle(report.reportType, route.name)}</title>
+        </Helmet>
         <ReportPageIntro accordion={verbiage.accordion} text={verbiage.intro} />
         <Heading as="h3" sx={sx.dashboardTitle}>
           {dashTitle}
@@ -147,7 +158,7 @@ export const DynamicModalOverlayReportPageV2 = ({
             {parseCustomHtml(dashSubTitle)}
           </Heading>
         )}
-        <Table content={tableHeaders()} sx={sx.table}>
+        <Table content={tableHeaders()}>
           {reportFieldDataEntities.map((entity: EntityShape) => (
             <EntityRow
               entering={entering}
@@ -198,7 +209,7 @@ interface Props {
 const sx = {
   backButton: {
     padding: 0,
-    fontWeight: "normal",
+    fontWeight: "body_sm",
     color: "primary",
     display: "flex",
     position: "relative",
@@ -220,8 +231,8 @@ const sx = {
   },
   dashboardTitle: {
     color: "gray",
-    fontSize: "md",
-    fontWeight: "bold",
+    fontSize: "heading_md",
+    fontWeight: "heading_md",
     marginTop: "spacer2",
     textAlign: "left",
     ".tablet &, .mobile &": {
@@ -230,42 +241,12 @@ const sx = {
   },
   subsectionHeading: {
     color: "gray_dark",
-    fontSize: "md",
-    fontWeight: "normal",
+    fontSize: "body_md",
+    fontWeight: "body_md",
     textAlign: "left",
     ".tablet &, .mobile &": {
       paddingBottom: "0",
     },
     paddingBottom: "spacer2",
-  },
-  table: {
-    tableLayout: "fixed",
-    br: {
-      marginBottom: "spacer_half",
-    },
-    th: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      color: "gray",
-      fontWeight: "bold",
-      paddingLeft: "spacer2",
-      paddingRight: "0",
-      ".tablet &, .mobile &": {
-        border: "0",
-      },
-      "&:nth-of-type(1)": {
-        width: "2.5rem",
-      },
-      "&:nth-of-type(3)": {
-        width: "260px",
-      },
-    },
-    tr: {
-      "&:last-of-type": {
-        td: {
-          border: "0",
-        },
-      },
-    },
   },
 };

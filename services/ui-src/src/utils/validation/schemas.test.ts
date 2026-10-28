@@ -1,5 +1,6 @@
 import { MixedSchema } from "yup/lib/mixed";
-import { isEndDateAfterStartDate, nested, schemaMap } from "./schemas";
+import { object } from "yup";
+import { endDate, isEndDateAfterStartDate, nested, schemaMap } from "./schemas";
 import {
   AnyObject,
   NumberOptions,
@@ -220,6 +221,178 @@ describe("utils/validation/schemas", () => {
 
     test("returns false", () => {
       expect(isEndDateAfterStartDate("01/01/1990", "01/01/1989")).toBe(false);
+    });
+
+    test("returns true when dates are the same", () => {
+      expect(isEndDateAfterStartDate("01/01/1990", "01/01/1990")).toBe(true);
+    });
+
+    test("handles empty and invalid inputs", () => {
+      expect(isEndDateAfterStartDate("", "01/01/1990")).toBe(true);
+      expect(isEndDateAfterStartDate("01/01/1990", "")).toBe(true);
+      expect(isEndDateAfterStartDate(undefined as any, "01/01/1990")).toBe(
+        true
+      );
+      expect(isEndDateAfterStartDate(null as any, "01/01/1990")).toBe(true);
+    });
+
+    test("handles invalid date formats", () => {
+      expect(isEndDateAfterStartDate("invalid", "01/01/1990")).toBe(true);
+      expect(isEndDateAfterStartDate("01/01/1990", "invalid")).toBe(true);
+      expect(isEndDateAfterStartDate("13/32/1990", "01/01/1990")).toBe(true);
+    });
+  });
+
+  describe("endDate with conditional start dates", () => {
+    test("validates with single conditional field (legacy behavior)", async () => {
+      const testSchema = object({
+        startDate: schemaMap.date,
+        endDate: endDate(["startDate"]),
+      });
+      const validData = {
+        startDate: "01/01/1990",
+        endDate: "12/31/1990",
+      };
+      expect(await testSchema.isValid(validData)).toBe(true);
+    });
+
+    test("validates against actual start date when it has a value", async () => {
+      const testSchema = object({
+        actualStartDate: schemaMap.date,
+        expectedStartDate: schemaMap.dateOptional,
+        endDate: endDate(["actualStartDate", "expectedStartDate"]),
+      });
+      const validData = {
+        actualStartDate: "01/01/1990",
+        expectedStartDate: "",
+        endDate: "12/31/1990",
+      };
+      expect(await testSchema.isValid(validData)).toBe(true);
+    });
+
+    test("validates against expected start date when actual is empty", async () => {
+      const testSchema = object({
+        actualStartDate: schemaMap.dateOptional,
+        expectedStartDate: schemaMap.date,
+        endDate: endDate(["actualStartDate", "expectedStartDate"]),
+      });
+      const validData = {
+        actualStartDate: "",
+        expectedStartDate: "01/01/1990",
+        endDate: "12/31/1990",
+      };
+      expect(await testSchema.isValid(validData)).toBe(true);
+    });
+
+    test("fails when end date is before actual start date", async () => {
+      const testSchema = object({
+        actualStartDate: schemaMap.date,
+        expectedStartDate: schemaMap.dateOptional,
+        endDate: endDate(["actualStartDate", "expectedStartDate"]),
+      });
+      const invalidData = {
+        actualStartDate: "12/31/1990",
+        expectedStartDate: "",
+        endDate: "01/01/1990",
+      };
+      expect(await testSchema.isValid(invalidData)).toBe(false);
+    });
+
+    test("end date is before expected start date", async () => {
+      const testSchema = object({
+        actualStartDate: schemaMap.dateOptional,
+        expectedStartDate: schemaMap.date,
+        endDate: endDate(["actualStartDate", "expectedStartDate"]),
+      });
+      const invalidData = {
+        actualStartDate: "",
+        expectedStartDate: "12/31/1990",
+        endDate: "01/01/1990",
+      };
+      expect(await testSchema.isValid(invalidData)).toBe(false);
+    });
+
+    test("end date is entered but no start date selected yet", async () => {
+      const testSchema = object({
+        actualStartDate: schemaMap.dateOptional,
+        expectedStartDate: schemaMap.dateOptional,
+        endDate: endDate(["actualStartDate", "expectedStartDate"]),
+      });
+      const dataWithOnlyEndDate = {
+        actualStartDate: "",
+        expectedStartDate: "",
+        endDate: "12/31/1990",
+      };
+      expect(await testSchema.isValid(dataWithOnlyEndDate)).toBe(true);
+    });
+
+    test("use first defined value when multiple start dates provided", async () => {
+      const testSchema = object({
+        actualStartDate: schemaMap.date,
+        expectedStartDate: schemaMap.date,
+        endDate: endDate(["actualStartDate", "expectedStartDate"]),
+      });
+      const bothDatesValid = {
+        actualStartDate: "01/01/1990",
+        expectedStartDate: "06/01/1990",
+        endDate: "12/31/1990",
+      };
+      expect(await testSchema.isValid(bothDatesValid)).toBe(true);
+
+      const betweenDates = {
+        actualStartDate: "01/01/1990",
+        expectedStartDate: "06/01/1990",
+        endDate: "03/01/1990",
+      };
+      expect(await testSchema.isValid(betweenDates)).toBe(true);
+    });
+
+    test("works with three conditional fields", async () => {
+      const testSchema = object({
+        plannedStartDate: schemaMap.dateOptional,
+        actualStartDate: schemaMap.dateOptional,
+        expectedStartDate: schemaMap.date,
+        endDate: endDate([
+          "plannedStartDate",
+          "actualStartDate",
+          "expectedStartDate",
+        ]),
+      });
+
+      const onlyExpected = {
+        plannedStartDate: "",
+        actualStartDate: "",
+        expectedStartDate: "03/01/1990",
+        endDate: "12/31/1990",
+      };
+      expect(await testSchema.isValid(onlyExpected)).toBe(true);
+
+      const actualHasValue = {
+        plannedStartDate: "",
+        actualStartDate: "02/01/1990",
+        expectedStartDate: "03/01/1990",
+        endDate: "12/31/1990",
+      };
+      expect(await testSchema.isValid(actualHasValue)).toBe(true);
+    });
+
+    test("validates error message structure correctly", async () => {
+      const testSchema = object({
+        startDate: schemaMap.date,
+        endDate: endDate(["startDate"]),
+      });
+
+      const invalidData = {
+        startDate: "12/31/1990",
+        endDate: "01/01/1990",
+      };
+
+      try {
+        await testSchema.validate(invalidData, { abortEarly: false });
+        fail("Should have thrown validation error");
+      } catch (error: any) {
+        expect(error.errors).toContain("End date can't be before start date");
+      }
     });
   });
 

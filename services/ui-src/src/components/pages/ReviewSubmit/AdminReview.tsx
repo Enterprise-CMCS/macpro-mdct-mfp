@@ -13,11 +13,12 @@ import {
   UnorderedList,
   ListItem,
 } from "@chakra-ui/react";
-import { Modal } from "components";
+import { ErrorAlert, Modal } from "components";
 // utils
 import { parseCustomHtml, useStore, releaseReport, approveReport } from "utils";
+import { reportErrors } from "verbiage/errors";
 // types
-import { AnyObject, ReportStatus, ReportType } from "types";
+import { AnyObject, ErrorVerbiage, ReportStatus, ReportType } from "types";
 
 export const AdminReview = ({
   reviewVerbiage,
@@ -27,6 +28,10 @@ export const AdminReview = ({
   // approve input state
   const [approveInput, setApproveInput] = useState<string>("");
   const [isApproved, setIsApproved] = useState<boolean>(false);
+  const [isApproving, setIsApproving] = useState<boolean>(false);
+  const [approveError, setApproveError] = useState<ErrorVerbiage | undefined>(
+    undefined
+  );
 
   //
 
@@ -67,8 +72,16 @@ export const AdminReview = ({
   };
 
   const handleSubmitApproval = async () => {
-    await approveReport(reportKeys, report!);
-    await navigate(report?.formTemplate?.basePath || "/");
+    setIsApproving(true);
+    setApproveError(undefined);
+    try {
+      await approveReport(reportKeys, report!);
+      await navigate(report?.formTemplate?.basePath || "/");
+    } catch {
+      setApproveError(reportErrors.APPROVE_REPORT_FAILED);
+    } finally {
+      setIsApproving(false);
+    }
   };
 
   useEffect(() => {
@@ -149,10 +162,11 @@ export const AdminReview = ({
           }}
           content={adminInfo.modal.approveModal}
         >
+          <ErrorAlert error={approveError} />
           <Text sx={sx.unlockModalBody}>
             {adminInfo.modal.approveModal.body}
           </Text>
-          <Text fontWeight="bold">Enter APPROVE to confirm.</Text>
+          <Text fontWeight="heading_md">Enter APPROVE to confirm.</Text>
           <Input
             id="approve"
             name="approve"
@@ -173,7 +187,8 @@ export const AdminReview = ({
             </Button>
             <Button
               type="submit"
-              disabled={isApproved ? false : true}
+              disabled={!isApproved || isApproving}
+              isLoading={isApproving}
               data-testid="modal-approve-button"
               onClick={handleSubmitApproval}
             >
@@ -217,7 +232,7 @@ const sx = {
     },
   },
   infoHeading: {
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     marginBottom: "spacer1",
   },
   list: {
@@ -278,7 +293,7 @@ const sx = {
       },
     },
     ".mobile &": {
-      fontSize: "sm",
+      fontSize: "body_sm",
     },
   },
 };

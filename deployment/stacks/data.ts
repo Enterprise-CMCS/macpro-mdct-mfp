@@ -59,13 +59,6 @@ export function createDataComponents(props: CreateDataComponentsProps) {
       partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
     }),
-    new DynamoDBTable(scope, "ExpenditureReports", {
-      stage,
-      isDev,
-      name: "expenditure-reports",
-      partitionKey: { name: "state", type: dynamodb.AttributeType.STRING },
-      sortKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    }),
     new DynamoDBTable(scope, "FinancialReports", {
       stage,
       isDev,

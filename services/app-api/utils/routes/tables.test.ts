@@ -151,12 +151,10 @@ describe("utils/routes/tables", () => {
     test("returns all field types", () => {
       const fieldsToReturn = [
         ServiceFieldType.BUDGETED_FTES,
-        ServiceFieldType.CATEGORY,
         ServiceFieldType.DESCRIPTION,
         ServiceFieldType.FILLED_FTES,
         ServiceFieldType.NAME,
         ServiceFieldType.PERCENTAGE_OVERRIDE,
-        ServiceFieldType.TITLE,
         ServiceFieldType.TOTAL_COMPUTABLE,
         ServiceFieldType.TOTAL_STATE_TERRITORY_SHARE,
         ServiceFieldType.TOTAL_FEDERAL_SHARE,
@@ -174,15 +172,6 @@ describe("utils/routes/tables", () => {
           },
           type: ReportFormFieldType.NUMBER,
           validation: ValidationType.NUMBER_OPTIONAL,
-        },
-        {
-          forTableOnly: true,
-          id: "mockServiceId-category",
-          props: {
-            label: "Mock Service Category",
-          },
-          type: ReportFormFieldType.TEXT,
-          validation: ValidationType.TEXT_OPTIONAL,
         },
         {
           forTableOnly: true,
@@ -230,15 +219,6 @@ describe("utils/routes/tables", () => {
             },
             type: ValidationType.NUMBER_COMPARISON_OPTIONAL,
           },
-        },
-        {
-          forTableOnly: true,
-          id: "mockServiceId-title",
-          props: {
-            label: "Mock Service Position Title",
-          },
-          type: ReportFormFieldType.TEXT,
-          validation: ValidationType.TEXT_OPTIONAL,
         },
         {
           forTableOnly: true,

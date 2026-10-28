@@ -9,13 +9,7 @@ export const TemplateCardAccordion = ({ verbiage, ...props }: Props) => (
   <Accordion sx={sx.root} allowToggle={true} {...props}>
     <AccordionItem sx={sx.text} label={verbiage.buttonLabel}>
       {parseCustomHtml(verbiage.text)}
-      {verbiage.table && (
-        <Table
-          content={verbiage.table}
-          variant="striped"
-          sxOverride={sx.table}
-        />
-      )}
+      {verbiage.table && <Table content={verbiage.table} variant="striped" />}
       {verbiage.list && (
         <UnorderedList sx={sx.list}>
           {verbiage.list.map((listItem: string, index: number) => (
@@ -42,15 +36,10 @@ const sx = {
       marginBottom: "spacer2",
     },
   },
-  table: {
-    "tr td:last-of-type": {
-      fontWeight: "semibold",
-    },
-  },
   list: {
     paddingLeft: "spacer2",
     "li:last-of-type": {
-      fontWeight: "bold",
+      fontWeight: "heading_md",
     },
   },
 };

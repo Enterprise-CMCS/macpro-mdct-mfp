@@ -1,5 +1,12 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import {
+  ComponentClass,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Link as RouterLink, useNavigate, useSearchParams } from "react-router";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import {
   Box,
@@ -28,7 +35,7 @@ import { ArchiveReportModal } from "components/modals/ArchiveReportModal";
 import { ResponsiveDashboardTable } from "./ResponsiveDashboardTable";
 import { ModalBundle } from "./FinancialReporting/FinancialReportingDashboardPage";
 // constants
-import { States } from "../../../constants";
+import { APP_TITLE, States } from "../../../constants";
 // types
 import {
   AnyObject,
@@ -51,9 +58,11 @@ import {
 // verbiage
 import accordion from "verbiage/pages/accordion";
 // assets
-import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.png";
+import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.svg";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
+  const wpSarRelease2025 = Boolean(useFlags()?.wpSarRelease2025);
   const {
     errorMessage,
     fetchReportsByState,
@@ -98,6 +107,11 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
 
   const { dashboardVerbiage } = getReportVerbiage(reportType);
   const { intro, body } = dashboardVerbiage;
+
+  // page title
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+  const reportTitle =
+    reportType === ReportType.FINANCIAL_REPORT ? "FRF" : reportType;
 
   // if an admin or a read-only user has selected a state, retrieve it from local storage
   const adminSelectedState = localStorage.getItem("selectedState") || undefined;
@@ -270,7 +284,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
     }
   };
 
-  const isAddSubmissionDisabled = (): boolean => {
+  const isAddSubmissionDisabled = (enableButton: boolean): boolean => {
     switch (reportType) {
       case ReportType.SAR:
         return !workPlanToCopyFrom;
@@ -278,11 +292,12 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
         if (!previousReport) {
           return false;
         } else {
-          // Prevent creating a new WP if the previous WP is for Q1 2026 and approved
+          // Prevent creating a new WP if the previous WP is for Q1 2026 and approved and feature flag is off
           if (
             previousReport.reportPeriod === 1 &&
             previousReport.reportYear === 2026 &&
-            previousReport.status === ReportStatus.APPROVED
+            previousReport.status === ReportStatus.APPROVED &&
+            !enableButton
           )
             return true;
           // Allow creating a new WP only if the previous WP is approved
@@ -347,8 +362,12 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   const fullStateName = States[activeState as keyof typeof States];
   return (
     <PageTemplate type="report" sx={sx.layout}>
+      {/* page title */}
+      <Helmet>
+        <title>{`${reportTitle} - ${APP_TITLE}`}</title>
+      </Helmet>
       <Link as={RouterLink} to="/" sx={sx.returnLink}>
-        <Image src={arrowLeftIcon} alt="Arrow left" className="returnIcon" />
+        <Image src={arrowLeftIcon} alt="" className="returnIcon" />
         Return home
       </Link>
       {errorMessage && <ErrorAlert error={errorMessage} />}
@@ -414,7 +433,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
             <Button
               type="submit"
               variant="primary"
-              disabled={isAddSubmissionDisabled()}
+              disabled={isAddSubmissionDisabled(wpSarRelease2025)}
               onClick={() =>
                 reportType === ReportType.FINANCIAL_REPORT
                   ? modal?.setModalReport(undefined)
@@ -527,12 +546,12 @@ const sx = {
   },
   headerText: {
     marginBottom: "spacer2",
-    fontSize: "4xl",
-    fontWeight: "normal",
+    fontSize: "heading_3xl",
+    fontWeight: "heading_3xl",
     ".tablet &, .mobile &": {
-      fontSize: "xl",
-      lineHeight: "1.75rem",
-      fontWeight: "bold",
+      fontSize: "heading_xl",
+      lineHeight: "heading_xl",
+      fontWeight: "heading_xl",
     },
   },
   bodyBox: {
@@ -573,23 +592,18 @@ const sx = {
   resetBtn: {
     border: "none",
     marginTop: "spacer2",
-    fontWeight: "none",
     textDecoration: "underline",
-    fontSize: "0.875rem",
+    fontSize: "body_sm",
   },
 };
 
 const sxChildStyles = {
   editReportButtonCell: {
-    width: "6.875rem",
-    padding: 0,
     button: {
-      width: "6.875rem",
-      height: "1.75rem",
       borderRadius: "0.25rem",
       textAlign: "center",
-      fontSize: "sm",
-      fontWeight: "normal",
+      fontSize: "body_md",
+      fontWeight: "heading_md",
       color: "primary",
     },
   },
@@ -606,32 +620,35 @@ const sxChildStyles = {
     },
   },
   sarSubmissionNameText: {
-    fontSize: "md",
-    fontWeight: "bold",
-    width: "10rem",
+    fontSize: "body_md",
+    fontWeight: "heading_md",
+    minWidth: "10rem",
     ".tablet &, .mobile &": {
       width: "100%",
     },
-    lineHeight: "1.25rem",
+    lineHeight: "body_md",
   },
   wpSubmissionNameText: {
-    fontSize: "md",
-    fontWeight: "bold",
-    width: "13rem",
+    fontSize: "body_md",
+    fontWeight: "heading_md",
+    minWidth: "8rem",
     ".tablet &, .mobile &": {
       width: "100%",
     },
-    lineHeight: "1.25rem",
+    lineHeight: "body_md",
   },
   adminActionCell: {
-    width: "2.5rem",
-    ".tablet &, .mobile &": {
-      display: "flex",
+    display: "flex",
+    gap: ".5rem",
+    button: {
+      minWidth: "auto",
+      fontSize: "body_md",
     },
   },
   adminActionButton: {
     minWidth: "4.5rem",
-    fontSize: "sm",
-    fontWeight: "normal",
+    fontSize: "body_sm",
+    fontWeight: "heading_md",
+    padding: 0,
   },
 };

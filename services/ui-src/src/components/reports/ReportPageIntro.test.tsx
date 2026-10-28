@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 // components
 import { ReportPageIntro } from "components";
 // verbiage
-import { mockVerbiageIntro } from "utils/testing/setupJest";
+import { mockVerbiageIntro } from "utils/testing/setupTest";
 import { testA11yAct } from "utils/testing/commonTests";
 
 const reportPageComponent = <ReportPageIntro text={mockVerbiageIntro} />;

@@ -1,4 +1,5 @@
-import { MouseEventHandler, useEffect, useState } from "react";
+import { ComponentClass, MouseEventHandler, useEffect, useState } from "react";
+import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
 import {
   Box,
@@ -18,12 +19,13 @@ import {
 } from "components";
 // assets
 import addIcon from "assets/icons/icon_add_white.png";
-import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.png";
+import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.svg";
 // types
 import { EntityShape, OverlayModalPageShape, ReportType } from "types";
 // utils
 import {
   getFormattedEntityData,
+  getPageTitle,
   parseCustomHtml,
   resetClearProp,
   useStore,
@@ -36,6 +38,8 @@ export const OverlayModalPage = ({
   closeEntityDetailsOverlay,
   route,
 }: Props) => {
+  const Helmet = HelmetImport as ComponentClass<HelmetProps>;
+
   const { verbiage, stepType } = route;
   const { report, selectedEntity, setSelectedEntity, editable } = useStore();
   const [selectedStepEntity, setSelectedStepEntity] = useState<
@@ -121,6 +125,10 @@ export const OverlayModalPage = ({
 
   return (
     <Box>
+      {/* page title */}
+      <Helmet>
+        <title>{report && getPageTitle(report.reportType, route.name)}</title>
+      </Helmet>
       <Button
         sx={sx.backButton}
         variant="none"
@@ -235,7 +243,7 @@ interface Props {
 const sx = {
   backButton: {
     padding: 0,
-    fontWeight: "normal",
+    fontWeight: "body_sm",
     color: "primary",
     display: "flex",
     position: "relative",
@@ -257,7 +265,7 @@ const sx = {
   dashboardTitle: {
     paddingTop: "spacer2",
     marginBottom: "spacer2",
-    fontWeight: "bold",
+    fontWeight: "heading_md",
     color: "gray",
   },
   addEntityButton: {

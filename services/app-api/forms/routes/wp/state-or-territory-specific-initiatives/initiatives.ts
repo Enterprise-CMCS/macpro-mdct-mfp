@@ -29,9 +29,6 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
           content: "previous page",
           props: {
             to: "/wp/state-or-territory-specific-initiatives/instructions",
-            style: {
-              textDecoration: "underline",
-            },
           },
         },
         {
@@ -55,7 +52,11 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
     readOnlyEntityDetailsButtonText: "View",
     dashboardTitle: "Initiative total count:",
     countEntitiesInTitle: true,
-    tableHeader: "Initiative name <br/> MFP Work Plan topic",
+    tableHeaders: [
+      "Status",
+      "Initiative name <br/> MFP Work Plan topic",
+      "Actions",
+    ],
     addEditModalHint:
       "Provide the name of one initiative. You will be then be asked to complete details for this initiative including a description, evaluation plan and funding sources.",
   },
@@ -657,6 +658,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                         type: ValidationType.TEXT,
                         nested: true,
                         parentFieldName: "closeOutInformation_initiativeStatus",
+                        parentOptionId: "GUcwKDPBs8K6LY4yT1hPGD",
                       },
                     },
                   ],
@@ -675,6 +677,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesRoute = {
                         type: ValidationType.TEXT,
                         nested: true,
                         parentFieldName: "closeOutInformation_initiativeStatus",
+                        parentOptionId: "86SG3qhFfsZ0CAu3G4SxM5",
                       },
                     },
                   ],
