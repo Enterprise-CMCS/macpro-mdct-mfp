@@ -44,7 +44,6 @@ export const EntityDetailsOverlayV2 = ({
   route,
   selectedEntity,
   submitting = false,
-  validateOnRender = false,
 }: Props) => {
   const [autosave, setAutosave] = useState<boolean>(true);
   const [formJson, setFormJson] = useState<FormJson>(form);
@@ -188,7 +187,6 @@ export const EntityDetailsOverlayV2 = ({
           id={form.id}
           onFormChange={onFormChange}
           onSubmit={onSubmit}
-          validateOnRender={validateOnRender}
         />
       )}
       {showCloseOut && (
@@ -255,7 +253,6 @@ interface Props {
   selectedEntity?: EntityShape;
   setEntering: Function;
   submitting?: boolean;
-  validateOnRender?: boolean;
 }
 
 const sx = {

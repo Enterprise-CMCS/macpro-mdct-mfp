@@ -218,7 +218,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
 interface Props {
   route: ModalOverlayReportPageShape;
   setSidebarHidden: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {

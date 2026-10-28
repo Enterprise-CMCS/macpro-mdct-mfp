@@ -146,7 +146,6 @@ export const AddEditCalculationModal = ({
         formData={formData}
         id={form.id}
         onSubmit={handleSubmit}
-        validateOnRender={false}
       />
     </Modal>
   );

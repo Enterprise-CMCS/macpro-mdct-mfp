@@ -33,7 +33,7 @@ import { ReportContext, ReportDrawer } from "components";
 import { ReportPageIntro } from "./ReportPageIntro";
 import completedIcon from "assets/icons/icon_check_circle.png";
 
-export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
+export const DrawerReportPage = ({ route }: Props) => {
   const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -169,7 +169,6 @@ export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
           isOpen,
           onClose,
         }}
-        validateOnRender={validateOnRender}
         data-testid="report-drawer"
       />
     </Box>
@@ -178,7 +177,6 @@ export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
 
 interface Props {
   route: DrawerReportPageShape;
-  validateOnRender?: boolean;
 }
 
 const sx = {

@@ -54,7 +54,6 @@ export const AdminDashSelector = ({ verbiage }: Props) => {
         formJson={form}
         onSubmit={onSubmit}
         onChange={onChange}
-        validateOnRender={false}
       />
       <Flex sx={sx.navigationButton}>
         <Button type="submit" form={formJson.id} isDisabled={!reportSelected}>

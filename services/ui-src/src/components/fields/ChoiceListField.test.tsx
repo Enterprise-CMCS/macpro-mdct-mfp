@@ -152,7 +152,6 @@ const RadioComponent = (
     label="Radio example"
     name="radioField"
     type="radio"
-    validateOnRender={true}
   />
 );
 

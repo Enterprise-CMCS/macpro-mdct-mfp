@@ -59,7 +59,6 @@ export const Form = ({
   onFormChange,
   onSubmit,
   reportStatus,
-  validateOnRender,
   ...props
 }: Props) => {
   const { editableByAdmins, fields, tables = [] } = formJson;
@@ -97,7 +96,7 @@ export const Form = ({
 
   useEffect(() => {
     setValidationSchema(formResolverSchema);
-  }, [formJson]);
+  }, []);
 
   const validation = (values: {}) => {
     try {
@@ -199,7 +198,6 @@ export const Form = ({
       {
         disabled: fieldInputDisabled,
         autosave,
-        validateOnRender,
         updateFieldValues,
       }
     );
@@ -388,7 +386,6 @@ interface Props {
   onFormChange?: Function;
   onSubmit: Function;
   reportStatus?: ReportStatus;
-  validateOnRender: boolean;
   [key: string]: any;
   updateFieldValues?: (fieldsToSave: FieldInfo[]) => {};
 }

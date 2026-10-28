@@ -108,26 +108,17 @@ describe("<StatusTable />", () => {
     expect(editButtons).toHaveLength(6);
 
     await userEvent.click(editButtons[0]);
-    const validateOnRenderProp = { state: { validateOnRender: true } };
+
     const expectedRoute1 = "/mock/mock-route-1";
-    expect(mockUseNavigate).toHaveBeenCalledWith(
-      expectedRoute1,
-      validateOnRenderProp
-    );
+    expect(mockUseNavigate).toHaveBeenCalledWith(expectedRoute1);
 
     await userEvent.click(editButtons[1]);
     const expectedRoute2 = "/mock/mock-route-2a";
-    expect(mockUseNavigate).toHaveBeenCalledWith(
-      expectedRoute2,
-      validateOnRenderProp
-    );
+    expect(mockUseNavigate).toHaveBeenCalledWith(expectedRoute2);
 
     await userEvent.click(editButtons[2]);
     const expectedRoute3 = "/mock/mock-route-2b";
-    expect(mockUseNavigate).toHaveBeenCalledWith(
-      expectedRoute3,
-      validateOnRenderProp
-    );
+    expect(mockUseNavigate).toHaveBeenCalledWith(expectedRoute3);
   });
 
   test("should be able to navigate to a page on the form by clicking edit on mobile", async () => {
@@ -142,26 +133,16 @@ describe("<StatusTable />", () => {
     expect(editButtons).toHaveLength(6);
 
     await userEvent.click(editButtons[0]);
-    const validateOnRenderProp = { state: { validateOnRender: true } };
     const expectedRoute1 = "/mock/mock-route-1";
-    expect(mockUseNavigate).toHaveBeenCalledWith(
-      expectedRoute1,
-      validateOnRenderProp
-    );
+    expect(mockUseNavigate).toHaveBeenCalledWith(expectedRoute1);
 
     await userEvent.click(editButtons[1]);
     const expectedRoute2 = "/mock/mock-route-2a";
-    expect(mockUseNavigate).toHaveBeenCalledWith(
-      expectedRoute2,
-      validateOnRenderProp
-    );
+    expect(mockUseNavigate).toHaveBeenCalledWith(expectedRoute2);
 
     await userEvent.click(editButtons[2]);
     const expectedRoute3 = "/mock/mock-route-2b";
-    expect(mockUseNavigate).toHaveBeenCalledWith(
-      expectedRoute3,
-      validateOnRenderProp
-    );
+    expect(mockUseNavigate).toHaveBeenCalledWith(expectedRoute3);
   });
 
   testA11yAct(StatusTableComponent, () => {

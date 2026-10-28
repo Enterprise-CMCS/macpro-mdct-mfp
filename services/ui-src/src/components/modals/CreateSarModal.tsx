@@ -137,7 +137,6 @@ export const CreateSarModal = ({
         formData={selectedReport?.formData}
         // if view-only (user is admin, report is submitted), close modal
         onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
-        validateOnRender={false}
         reportStatus={selectedReport?.status}
       />
     </Modal>

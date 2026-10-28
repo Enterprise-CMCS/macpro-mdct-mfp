@@ -128,7 +128,6 @@ interface Props {
   nested?: boolean;
   clear?: boolean;
   autosave?: boolean;
-  validateOnRender?: boolean;
   sxOverride?: SystemStyleObject;
   styleAsOptional?: boolean;
   disabled?: boolean;

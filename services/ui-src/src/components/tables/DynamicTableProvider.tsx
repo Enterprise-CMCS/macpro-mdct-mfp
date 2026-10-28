@@ -238,7 +238,6 @@ export const DynamicTableProvider = ({ updateFieldValues, children }: any) => {
     return formFieldFactory(fieldsToRender, {
       autosave: true,
       disabled,
-      validateOnRender: false,
       updateFieldValues: updateFieldValues,
     });
   };

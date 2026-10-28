@@ -315,7 +315,6 @@ export const ModalOverlayReportPageV2 = ({
           selectedEntity={selectedEntity}
           submitting={submitting}
           setEntering={setEntering}
-          validateOnRender={false}
         />
       </EntityProvider>
     );
@@ -327,7 +326,6 @@ export const ModalOverlayReportPageV2 = ({
 interface Props {
   route: ModalOverlayReportPageShape;
   setSidebarHidden: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {

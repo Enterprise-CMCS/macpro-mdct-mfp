@@ -22,12 +22,7 @@ const mockOnSubmit = vi.fn();
 
 const formComponent = (form = mockForm) => (
   <RouterWrappedComponent>
-    <Form
-      id={form.id}
-      formJson={form}
-      onSubmit={mockOnSubmit}
-      validateOnRender={false}
-    />
+    <Form id={form.id} formJson={form} onSubmit={mockOnSubmit} />
     <button form={form.id} type="submit">
       Submit
     </button>

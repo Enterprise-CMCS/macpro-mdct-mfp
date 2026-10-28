@@ -8,7 +8,7 @@ export const EditButton = ({ buttonAriaLabel, path, editable }: Props) => {
     <Button
       variant="outline"
       aria-label={buttonAriaLabel}
-      onClick={() => navigate(path, { state: { validateOnRender: true } })}
+      onClick={() => navigate(path)}
     >
       {displayText}
     </Button>

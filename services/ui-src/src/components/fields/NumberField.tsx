@@ -154,6 +154,5 @@ interface Props {
   readOnly?: boolean;
   styleAsOptional?: boolean;
   sxOverride?: SystemStyleObject;
-  validateOnRender?: boolean;
   updateFieldValues: (fieldsToSave: FieldInfo[]) => {};
 }

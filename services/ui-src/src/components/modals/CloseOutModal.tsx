@@ -115,7 +115,6 @@ export const CloseOutModal = ({
         formJson={form}
         id={form.id}
         onSubmit={handleSubmit}
-        validateOnRender={false}
       />
       {errorMessage && (
         <Alert

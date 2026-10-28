@@ -100,7 +100,6 @@ interface Props {
   timetype?: string;
   nested?: boolean;
   autosave?: boolean;
-  validateOnRender?: boolean;
   sxOverride?: SystemStyleObject;
   styleAsOptional?: boolean;
   clear?: boolean;

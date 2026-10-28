@@ -84,12 +84,7 @@ export const AdminBannerForm = ({ writeAdminBanner }: Props) => {
   return (
     <>
       <ErrorAlert error={error} sxOverride={sx.errorAlert} />
-      <Form
-        id={form.id}
-        formJson={form}
-        onSubmit={onSubmit}
-        validateOnRender={false}
-      >
+      <Form id={form.id} formJson={form} onSubmit={onSubmit}>
         <PreviewBanner fields={fields} />
       </Form>
       <Flex sx={sx.previewFlex}>

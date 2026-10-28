@@ -164,7 +164,6 @@ export const CreateFinancialReportingModal = ({
         formData={selectedReport?.formData}
         onSubmit={viewOnly ? modalDisclosure.onClose : writeReport}
         reportStatus={selectedReport?.status}
-        validateOnRender={false}
         onChange={onChange}
       />
     </Modal>

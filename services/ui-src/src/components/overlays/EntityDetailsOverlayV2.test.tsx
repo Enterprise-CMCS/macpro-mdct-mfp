@@ -59,7 +59,6 @@ const entityDetailsOverlayComponent = (
         selectedEntity={selectedEntity}
         submitting={false}
         setEntering={vi.fn()}
-        validateOnRender={false}
       />
     </ReportContext.Provider>
   </RouterWrappedComponent>

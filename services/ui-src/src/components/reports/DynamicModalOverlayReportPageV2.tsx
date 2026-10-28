@@ -190,7 +190,6 @@ export const DynamicModalOverlayReportPageV2 = ({
           selectedEntity={selectedEntity}
           submitting={submitting}
           setEntering={setEntering}
-          validateOnRender={false}
         />
       </EntityProvider>
     );
@@ -202,7 +201,6 @@ export const DynamicModalOverlayReportPageV2 = ({
 interface Props {
   route: DynamicModalOverlayReportPageShape;
   setSidebarHidden: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {

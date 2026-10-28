@@ -244,7 +244,6 @@ export const EntityDetailsOverlay = ({
         autosave={true}
         formData={selectedEntity}
         onFormChange={onChange}
-        validateOnRender={false}
       />
       <Box>
         {verbiage.closeOutWarning && (

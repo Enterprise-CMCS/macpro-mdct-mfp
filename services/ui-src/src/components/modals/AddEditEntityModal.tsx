@@ -159,7 +159,6 @@ export const AddEditEntityModal = ({
         formData={selectedEntity}
         onSubmit={writeEntity}
         onChange={onChange}
-        validateOnRender={false}
       />
       <Text sx={sx.bottomModalMessage}>{verbiage.addEditModalMessage}</Text>
     </Modal>
