@@ -49,6 +49,9 @@ const outlineVariant = {
     borderColor: "gray_lighter",
     backgroundColor: "transparent",
   },
+  img: {
+    height: "1rem",
+  },
 };
 
 const transparentVariant = {

@@ -116,6 +116,7 @@ export const DynamicField = ({
               rows={rows}
               value={field.name || ""}
               style={sx.textfield}
+              disabled={disabled}
             />
             {!disabled && index > 0 && (
               <Box sx={sx.deleteButton}>
