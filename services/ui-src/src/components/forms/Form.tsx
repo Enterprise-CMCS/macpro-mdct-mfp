@@ -1,6 +1,5 @@
 import {
   BaseSyntheticEvent,
-  forwardRef,
   Fragment,
   ReactNode,
   useContext,
@@ -48,7 +47,7 @@ import {
   useStore,
 } from "utils";
 
-export const Form = forwardRef<HTMLFormElement, Props>(function Form({
+export const Form = ({
   autosave,
   className,
   children,
@@ -62,7 +61,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
   reportStatus,
   validateOnRender,
   ...props
-}) {
+}: Props) => {
   const { editableByAdmins, fields, tables = [] } = formJson;
 
   let location = useLocation();
@@ -330,7 +329,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
 
     const formErrors = Object.keys(errors).filter((key) => {
       const currentFormData = report?.fieldData?.[formData?.type]?.find(
-        (t: AnyObject) => t.id === formData.id
+        (t: AnyObject) => t.id === formData?.id
       );
       const hasTableError = tableFieldIds.includes(key);
       const hasTableData = currentFormData?.[key]?.length > 0;
@@ -375,7 +374,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form({
       {children}
     </form>
   );
-});
+};
 
 interface Props {
   autosave?: boolean;
@@ -386,13 +385,13 @@ interface Props {
   formData?: AnyObject;
   formJson: FormJson;
   id: string;
-  onError?: () => void;
+  onError?: (errors: Record<string, any>) => void;
   onFormChange?: Function;
   onSubmit: Function;
   reportStatus?: ReportStatus;
   validateOnRender: boolean;
   [key: string]: any;
-  updateFieldValues: (fieldsToSave: FieldInfo[]) => {};
+  updateFieldValues?: (fieldsToSave: FieldInfo[]) => {};
 }
 
 const sx = {

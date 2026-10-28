@@ -91,7 +91,6 @@ type ErrorType = {
 };
 
 const recusiveObjectFromStringArray = (
-  errors: { [key: string]: any },
   arr: string[],
   index: number,
   value: any
@@ -100,12 +99,7 @@ const recusiveObjectFromStringArray = (
     return { [arr[index]]: value };
   } else {
     return {
-      [arr[index]]: recusiveObjectFromStringArray(
-        errors,
-        arr,
-        index + 1,
-        value
-      ),
+      [arr[index]]: recusiveObjectFromStringArray(arr, index + 1, value),
     };
   }
 };
@@ -117,7 +111,7 @@ export const transformYupErrorsIntoObject = (
 
   errors.inner.forEach((error: any) => {
     const formatPath: string[] = error.path.split(/[\.\[\]]/).filter(Boolean);
-    const obj = recusiveObjectFromStringArray(validationErrors, formatPath, 0, {
+    const obj = recusiveObjectFromStringArray(formatPath, 0, {
       message: error.errors[0],
       type: "required",
     });

@@ -53,13 +53,7 @@ const mockedReportContext = {
   updateReport: mockUpdateReport,
 };
 
-const MockForm = ({
-  dynamicLabel,
-  error,
-  hint,
-  hydrationValue,
-  multiline,
-}: any) => {
+const MockForm = ({ dynamicLabel, error, hint, multiline }: any) => {
   const form = useForm({
     shouldFocusError: false,
   });
@@ -82,10 +76,10 @@ const MockForm = ({
               autosave={true}
               dynamicLabel={dynamicLabel}
               hint={hint}
-              hydrate={hydrationValue}
               label={mockFieldLabel}
               name={mockDynamicField}
               multiline={multiline}
+              updateFieldValues={vi.fn()}
             />
           </form>
         </FormProvider>
