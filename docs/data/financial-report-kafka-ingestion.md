@@ -32,8 +32,6 @@ Examples of full topic names:
 {topicNamespace}aws.mdct.mfp.financial-form-template.v0
 ```
 
-> **Note:** The Financial Report form is feature-gated by a LaunchDarkly flag (`abcdReport`). In environments where the flag is disabled the form will not be available, and no records will appear in these topics.
-
 ---
 
 ## MFP Financial Report Topics
@@ -59,7 +57,7 @@ Contains the report submission metadata, such as submission date, completion sta
 | `completionStatus`  | object     | mixed      |           |
 | `isComplete`        | boolean    | bool       |           |
 | `lastAltered`       | number     | number     | true      |
-| `lastAlteredBy`     | text       | string     |           |
+| `lastAlteredBy`     | text       | string     | true      |
 | `submittedBy`       | text       | string     |           |
 | `submitterEmail`    | text       | string     |           |
 | `submittedOnDate`   | number     | number     |           |
