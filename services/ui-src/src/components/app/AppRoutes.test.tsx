@@ -11,6 +11,7 @@ import {
   mockBannerStore,
   mockReportStore,
   mockWpReportContext,
+  mockFieldStore,
 } from "utils/testing/setupTest";
 
 vi.mock("launchdarkly-react-client-sdk");
@@ -25,6 +26,7 @@ mockedUseStore.mockReturnValue({
   ...mockStateUserStore,
   ...mockBannerStore,
   ...mockReportStore,
+  ...mockFieldStore,
 });
 
 const appRoutesComponent = (route: string, isReportPage: boolean = false) => (

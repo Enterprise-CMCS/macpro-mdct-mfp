@@ -194,8 +194,6 @@ export const CreateWorkPlanModal = ({
         formJson={form}
         formData={previousReport}
         onSubmit={writeReport}
-        validateOnRender={false}
-        dontReset={true}
         onChange={onChange}
       />
       {showAlert && (

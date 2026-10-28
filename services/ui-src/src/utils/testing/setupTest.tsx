@@ -40,6 +40,8 @@ import {
   ReportShape,
   MfpEntityState,
   EntityType,
+  MfpFieldState,
+  FIELD_ERROR,
 } from "types";
 // utils
 import { mockBannerData } from "./mockBanner";
@@ -315,12 +317,48 @@ export const mockEmptyReportStore: MfpReportState = {
   setEditable: () => {},
 };
 
+export const mockFieldStore: MfpFieldState = {
+  fields: new Map(),
+  validationSchema: undefined,
+  setField: (key, value) => {
+    mockFieldStore.fields.set(key, {
+      answer: value,
+      error: { message: "" },
+      validate: false,
+    });
+  },
+  setAnswer: (key, value) => {
+    mockFieldStore.fields.set(key, {
+      answer: value,
+      error: { message: "" },
+      validate: false,
+    });
+  },
+  setValidationSchema: (schema) => {
+    mockFieldStore.validationSchema = schema;
+  },
+  setErrors: (updateErrors: { [key: string]: FIELD_ERROR }) => {
+    if (Object.keys(updateErrors).length > 0) {
+      const updateFields = new Map(mockFieldStore.fields);
+      for (const [key, value] of Object.entries(updateErrors)) {
+        const data = mockFieldStore.fields.get(key) ?? { answer: undefined };
+        updateFields.set(key, { ...data, error: value, validate: false });
+      }
+      mockFieldStore.fields = updateFields;
+    }
+  },
+  setClearFields: () => {
+    mockFieldStore.fields = new Map();
+  },
+};
+
 // BOUND STORE
 
 export const mockUseStore: MfpUserState & AdminBannerState & MfpReportState = {
   ...mockReportStore,
   ...mockStateUserStore,
   ...mockBannerStore,
+  ...mockFieldStore,
 };
 
 export const mockUseSARStore: MfpUserState & AdminBannerState & MfpReportState =
@@ -328,6 +366,7 @@ export const mockUseSARStore: MfpUserState & AdminBannerState & MfpReportState =
     ...mockSARReportStore,
     ...mockStateUserStore,
     ...mockBannerStore,
+    ...mockFieldStore,
   };
 
 export const mockUseEmptyReportStore: MfpUserState &
@@ -336,6 +375,7 @@ export const mockUseEmptyReportStore: MfpUserState &
   ...mockEmptyReportStore,
   ...mockStateUserStore,
   ...mockBannerStore,
+  ...mockFieldStore,
 };
 
 export const mockUseAdminStore: MfpUserState &
@@ -344,6 +384,7 @@ export const mockUseAdminStore: MfpUserState &
   ...mockReportStore,
   ...mockAdminUserStore,
   ...mockBannerStore,
+  ...mockFieldStore,
 };
 
 export const mockUseEntityStore: MfpUserState &
@@ -354,6 +395,7 @@ export const mockUseEntityStore: MfpUserState &
   ...mockStateUserStore,
   ...mockBannerStore,
   ...mockEntityStore,
+  ...mockFieldStore,
 };
 
 export const mockUseEvaluationPlanEntityStore: MfpUserState &

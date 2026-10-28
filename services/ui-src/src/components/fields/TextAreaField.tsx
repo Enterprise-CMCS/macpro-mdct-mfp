@@ -1,5 +1,6 @@
 // components
 import { TextField } from "components";
+import { FieldInfo } from "utils";
 
 export const TextAreaField = ({
   name,
@@ -30,4 +31,5 @@ interface Props {
   clear?: boolean;
   maxLength?: number;
   [key: string]: any;
+  updateFieldValues: (fieldsToSave: FieldInfo[]) => {};
 }

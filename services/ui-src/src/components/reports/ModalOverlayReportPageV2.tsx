@@ -40,7 +40,6 @@ import {
   setClearedEntriesToDefaultValue,
   useBreakpoint,
   useStore,
-  waitForAutosavesAndGetReport,
 } from "utils";
 import { getWPAlertStatus } from "../alerts/getWPAlertStatus";
 // assets
@@ -159,7 +158,7 @@ export const ModalOverlayReportPageV2 = ({
   const onSubmit = async (enteredData: AnyObject) => {
     if (userIsEndUser) {
       setSubmitting(true);
-      const latestReport = await waitForAutosavesAndGetReport(report);
+      const latestReport = report;
       const reportKeys = {
         reportType: latestReport.reportType,
         state,
@@ -316,7 +315,6 @@ export const ModalOverlayReportPageV2 = ({
           selectedEntity={selectedEntity}
           submitting={submitting}
           setEntering={setEntering}
-          validateOnRender={false}
         />
       </EntityProvider>
     );
@@ -328,7 +326,6 @@ export const ModalOverlayReportPageV2 = ({
 interface Props {
   route: ModalOverlayReportPageShape;
   setSidebarHidden: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {

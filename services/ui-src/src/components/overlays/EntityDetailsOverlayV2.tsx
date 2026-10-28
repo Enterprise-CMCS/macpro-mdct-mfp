@@ -12,7 +12,6 @@ import {
 // components
 import { CloseOutModal, Form, ReportPageIntro } from "components";
 // types
-import { FieldValues, UseFormReturn } from "react-hook-form";
 import {
   DynamicModalOverlayReportPageShape,
   EntityShape,
@@ -32,6 +31,7 @@ import {
 // assets
 import arrowLeftBlue from "assets/icons/icon_arrow_left_blue.svg";
 import previousIcon from "assets/icons/icon_previous_blue.png";
+import { AnyObject } from "yup/lib/types";
 
 export const EntityDetailsOverlayV2 = ({
   backButtonText,
@@ -44,7 +44,6 @@ export const EntityDetailsOverlayV2 = ({
   route,
   selectedEntity,
   submitting = false,
-  validateOnRender = false,
 }: Props) => {
   const [autosave, setAutosave] = useState<boolean>(true);
   const [formJson, setFormJson] = useState<FormJson>(form);
@@ -52,7 +51,6 @@ export const EntityDetailsOverlayV2 = ({
   const [currentEntity, setCurrentEntity] = useState<EntityShape>(
     selectedEntity as EntityShape
   );
-
   const { report } = useStore();
   // Closed initiatives are locked in the Work Plan, but stay editable in the
   // SAR so state users can continue reporting on them.
@@ -131,8 +129,8 @@ export const EntityDetailsOverlayV2 = ({
     [form, isWP]
   );
 
-  const onFormChange = (hookForm: UseFormReturn<FieldValues, any>) => {
-    const currentValues = hookForm.getValues() as EntityShape;
+  const onFormChange = (answers: AnyObject) => {
+    const currentValues = answers as EntityShape;
     const endDate = currentValues.defineInitiative_endDate;
 
     // Keep the read-only close-out projected end date in sync with the
@@ -184,13 +182,11 @@ export const EntityDetailsOverlayV2 = ({
           autosave={autosave}
           className="overlay-form"
           disabled={isDisabled}
-          dontReset={true}
           formData={currentEntity}
           formJson={formJson}
           id={form.id}
           onFormChange={onFormChange}
           onSubmit={onSubmit}
-          validateOnRender={validateOnRender}
         />
       )}
       {showCloseOut && (
@@ -257,7 +253,6 @@ interface Props {
   selectedEntity?: EntityShape;
   setEntering: Function;
   submitting?: boolean;
-  validateOnRender?: boolean;
 }
 
 const sx = {

@@ -170,7 +170,6 @@ export const DynamicModalOverlayReportPage = ({
 interface Props {
   route: DynamicModalOverlayReportPageShape;
   setSidebarHidden: Function;
-  validateOnRender?: boolean;
 }
 
 const sx = {

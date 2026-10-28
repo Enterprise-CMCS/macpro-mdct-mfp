@@ -1,47 +1,22 @@
-import { Mock } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 //components
-import { useFormContext } from "react-hook-form";
 import { ChoiceListField, ReportContext, TextField } from "components";
 import { mockWpReportContext } from "../../utils/testing/mockReport";
 import { ReportStatus } from "../../types";
 import { testA11yAct } from "utils/testing/commonTests";
+import { useStore } from "utils";
+import { MockedFunction } from "vitest";
+import { mockFieldStore } from "utils/testing/setupTest";
 
-const mockTrigger = vi.fn().mockReturnValue(true);
 const mockSetValue = vi.fn();
-const mockRhfMethods = {
-  register: () => {},
-  unregister: () => {},
-  setValue: mockSetValue,
-  getValues: vi.fn(),
-  trigger: mockTrigger,
-  formState: {
-    errors: {},
-  },
-};
-const mockUseFormContext = useFormContext as unknown as Mock<
-  typeof useFormContext
->;
-vi.mock("react-hook-form", () => ({
-  useFormContext: vi.fn(() => mockRhfMethods),
-}));
-
-const mockGetValues = (returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi.fn().mockReturnValueOnce([]).mockReturnValue(returnValue),
-  }));
-
-const mockFieldIsRegistered = (fieldName: string, returnValue: any) =>
-  mockUseFormContext.mockImplementation((): any => ({
-    ...mockRhfMethods,
-    getValues: vi
-      .fn()
-      .mockReturnValueOnce({ [`${fieldName}`]: returnValue })
-      .mockReturnValue(returnValue),
-  }));
-
+const mockSetAnswer = vi.fn();
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue({
+  ...mockFieldStore,
+  setAnswer: mockSetAnswer,
+});
 const mockChoices = [
   {
     id: "Choice1",
@@ -177,35 +152,30 @@ const RadioComponent = (
     label="Radio example"
     name="radioField"
     type="radio"
-    validateOnRender={true}
   />
 );
 
 describe("<ChoiceListField />", () => {
   describe("Test ChoiceListField component rendering", () => {
     test("ChoiceList should render a normal Radiofield that doesn't have children", () => {
-      mockGetValues([]);
       render(RadioComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
     });
 
     test("ChoiceList should render a normal Checkbox that doesn't have children", () => {
-      mockGetValues([]);
       render(CheckboxComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
     });
 
     test("ChoiceList should render a normal Radiofield that already has data registered", () => {
-      mockFieldIsRegistered("radioField", []);
       render(RadioComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
     });
 
     test("ChoiceList should render a normal Checkbox that already has data registered", () => {
-      mockFieldIsRegistered("checkboxField", []);
       render(CheckboxComponent);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
@@ -213,7 +183,6 @@ describe("<ChoiceListField />", () => {
 
     test("RadioField should render nested child fields for choices with children", () => {
       // Render Initial State and choices
-      mockGetValues(undefined);
       render(RadioComponentWithNestedChildren);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
@@ -230,7 +199,6 @@ describe("<ChoiceListField />", () => {
 
     test("CheckboxField should render nested child fields for choices with children", async () => {
       // Render Initial State and choices
-      mockGetValues(undefined);
       render(CheckboxComponentWithNestedChildren);
       expect(screen.getByText("Choice1")).toBeVisible();
       expect(screen.getByText("Choice2")).toBeVisible();
@@ -260,20 +228,6 @@ describe("<ChoiceListField />", () => {
       </ReportContext.Provider>
     );
 
-    const CheckboxHydrationClearComponent = (
-      <ReportContext.Provider value={mockWpReportContext}>
-        <ChoiceListField
-          choices={mockChoices}
-          label="Checkbox Hydration Example"
-          name=""
-          type="checkbox"
-          hydrate={[{ key: "Choice1", value: "Choice1" }]}
-          autosave
-          clear={true}
-        />
-      </ReportContext.Provider>
-    );
-
     const RadioHydrationComponent = (
       <ReportContext.Provider value={mockWpReportContext}>
         <ChoiceListField
@@ -296,7 +250,6 @@ describe("<ChoiceListField />", () => {
        * Set the mock of form.GetValues to return nothing to represent that a user hasn't made any updates
        * and the form should be updated based purely on the hydration values
        */
-      mockGetValues(undefined);
 
       // Create the Checkbox Component
       const wrapper = render(CheckboxHydrationComponent);
@@ -311,51 +264,12 @@ describe("<ChoiceListField />", () => {
       expect(secondCheckbox).not.toBeChecked();
     });
 
-    test("Checkbox Choicelist correctly setting passed field value even when given a different hydration value", () => {
-      /*
-       * Set the mock of form.GetValues to return a users choice of the first checkbox being checked
-       * so that even though hydration is passed as having Choice1 as checked, the users input is respected instead
-       */
-      mockGetValues([{ key: "Choice2", value: "Choice2" }]);
-
-      // Create the Checkbox Component
-      const wrapper = render(CheckboxHydrationComponent);
-      const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice1" });
-      const secondCheckbox = wrapper.getByRole("checkbox", {
-        name: "Choice2",
-      });
-
-      // Confirm hydration successfully made the first value checked
-      expect(firstCheckbox).not.toBeChecked();
-      expect(secondCheckbox).toBeChecked();
-    });
-
-    test("Checkbox Choicelist correctly clearing nested checkbox values if clear prop is set to true", () => {
-      /*
-       * Set the mock of form.GetValues to return nothing to represent that a user hasn't made any updates
-       * and the form should be updated based purely on the hydration values
-       */
-      mockGetValues(undefined);
-
-      // Create the Checkbox Component
-      const wrapper = render(CheckboxHydrationClearComponent);
-      const firstCheckbox = wrapper.getByRole("checkbox", { name: "Choice1" });
-      const secondCheckbox = wrapper.getByRole("checkbox", {
-        name: "Choice2",
-      });
-
-      // Confirm hydration successfully made the first value checked
-      expect(firstCheckbox).not.toBeChecked();
-      expect(secondCheckbox).not.toBeChecked();
-    });
-
     // Repeat above tests for RadioField to ensure nothing changes
     test("Radio Choicelist correctly setting passed hydration value", () => {
       /*
        * Set the mock of form.GetValues to return nothing to represent that a user hasn't made any updates
        * and the form should be updated based purely on the hydration values
        */
-      mockGetValues(undefined);
 
       // Create the Radio Component
       const wrapper = render(RadioHydrationComponent);
@@ -369,25 +283,6 @@ describe("<ChoiceListField />", () => {
       expect(firstRadioOption).toBeChecked();
       expect(secondRadioOption).not.toBeChecked();
     });
-
-    test("Radio Choicelist correctly setting passed field value even when given a different hydration value", () => {
-      /*
-       * Set the mock of form.GetValues to return a users choice of the first radio being checked
-       * so that even though hydration is passed is Choice1 as checked, the users input is respected instead
-       */
-      mockGetValues([{ key: "Choice2", value: "Choice2" }]);
-
-      // Create the Radio Component
-      const wrapper = render(RadioHydrationComponent);
-      const firstRadioOption = wrapper.getByRole("radio", { name: "Choice1" });
-      const secondRadioOption = wrapper.getByRole("radio", {
-        name: "Choice2",
-      });
-
-      // Confirm hydration successfully made the first value checked
-      expect(firstRadioOption).not.toBeChecked();
-      expect(secondRadioOption).toBeChecked();
-    });
   });
 
   describe("Test Choicelist Autosaving Methods", () => {
@@ -400,7 +295,7 @@ describe("<ChoiceListField />", () => {
           type="checkbox"
           autosave
         />
-        <TextField name="mockTextField" />
+        <TextField name="mockTextField" updateFieldValues={mockSetValue} />
       </ReportContext.Provider>
     );
 
@@ -415,8 +310,6 @@ describe("<ChoiceListField />", () => {
 
     // TODO: fix test timing out
     test.skip("Choicelist Checkbox autosaves with checked value when autosave true, and form is valid", async () => {
-      mockGetValues(undefined);
-
       const user = userEvent.setup({
         advanceTimers: vi.advanceTimersByTime,
       });
@@ -491,8 +384,6 @@ describe("<ChoiceListField />", () => {
     });
 
     test("Checking and unchecking choices in a CheckboxChoicelist are reflected correctly in the form", async () => {
-      mockGetValues(undefined);
-
       // Create the Checkbox Component
       const wrapper = render(CheckboxComponent);
 
@@ -521,12 +412,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice1)
       const firstCheckboxData = [{ key: "Choice1", value: "Choice1" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "checkboxField",
-        firstCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        firstCheckboxData
       );
 
       // Now uncheck the first checkbox to trigger the onChangeHandler
@@ -544,18 +432,13 @@ describe("<ChoiceListField />", () => {
       fireEvent.blur(firstCheckbox);
 
       // Make sure the form value is set to default state
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "checkboxField",
-        firstCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        firstCheckboxData
       );
     });
 
     test("Checking and unchecking choices in a RadioChoicelist are reflected correctly in the form", async () => {
-      mockGetValues(undefined);
-
       // Create the Radio Component
       const wrapper = render(RadioComponent);
 
@@ -584,12 +467,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice1)
       const firstRadioOptionOptionData = [{ key: "Choice1", value: "Choice1" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "radioField",
-        firstRadioOptionOptionData,
-        {
-          shouldValidate: true,
-        }
+        firstRadioOptionOptionData
       );
 
       // Now check the second radio option to trigger the onChangeHandler
@@ -607,18 +487,13 @@ describe("<ChoiceListField />", () => {
       fireEvent.blur(firstRadioOption);
 
       // Make sure the form value is set to default state
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "radioField",
-        firstRadioOptionOptionData,
-        {
-          shouldValidate: true,
-        }
+        firstRadioOptionOptionData
       );
     });
 
     test("Checking and unchecking choices that have a nested textbox child sets that textbox to its default value", async () => {
-      mockGetValues(undefined);
-
       // Create the Checkbox Component
       const wrapper = render(CheckboxComponentWithNestedChildren);
 
@@ -644,12 +519,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice3)
       const parentCheckboxData = [{ key: "Choice3", value: "Choice3" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "checkboxFieldWithNestedChildren",
-        parentCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        parentCheckboxData
       );
 
       const childTextBox: HTMLInputElement = wrapper.container.querySelector(
@@ -666,12 +538,9 @@ describe("<ChoiceListField />", () => {
       fireEvent.blur(childTextBox);
 
       // Make sure the form value is set to with new child text
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "Choice3-otherText",
-        "Added Text",
-        {
-          shouldValidate: true,
-        }
+        "Added Text"
       );
 
       // Now uncheck the parent
@@ -704,8 +573,6 @@ describe("<ChoiceListField />", () => {
     });
 
     test("Checking and unchecking a checkbox that has a nested radio child sets that radio to its default value (Nothing is checked)", async () => {
-      mockGetValues(undefined);
-
       // Create the Checkbox Component
       const wrapper = render(CheckboxComponentWithNestedChildren);
 
@@ -731,12 +598,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice3)
       const parentCheckboxData = [{ key: "Choice3", value: "Choice3" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "checkboxFieldWithNestedChildren",
-        parentCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        parentCheckboxData
       );
 
       // Now check the child radio field
@@ -755,12 +619,9 @@ describe("<ChoiceListField />", () => {
       const childRadioData = [
         { key: "test-nested-child-radio-Choice4", value: "Choice4" },
       ];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "test-nested-child-radio",
-        childRadioData,
-        {
-          shouldValidate: true,
-        }
+        childRadioData
       );
 
       // Now uncheck the parent
@@ -793,8 +654,6 @@ describe("<ChoiceListField />", () => {
     });
 
     test("Selecting and unselecting a radio button that has nested checkbox children sets that checkbox to its default state", () => {
-      mockGetValues(undefined);
-
       // Create the Radio Component
       const wrapper = render(RadioComponentWithNestedChildren);
 
@@ -818,12 +677,9 @@ describe("<ChoiceListField />", () => {
 
       // Make sure the form value is set to what we've clicked (Which is only Choice3)
       const parentRadioData = [{ key: "Choice3", value: "Choice3" }];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "radioFieldWithNestedChildren",
-        parentRadioData,
-        {
-          shouldValidate: true,
-        }
+        parentRadioData
       );
 
       // Now check the child radio field
@@ -842,12 +698,9 @@ describe("<ChoiceListField />", () => {
       const childCheckboxData = [
         { key: "test-nested-child-checkbox-Choice6", value: "Choice6" },
       ];
-      expect(mockSetValue).toHaveBeenCalledWith(
+      expect(mockSetAnswer).toHaveBeenCalledWith(
         "test-nested-child-checkbox",
-        childCheckboxData,
-        {
-          shouldValidate: true,
-        }
+        childCheckboxData
       );
 
       const otherRadio = wrapper.getByRole("radio", { name: "Choice1" });
@@ -882,55 +735,27 @@ describe("<ChoiceListField />", () => {
     });
   });
 
-  describe("ChoiceListField handles triggering validation", () => {
-    const choiceListFieldValidateOnRenderComponent = (
-      <ReportContext.Provider value={mockWpReportContext}>
-        <ChoiceListField
-          choices={mockChoices}
-          label="Checkbox example"
-          name="checkboxField"
-          type="checkbox"
-          validateOnRender
-        />
-      </ReportContext.Provider>
-    );
-
-    afterEach(() => {
-      vi.clearAllMocks();
-    });
-
-    test("Component with validateOnRender passed should validate on initial render", async () => {
-      mockGetValues(undefined);
-      render(choiceListFieldValidateOnRenderComponent);
-      expect(mockTrigger).toHaveBeenCalled();
-    });
-  });
-
   describe("CheckboxField", () => {
     testA11yAct(CheckboxComponent, () => {
       vi.clearAllMocks();
-      mockGetValues(undefined);
     });
   });
 
   describe("CheckboxField with children", () => {
     testA11yAct(CheckboxComponentWithNestedChildren, () => {
       vi.clearAllMocks();
-      mockGetValues(undefined);
     });
   });
 
   describe("RadioField", () => {
     testA11yAct(RadioComponent, () => {
       vi.clearAllMocks();
-      mockGetValues(undefined);
     });
   });
 
   describe("RadioField with children", () => {
     testA11yAct(RadioComponentWithNestedChildren, () => {
       vi.clearAllMocks();
-      mockGetValues(undefined);
     });
   });
 });

@@ -30,10 +30,7 @@ import {
   useStore,
 } from "utils";
 
-export const StandardReportPage = ({
-  route,
-  validateOnRender = false,
-}: Props) => {
+export const StandardReportPage = ({ route }: Props) => {
   const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
   const [form, setForm] = useState<FormJson>({} as FormJson);
@@ -107,8 +104,6 @@ export const StandardReportPage = ({
           onError={onError}
           formData={formData}
           autosave
-          validateOnRender={validateOnRender}
-          dontReset={false}
         />
       )}
       {route.verbiage.reviewPdfHint && (
@@ -130,7 +125,6 @@ export const StandardReportPage = ({
 
 interface Props {
   route: StandardReportPageShape;
-  validateOnRender?: boolean;
 }
 
 const sx = {

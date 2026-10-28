@@ -24,7 +24,7 @@ export const AdminBannerForm = ({ writeAdminBanner }: Props) => {
   const [error, setError] = useState<ErrorVerbiage>();
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  const { allBanners } = useStore();
+  const { allBanners, fields } = useStore();
 
   // add validation to formJson
   const form: FormJson = formJson;
@@ -84,14 +84,8 @@ export const AdminBannerForm = ({ writeAdminBanner }: Props) => {
   return (
     <>
       <ErrorAlert error={error} sxOverride={sx.errorAlert} />
-      <Form
-        id={form.id}
-        formJson={form}
-        onSubmit={onSubmit}
-        validateOnRender={false}
-        dontReset={false}
-      >
-        <PreviewBanner />
+      <Form id={form.id} formJson={form} onSubmit={onSubmit}>
+        <PreviewBanner fields={fields} />
       </Form>
       <Flex sx={sx.previewFlex}>
         <Button form={form.id} type="submit" sx={sx.replaceBannerButton}>

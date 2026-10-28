@@ -23,7 +23,6 @@ export const ReportDrawer = ({
   onSubmit,
   submitting,
   drawerDisclosure,
-  validateOnRender,
   ...props
 }: Props) => {
   const { editable } = useStore();
@@ -42,8 +41,6 @@ export const ReportDrawer = ({
           formJson={form}
           onSubmit={onSubmit}
           formData={selectedEntity}
-          validateOnRender={validateOnRender || false}
-          dontReset={true}
         />
       ) : (
         <Text sx={sx.noFormMessage}>{verbiage.drawerNoFormMessage}</Text>
@@ -86,7 +83,6 @@ interface Props {
     isOpen: boolean;
     onClose: Function;
   };
-  validateOnRender?: boolean;
 }
 
 const sx = {

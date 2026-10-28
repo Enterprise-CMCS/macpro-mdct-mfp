@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { CloseOutModal, ReportContext } from "components";
 // utils
 import {
+  mockFieldStore,
   mockReportMethods,
   mockStateUserStore,
   mockWPFullReport,
@@ -25,6 +26,7 @@ const mockSetSelectedEntity = vi.fn();
 
 mockedUseStore.mockReturnValue({
   ...mockStateUserStore,
+  ...mockFieldStore,
   report: {
     ...mockWPFullReport,
     fieldData: {

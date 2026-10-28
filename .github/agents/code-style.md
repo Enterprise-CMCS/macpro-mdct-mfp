@@ -23,15 +23,13 @@ Organize imports in this order, separated by blank lines:
 ```typescript
 // 1. React/framework imports
 import { useState, useEffect, useContext } from "react";
-// 2. Third-party libraries
-import { useFormContext } from "react-hook-form";
-// 3. Components (use barrel exports)
+// 2. Components (use barrel exports)
 import { Banner, PageTemplate, TemplateCard } from "components";
-// 4. Utils (use barrel exports)
+// 3. Utils (use barrel exports)
 import { checkDateRangeStatus, useStore } from "utils";
-// 5. Types
+// 4. Types
 import { ReportShape, MFPUser } from "types";
-// 6. Verbiage/constants
+// 5. Verbiage/constants
 import verbiage from "verbiage/pages/home";
 ```
 

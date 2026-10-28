@@ -6,6 +6,7 @@ import { ReportContext, ReportPageWrapper } from "components";
 import {
   mockDrawerReportPageJson,
   mockDynamicModalOverlayReportPageJson,
+  mockFieldStore,
   mockModalDrawerReportPageJson,
   mockModalOverlayReportPageJson,
   mockReportJson,
@@ -28,7 +29,7 @@ vi.mock("react-router", async (importOriginal) => ({
 
 vi.mock("utils/state/useStore");
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
-mockedUseStore.mockReturnValue(mockUseEntityStore);
+mockedUseStore.mockReturnValue({ ...mockUseEntityStore, mockFieldStore });
 
 const mockLocations = {
   standard: { pathname: mockReportJson.flatRoutes[0].path },

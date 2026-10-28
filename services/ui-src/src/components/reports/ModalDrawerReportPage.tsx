@@ -55,7 +55,7 @@ const alertVerbiage: ErrorVerbiage = {
     "To correct this, select “Edit” and respond with ”Yes” to at least one default target population, and add quarterly benchmark projections.",
 };
 
-export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
+export const ModalDrawerReportPage = ({ route }: Props) => {
   const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
@@ -299,7 +299,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
             isOpen: drawerIsOpen,
             onClose: closeDrawer,
           }}
-          validateOnRender={validateOnRender}
           data-testid="report-drawer"
         />
       </Stack>
@@ -310,7 +309,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
 
 interface Props {
   route: ModalDrawerReportPageShape;
-  validateOnRender?: boolean;
 }
 
 const sx = {
