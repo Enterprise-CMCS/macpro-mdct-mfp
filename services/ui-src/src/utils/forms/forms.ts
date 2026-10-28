@@ -111,9 +111,6 @@ export const hydrateFormFields = (
   formFields: (FormField | FormLayoutElement)[],
   formData: AnyObject | undefined
 ) => {
-  console.log("formFields", formFields);
-  console.log("formData", formData);
-
   formFields.forEach((field: FormField | FormLayoutElement) => {
     const fieldFormIndex = formFields.indexOf(field!);
     const fieldProps = formFields[fieldFormIndex].props!;

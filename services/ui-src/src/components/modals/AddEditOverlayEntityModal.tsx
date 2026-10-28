@@ -206,7 +206,6 @@ export const AddEditOverlayEntityModal = ({
         formData={selectedEntity}
         onSubmit={writeEntity}
         validateOnRender={false}
-        dontReset={true}
       />
       {objectiveProgressWithTargets && (
         <Text sx={sx.bottomModalMessage}>{verbiage.addEditModalMessage}</Text>

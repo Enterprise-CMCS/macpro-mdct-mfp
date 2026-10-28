@@ -243,7 +243,6 @@ export const EntityDetailsOverlay = ({
         onSubmit={onSubmit}
         autosave={true}
         formData={selectedEntity}
-        dontReset={true}
         onFormChange={onChange}
         validateOnRender={false}
       />

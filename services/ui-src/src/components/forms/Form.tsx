@@ -381,7 +381,6 @@ interface Props {
   children?: ReactNode;
   className?: string;
   disabled?: boolean;
-  dontReset: boolean;
   formData?: AnyObject;
   formJson: FormJson;
   id: string;

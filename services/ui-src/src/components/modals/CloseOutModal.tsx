@@ -111,7 +111,6 @@ export const CloseOutModal = ({
     >
       <Form
         disabled={disabled}
-        dontReset={false}
         formData={selectedEntity}
         formJson={form}
         id={form.id}

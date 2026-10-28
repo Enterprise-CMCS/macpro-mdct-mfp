@@ -108,7 +108,6 @@ export const StandardReportPage = ({
           formData={formData}
           autosave
           validateOnRender={validateOnRender}
-          dontReset={false}
         />
       )}
       {route.verbiage.reviewPdfHint && (

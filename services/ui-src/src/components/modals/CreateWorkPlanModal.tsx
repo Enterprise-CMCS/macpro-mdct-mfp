@@ -195,7 +195,6 @@ export const CreateWorkPlanModal = ({
         formData={previousReport}
         onSubmit={writeReport}
         validateOnRender={false}
-        dontReset={true}
         onChange={onChange}
       />
       {showAlert && (

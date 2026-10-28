@@ -89,7 +89,6 @@ export const AdminBannerForm = ({ writeAdminBanner }: Props) => {
         formJson={form}
         onSubmit={onSubmit}
         validateOnRender={false}
-        dontReset={false}
       >
         <PreviewBanner fields={fields} />
       </Form>

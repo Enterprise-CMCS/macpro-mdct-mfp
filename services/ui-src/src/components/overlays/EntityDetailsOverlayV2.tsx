@@ -183,7 +183,6 @@ export const EntityDetailsOverlayV2 = ({
           autosave={autosave}
           className="overlay-form"
           disabled={isDisabled}
-          dontReset={true}
           formData={currentEntity}
           formJson={formJson}
           id={form.id}

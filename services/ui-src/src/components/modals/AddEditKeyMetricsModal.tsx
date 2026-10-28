@@ -164,7 +164,6 @@ export const AddEditKeyMetricsModal = ({
         onSubmit={handleSubmit}
         validateOnRender={false}
         disabled={viewOnly}
-        dontReset={false}
       />
     </Modal>
   );

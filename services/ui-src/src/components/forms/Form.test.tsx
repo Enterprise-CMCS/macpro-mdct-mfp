@@ -27,7 +27,6 @@ const formComponent = (form = mockForm) => (
       formJson={form}
       onSubmit={mockOnSubmit}
       validateOnRender={false}
-      dontReset={false}
     />
     <button form={form.id} type="submit">
       Submit

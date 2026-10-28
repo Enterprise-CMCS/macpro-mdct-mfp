@@ -142,7 +142,6 @@ export const AddEditCalculationModal = ({
       <Form
         data-testid="add-calculation-form"
         disabled={viewOnly}
-        dontReset={false}
         formJson={form}
         formData={formData}
         id={form.id}
