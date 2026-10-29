@@ -1,9 +1,7 @@
 import {
   BaseSyntheticEvent,
-  forwardRef,
   Fragment,
   ReactNode,
-  useImperativeHandle,
   useLayoutEffect,
 } from "react";
 import {
@@ -51,26 +49,22 @@ import {
   useStore,
 } from "utils";
 
-export const Form = forwardRef<HTMLFormElement, Props>(function Form(
-  {
-    autosave,
-    className,
-    children,
-    disabled = false,
-    dontReset,
-    formData,
-    formJson,
-    id,
-    nestedForm,
-    onError,
-    onFormChange,
-    onSubmit,
-    reportStatus,
-    validateOnRender,
-    ...props
-  },
-  ref?
-) {
+export const Form = ({
+  autosave,
+  className,
+  children,
+  disabled = false,
+  dontReset,
+  formData,
+  formJson,
+  id,
+  onError,
+  onFormChange,
+  onSubmit,
+  reportStatus,
+  validateOnRender,
+  ...props
+}: Props) => {
   const { editableByAdmins, fields, options, tables = [] } = formJson;
 
   let location = useLocation();
@@ -251,6 +245,7 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
   }, [location?.pathname]);
 
   const onChange = () => {
+    console.log("on change");
     if (onFormChange) {
       onFormChange(form);
     }
@@ -314,7 +309,6 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     return renderedFieldsAndTables;
   };
 
-  const FormTag = nestedForm ? "fieldset" : "form";
   const submit = (e?: BaseSyntheticEvent) => {
     e?.preventDefault();
 
@@ -322,8 +316,8 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
       (data) => onSubmit(data),
       (errors: AnyObject) => {
         const formErrors = Object.keys(errors).filter((key) => {
-          const currentFormData = report?.fieldData?.[formData.type]?.find(
-            (t: AnyObject) => t.id === formData.id
+          const currentFormData = report?.fieldData?.[formData?.type]?.find(
+            (t: AnyObject) => t.id === formData?.id
           );
           const hasTableError = tableFieldIds.includes(key);
           const hasTableData = currentFormData?.[key]?.length > 0;
@@ -347,22 +341,13 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
     )(e);
   };
 
-  // Submit fieldset ref like a form
-  useImperativeHandle(
-    ref,
-    () =>
-      ({
-        requestSubmit: submit,
-      }) as any
-  );
-
   return (
     <FormProvider {...form}>
-      <FormTag
+      <form
         id={id}
         autoComplete="off"
         onChange={onChange}
-        {...(!nestedForm && { onSubmit: submit })}
+        onSubmit={submit}
         {...props}
       >
         <Box sx={sx}>
@@ -378,10 +363,10 @@ export const Form = forwardRef<HTMLFormElement, Props>(function Form(
           </Box>
         </Box>
         {children}
-      </FormTag>
+      </form>
     </FormProvider>
   );
-});
+};
 
 interface Props {
   autosave?: boolean;
@@ -392,7 +377,6 @@ interface Props {
   formData?: AnyObject;
   formJson: FormJson;
   id: string;
-  nestedForm?: boolean;
   onError?: SubmitErrorHandler<FieldValues>;
   onFormChange?: Function;
   onSubmit: Function;
