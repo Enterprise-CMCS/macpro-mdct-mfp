@@ -29,13 +29,13 @@ interface Props {
 const sx = {
   root: {
     marginTop: "spacer4",
-    border: "none",
   },
   text: {
     borderColor: "gray_lightest",
     p: {
       marginBottom: "spacer2",
     },
+    border: "none",
   },
   list: {
     paddingLeft: "spacer2",
