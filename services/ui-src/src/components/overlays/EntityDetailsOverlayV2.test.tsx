@@ -78,12 +78,6 @@ describe("<EntityDetailsOverlayV2 />", () => {
     render(entityDetailsOverlayComponent());
     expect(
       screen.getByRole("heading", {
-        level: 1,
-        name: "mock-route-2c",
-      })
-    ).toBeVisible();
-    expect(
-      screen.getByRole("heading", {
         level: 2,
         name: "mock-initiative-name",
       })

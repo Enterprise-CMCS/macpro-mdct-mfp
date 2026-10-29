@@ -14,34 +14,13 @@ export const ReportPageIntro = ({
   reportPeriod,
   reportYear,
 }: Props) => {
-  const { section, subsection, info, introAccordion } = text;
-
-  const isSubsectionPage = section && (subsection || initiativeName);
-
-  const header = () => {
-    return (
-      <Heading as="h1" sx={sx.largeHeading}>
-        {subsection}
-      </Heading>
-    );
-  };
-
-  const headerSubsection = () => {
-    return (
-      <>
-        <Heading as="h1" sx={sx.smallHeading}>
-          {section}
-        </Heading>
-        <Heading as="h2" sx={sx.largeHeading}>
-          {initiativeName ?? subsection}
-        </Heading>
-      </>
-    );
-  };
+  const { subsection, info, introAccordion } = text;
 
   return (
     <Box sx={sx.introBox}>
-      {isSubsectionPage ? headerSubsection() : header()}
+      <Heading as="h2" sx={sx.largeHeading}>
+        {initiativeName ?? subsection}
+      </Heading>
 
       {/* accordion specifically nested in the intro verbiage */}
       {introAccordion && <InstructionsAccordion verbiage={introAccordion} />}
