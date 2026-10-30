@@ -16,32 +16,16 @@ export const ReportPageIntro = ({
 }: Props) => {
   const { section, subsection, info, introAccordion } = text;
 
-  const isSubsectionPage = section && (subsection || initiativeName);
-
-  const header = () => {
-    return (
-      <Heading as="h1" sx={sx.largeHeading}>
-        {subsection}
-      </Heading>
-    );
-  };
-
-  const headerSubsection = () => {
-    return (
-      <>
+  return (
+    <Box sx={sx.introBox}>
+      {section && (
         <Heading as="h1" sx={sx.smallHeading}>
           {section}
         </Heading>
-        <Heading as="h2" sx={sx.largeHeading}>
-          {initiativeName ?? subsection}
-        </Heading>
-      </>
-    );
-  };
-
-  return (
-    <Box sx={sx.introBox}>
-      {isSubsectionPage ? headerSubsection() : header()}
+      )}
+      <Heading as={section ? "h2" : "h1"} sx={sx.largeHeading}>
+        {initiativeName ?? subsection}
+      </Heading>
 
       {/* accordion specifically nested in the intro verbiage */}
       {introAccordion && <InstructionsAccordion verbiage={introAccordion} />}
