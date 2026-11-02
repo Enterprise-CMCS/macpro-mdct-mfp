@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 // components
-import { Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Button, Flex, Image } from "@chakra-ui/react";
 import { DynamicTableContext } from "components";
 // types
 import {
@@ -87,7 +87,7 @@ export const DynamicTableRows = (
   }, [focusedRowIndex, localDynamicRows]);
 
   if (!!emptyTableMessage && !hasStaticRows && localDynamicRows.length === 0)
-    return [<Text sx={sx.emptyTableMessage}>{emptyTableMessage}</Text>];
+    return [];
 
   return localDynamicRows.map((row, rowIndex: number) => {
     const dynamicId = row.id;

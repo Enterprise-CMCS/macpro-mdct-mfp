@@ -574,7 +574,7 @@ const sx = {
   },
   emptyTableContainer: {
     maxWidth: "75%",
-    margin: "0 auto",
+    margin: "16px auto",
     textAlign: "center",
   },
   callToActionContainer: {

@@ -172,6 +172,9 @@ export const CalculationTable = ({
     ),
   };
 
+  const tableEmpty =
+    tableData.rows.length === 0 && tableData.dynamicRows?.length === 0;
+
   return (
     <Box sx={sx.box}>
       {verbiage?.errorMessage && showError && (
@@ -221,7 +224,11 @@ export const CalculationTable = ({
           )}
         </>
       )}
-      {ResponsiveTable(tableData)}
+      {tableEmpty ? (
+        <Text sx={sx.empty}>{verbiage?.emptyTableMessage}</Text>
+      ) : (
+        ResponsiveTable(tableData)
+      )}
     </Box>
   );
 };
@@ -274,5 +281,11 @@ export const sx = {
     margin: 0,
     padding: 0,
     height: 0,
+  },
+  empty: {
+    fontWeight: "heading_md",
+    paddingBottom: "spacer2",
+    paddingTop: "spacer2",
+    textAlign: "center",
   },
 };
