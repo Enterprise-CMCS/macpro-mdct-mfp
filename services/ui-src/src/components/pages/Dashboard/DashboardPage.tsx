@@ -14,7 +14,6 @@ import {
   Flex,
   Heading,
   Image,
-  Link,
   Text,
   Spinner,
   useDisclosure,
@@ -366,10 +365,10 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
       <Helmet>
         <title>{`${reportTitle} - ${APP_TITLE}`}</title>
       </Helmet>
-      <Link as={RouterLink} to="/" sx={sx.returnLink}>
+      <Button as={RouterLink} to="/" variant="link" marginTop="spacer1">
         <Image src={arrowLeftIcon} alt="" className="returnIcon" />
         Return home
-      </Link>
+      </Button>
       {errorMessage && <ErrorAlert error={errorMessage} />}
       {/* Only show SAR alert banner if the corresponding Work Plan is not approved */}
       <Box sx={sx.leadTextBox}>
@@ -513,27 +512,6 @@ const sx = {
       maxWidth: "appMax",
       marginTop: "spacer2",
       marginBottom: "spacer7",
-    },
-  },
-  returnLink: {
-    display: "flex",
-    width: "8.5rem",
-    paddingTop: "spacer1",
-    svg: {
-      height: "1.375rem",
-      width: "1.375rem",
-      marginTop: "-0.125rem",
-      marginRight: "spacer1",
-    },
-    textDecoration: "none",
-    _hover: {
-      textDecoration: "underline",
-    },
-    ".returnIcon": {
-      width: "1.25rem",
-      height: "1.25rem",
-      marginTop: "spacer_half",
-      marginRight: "spacer1",
     },
   },
   leadTextBox: {

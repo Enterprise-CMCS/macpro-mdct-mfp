@@ -81,11 +81,26 @@ const dangerVariant = {
   },
 };
 
+const linkVariant = {
+  fontWeight: "normal",
+  img: {
+    paddingRight: "spacer1",
+  },
+  "&:hover": {
+    textDecoration: "underline",
+  },
+  "&:visited, &:visited:hover": {
+    backgroundColor: "transparent",
+    color: "primary",
+  },
+};
+
 const variants = {
   primary: primaryVariant,
   outline: outlineVariant,
   transparent: transparentVariant,
   danger: dangerVariant,
+  link: linkVariant,
 };
 
 const sizes = {
