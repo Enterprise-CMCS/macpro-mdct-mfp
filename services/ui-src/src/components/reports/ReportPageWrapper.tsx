@@ -1,6 +1,6 @@
 import { useState } from "react";
 // components
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 import {
   DrawerReportPage,
   DynamicModalOverlayReportPage,
@@ -9,6 +9,8 @@ import {
   ModalOverlayReportPage,
   ModalOverlayReportPageV2,
   PageTemplate,
+  PrintButton,
+  ReportPageFooter,
   ReviewSubmitPage,
   Sidebar,
   StandardReportPage,
@@ -24,12 +26,18 @@ import {
   StandardReportPageShape,
 } from "types";
 // utils
-import { hasEntitySteps, hasInitiativesWithEntitySteps, useStore } from "utils";
+import {
+  hasEntitySteps,
+  hasInitiativesWithEntitySteps,
+  parseCustomHtml,
+  useStore,
+} from "utils";
 
 export const ReportPageWrapper = () => {
   const { report } = useStore();
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
+  const [submitting, _setSubmitting] = useState<boolean>(false);
 
   const showSidebar = () => {
     if (sidebarHidden) setSidebarHidden(false);
@@ -93,9 +101,29 @@ export const ReportPageWrapper = () => {
     <PageTemplate section={false} type="report">
       <Flex sx={sx.pageContainer}>
         <Sidebar isHidden={sidebarHidden} />
-        <Flex as="main" id="report-content" sx={sx.reportContainer}>
-          {reportTemplate && renderPageSection(reportTemplate)}
-        </Flex>
+        {reportTemplate && (
+          <Stack>
+            <Flex as="main" id="report-content" sx={sx.reportContainer}>
+              {renderPageSection(reportTemplate)}
+            </Flex>
+            {/* {route.verbiage.reviewPdfHint && ( */}
+            {reportTemplate.verbiage?.reviewPdfHint && (
+              <Box paddingTop="0">
+                <Text>
+                  {parseCustomHtml(reportTemplate.verbiage.reviewPdfHint)}
+                </Text>
+                <PrintButton />
+              </Box>
+            )}
+            {reportTemplate.pageType != PageTypes.REVIEW_SUBMIT && (
+              <ReportPageFooter
+                submitting={submitting}
+                form={(reportTemplate as any).form}
+                praDisclosure={reportTemplate.verbiage?.praDisclosure}
+              />
+            )}
+          </Stack>
+        )}
       </Flex>
     </PageTemplate>
   );

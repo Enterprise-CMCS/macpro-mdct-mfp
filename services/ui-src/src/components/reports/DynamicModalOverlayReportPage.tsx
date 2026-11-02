@@ -7,7 +7,6 @@ import {
   EntityDetailsDashboardOverlay,
   EntityProvider,
   EntityRow,
-  ReportPageFooter,
   ReportPageIntro,
   Table,
 } from "components";
@@ -160,7 +159,6 @@ export const DynamicModalOverlayReportPage = ({
               </Table>
             )}
           </Box>
-          <ReportPageFooter verbiage={verbiage} />
         </Box>
       )}
     </Box>

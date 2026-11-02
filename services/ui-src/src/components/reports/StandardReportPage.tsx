@@ -1,15 +1,8 @@
 import { ComponentClass, useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router";
 import { Helmet as HelmetImport, HelmetProps } from "react-helmet";
 // components
-import { Box, Text } from "@chakra-ui/react";
-import {
-  Form,
-  PrintButton,
-  ReportContext,
-  ReportPageFooter,
-  ReportPageIntro,
-} from "components";
+import { Box } from "@chakra-ui/react";
+import { Form, ReportContext, ReportPageIntro } from "components";
 // types
 import {
   AnyObject,
@@ -25,8 +18,6 @@ import {
   filterResubmissionData,
   getPageTitle,
   isFieldElement,
-  parseCustomHtml,
-  useFindRoute,
   useStore,
 } from "utils";
 
@@ -38,22 +29,11 @@ export const StandardReportPage = ({
 
   const [form, setForm] = useState<FormJson>({} as FormJson);
   const [formData, setFormData] = useState<AnyObject>({});
-  const [submitting, setSubmitting] = useState<boolean>(false);
   const { report = {} as ReportShape } = useStore();
   const { updateReport } = useContext(ReportContext);
-  const navigate = useNavigate();
   const { full_name, state } = useStore().user ?? {};
-  const { nextRoute } = useFindRoute(
-    report.formTemplate?.flatRoutes,
-    report.formTemplate?.basePath
-  );
-
-  const onError = () => {
-    navigate(nextRoute);
-  };
 
   const onSubmit = async (enteredData: AnyObject) => {
-    setSubmitting(true);
     const reportKeys = {
       reportType: report.reportType,
       state: state,
@@ -71,9 +51,6 @@ export const StandardReportPage = ({
       fieldData: filteredFormData,
     };
     await updateReport(reportKeys, dataToWrite);
-    setSubmitting(false);
-
-    navigate(nextRoute);
   };
 
   useEffect(() => {
@@ -104,26 +81,12 @@ export const StandardReportPage = ({
           id={route.form.id}
           formJson={form}
           onSubmit={onSubmit}
-          onError={onError}
           formData={formData}
           autosave
           validateOnRender={validateOnRender}
           dontReset={false}
         />
       )}
-      {route.verbiage.reviewPdfHint && (
-        <Box>
-          <Text sx={sx.reviewPdfHint}>
-            {parseCustomHtml(route.verbiage.reviewPdfHint)}
-          </Text>
-          <PrintButton />
-        </Box>
-      )}
-      <ReportPageFooter
-        submitting={submitting}
-        form={route.form}
-        praDisclosure={route.verbiage.praDisclosure}
-      />
     </Box>
   );
 };
@@ -132,11 +95,3 @@ interface Props {
   route: StandardReportPageShape;
   validateOnRender?: boolean;
 }
-
-const sx = {
-  reviewPdfHint: {
-    paddingTop: "spacer5",
-    paddingBottom: "spacer5",
-    color: "gray",
-  },
-};

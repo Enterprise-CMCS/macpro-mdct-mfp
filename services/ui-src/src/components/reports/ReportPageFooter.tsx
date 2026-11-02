@@ -17,6 +17,8 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
   );
   const hidePrevious = previousRoute === report?.formTemplate?.basePath;
 
+  console.log("nextRoute", nextRoute);
+
   /*
    * By default, the Continue button submits the form AND navigates.
    * If the form is disabled, the button will navigate only.
@@ -43,7 +45,10 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
 
   const nextButtonNavOnly = (
     <Button
-      onClick={() => navigate(nextRoute)}
+      onClick={() => {
+        console.log("next route test");
+        navigate(nextRoute);
+      }}
       sx={sx.nextButton}
       rightIcon={<Image src={nextIcon} alt="" sx={sx.arrowIcon} />}
     >

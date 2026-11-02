@@ -7,7 +7,6 @@ import {
   Heading,
   Image,
   Stack,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -15,10 +14,8 @@ import {
   DeleteEntityModal,
   EntityRow,
   ErrorAlert,
-  PrintButton,
   ReportContext,
   ReportDrawer,
-  ReportPageFooter,
   ReportPageIntro,
   Table,
 } from "components";
@@ -41,7 +38,6 @@ import {
   getFormattedEntityData,
   getPageTitle,
   isFieldElement,
-  parseCustomHtml,
   resetClearProp,
   setClearedEntriesToDefaultValue,
   useStore,
@@ -257,10 +253,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         >
           {verbiage.addEntityButtonText}
         </Button>
-        <Text sx={sx.reviewPdfHint}>
-          {parseCustomHtml(verbiage.reviewPdfHint)}
-        </Text>
-        <PrintButton />
         {/* MODALS */}
         <AddEditEntityModal
           entityType={entityType as EntityType}
@@ -303,7 +295,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
           data-testid="report-drawer"
         />
       </Stack>
-      <ReportPageFooter />
     </Box>
   );
 };
@@ -312,9 +303,3 @@ interface Props {
   route: ModalDrawerReportPageShape;
   validateOnRender?: boolean;
 }
-
-const sx = {
-  reviewPdfHint: {
-    color: "gray",
-  },
-};
