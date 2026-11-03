@@ -585,14 +585,6 @@ const EntityFieldsTable = ({
       // label should stay in the Indicators column rather than become a heading.
       const isCloseOutField = formField.id?.startsWith("closeOutInformation_");
 
-      const modifiedField = {
-        ...formField,
-        props: {
-          ...formField.props,
-          label: isCloseOutField ? formField.props?.label : "",
-        },
-      };
-
       // Render as: H4 title -> subtitle text -> H5 label -> table
       tableRows.push(
         <Tr
@@ -634,7 +626,7 @@ const EntityFieldsTable = ({
                 }}
               >
                 <ExportedEntityDetailsTableRow
-                  formField={modifiedField as FormField}
+                  formField={formField}
                   pageType={PageTypes.MODAL_OVERLAY}
                   entityType={entityType}
                   entityId={entityId}
