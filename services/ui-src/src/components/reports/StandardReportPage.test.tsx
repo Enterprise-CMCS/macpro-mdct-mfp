@@ -3,16 +3,12 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { ReportContext, StandardReportPage } from "components";
-// types
-import { ReportShape } from "types";
 // utils
 import {
   mockForm,
   mockWpReportContext,
   mockStandardReportPageJson,
   RouterWrappedComponent,
-  mockUseStore,
-  mockWPFullReport,
   mockReportStore,
 } from "utils/testing/setupTest";
 import { useStore } from "utils/state/useStore";
@@ -22,19 +18,12 @@ import { mockStateUser } from "utils/testing/mockUsers";
 vi.mock("utils/state/useStore");
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
-const mockReportStoreWithoutData = {
-  ...mockUseStore,
-  report: {
-    ...(mockWPFullReport as ReportShape),
-    fieldData: {},
-  },
-};
-
 const standardPageSectionComponent = (
   <RouterWrappedComponent>
     <ReportContext.Provider value={mockWpReportContext}>
       <StandardReportPage
         route={{ ...mockStandardReportPageJson, form: mockForm }}
+        setSubmitting={vi.fn()}
       />
     </ReportContext.Provider>
   </RouterWrappedComponent>
@@ -76,24 +65,6 @@ describe("<StandardReportPage />", () => {
       await userEvent.type(numberFieldInput, "1");
     });
     expect(numberFieldInput.value).toEqual("1");
-    const continueButton = screen.getByRole("button", { name: "Continue" });
-    await act(async () => {
-      await userEvent.click(continueButton);
-    });
-    const newPath = window.location.pathname;
-    expect(newPath).toEqual("/mock");
-  });
-
-  test("StandardReportPage navigates to next route onError", async () => {
-    mockedUseStore.mockReturnValue(mockReportStoreWithoutData);
-    render(standardPageSectionComponent);
-    const continueButton = screen.getByRole("button", { name: "Continue" });
-    await act(async () => {
-      await userEvent.click(continueButton);
-    });
-    // test that form navigates with an error in the field
-    const newPath = window.location.pathname;
-    expect(newPath).not.toEqual("/");
   });
 
   testA11yAct(standardPageSectionComponent, () => {

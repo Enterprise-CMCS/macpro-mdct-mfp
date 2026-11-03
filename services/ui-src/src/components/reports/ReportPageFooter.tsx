@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // utils
 import { parseCustomHtml, useFindRoute, useStore } from "utils";
-import { AnyObject, FormJson, ReportStatus } from "types";
+import { FormJson, ReportStatus } from "types";
 // assets
 import nextIcon from "assets/icons/icon_next_white.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
@@ -74,7 +74,6 @@ interface Props {
   form?: FormJson;
   submitting?: boolean;
   [key: string]: any;
-  verbiage?: AnyObject;
 }
 
 const sx = {

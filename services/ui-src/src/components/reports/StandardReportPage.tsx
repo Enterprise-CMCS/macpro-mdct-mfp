@@ -24,6 +24,7 @@ import {
 export const StandardReportPage = ({
   route,
   validateOnRender = false,
+  setSubmitting,
 }: Props) => {
   const Helmet = HelmetImport as ComponentClass<HelmetProps>;
 
@@ -34,6 +35,7 @@ export const StandardReportPage = ({
   const { full_name, state } = useStore().user ?? {};
 
   const onSubmit = async (enteredData: AnyObject) => {
+    setSubmitting(true);
     const reportKeys = {
       reportType: report.reportType,
       state: state,
@@ -51,6 +53,7 @@ export const StandardReportPage = ({
       fieldData: filteredFormData,
     };
     await updateReport(reportKeys, dataToWrite);
+    setSubmitting(false);
   };
 
   useEffect(() => {
@@ -94,4 +97,5 @@ export const StandardReportPage = ({
 interface Props {
   route: StandardReportPageShape;
   validateOnRender?: boolean;
+  setSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
 }

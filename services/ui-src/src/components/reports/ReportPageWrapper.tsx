@@ -37,7 +37,7 @@ export const ReportPageWrapper = () => {
   const { report } = useStore();
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
-  const [submitting, _setSubmitting] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const showSidebar = () => {
     if (sidebarHidden) setSidebarHidden(false);
@@ -89,7 +89,12 @@ export const ReportPageWrapper = () => {
         return <ReviewSubmitPage />;
       default:
         showSidebar();
-        return <StandardReportPage route={route as StandardReportPageShape} />;
+        return (
+          <StandardReportPage
+            route={route as StandardReportPageShape}
+            setSubmitting={setSubmitting}
+          />
+        );
     }
   };
 
