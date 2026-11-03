@@ -124,14 +124,17 @@ export const ReportPageWrapper = () => {
                   <PrintButton />
                 </Stack>
               )}
-              <Divider marginTop="spacer2"></Divider>
-              {reportTemplate.pageType != PageTypes.REVIEW_SUBMIT && (
-                <ReportPageFooter
-                  submitting={submitting}
-                  form={(reportTemplate as any).form}
-                  praDisclosure={reportTemplate.verbiage?.praDisclosure}
-                />
-              )}
+              {reportTemplate.pageType != PageTypes.REVIEW_SUBMIT &&
+                !sidebarHidden && (
+                  <>
+                    <Divider marginTop="spacer2"></Divider>
+                    <ReportPageFooter
+                      submitting={submitting}
+                      form={(reportTemplate as any).form}
+                      praDisclosure={reportTemplate.verbiage?.praDisclosure}
+                    />
+                  </>
+                )}
             </Flex>
           </Stack>
         )}

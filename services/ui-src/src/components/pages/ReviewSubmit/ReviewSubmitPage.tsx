@@ -108,7 +108,7 @@ export const ReviewSubmitPage = () => {
         <title>{reviewAndSubmitVerbiage.title}</title>
       </Helmet>
       {(hasError || report?.status === ReportStatus.NOT_STARTED) && (
-        <Box sx={sx.alert}>
+        <Box>
           <Alert
             title={alertBox.title}
             status={AlertTypes.ERROR}
@@ -389,10 +389,6 @@ const sx = {
     "p + p": {
       marginY: "spacer1",
     },
-  },
-  alert: {
-    marginBottom: "spacer4",
-    marginRight: "spacer5",
   },
   footerBox: {
     marginTop: "spacer5",
