@@ -17,8 +17,6 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
   );
   const hidePrevious = previousRoute === report?.formTemplate?.basePath;
 
-  console.log("nextRoute", nextRoute);
-
   /*
    * By default, the Continue button submits the form AND navigates.
    * If the form is disabled, the button will navigate only.
@@ -43,24 +41,12 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
     </Button>
   );
 
-  const nextButtonNavOnly = (
-    <Button
-      onClick={() => {
-        console.log("next route test");
-        navigate(nextRoute);
-      }}
-      sx={sx.nextButton}
-      rightIcon={<Image src={nextIcon} alt="" sx={sx.arrowIcon} />}
-    >
-      Continue
-    </Button>
-  );
-
-  const nextButtonSubmit = (
+  const nextButton = (
     <Button
       form={form?.id}
-      type="submit"
       sx={sx.nextButton}
+      type={isReadOnly ? "button" : "submit"}
+      onClick={() => navigate(nextRoute)}
       rightIcon={
         !submitting ? (
           <Image src={nextIcon} alt="" sx={sx.arrowIcon} />
@@ -73,9 +59,9 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
 
   return (
     <>
-      <Flex sx={sx.footerBox}>
+      <Flex>
         {!hidePrevious ? prevButton : null}
-        {isReadOnly ? nextButtonNavOnly : nextButtonSubmit}
+        {nextButton}
       </Flex>
       {props.praDisclosure && (
         <Box sx={sx.praStatement}>{parseCustomHtml(props.praDisclosure)}</Box>
@@ -92,12 +78,6 @@ interface Props {
 }
 
 const sx = {
-  footerBox: {
-    marginTop: "spacer5",
-    paddingTop: "spacer3",
-    borderTop: "1px solid",
-    borderColor: "gray_light",
-  },
   nextButton: {
     minWidth: "8.25rem",
     marginLeft: "auto",
@@ -107,6 +87,5 @@ const sx = {
   },
   praStatement: {
     fontSize: "body_sm",
-    marginTop: "spacer2",
   },
 };

@@ -1,6 +1,6 @@
 import { useState } from "react";
 // components
-import { Box, Flex, Stack, Text } from "@chakra-ui/react";
+import { Divider, Flex, Stack, Text } from "@chakra-ui/react";
 import {
   DrawerReportPage,
   DynamicModalOverlayReportPage,
@@ -103,25 +103,31 @@ export const ReportPageWrapper = () => {
         <Sidebar isHidden={sidebarHidden} />
         {reportTemplate && (
           <Stack>
-            <Flex as="main" id="report-content" sx={sx.reportContainer}>
+            <Flex
+              as="main"
+              id="report-content"
+              sx={sx.reportContainer}
+              gap="spacer3"
+            >
               {renderPageSection(reportTemplate)}
+              {/* {route.verbiage.reviewPdfHint && ( */}
+              {reportTemplate.verbiage?.reviewPdfHint && (
+                <Stack gap="spacer3">
+                  <Text color="gray">
+                    {parseCustomHtml(reportTemplate.verbiage.reviewPdfHint)}
+                  </Text>
+                  <PrintButton />
+                </Stack>
+              )}
+              <Divider marginTop="spacer2"></Divider>
+              {reportTemplate.pageType != PageTypes.REVIEW_SUBMIT && (
+                <ReportPageFooter
+                  submitting={submitting}
+                  form={(reportTemplate as any).form}
+                  praDisclosure={reportTemplate.verbiage?.praDisclosure}
+                />
+              )}
             </Flex>
-            {/* {route.verbiage.reviewPdfHint && ( */}
-            {reportTemplate.verbiage?.reviewPdfHint && (
-              <Box paddingTop="0">
-                <Text>
-                  {parseCustomHtml(reportTemplate.verbiage.reviewPdfHint)}
-                </Text>
-                <PrintButton />
-              </Box>
-            )}
-            {reportTemplate.pageType != PageTypes.REVIEW_SUBMIT && (
-              <ReportPageFooter
-                submitting={submitting}
-                form={(reportTemplate as any).form}
-                praDisclosure={reportTemplate.verbiage?.praDisclosure}
-              />
-            )}
           </Stack>
         )}
       </Flex>
@@ -139,7 +145,7 @@ const sx = {
     width: "100%",
     maxWidth: "reportPageWidth",
     marginY: "spacer7",
-    marginLeft: "spacer7",
+    paddingLeft: "spacer7",
     ".mobile &": {
       marginX: "0rem",
     },
