@@ -60,6 +60,7 @@ export const Modal = ({
             {formId && (
               <Button
                 sx={sx.action}
+                form={formId}
                 type="submit"
                 data-testid="modal-submit-button"
                 disabled={submitButtonDisabled}
