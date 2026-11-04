@@ -245,7 +245,6 @@ export const Form = ({
   }, [location?.pathname]);
 
   const onChange = () => {
-    console.log("on change");
     if (onFormChange) {
       onFormChange(form);
     }
@@ -311,6 +310,7 @@ export const Form = ({
 
   const submit = (e?: BaseSyntheticEvent) => {
     e?.preventDefault();
+    e?.stopPropagation();
 
     form.handleSubmit(
       (data) => onSubmit(data),
