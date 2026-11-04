@@ -9,7 +9,6 @@ import {
   EntityDetailsDashboardOverlay,
   EntityProvider,
   EntityRow,
-  ReportPageFooter,
   ReportPageIntro,
   Table,
 } from "components";
@@ -208,7 +207,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
               onClose: closeDeleteEntityModal,
             }}
           />
-          <ReportPageFooter verbiage={verbiage} />
         </Box>
       )}
     </Box>

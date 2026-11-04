@@ -10,7 +10,6 @@ import {
   EntityProvider,
   EntityRow,
   ReportContext,
-  ReportPageFooter,
   ReportPageIntro,
   Table,
 } from "components";
@@ -296,7 +295,6 @@ export const ModalOverlayReportPageV2 = ({
           selectedEntity={selectedEntity}
           verbiage={verbiage}
         />
-        <ReportPageFooter verbiage={verbiage} />
       </Box>
     );
   };
