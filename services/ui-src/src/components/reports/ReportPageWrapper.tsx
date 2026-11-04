@@ -1,6 +1,6 @@
 import { useState } from "react";
 // components
-import { Flex } from "@chakra-ui/react";
+import { Divider, Flex, Stack, Text } from "@chakra-ui/react";
 import {
   DrawerReportPage,
   DynamicModalOverlayReportPage,
@@ -9,6 +9,8 @@ import {
   ModalOverlayReportPage,
   ModalOverlayReportPageV2,
   PageTemplate,
+  PrintButton,
+  ReportPageFooter,
   ReviewSubmitPage,
   Sidebar,
   StandardReportPage,
@@ -24,12 +26,18 @@ import {
   StandardReportPageShape,
 } from "types";
 // utils
-import { hasEntitySteps, hasInitiativesWithEntitySteps, useStore } from "utils";
+import {
+  hasEntitySteps,
+  hasInitiativesWithEntitySteps,
+  parseCustomHtml,
+  useStore,
+} from "utils";
 
 export const ReportPageWrapper = () => {
   const { report } = useStore();
   const { pathname } = useLocation();
   const [sidebarHidden, setSidebarHidden] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const showSidebar = () => {
     if (sidebarHidden) setSidebarHidden(false);
@@ -81,7 +89,12 @@ export const ReportPageWrapper = () => {
         return <ReviewSubmitPage />;
       default:
         showSidebar();
-        return <StandardReportPage route={route as StandardReportPageShape} />;
+        return (
+          <StandardReportPage
+            route={route as StandardReportPageShape}
+            setSubmitting={setSubmitting}
+          />
+        );
     }
   };
 
@@ -93,9 +106,38 @@ export const ReportPageWrapper = () => {
     <PageTemplate section={false} type="report">
       <Flex sx={sx.pageContainer}>
         <Sidebar isHidden={sidebarHidden} />
-        <Flex as="main" id="report-content" sx={sx.reportContainer}>
-          {reportTemplate && renderPageSection(reportTemplate)}
-        </Flex>
+        {reportTemplate && (
+          <Stack>
+            <Flex
+              as="main"
+              id="report-content"
+              sx={sx.reportContainer}
+              gap="spacer3"
+            >
+              {renderPageSection(reportTemplate)}
+              {/* {route.verbiage.reviewPdfHint && ( */}
+              {reportTemplate.verbiage?.reviewPdfHint && (
+                <Stack gap="spacer3">
+                  <Text color="gray">
+                    {parseCustomHtml(reportTemplate.verbiage.reviewPdfHint)}
+                  </Text>
+                  <PrintButton />
+                </Stack>
+              )}
+              {reportTemplate.pageType != PageTypes.REVIEW_SUBMIT &&
+                !sidebarHidden && (
+                  <>
+                    <Divider marginTop="spacer2"></Divider>
+                    <ReportPageFooter
+                      submitting={submitting}
+                      form={(reportTemplate as any).form}
+                      praDisclosure={reportTemplate.verbiage?.praDisclosure}
+                    />
+                  </>
+                )}
+            </Flex>
+          </Stack>
+        )}
       </Flex>
     </PageTemplate>
   );
@@ -111,7 +153,7 @@ const sx = {
     width: "100%",
     maxWidth: "reportPageWidth",
     marginY: "spacer7",
-    marginLeft: "spacer7",
+    paddingLeft: "spacer7",
     ".mobile &": {
       marginX: "0rem",
     },

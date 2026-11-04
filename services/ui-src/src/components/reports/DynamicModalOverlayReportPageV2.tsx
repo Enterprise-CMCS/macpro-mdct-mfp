@@ -7,7 +7,6 @@ import {
   EntityProvider,
   EntityRow,
   ReportContext,
-  ReportPageFooter,
   ReportPageIntro,
   Table,
 } from "components";
@@ -172,7 +171,6 @@ export const DynamicModalOverlayReportPageV2 = ({
             />
           ))}
         </Table>
-        <ReportPageFooter verbiage={verbiage} />
       </Box>
     );
   };

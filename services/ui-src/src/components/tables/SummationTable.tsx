@@ -111,6 +111,9 @@ export const SummationTable = ({
     ),
   };
 
+  const tableEmpty =
+    tableData.rows.length === 0 && tableData.dynamicRows?.length === 0;
+
   return (
     <Box sx={sx.box}>
       {verbiage?.title && <Heading as="h2">{verbiage.title}</Heading>}
@@ -133,7 +136,11 @@ export const SummationTable = ({
           </Button>
         </>
       )}
-      {ResponsiveTable(tableData)}
+      {tableEmpty ? (
+        <Text sx={sx.empty}>{verbiage?.emptyTableMessage}</Text>
+      ) : (
+        ResponsiveTable(tableData)
+      )}
     </Box>
   );
 };
