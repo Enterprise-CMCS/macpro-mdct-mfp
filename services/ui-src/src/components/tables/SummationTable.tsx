@@ -136,11 +136,7 @@ export const SummationTable = ({
           </Button>
         </>
       )}
-      {tableEmpty ? (
-        <Text sx={sx.empty}>{verbiage?.emptyTableMessage}</Text>
-      ) : (
-        ResponsiveTable(tableData)
-      )}
+      {!tableEmpty && ResponsiveTable(tableData)}
     </Box>
   );
 };
