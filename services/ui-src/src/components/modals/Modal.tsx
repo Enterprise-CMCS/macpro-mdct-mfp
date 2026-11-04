@@ -71,6 +71,7 @@ export const Modal = ({
             {onConfirmHandler && (
               <Button
                 sx={sx.action}
+                onClick={() => onConfirmHandler()}
                 data-testid="modal-submit-button"
                 disabled={submitButtonDisabled}
               >
