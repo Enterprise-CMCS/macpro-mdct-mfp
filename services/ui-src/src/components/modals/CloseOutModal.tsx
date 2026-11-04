@@ -115,7 +115,6 @@ export const CloseOutModal = ({
         formData={selectedEntity}
         formJson={form}
         id={form.id}
-        nestedForm={true}
         onSubmit={handleSubmit}
         validateOnRender={false}
       />

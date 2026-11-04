@@ -146,7 +146,6 @@ export const AddEditCalculationModal = ({
         formJson={form}
         formData={formData}
         id={form.id}
-        nestedForm={true}
         onSubmit={handleSubmit}
         validateOnRender={false}
       />
