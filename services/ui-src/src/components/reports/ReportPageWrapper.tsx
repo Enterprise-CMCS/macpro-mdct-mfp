@@ -32,6 +32,7 @@ import {
   parseCustomHtml,
   useStore,
 } from "utils";
+import { DevTools, ToolType } from "components/devTools/DevTools";
 
 export const ReportPageWrapper = () => {
   const { report } = useStore();
@@ -108,6 +109,7 @@ export const ReportPageWrapper = () => {
         <Sidebar isHidden={sidebarHidden} />
         {reportTemplate && (
           <Stack>
+            <DevTools type={ToolType.REPORT}></DevTools>
             <Flex
               as="main"
               id="report-content"

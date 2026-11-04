@@ -59,6 +59,7 @@ import accordion from "verbiage/pages/accordion";
 // assets
 import arrowLeftIcon from "assets/icons/icon_arrow_left_blue.svg";
 import { useFlags } from "launchdarkly-react-client-sdk";
+import { DevTools, ToolType } from "components/devTools/DevTools";
 
 export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   const wpSarRelease2025 = Boolean(useFlags()?.wpSarRelease2025);
@@ -362,6 +363,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   return (
     <PageTemplate type="report" sx={sx.layout}>
       {/* page title */}
+      <DevTools type={ToolType.DASHBOARD}></DevTools>
       <Helmet>
         <title>{`${reportTitle} - ${APP_TITLE}`}</title>
       </Helmet>
