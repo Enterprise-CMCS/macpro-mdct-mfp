@@ -224,11 +224,7 @@ export const CalculationTable = ({
           )}
         </>
       )}
-      {tableEmpty ? (
-        <Text sx={sx.empty}>{verbiage?.emptyTableMessage}</Text>
-      ) : (
-        ResponsiveTable(tableData)
-      )}
+      {!tableEmpty && ResponsiveTable(tableData)}
     </Box>
   );
 };
@@ -281,11 +277,5 @@ export const sx = {
     margin: 0,
     padding: 0,
     height: 0,
-  },
-  empty: {
-    fontWeight: "heading_md",
-    paddingBottom: "spacer2",
-    paddingTop: "spacer2",
-    textAlign: "center",
   },
 };
