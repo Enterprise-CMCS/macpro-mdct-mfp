@@ -39,13 +39,9 @@ export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { entityType, verbiage, drawerForm } = route;
   const { full_name, state, userIsEndUser } = useStore().user ?? {};
-  const { report } = useStore();
+  const { report, setSelectedEntity, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
-    undefined
-  );
-
   const entities = report?.fieldData?.[entityType];
 
   const openRowDrawer = (entity: EntityShape) => {
@@ -157,7 +153,6 @@ export const DrawerReportPage = ({ route, validateOnRender }: Props) => {
         )}
       </Box>
       <ReportDrawer
-        selectedEntity={selectedEntity!}
         verbiage={{
           drawerTitle: `${verbiage.drawerTitle} ${selectedEntity?.name}`,
           drawerInfo: verbiage.drawerInfo,

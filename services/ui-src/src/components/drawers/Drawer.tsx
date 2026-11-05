@@ -70,7 +70,6 @@ interface Props {
     isOpen: boolean;
     onClose: Function;
   };
-  selectedEntity?: string;
   [key: string]: any;
 }
 

@@ -28,7 +28,11 @@ import {
   ReportStatus,
 } from "types";
 // utils
-import { calculateNextQuarter, createTempDynamicId } from "utils";
+import {
+  calculateNextQuarter,
+  createTempDynamicId,
+  sanitizeAndParseHtml,
+} from "utils";
 import {
   getDefaultTargetPopulationNames,
   notAnsweredText,
@@ -564,4 +568,42 @@ export const isFieldValidationOptional = (
       : formField.validation;
 
   return validationType.toLowerCase().includes("optional");
+};
+
+export const updateFieldsToRenderWithAriaLabels = (
+  fieldsToRender: FormField | FormLayoutElement[]
+) => {
+  const fieldsToRenderWithAriaLabels = JSON.parse(
+    JSON.stringify(fieldsToRender)
+  );
+  let choiceList: [] =
+    fieldsToRenderWithAriaLabels[1] &&
+    fieldsToRenderWithAriaLabels[1].props?.choices;
+
+  //add aria label to hint hint
+  sanitizeAndParseHtml(
+    fieldsToRenderWithAriaLabels[1] &&
+      fieldsToRenderWithAriaLabels[1].props.hint
+  );
+
+  // add aria label to choicelist
+  choiceList &&
+    choiceList.map((choice: AnyObject) => {
+      if (choice?.label.includes("*")) {
+        let asteriskIndex = choice?.label.includes("*if applicable")
+          ? choice?.label.indexOf("*") - 1
+          : choice?.label.indexOf("*");
+        let newOption = sanitizeAndParseHtml(
+          `${choice?.label.slice(
+            0,
+            asteriskIndex
+          )} <span aria-label="(required topic at least once across all initiatives)"> ${choice?.label.charAt(
+            asteriskIndex
+          )}</span>${choice?.label.slice(asteriskIndex + 1)}`
+        );
+        choice.label = newOption;
+      }
+      return choice;
+    });
+  return fieldsToRenderWithAriaLabels;
 };
