@@ -127,7 +127,6 @@ const modalComponentWithSelectedEntity = (
     <ReportContext.Provider value={mockedReportContext}>
       <AddEditEntityModal
         entityType={EntityType.TARGET_POPULATIONS}
-        selectedEntity={mockEntity}
         verbiage={mockModalDrawerReportPageVerbiage}
         form={mockModalForm}
         setError={mockSetError}
