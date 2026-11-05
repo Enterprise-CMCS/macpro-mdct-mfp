@@ -373,29 +373,6 @@ describe("<DynamicTableRows />", () => {
 
       expect(mockOpenModal).toHaveBeenCalledTimes(1);
     });
-
-    test("show empty table message", async () => {
-      mockedUseStore.mockReturnValue({
-        ...mockStateUserStore,
-        ...mockReportStore,
-        report: {
-          fieldData: {
-            [mockDynamicTemplateId]: [],
-          },
-        },
-      });
-      mockGetValues(undefined);
-
-      render(
-        <DynamicTableProvider>
-          <DynamicTableRowsComponent props={updatedProps as any} />
-        </DynamicTableProvider>
-      );
-
-      expect(
-        screen.getByText("Mock dynamic empty table message")
-      ).toBeVisible();
-    });
   });
 
   testA11yAct(

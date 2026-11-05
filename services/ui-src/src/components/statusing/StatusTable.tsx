@@ -44,6 +44,7 @@ const sx = {
       fontWeight: "body_sm",
       fontSize: "body_sm",
       lineHeight: "body_sm",
+      textTransform: "none",
       "&:last-of-type": {
         textAlign: "right",
         paddingRight: "spacer5",

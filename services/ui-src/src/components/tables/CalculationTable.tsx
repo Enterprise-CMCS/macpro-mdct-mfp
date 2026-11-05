@@ -172,6 +172,9 @@ export const CalculationTable = ({
     ),
   };
 
+  const tableEmpty =
+    tableData.rows.length === 0 && tableData.dynamicRows?.length === 0;
+
   return (
     <Box sx={sx.box}>
       {verbiage?.errorMessage && showError && (
@@ -221,7 +224,7 @@ export const CalculationTable = ({
           )}
         </>
       )}
-      {ResponsiveTable(tableData)}
+      {!tableEmpty && ResponsiveTable(tableData)}
     </Box>
   );
 };

@@ -9,7 +9,6 @@ import {
   EntityDetailsDashboardOverlay,
   EntityProvider,
   EntityRow,
-  ReportPageFooter,
   ReportPageIntro,
   Table,
 } from "components";
@@ -157,7 +156,7 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
             {reportFieldDataEntities.length === 0 ? (
               <Box>{verbiage.emptyDashboardText}</Box>
             ) : (
-              <Table sx={sx.table} content={tableHeaders()}>
+              <Table content={tableHeaders()} variant="initiative">
                 {reportFieldDataEntities.map((entity: EntityShape) => (
                   <EntityRow
                     key={entity.id}
@@ -208,7 +207,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
               onClose: closeDeleteEntityModal,
             }}
           />
-          <ReportPageFooter verbiage={verbiage} />
         </Box>
       )}
     </Box>
@@ -246,33 +244,6 @@ const sx = {
       paddingBottom: "0",
     },
     paddingBottom: "spacer2",
-  },
-  table: {
-    tableLayout: "fixed",
-    br: {
-      marginBottom: "spacer_half",
-    },
-    th: {
-      fontWeight: "heading_md",
-      color: "gray",
-      paddingLeft: "spacer2",
-      paddingRight: "0",
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      ".tablet &, .mobile &": {
-        border: "none",
-      },
-      "&:nth-of-type(1)": {
-        width: "4rem",
-      },
-      "&:nth-of-type(2)": {
-        width: "280px",
-      },
-    },
-    tr: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-    },
   },
   addEntityButton: {
     marginTop: "spacer4",
