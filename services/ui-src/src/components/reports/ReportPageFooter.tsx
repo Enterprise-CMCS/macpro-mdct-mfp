@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Box, Button, Flex, Image, Spinner } from "@chakra-ui/react";
 // utils
 import { parseCustomHtml, useFindRoute, useStore } from "utils";
-import { AnyObject, FormJson, ReportStatus } from "types";
+import { FormJson, ReportStatus } from "types";
 // assets
 import nextIcon from "assets/icons/icon_next_white.png";
 import previousIcon from "assets/icons/icon_previous_blue.png";
@@ -41,21 +41,12 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
     </Button>
   );
 
-  const nextButtonNavOnly = (
-    <Button
-      onClick={() => navigate(nextRoute)}
-      sx={sx.nextButton}
-      rightIcon={<Image src={nextIcon} alt="" sx={sx.arrowIcon} />}
-    >
-      Continue
-    </Button>
-  );
-
-  const nextButtonSubmit = (
+  const nextButton = (
     <Button
       form={form?.id}
-      type="submit"
       sx={sx.nextButton}
+      type={isReadOnly ? "button" : "submit"}
+      onClick={() => navigate(nextRoute)}
       rightIcon={
         !submitting ? (
           <Image src={nextIcon} alt="" sx={sx.arrowIcon} />
@@ -68,9 +59,9 @@ export const ReportPageFooter = ({ submitting, form, ...props }: Props) => {
 
   return (
     <>
-      <Flex sx={sx.footerBox}>
+      <Flex>
         {!hidePrevious ? prevButton : null}
-        {isReadOnly ? nextButtonNavOnly : nextButtonSubmit}
+        {nextButton}
       </Flex>
       {props.praDisclosure && (
         <Box sx={sx.praStatement}>{parseCustomHtml(props.praDisclosure)}</Box>
@@ -83,16 +74,9 @@ interface Props {
   form?: FormJson;
   submitting?: boolean;
   [key: string]: any;
-  verbiage?: AnyObject;
 }
 
 const sx = {
-  footerBox: {
-    marginTop: "spacer5",
-    paddingTop: "spacer3",
-    borderTop: "1px solid",
-    borderColor: "gray_light",
-  },
   nextButton: {
     minWidth: "8.25rem",
     marginLeft: "auto",
@@ -102,6 +86,5 @@ const sx = {
   },
   praStatement: {
     fontSize: "body_sm",
-    marginTop: "spacer2",
   },
 };

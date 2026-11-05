@@ -86,9 +86,9 @@ describe("<ModalOverlayReportPageV2 />", () => {
     ).toBeVisible();
 
     expect(
-      screen.getByRole("heading", { name: `${dashboardTitle} 1`, level: 3 })
+      screen.getByRole("heading", { name: `${dashboardTitle} 1`, level: 2 })
     );
-    expect(screen.getByRole("heading", { name: dashboardSubtitle, level: 2 }));
+    expect(screen.getByRole("heading", { name: dashboardSubtitle, level: 3 }));
   });
 
   test("renders mobile table", () => {
@@ -108,7 +108,7 @@ describe("<ModalOverlayReportPageV2 />", () => {
 
     expect(screen.getByText(emptyDashboardText)).toBeVisible();
     expect(
-      screen.getByRole("heading", { name: `${dashboardTitle} 0`, level: 3 })
+      screen.getByRole("heading", { name: `${dashboardTitle} 0`, level: 2 })
     );
   });
 

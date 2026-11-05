@@ -131,7 +131,7 @@ describe("<DashboardPage />", () => {
       mockedUseStore.mockReturnValue(mockUseStore);
       render(wpDashboardViewWithReports);
       const reportByRows = screen.getAllByRole("row");
-      expect(reportByRows[1].querySelectorAll("td")[5]).not.toHaveTextContent(
+      expect(reportByRows[1].querySelectorAll("td")[4]).not.toHaveTextContent(
         "Approved"
       );
       const callToActionButton = screen.getByText(

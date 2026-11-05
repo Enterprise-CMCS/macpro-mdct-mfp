@@ -10,7 +10,6 @@ import {
   EntityProvider,
   EntityRow,
   ReportContext,
-  ReportPageFooter,
   ReportPageIntro,
   Table,
 } from "components";
@@ -240,14 +239,16 @@ export const ModalOverlayReportPageV2 = ({
             title={errorMessage.title}
           />
         )}
-        <Heading as="h3" sx={sx.dashboardTitle}>
+        <Heading as="h2" sx={sx.dashboardTitle}>
           {dashTitle}
         </Heading>
-        <Heading as="h2" sx={sx.subsectionHeading}>
-          {dashSubTitle}
-        </Heading>
+        {dashSubTitle && (
+          <Heading as="h3" sx={sx.subsectionHeading}>
+            {dashSubTitle}
+          </Heading>
+        )}
         {hasEntities ? (
-          <Table content={tableHeaders()} sx={sx.table}>
+          <Table content={tableHeaders()} variant="initiative">
             {reportFieldDataEntities.map((entity: EntityShape) => (
               <EntityRow
                 entering={entering}
@@ -294,7 +295,6 @@ export const ModalOverlayReportPageV2 = ({
           selectedEntity={selectedEntity}
           verbiage={verbiage}
         />
-        <ReportPageFooter verbiage={verbiage} />
       </Box>
     );
   };
@@ -354,33 +354,6 @@ const sx = {
       paddingBottom: "0",
     },
     paddingBottom: "spacer2",
-  },
-  table: {
-    tableLayout: "fixed",
-    br: {
-      marginBottom: "spacer_half",
-    },
-    th: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-      color: "gray",
-      fontWeight: "heading_md",
-      paddingLeft: "spacer2",
-      paddingRight: "0",
-      ".tablet &, .mobile &": {
-        border: "0",
-      },
-      "&:nth-of-type(1)": {
-        width: "4rem",
-      },
-      "&:nth-of-type(2)": {
-        width: "280px",
-      },
-    },
-    tr: {
-      borderBottom: "1px solid",
-      borderColor: "gray_light",
-    },
   },
   addEntityButton: {
     marginTop: "spacer4",

@@ -35,6 +35,7 @@ const sx = {
     p: {
       marginBottom: "spacer2",
     },
+    border: "none",
   },
   list: {
     paddingLeft: "spacer2",

@@ -41,7 +41,6 @@ export const EntityDetailsOverlayV2 = ({
   errorMessage,
   form = {} as FormJson,
   onSubmit,
-  route,
   selectedEntity,
   submitting = false,
   validateOnRender = false,
@@ -176,7 +175,6 @@ export const EntityDetailsOverlayV2 = ({
         initiativeName={currentEntity?.initiative_name}
         text={{
           ...form.verbiage?.intro,
-          section: route.name,
         }}
       />
       {form.fields && (
