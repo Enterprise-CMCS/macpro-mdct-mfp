@@ -73,7 +73,9 @@ export const updateReport = handler(async (event) => {
   }
   if (
     unvalidatedFieldData &&
-    Object.keys(unvalidatedFieldData).some((_) => metadataBlocklist.includes(_))
+    Object.keys(unvalidatedFieldData).some((_) =>
+      fieldDataBlocklist.includes(_)
+    )
   ) {
     for (const [key, _value] of Object.entries(unvalidatedFieldData)) {
       if (fieldDataBlocklist.includes(key)) {
