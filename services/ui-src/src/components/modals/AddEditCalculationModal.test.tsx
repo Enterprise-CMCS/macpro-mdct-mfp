@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { AddEditCalculationModal } from "./AddEditCalculationModal";
@@ -160,8 +160,7 @@ describe("AddEditCalculationModal", () => {
           render(modalComponent(false, mockDynamicFieldId, true));
         });
 
-        const fieldset = screen.getByRole("group");
-        const inputs = within(fieldset).getAllByRole("textbox");
+        const inputs = screen.getAllByRole("textbox");
 
         inputs.forEach((input) => {
           expect(input).toBeDisabled();
@@ -187,8 +186,7 @@ describe("AddEditCalculationModal", () => {
     test("form fields are disabled", () => {
       render(modalComponent(true));
 
-      const fieldset = screen.getByRole("group");
-      const inputs = within(fieldset).getAllByRole("textbox");
+      const inputs = screen.getAllByRole("textbox");
 
       inputs.forEach((input) => {
         expect(input).toBeDisabled();
