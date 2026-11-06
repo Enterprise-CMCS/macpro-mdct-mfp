@@ -287,7 +287,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         type: ReportFormFieldType.RADIO,
         validation: ValidationType.RADIO,
         props: {
-          label: "Enter the expected or actual state date for the initiative.",
+          label: "Enter the expected or actual start date for the initiative.",
           hint: "For initiatives that have not yet begun, enter the projected date it will start. The projected start date should allow at least 30 days for Centers for Medicare & Medicaid Services (CMS) review and approval of the Work Plan before implementation. For initiatives in progress, if the exact date is unknown, provide an estimate.",
           choices: [
             {
