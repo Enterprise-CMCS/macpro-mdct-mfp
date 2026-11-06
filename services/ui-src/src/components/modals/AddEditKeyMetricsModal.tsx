@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
 // types
@@ -24,7 +24,6 @@ export const AddEditKeyMetricsModal = ({
   report,
   userIsAdmin = false,
 }: Props) => {
-  const formRef = useRef<HTMLFormElement>(null);
   const { updateReport } = useContext(ReportContext);
 
   const [currentEntityFieldData, setCurrentEntityFieldData] = useState<
@@ -132,11 +131,6 @@ export const AddEditKeyMetricsModal = ({
     modalDisclosure.onClose(true);
   };
 
-  const submitForm = (event: SubmitEvent) => {
-    event.preventDefault();
-    formRef.current?.requestSubmit();
-  };
-
   return (
     <Modal
       content={{
@@ -149,9 +143,7 @@ export const AddEditKeyMetricsModal = ({
       }}
       data-testid="add-key-metrics-modal"
       formId={form.id}
-      handleSubmit={submitForm}
       modalDisclosure={modalDisclosure}
-      nestedForm={true}
       submitButtonDisabled={submitting}
       submitting={submitting}
     >
@@ -162,9 +154,7 @@ export const AddEditKeyMetricsModal = ({
         formJson={form}
         formData={formData}
         id={form.id}
-        nestedForm={true}
-        onSubmit={(data: AnyObject) => handleSubmit(data)}
-        ref={formRef}
+        onSubmit={handleSubmit}
         validateOnRender={false}
       />
     </Modal>
