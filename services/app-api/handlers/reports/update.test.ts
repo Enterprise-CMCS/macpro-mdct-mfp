@@ -7,6 +7,7 @@ import {
   mockWPReport,
   mockReportFieldData,
   mockReportJson,
+  mockDynamoDataWPCompleted,
 } from "../../utils/testing/setupTest";
 import { error } from "../../utils/constants/constants";
 import {
@@ -138,26 +139,6 @@ describe("Test updateReport API method", () => {
     expect(res.body).toContain(error.MISSING_DATA);
   });
 
-  test("Test attempted report update with disallowed metadata properties returns 400", async () => {
-    const eventWritingToReadonlyMetadataFields = {
-      ...submissionEvent,
-      body: `{"metadata":{"locked":true}}`,
-    };
-    const res = await updateReport(eventWritingToReadonlyMetadataFields, null);
-    expect(res.statusCode).toBe(StatusCodes.BadRequest);
-    expect(res.body).toContain(error.INVALID_DATA);
-  });
-
-  test("Test attempted report update with disallowed fieldData properties returns 400", async () => {
-    const eventWritingToReadonlyFieldDataFields = {
-      ...submissionEvent,
-      body: `{"fieldData":{"submitterName":"Abraham Lincoln"}}`,
-    };
-    const res = await updateReport(eventWritingToReadonlyFieldDataFields, null);
-    expect(res.statusCode).toBe(StatusCodes.BadRequest);
-    expect(res.body).toContain(error.INVALID_DATA);
-  });
-
   test("Test attempted report update without permissions returns 403", async () => {
     (hasPermissions as Mock).mockReturnValueOnce(false);
     const res = await updateReport(submissionEvent, null);
@@ -244,5 +225,57 @@ describe("Test updateReport API method", () => {
 
     expect(response.statusCode).toBe(StatusCodes.InternalServerError);
     expect(response.body).toContain(error.MISSING_FORM_TEMPLATE);
+  });
+
+  test("Test updating report with blocked fields passes without changing blocked fields", async () => {
+    const submittedFieldData = {
+      ...mockReportFieldData,
+      submitterName: "Submitting user",
+      submitterEmailAddress: "submitter@email.com",
+      reportSubmissionDate: "dd/mm/yy",
+    };
+    const updateSubmittedReportEvent: APIGatewayProxyEvent = {
+      ...mockProxyEvent,
+      body: JSON.stringify({
+        ...mockWPReport,
+        metadata: {
+          status: "in progress",
+          submittedBy: "MOCK OVERWRITE DATA",
+          submittedOnDate: "12345",
+        },
+        fieldData: {
+          ...mockReportFieldData,
+          "mock-number-field": "2",
+          submitterName: "Mock fake user",
+          submitterEmailAddress: "mock@notmail.com",
+          reportSubmissionDate: "yy/mm/dd",
+        },
+      }),
+    };
+
+    (getReportMetadata as Mock).mockResolvedValue(mockDynamoDataWPCompleted);
+    (getReportFormTemplate as Mock).mockResolvedValue(mockReportJson);
+    (getReportFieldData as Mock).mockResolvedValue(submittedFieldData);
+
+    const response = await updateReport(updateSubmittedReportEvent, null);
+
+    expect(response.statusCode).toBe(StatusCodes.Ok);
+    expect(putReportFieldData).toHaveBeenCalled();
+    expect(putReportMetadata).toHaveBeenCalled();
+    const body = JSON.parse(response.body!);
+    expect(body).toEqual(
+      expect.objectContaining({
+        submittedBy: mockDynamoDataWPCompleted.submittedBy,
+        submittedOnDate: mockDynamoDataWPCompleted.submittedOnDate,
+      })
+    );
+    expect(body.fieldData).toEqual(
+      expect.objectContaining({
+        "mock-number-field": "2",
+        submitterName: submittedFieldData.submitterName,
+        submitterEmailAddress: submittedFieldData.submitterEmailAddress,
+        reportSubmissionDate: submittedFieldData.reportSubmissionDate,
+      })
+    );
   });
 });

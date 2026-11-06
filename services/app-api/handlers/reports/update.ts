@@ -56,18 +56,30 @@ export const updateReport = handler(async (event) => {
   ];
 
   // This parse is guaranteed to succeed, because handler-lib already did it.
-  const eventBody = JSON.parse(event.body);
+  const unvalidatedPayload = JSON.parse(event.body);
+  let { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
+    unvalidatedPayload;
+
+  // Strip blocked fields so they cannot be updated. They get re-spread in later from the source.
   if (
-    (eventBody.metadata &&
-      Object.keys(eventBody.metadata).some((_) =>
-        metadataBlocklist.includes(_)
-      )) ||
-    (eventBody.fieldData &&
-      Object.keys(eventBody.fieldData).some((_) =>
-        fieldDataBlocklist.includes(_)
-      ))
+    unvalidatedMetadata &&
+    Object.keys(unvalidatedMetadata).some((_) => metadataBlocklist.includes(_))
   ) {
-    return badRequest(error.INVALID_DATA);
+    for (const [key, _value] of Object.entries(unvalidatedMetadata)) {
+      if (metadataBlocklist.includes(key)) {
+        delete unvalidatedMetadata[key];
+      }
+    }
+  }
+  if (
+    unvalidatedFieldData &&
+    Object.keys(unvalidatedFieldData).some((_) => metadataBlocklist.includes(_))
+  ) {
+    for (const [key, _value] of Object.entries(unvalidatedFieldData)) {
+      if (fieldDataBlocklist.includes(key)) {
+        delete unvalidatedFieldData[key];
+      }
+    }
   }
 
   // Ensure user has correct permissions to update a report.
@@ -93,12 +105,6 @@ export const updateReport = handler(async (event) => {
   if (!existingFieldData) {
     return notFound(error.MISSING_DATA);
   }
-
-  // Parse the passed payload.
-  const unvalidatedPayload = JSON.parse(event.body);
-
-  const { metadata: unvalidatedMetadata, fieldData: unvalidatedFieldData } =
-    unvalidatedPayload;
 
   if (!unvalidatedFieldData) {
     return badRequest(error.MISSING_DATA);
