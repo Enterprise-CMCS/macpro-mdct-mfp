@@ -428,7 +428,7 @@ export const initiativesRoute: WPStateOrTerritorySpecificInitiativesV2Route = {
         forCopyoverOnly: true,
         id: "closeOutInformation_closeOut",
         type: ReportFormFieldType.RADIO,
-        validation: ValidationType.RADIO,
+        validation: ValidationType.RADIO_OPTIONAL,
         props: {
           label: "Do you want to close out this initiative?",
           title: "Close-out status for {{initiativeName}}",

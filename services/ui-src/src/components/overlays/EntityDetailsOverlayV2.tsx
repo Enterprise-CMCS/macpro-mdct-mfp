@@ -177,20 +177,6 @@ export const EntityDetailsOverlayV2 = ({
           ...form.verbiage?.intro,
         }}
       />
-      {form.fields && (
-        <Form
-          autosave={autosave}
-          className="overlay-form"
-          disabled={isDisabled}
-          dontReset={true}
-          formData={currentEntity}
-          formJson={formJson}
-          id={form.id}
-          onFormChange={onFormChange}
-          onSubmit={onSubmit}
-          validateOnRender={validateOnRender}
-        />
-      )}
       {showCloseOut && (
         <Box sx={sx.closeOutSection}>
           <Heading as="h2" sx={sx.closeOutHeading}>
@@ -219,6 +205,20 @@ export const EntityDetailsOverlayV2 = ({
             selectedEntity={currentEntity}
           />
         </Box>
+      )}
+      {form.fields && (
+        <Form
+          autosave={autosave}
+          className="overlay-form"
+          disabled={isDisabled}
+          dontReset={true}
+          formData={currentEntity}
+          formJson={formJson}
+          id={form.id}
+          onFormChange={onFormChange}
+          onSubmit={onSubmit}
+          validateOnRender={validateOnRender}
+        />
       )}
       <Box sx={sx.footerBox}>
         <Flex sx={sx.buttonFlex}>
