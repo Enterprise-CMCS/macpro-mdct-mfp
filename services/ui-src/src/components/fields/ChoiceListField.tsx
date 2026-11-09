@@ -99,7 +99,10 @@ export const ChoiceListField = ({
     return choices.map((choice: FieldChoice) => {
       setCheckedOrUnchecked(choice);
       const choiceObject: FieldChoice = { ...choice };
-      const choiceChildren = choice?.children;
+      const choiceChildren = choice?.children?.map((child) => ({
+        ...child,
+        ariaLabelledby: name,
+      }));
       if (choiceChildren) {
         const isNested = true;
         const formattedChildren = formFieldFactory(choiceChildren, {
