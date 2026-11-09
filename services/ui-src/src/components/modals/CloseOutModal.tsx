@@ -104,7 +104,7 @@ export const CloseOutModal = ({
         actionButtonText: disabled ? "Return" : "Save",
         closeButtonText: "Cancel",
       }}
-      formId={form.id}
+      formId={"closeout-modal"}
       modalDisclosure={modalDisclosure}
       submitButtonDisabled={submitting}
       submitting={submitting}
@@ -114,7 +114,7 @@ export const CloseOutModal = ({
         dontReset={false}
         formData={selectedEntity}
         formJson={form}
-        id={form.id}
+        id={"closeout-modal"}
         onSubmit={handleSubmit}
         validateOnRender={false}
       />
