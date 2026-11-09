@@ -101,7 +101,10 @@ export const ChoiceListField = ({
       const choiceObject: FieldChoice = { ...choice };
       const choiceChildren = choice?.children?.map((child) => ({
         ...child,
-        ariaLabelledby: name,
+        props: {
+          ...child.props,
+          ariaLabelledby: props.hydrate[0]?.key + "__label",
+        },
       }));
       if (choiceChildren) {
         const isNested = true;
