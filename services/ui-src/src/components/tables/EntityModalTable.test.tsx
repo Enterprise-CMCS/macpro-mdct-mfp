@@ -255,7 +255,7 @@ describe("<EntityModalTable />", () => {
     expect(table).toHaveAttribute("id", "mockTable_mockServices");
 
     const tableHeading = screen.getByRole("heading", {
-      level: 4,
+      level: 3,
       name: "Mock table title",
     });
     expect(tableHeading).toBeVisible();
