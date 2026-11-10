@@ -103,7 +103,7 @@ export const ChoiceListField = ({
         ...child,
         props: {
           ...child.props,
-          ariaLabelledby: props.hydrate[0]?.key + "__label",
+          ariaLabelledby: choice.id + "__label",
         },
       }));
       if (choiceChildren) {
