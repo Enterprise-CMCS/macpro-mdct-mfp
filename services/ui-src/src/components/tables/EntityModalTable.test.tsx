@@ -23,6 +23,7 @@ import {
   mockDynamicRowsTemplateWithModalForm,
   mockDynamicTemplateId,
   mockStateUserStore,
+  mockEntityStore,
   mockWpReportContext,
   RouterWrappedComponent,
 } from "utils/testing/setupTest";
@@ -61,6 +62,7 @@ const mockGetValues = (returnValue: any) =>
 
 vi.mock("utils/state/useStore");
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+const mockedStore = { ...mockStateUserStore, ...mockEntityStore };
 
 vi.mock("utils/autosave/autosave", () => ({
   getAutosaveFields: vi.fn().mockImplementation(() => {
@@ -247,7 +249,7 @@ describe("<EntityModalTable />", () => {
   });
 
   test("table is visible", () => {
-    mockedUseStore.mockReturnValue(mockStateUserStore);
+    mockedUseStore.mockReturnValue(mockedStore);
     mockGetValues(undefined);
     render(tableComponent());
 
@@ -332,7 +334,7 @@ describe("<EntityModalTable />", () => {
           ],
         },
       };
-      mockedUseStore.mockReturnValue({ report });
+      mockedUseStore.mockReturnValue({ report, ...mockEntityStore });
       mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
@@ -388,7 +390,7 @@ describe("<EntityModalTable />", () => {
     });
 
     test("clicking add button opens modal", async () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockedUseStore.mockReturnValue(mockedStore);
       mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
@@ -494,7 +496,7 @@ describe("<EntityModalTable />", () => {
 
   describe("error message", () => {
     test("table shows error message", () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockedUseStore.mockReturnValue(mockedStore);
       mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
@@ -508,7 +510,7 @@ describe("<EntityModalTable />", () => {
     });
 
     test("table does not show error message", () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockedUseStore.mockReturnValue(mockedStore);
       mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,
@@ -542,7 +544,7 @@ describe("<EntityModalTable />", () => {
     });
 
     test("saving in modal clears error message", async () => {
-      mockedUseStore.mockReturnValue(mockStateUserStore);
+      mockedUseStore.mockReturnValue(mockedStore);
       mockGetValues(undefined);
       const updatedProps = {
         ...mockProps,

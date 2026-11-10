@@ -6,7 +6,7 @@ import { ReportContext, DrawerReportPage } from "components";
 // utils
 import {
   mockDrawerReportPageJson,
-  mockUseStore,
+  mockUseEntityStore,
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
@@ -30,7 +30,7 @@ vi.mock("utils/state/useStore");
 const mockedUseStore = useStore as MockedFunction<typeof useStore>;
 
 const mockReportStoreWithoutEntities = {
-  ...mockUseStore,
+  ...mockUseEntityStore,
   report: {
     ...(mockWPFullReport as ReportShape),
     fieldData: {},
@@ -66,7 +66,7 @@ describe("<DrawerReportPage />", () => {
 
   describe("Test DrawerReportPage with entities", () => {
     beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockUseStore);
+      mockedUseStore.mockReturnValue(mockUseEntityStore);
       render(drawerReportPage);
     });
     afterEach(() => {
@@ -137,6 +137,6 @@ describe("<DrawerReportPage />", () => {
   });
 
   testA11yAct(drawerReportPage, () => {
-    mockedUseStore.mockReturnValue(mockUseStore);
+    mockedUseStore.mockReturnValue(mockUseEntityStore);
   });
 });

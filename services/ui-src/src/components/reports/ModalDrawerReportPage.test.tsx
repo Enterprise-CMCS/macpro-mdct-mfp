@@ -14,7 +14,7 @@ import {
 import {
   mockModalDrawerReportPageJson,
   mockTargetPopulationsReportPageJson,
-  mockUseStore,
+  mockUseEntityStore,
   mockWPFullReport,
   mockWpReportContext,
   RouterWrappedComponent,
@@ -117,7 +117,7 @@ const mockReportContextGivenFieldData = (fieldData: AnyObject) => {
 
 const mockReportStoreGivenFieldData = (fieldData: AnyObject) => {
   return {
-    ...mockUseStore,
+    ...mockUseEntityStore,
     report: {
       ...(mockWPFullReport as ReportShape),
       fieldData: fieldData,
@@ -185,7 +185,7 @@ describe("<ModelDrawerReportPage />", () => {
 
   describe("Test ModalDrawerReportPage with entities", () => {
     beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockUseStore);
+      mockedUseStore.mockReturnValue(mockUseEntityStore);
       render(
         modalDrawerReportPageComponent(
           mockWpReportContext,
@@ -298,7 +298,7 @@ describe("<ModelDrawerReportPage />", () => {
       mockModalDrawerReportPageJson
     ),
     () => {
-      mockedUseStore.mockReturnValue(mockUseStore);
+      mockedUseStore.mockReturnValue(mockUseEntityStore);
     }
   );
 });
