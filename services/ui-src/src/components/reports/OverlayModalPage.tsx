@@ -202,7 +202,6 @@ export const OverlayModalPage = ({
         <DeleteEntityModal
           entityType={[entityType, stepType]}
           entityIdLookup={entityIdLookup}
-          selectedEntity={selectedStepEntity}
           verbiage={verbiage}
           modalDisclosure={{
             isOpen: deleteEntityModalIsOpen,

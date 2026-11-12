@@ -82,7 +82,6 @@ const modalComponentWithSelectedEntity = (
     <ReportContext.Provider value={mockedReportContext}>
       <DeleteEntityModal
         entityType={EntityType.INITIATIVE}
-        selectedEntity={mockEntity}
         verbiage={mockModalDrawerReportPageVerbiage}
         modalDisclosure={{
           isOpen: true,
@@ -126,7 +125,6 @@ const modalComponentWithNestedEntity = (
     <ReportContext.Provider value={mockReportContextNestedEntity}>
       <DeleteEntityModal
         entityType={EntityType.INITIATIVE}
-        selectedEntity={mockNestedEntity}
         verbiage={mockModalDrawerReportPageVerbiage}
         modalDisclosure={{
           isOpen: true,
@@ -179,7 +177,10 @@ describe("<DeleteEntityModal />", () => {
     };
 
     beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockUseStore);
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        selectedEntity: mockEntity,
+      });
     });
 
     test("Successfully deletes an existing entity", async () => {

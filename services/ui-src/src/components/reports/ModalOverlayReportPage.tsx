@@ -188,7 +188,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
           {modalForm && (
             <AddEditEntityModal
               entityType={entityType}
-              selectedEntity={selectedEntity}
               verbiage={verbiage}
               form={modalForm}
               setError={() => {}}
@@ -200,7 +199,6 @@ export const ModalOverlayReportPage = ({ route, setSidebarHidden }: Props) => {
           )}
           <DeleteEntityModal
             entityType={entityType}
-            selectedEntity={selectedEntity}
             verbiage={verbiage}
             modalDisclosure={{
               isOpen: deleteEntityModalIsOpen,
