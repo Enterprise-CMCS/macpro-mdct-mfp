@@ -177,7 +177,10 @@ describe("<DeleteEntityModal />", () => {
     };
 
     beforeEach(() => {
-      mockedUseStore.mockReturnValue(mockUseStore);
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        selectedEntity: mockEntity,
+      });
     });
 
     test("Successfully deletes an existing entity", async () => {

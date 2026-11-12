@@ -243,6 +243,10 @@ describe("<AddEditEntityModal />", () => {
     });
 
     test("Successfully edits an existing entity", async () => {
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        selectedEntity: mockEntity,
+      });
       const result = render(modalComponentWithSelectedEntity);
       const form = result.getByTestId("add-edit-entity-form");
       await fillAndSubmitForm(form);
@@ -272,6 +276,10 @@ describe("<AddEditEntityModal />", () => {
     });
 
     test("Doesn't edit an existing entity if no update was made", async () => {
+      mockedUseStore.mockReturnValue({
+        ...mockUseStore,
+        selectedEntity: mockEntity,
+      });
       render(modalComponentWithSelectedEntity);
       const submitButton = screen.getByRole("button", { name: "Save" });
       await act(async () => {
