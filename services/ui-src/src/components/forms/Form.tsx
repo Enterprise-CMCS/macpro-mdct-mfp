@@ -1,7 +1,9 @@
 import {
   BaseSyntheticEvent,
+  forwardRef,
   Fragment,
   ReactNode,
+  useImperativeHandle,
   useLayoutEffect,
 } from "react";
 import {
@@ -49,22 +51,26 @@ import {
   useStore,
 } from "utils";
 
-export const Form = ({
-  autosave,
-  className,
-  children,
-  disabled = false,
-  dontReset,
-  formData,
-  formJson,
-  id,
-  onError,
-  onFormChange,
-  onSubmit,
-  reportStatus,
-  validateOnRender,
-  ...props
-}: Props) => {
+export const Form = forwardRef<HTMLFormElement, Props>(function Form(
+  {
+    autosave,
+    className,
+    children,
+    disabled = false,
+    dontReset,
+    formData,
+    formJson,
+    id,
+    nestedForm,
+    onError,
+    onFormChange,
+    onSubmit,
+    reportStatus,
+    validateOnRender,
+    ...props
+  },
+  ref?
+) {
   const { editableByAdmins, fields, options, tables = [] } = formJson;
 
   let location = useLocation();
@@ -308,16 +314,16 @@ export const Form = ({
     return renderedFieldsAndTables;
   };
 
+  const FormTag = nestedForm ? "fieldset" : "form";
   const submit = (e?: BaseSyntheticEvent) => {
     e?.preventDefault();
-    e?.stopPropagation();
 
     form.handleSubmit(
       (data) => onSubmit(data),
       (errors: AnyObject) => {
         const formErrors = Object.keys(errors).filter((key) => {
-          const currentFormData = report?.fieldData?.[formData?.type]?.find(
-            (t: AnyObject) => t.id === formData?.id
+          const currentFormData = report?.fieldData?.[formData.type]?.find(
+            (t: AnyObject) => t.id === formData.id
           );
           const hasTableError = tableFieldIds.includes(key);
           const hasTableData = currentFormData?.[key]?.length > 0;
@@ -341,13 +347,22 @@ export const Form = ({
     )(e);
   };
 
+  // Submit fieldset ref like a form
+  useImperativeHandle(
+    ref,
+    () =>
+      ({
+        requestSubmit: submit,
+      }) as any
+  );
+
   return (
     <FormProvider {...form}>
-      <form
+      <FormTag
         id={id}
         autoComplete="off"
         onChange={onChange}
-        onSubmit={submit}
+        {...(!nestedForm && { onSubmit: submit })}
         {...props}
       >
         <Box sx={sx}>
@@ -363,10 +378,10 @@ export const Form = ({
           </Box>
         </Box>
         {children}
-      </form>
+      </FormTag>
     </FormProvider>
   );
-};
+});
 
 interface Props {
   autosave?: boolean;
