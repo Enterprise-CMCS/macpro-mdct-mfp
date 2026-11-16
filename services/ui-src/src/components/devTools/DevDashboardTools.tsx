@@ -1,7 +1,11 @@
 import { Button, Select, Divider, Text } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { DropdownOptions } from "types";
-import { deleteReport, useStore } from "utils";
+import {
+  deleteReport,
+  deleteReportsForState,
+  useStore,
+} from "utils";
 
 interface Props {
   reload?: Function;
@@ -15,11 +19,11 @@ export const DevDashboardTools = ({ reload, state }: Props) => {
   const [selectedReport, setSelectedReport] = useState<string>("");
   const reportType = "WP";
 
-  if (!reportsByState) return;
+  if (!reportsByState || !state) return;
 
   const onDeleteReport = async () => {
     setLoading(true);
-    const [state, id] = selectedReport.split("#"); // split value from select option below
+    const id = selectedReport; // split value from select option below
     await deleteReport({ reportType, state, id });
     if (reload) reload(reportType, state);
     setLoading(false);
@@ -28,6 +32,8 @@ export const DevDashboardTools = ({ reload, state }: Props) => {
   const onDeleteAll = async () => {
     setLoading(true);
     if (!state) return;
+    const id = selectedReport; // split value from select option below
+    await deleteReportsForState({ reportType, state, id });
     if (reload) reload();
     setLoading(false);
   };

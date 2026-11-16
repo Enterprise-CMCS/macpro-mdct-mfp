@@ -1,6 +1,6 @@
 import handler from "../handler-lib";
 import { error } from "../../utils/constants/constants";
-import { badRequest, ok } from "../../utils/responses/response-lib";
+import { badRequest, forbidden, ok } from "../../utils/responses/response-lib";
 import {
   parseSpecificReportParameters,
   parseStateReportParameters,
@@ -10,6 +10,8 @@ import {
   deleteReportFromDatabase,
   queryReportMetadatasForState,
 } from "../../storage/reports";
+import { hasPermissions } from "../../utils/auth/authorization";
+import { UserRoles } from "../../utils/types";
 
 //should not be callable if dev tool is not enabled
 export const deleteReport = handler(async (event, _context) => {
@@ -17,6 +19,10 @@ export const deleteReport = handler(async (event, _context) => {
     parseSpecificReportParameters(event);
   if (!allParamsValid) {
     return badRequest(error.NO_KEY);
+  }
+
+  if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
+    return forbidden(error.UNAUTHORIZED);
   }
 
   const useDevTools = await isFeatureFlagEnabled("devTools");
@@ -33,6 +39,9 @@ export const deleteReportsForState = handler(async (event, _context) => {
     return badRequest(error.NO_KEY);
   }
 
+  if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
+    return forbidden(error.UNAUTHORIZED);
+  }
   const useDevTools = await isFeatureFlagEnabled("devTools");
   if (useDevTools) {
     const reports = await queryReportMetadatasForState(reportType, state);

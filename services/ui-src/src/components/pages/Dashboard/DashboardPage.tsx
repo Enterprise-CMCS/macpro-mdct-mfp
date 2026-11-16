@@ -363,7 +363,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   return (
     <PageTemplate type="report" sx={sx.layout}>
       {/* page title */}
-      <DevTools type={ToolType.DASHBOARD}></DevTools>
+      <DevTools type={ToolType.DASHBOARD} state={userState}></DevTools>
       <Helmet>
         <title>{`${reportTitle} - ${APP_TITLE}`}</title>
       </Helmet>

@@ -66,14 +66,14 @@ async function approveReport(reportKeys: ReportKeys, report: AnyObject) {
 
 async function deleteReport(reportKeys: ReportKeys) {
   const { reportType, state, id } = reportKeys;
-  const path = `reports/${reportType}/${state}/${id}`;
-  return del<AnyObject>(path);
+  const path = `/reports/${reportType}/${state}/${id}`;
+  return del(path);
 }
 
 async function deleteReportsForState(reportKeys: ReportKeys) {
   const { reportType, state } = reportKeys;
-  const path = `reports/${reportType}/${state}`;
-  return del<AnyObject>(path);
+  const path = `/reports/${reportType}/${state}`;
+  return del(path);
 }
 
 export {
