@@ -39,7 +39,6 @@ export const Modal = ({
   } else {
     submitButtonProps.form = formId;
   }
-
   return (
     <ChakraModal
       isOpen={modalDisclosure.isOpen}

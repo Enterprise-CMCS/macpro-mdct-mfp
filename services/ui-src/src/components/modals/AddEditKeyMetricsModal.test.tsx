@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 // components
 import { AddEditKeyMetricsModal } from "./AddEditKeyMetricsModal";
@@ -169,8 +169,7 @@ describe("AddEditKeyMetricsModal", () => {
           render(modalComponent(false, mockCurrentEntityId, true));
         });
 
-        const fieldset = screen.getByRole("group");
-        const inputs = within(fieldset).getAllByRole("textbox");
+        const inputs = screen.getAllByRole("textbox");
 
         inputs.forEach((input) => {
           expect(input).toBeDisabled();
@@ -196,8 +195,7 @@ describe("AddEditKeyMetricsModal", () => {
     test("form fields are disabled", () => {
       render(modalComponent(true));
 
-      const fieldset = screen.getByRole("group");
-      const inputs = within(fieldset).getAllByRole("textbox");
+      const inputs = screen.getAllByRole("textbox");
 
       inputs.forEach((input) => {
         expect(input).toBeDisabled();

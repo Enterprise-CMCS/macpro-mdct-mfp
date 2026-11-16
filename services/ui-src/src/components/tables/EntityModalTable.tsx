@@ -219,7 +219,7 @@ export const EntityModalTable = ({
           {verbiage.sectionTitle}
         </Heading>
       )}
-      <Heading as="h4" className="table-title">
+      <Heading as="h3" className="table-title">
         {verbiage?.title}
       </Heading>
       {verbiage?.subtitle && (

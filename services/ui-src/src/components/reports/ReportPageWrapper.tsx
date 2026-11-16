@@ -117,7 +117,6 @@ export const ReportPageWrapper = () => {
               gap="spacer3"
             >
               {renderPageSection(reportTemplate)}
-              {/* {route.verbiage.reviewPdfHint && ( */}
               {reportTemplate.verbiage?.reviewPdfHint && (
                 <Stack gap="spacer3">
                   <Text color="gray">

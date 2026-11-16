@@ -8,6 +8,8 @@ import { EntityShape, HeadingLevel, ModalDrawerReportPageShape } from "types";
 import { convertToThousandsSeparatedString, useStore } from "utils";
 import { notAnsweredText } from "../../constants";
 
+const NUM_OF_QUARTERS = 12;
+
 export const ExportedModalDrawerReportSection = ({
   section: { entityType, verbiage },
   headingLevel = "h3",
@@ -64,31 +66,13 @@ export const ExportedModalDrawerReportSection = ({
 
   const ariaLabelledAsterisk = `<span aria-label="sum of incomplete fields">*</span>`;
 
-  // some reports (e.g. copies of copies) can accumulate more than the
-  // standard 12 quarters of data; the table needs a label for every quarter
-  // that actually has data, not just the first 12
-  const getQuarterCount = () => {
-    const counts = entities.map((entity: EntityShape) => {
-      const isNotApplicableToMfp =
-        entity?.transitionBenchmarks_applicableToMfpDemonstration?.[0].value ===
-        "No";
-      if (isNotApplicableToMfp) return 0;
-
-      return Object.keys(entity).filter((key) => key.includes("quarterly"))
-        .length;
-    });
-
-    return Math.max(12, ...counts);
-  };
-  const quarterCount = getQuarterCount();
-
   // applicable quarters for report; populates left table column
   const generateQuarterLabels = () => {
     // The first quarter will be Q1 for period 1, or Q3 for period 2.
     const firstQuarterIndex = reportPeriod === 1 ? 0 : 2;
 
     // returns array of labels like ["2024 Q1", "2024 Q2", ...]
-    return Array.from({ length: quarterCount })
+    return Array.from({ length: NUM_OF_QUARTERS })
       .map((_, index) => ({
         year: reportYear + Math.floor((firstQuarterIndex + index) / 4),
         quarter: `Q${1 + ((firstQuarterIndex + index) % 4)}`,
@@ -96,6 +80,7 @@ export const ExportedModalDrawerReportSection = ({
       .map(({ year, quarter }) => `${year} ${quarter}`);
   };
   const quarterLabels = generateQuarterLabels();
+  const quarterIds = quarterLabels.map((label) => label.replaceAll(" ", ""));
 
   // creates arrays of 'only' quarterly values
   const quarterValueArray = entities.map((entity: EntityShape) => {
@@ -105,15 +90,15 @@ export const ExportedModalDrawerReportSection = ({
 
     // if not applicable we populate the column with "N/A" cells for every quarter
     if (isNotApplicableToMfp) {
-      return Array.from({ length: quarterCount }).fill("N/A");
+      return Array.from({ length: NUM_OF_QUARTERS }).fill("N/A");
     }
 
     const quarterArray = Object.keys(entity)
-      .filter((key) => key.includes("quarterly"))
+      .filter((key) => quarterIds.includes(key.substring(key.length - 6))) // get end of key, ex: "2027Q1", and include if it has a matching label
       .map((key) => entity[key]);
 
-    // if length of filled in data is less than quarterCount, show "Not answered" in remaining cells
-    while (quarterArray.length < quarterCount) {
+    // if length of filled in data is less than NUM_OF_QUARTERS, show "Not answered" in remaining cells
+    while (quarterArray.length < NUM_OF_QUARTERS) {
       quarterArray.push(notAnsweredText);
     }
 

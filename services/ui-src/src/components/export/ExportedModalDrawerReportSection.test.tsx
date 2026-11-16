@@ -156,7 +156,7 @@ describe("<ExportedModalDrawerReportSection />", () => {
       ...mockReportStore,
       report: {
         ...mockReportStore.report,
-        reportPeriod: 1,
+        reportPeriod: 2,
         reportYear: 2024,
         fieldData: {
           ...mockReportFieldData,
@@ -187,14 +187,14 @@ describe("<ExportedModalDrawerReportSection />", () => {
     mockedUseStore.mockReturnValue(mockReportWithExtraQuarters);
     render(tableComponent);
 
-    // the 13th and 14th quarters should render with their correct labels,
-    // not blank cells
+    // 2024 period 2 starts with Q3, and counts to 12 quarters from there
+    expect(screen.getByText("2024 Q3")).toBeVisible();
     expect(screen.getByText("2027 Q1")).toBeVisible();
     expect(screen.getByText("2027 Q2")).toBeVisible();
 
-    // and the standard first 12 quarters are unaffected
-    expect(screen.getByText("2024 Q1")).toBeVisible();
-    expect(screen.getByText("2026 Q4")).toBeVisible();
+    // previous quarters should not be visible
+    expect(screen.queryByText("2024 Q1")).not.toBeInTheDocument();
+    expect(screen.queryByText("2024 Q2")).not.toBeInTheDocument();
   });
 
   test("renders aria labels for target populations with abbreviated names", async () => {
