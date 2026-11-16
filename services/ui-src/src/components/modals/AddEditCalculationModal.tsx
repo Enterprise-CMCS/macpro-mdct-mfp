@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 // components
 import { Form, Modal, ReportContext } from "components";
 // types
@@ -22,6 +22,7 @@ export const AddEditCalculationModal = ({
   tableId,
   userIsAdmin = false,
 }: Props) => {
+  const formRef = useRef<HTMLFormElement>(null);
   const { updateReport } = useContext(ReportContext);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -123,6 +124,11 @@ export const AddEditCalculationModal = ({
     modalDisclosure.onClose();
   };
 
+  const submitForm = (event: SubmitEvent) => {
+    event.preventDefault();
+    formRef.current?.requestSubmit();
+  };
+
   return (
     <Modal
       content={{
@@ -135,7 +141,9 @@ export const AddEditCalculationModal = ({
       }}
       data-testid="add-calculation-modal"
       formId={form.id}
+      handleSubmit={submitForm}
       modalDisclosure={modalDisclosure}
+      nestedForm={true}
       submitButtonDisabled={submitting}
       submitting={submitting}
     >
@@ -146,7 +154,9 @@ export const AddEditCalculationModal = ({
         formJson={form}
         formData={formData}
         id={form.id}
-        onSubmit={handleSubmit}
+        nestedForm={true}
+        onSubmit={(data: AnyObject) => handleSubmit(data)}
+        ref={formRef}
         validateOnRender={false}
       />
     </Modal>
