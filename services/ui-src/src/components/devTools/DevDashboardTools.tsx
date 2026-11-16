@@ -1,11 +1,7 @@
 import { Button, Select, Divider, Text } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { DropdownOptions } from "types";
-import {
-  deleteReport,
-  deleteReportsForState,
-  useStore,
-} from "utils";
+import { deleteReport, deleteReportsForState, useStore } from "utils";
 
 interface Props {
   reload?: Function;

@@ -17,12 +17,13 @@ import { UserRoles } from "../../utils/types";
 export const deleteReport = handler(async (event, _context) => {
   const { allParamsValid, reportType, state, id } =
     parseSpecificReportParameters(event);
-  if (!allParamsValid) {
-    return badRequest(error.NO_KEY);
-  }
 
   if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
     return forbidden(error.UNAUTHORIZED);
+  }
+
+  if (!allParamsValid) {
+    return badRequest(error.NO_KEY);
   }
 
   const useDevTools = await isFeatureFlagEnabled("devTools");
@@ -35,13 +36,15 @@ export const deleteReport = handler(async (event, _context) => {
 export const deleteReportsForState = handler(async (event, _context) => {
   const { allParamsValid, reportType, state } =
     parseStateReportParameters(event);
-  if (!allParamsValid) {
-    return badRequest(error.NO_KEY);
-  }
 
   if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
     return forbidden(error.UNAUTHORIZED);
   }
+
+  if (!allParamsValid) {
+    return badRequest(error.NO_KEY);
+  }
+
   const useDevTools = await isFeatureFlagEnabled("devTools");
   if (useDevTools) {
     const reports = await queryReportMetadatasForState(reportType, state);
