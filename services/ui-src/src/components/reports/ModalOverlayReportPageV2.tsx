@@ -282,7 +282,6 @@ export const ModalOverlayReportPageV2 = ({
             isOpen: addEditEntityModalIsOpen,
             onClose: closeAddEditEntityModal,
           }}
-          selectedEntity={selectedEntity}
           setError={() => {}}
           verbiage={verbiage}
         />
@@ -292,7 +291,6 @@ export const ModalOverlayReportPageV2 = ({
             isOpen: deleteEntityModalIsOpen,
             onClose: closeDeleteEntityModal,
           }}
-          selectedEntity={selectedEntity}
           verbiage={verbiage}
         />
       </Box>

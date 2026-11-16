@@ -12,11 +12,10 @@ export const DeleteEntityModal = ({
   entityType,
   entityIdLookup,
   modalDisclosure,
-  selectedEntity,
   userDisabled,
   verbiage,
 }: Props) => {
-  const { report, editable } = useStore();
+  const { report, editable, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [deleting, setDeleting] = useState<boolean>(false);
@@ -122,7 +121,6 @@ interface Props {
     isOpen: boolean;
     onClose: any;
   };
-  selectedEntity?: EntityShape;
   userDisabled?: boolean;
   verbiage: AnyObject;
 }

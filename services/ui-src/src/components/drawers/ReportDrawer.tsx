@@ -5,19 +5,12 @@ import { Drawer, Form } from "components";
 // utils
 import { useStore } from "utils";
 // types
-import {
-  AnyObject,
-  CustomHtmlElement,
-  FormJson,
-  EntityShape,
-  EntityType,
-} from "types";
+import { AnyObject, CustomHtmlElement, FormJson, EntityType } from "types";
 // constants
 import { closeText, saveAndCloseText } from "../../constants";
 
 export const ReportDrawer = ({
   entityType,
-  selectedEntity,
   verbiage,
   form,
   onSubmit,
@@ -26,9 +19,10 @@ export const ReportDrawer = ({
   validateOnRender,
   ...props
 }: Props) => {
-  const { editable } = useStore();
+  const { editable, selectedEntity } = useStore();
   const buttonText = !editable ? closeText : saveAndCloseText;
   const formFieldsExist = form.fields.length;
+
   return (
     <Drawer
       verbiage={verbiage}
@@ -71,7 +65,6 @@ export const ReportDrawer = ({
 };
 
 interface Props {
-  selectedEntity: EntityShape;
   verbiage: {
     drawerTitle: string;
     drawerInfo?: CustomHtmlElement[];

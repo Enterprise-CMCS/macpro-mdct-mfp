@@ -64,12 +64,9 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
   } = route;
 
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
-    undefined
-  );
   const [pageError, setPageError] = useState<ErrorVerbiage>();
   const [modalError, setModalError] = useState<ErrorVerbiage>();
-  const { report } = useStore();
+  const { report, selectedEntity, setSelectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const reportFieldDataEntities = report?.fieldData[entityType] || [];
   const selectedEntityName =
@@ -256,7 +253,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         {/* MODALS */}
         <AddEditEntityModal
           entityType={entityType as EntityType}
-          selectedEntity={selectedEntity}
           verbiage={verbiage}
           form={modalForm}
           error={modalError}
@@ -268,7 +264,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         />
         <DeleteEntityModal
           entityType={entityType}
-          selectedEntity={selectedEntity}
           verbiage={verbiage}
           modalDisclosure={{
             isOpen: deleteEntityModalIsOpen,
@@ -278,7 +273,6 @@ export const ModalDrawerReportPage = ({ route, validateOnRender }: Props) => {
         {/* DRAWER */}
         <ReportDrawer
           entityType={entityType as EntityType}
-          selectedEntity={selectedEntity!}
           verbiage={{
             ...verbiage,
             drawerTitle: drawerTitleText,

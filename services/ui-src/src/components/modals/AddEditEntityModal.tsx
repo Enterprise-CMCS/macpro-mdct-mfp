@@ -34,10 +34,9 @@ export const AddEditEntityModal = ({
   verbiage,
   error,
   setError,
-  selectedEntity,
   modalDisclosure,
 }: Props) => {
-  const { report, editable } = useStore();
+  const { report, editable, selectedEntity } = useStore();
   const { updateReport } = useContext(ReportContext);
   const { full_name } = useStore().user ?? {};
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -172,7 +171,6 @@ interface Props {
   entityName?: string;
   form: FormJson;
   verbiage: AnyObject;
-  selectedEntity?: EntityShape;
   error?: ErrorVerbiage;
   setError: Function;
   modalDisclosure: {

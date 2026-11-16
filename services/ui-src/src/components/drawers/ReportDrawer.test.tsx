@@ -4,7 +4,6 @@ import { MockedFunction } from "vitest";
 import {
   mockDrawerForm,
   mockEmptyDrawerForm,
-  mockGenericEntity,
   mockModalDrawerReportPageVerbiage,
   mockStateUserStore,
   mockUseStore,
@@ -32,7 +31,6 @@ const drawerComponent = (
   <RouterWrappedComponent>
     <ReportDrawer
       verbiage={mockModalDrawerReportPageVerbiage}
-      selectedEntity={mockGenericEntity}
       form={mockDrawerForm}
       onSubmit={mockOnSubmit}
       drawerDisclosure={mockDrawerDisclosure}
@@ -43,7 +41,6 @@ const drawerComponent = (
 const drawerComponentWithoutFormFields = (
   <ReportDrawer
     verbiage={mockModalDrawerReportPageVerbiage}
-    selectedEntity={mockGenericEntity}
     form={mockEmptyDrawerForm}
     onSubmit={mockOnSubmit}
     drawerDisclosure={mockDrawerDisclosure}

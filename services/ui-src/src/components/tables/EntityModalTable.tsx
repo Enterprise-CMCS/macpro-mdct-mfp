@@ -33,7 +33,7 @@ import {
   ReportShape,
 } from "types";
 // utils
-import { parseCustomHtml, shimComponent } from "utils";
+import { parseCustomHtml, shimComponent, useStore } from "utils";
 import { ResponsiveTable } from "./ResponsiveTable";
 
 export const EntityModalTable = ({
@@ -49,6 +49,7 @@ export const EntityModalTable = ({
   verbiage,
 }: Props) => {
   const form = useFormContext();
+  const { setSelectedEntity } = useStore();
   const formErrorState = form?.formState?.errors || {};
   const [errorMessage, setErrorMessage] = useState<ReactNode>(undefined);
   const errorId = `${tableId}__error`;
@@ -75,9 +76,6 @@ export const EntityModalTable = ({
   // Modal
   const hasDynamicModalForm = !!dynamicRowsTemplate?.props?.dynamicModalForm;
   const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(
-    undefined
-  );
-  const [selectedEntity, setSelectedEntity] = useState<EntityShape | undefined>(
     undefined
   );
   const [deleteCallback, setDeleteCallback] = useState<Function>();
@@ -264,7 +262,6 @@ export const EntityModalTable = ({
           <DeleteEntityModal
             deleteCallback={deleteCallback}
             entityType={formData?.type}
-            selectedEntity={selectedEntity}
             verbiage={dynamicRowsTemplate.verbiage}
             modalDisclosure={{
               isOpen: deleteEntityModalIsOpen,
