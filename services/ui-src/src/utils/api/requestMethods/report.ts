@@ -1,5 +1,5 @@
 import { AnyObject, ReportShape, ReportKeys } from "types";
-import { get, post, put } from "utils";
+import { get, post, put, del } from "utils";
 
 async function archiveReport(reportKeys: ReportKeys) {
   const { reportType, state, id } = reportKeys;
@@ -64,6 +64,18 @@ async function approveReport(reportKeys: ReportKeys, report: AnyObject) {
   return put<AnyObject>(path, options);
 }
 
+async function deleteReport(reportKeys: ReportKeys) {
+  const { reportType, state, id } = reportKeys;
+  const path = `reports/${reportType}/${state}/${id}`;
+  return del<AnyObject>(path);
+}
+
+async function deleteReportsForState(reportKeys: ReportKeys) {
+  const { reportType, state } = reportKeys;
+  const path = `reports/${reportType}/${state}`;
+  return del<AnyObject>(path);
+}
+
 export {
   archiveReport,
   getReportsByState,
@@ -73,4 +85,6 @@ export {
   releaseReport,
   submitReport,
   approveReport,
+  deleteReport,
+  deleteReportsForState,
 };

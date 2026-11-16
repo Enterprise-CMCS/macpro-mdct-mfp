@@ -1,4 +1,8 @@
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import {
   GetCommand,
   paginateQuery,
@@ -139,6 +143,28 @@ export const getReportFormTemplate = async ({
   );
   const fieldData = await parseS3Response(response);
   return fieldData as ReportJson | undefined;
+};
+
+export const deleteReportFromDatabase = async ({
+  reportType,
+  state,
+  id,
+}: Pick<ReportMetadataShape, "reportType" | "state" | "id">) => {
+  const bucket = reportBuckets[reportType];
+  await s3Client.send(
+    new DeleteObjectCommand({
+      Bucket: bucket,
+      Key: `formTemplates/${id}.json`,
+    })
+  );
+
+  //need to also delete fieldData form too
+  // await s3Client.send(
+  //   new DeleteObjectCommand({
+  //     Bucket: bucket,
+  //     Key: `fieldData/${state}/${fieldDataId}.json`,
+  //   }),
+  // );
 };
 
 /* FORM TEMPLATE VERSIONS (dynamo) */

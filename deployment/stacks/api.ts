@@ -51,6 +51,8 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     launchDarklyLocalFlags = '{"local": false, "flags": {}}',
   } = props;
 
+  const isProduction = stage === "production";
+
   const service = "app-api";
 
   const kafkaSecurityGroup = new ec2.SecurityGroup(
@@ -219,6 +221,25 @@ export function createApiComponents(props: CreateApiComponentsProps) {
     timeout: Duration.seconds(30),
     ...commonProps,
   });
+
+  //paths made only for dev tool, not to be used on real data
+  if (!isProduction) {
+    new Lambda(scope, "deleteReport", {
+      entry: "services/app-api/handlers/reports/delete.ts",
+      handler: "deleteReport",
+      path: "reports/{reportType}/{state}/{id}",
+      method: "DELETE",
+      ...commonProps,
+    });
+
+    new Lambda(scope, "deleteReportsForState", {
+      entry: "services/app-api/handlers/reports/delete.ts",
+      handler: "deleteReportsForState",
+      path: "reports/{reportType}/{state}",
+      method: "DELETE",
+      ...commonProps,
+    });
+  }
 
   new LambdaDynamoEventSource(scope, "postKafkaData", {
     entry: "services/app-api/handlers/kafka/postKafkaData.ts",

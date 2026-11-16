@@ -1,7 +1,7 @@
-import { Button, Divider, Box } from "@chakra-ui/react";
-import { TextField } from "@cmsgov/design-system";
-import { useState } from "react";
+import { Button, Select, Divider, Text } from "@chakra-ui/react";
+import { ChangeEvent, useState } from "react";
 import { DropdownOptions } from "types";
+import { deleteReport, useStore } from "utils";
 
 interface Props {
   reload?: Function;
@@ -9,28 +9,20 @@ interface Props {
   datasets: DropdownOptions[];
 }
 
-export const DevDashboardTools = ({ reload, state, datasets }: Props) => {
+export const DevDashboardTools = ({ reload, state }: Props) => {
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | undefined>();
-  const [amount, setAmount] = useState<number>(0);
+  const { reportsByState } = useStore();
+  const [selectedReport, setSelectedReport] = useState<string>("");
+  const reportType = "WP";
 
-  const onTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    setAmount(parseInt(newValue));
-  };
+  if (!reportsByState) return;
 
-  const runUpload = async () => {
-    if (!file || datasets.length === 0) return;
-
+  const onDeleteReport = async () => {
     setLoading(true);
-    if (reload) reload();
+    const [state, id] = selectedReport.split("#"); // split value from select option below
+    await deleteReport({ reportType, state, id });
+    if (reload) reload(reportType, state);
     setLoading(false);
-  };
-
-  const onGenerateUploads = () => {
-    runUpload();
-    setFile(undefined);
-    setAmount(0);
   };
 
   const onDeleteAll = async () => {
@@ -42,20 +34,27 @@ export const DevDashboardTools = ({ reload, state, datasets }: Props) => {
 
   return (
     <>
-      <Box>Dataset: Randomize</Box>
-      <TextField
-        name={"amount"}
-        label="Amount To Generate:"
-        onChange={onTextChange}
-        value={amount}
-        numeric
-      ></TextField>
-      <Button onClick={onGenerateUploads} disabled={loading}>
-        Generate Uploads
+      <Text fontWeight="bold">Delete a Report</Text>
+      <Select
+        placeholder="Select a report to delete"
+        onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+          setSelectedReport(e.target.value);
+        }}
+        aria-label="select a report to delete"
+      >
+        {reportsByState.map((report) => (
+          <option key={`${report.id}`} value={`${report.id}`}>
+            {report.submissionName}
+          </option>
+        ))}
+      </Select>
+      <Button onClick={onDeleteReport} disabled={!selectedReport || loading}>
+        Delete Report
       </Button>
       <Divider />
+      <Text>Delete all the reports for {reportType}</Text>
       <Button onClick={onDeleteAll} disabled={loading}>
-        Delete All Uploads
+        Delete All Reports
       </Button>
     </>
   );

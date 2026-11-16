@@ -1,8 +1,9 @@
 import { Box, Button, Stack, Text } from "@chakra-ui/react";
-// import { useFlags } from "launchdarkly-react-client-sdk";
+import { useFlags } from "launchdarkly-react-client-sdk";
 import { DevDashboardTools } from "./DevDashboardTools";
 import { useState } from "react";
 import { DropdownOptions } from "types";
+import { DevReportTools } from "./DevReportTools";
 
 interface Props {
   type: ToolType;
@@ -35,6 +36,7 @@ export const DevTools = ({ type, reload, state }: Props) => {
           {type === ToolType.DASHBOARD && (
             <DevDashboardTools state={state} reload={reload} datasets={[]} />
           )}
+          {type === ToolType.REPORT && <DevReportTools></DevReportTools>}
         </Stack>
       )}
     </Box>
