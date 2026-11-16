@@ -392,6 +392,7 @@ interface Props {
   formData?: AnyObject;
   formJson: FormJson;
   id: string;
+  nestedForm?: boolean;
   onError?: SubmitErrorHandler<FieldValues>;
   onFormChange?: Function;
   onSubmit: Function;
