@@ -16,6 +16,8 @@ import {
 } from "@chakra-ui/react";
 // assets
 import closeIcon from "assets/icons/icon_close.png";
+// types
+import { AnyObject } from "types";
 // utils
 import { renderHtml } from "utils";
 
@@ -23,11 +25,20 @@ export const Modal = ({
   children,
   content,
   formId,
+  handleSubmit,
   modalDisclosure,
+  nestedForm = false,
   onConfirmHandler,
   submitButtonDisabled,
   submitting,
 }: Props) => {
+  const submitButtonProps: AnyObject = {};
+
+  if (nestedForm) {
+    submitButtonProps.onClick = handleSubmit;
+  } else {
+    submitButtonProps.form = formId;
+  }
   return (
     <ChakraModal
       isOpen={modalDisclosure.isOpen}
@@ -60,10 +71,10 @@ export const Modal = ({
             {formId && (
               <Button
                 sx={sx.action}
-                form={formId}
                 type="submit"
                 data-testid="modal-submit-button"
                 disabled={submitButtonDisabled}
+                {...submitButtonProps}
               >
                 {submitting ? <Spinner size="md" /> : content.actionButtonText}
               </Button>
@@ -101,10 +112,12 @@ interface Props {
     closeButtonText?: string;
   };
   formId?: string;
+  handleSubmit?: Function;
   modalDisclosure: {
     isOpen: boolean;
     onClose: any;
   };
+  nestedForm?: boolean;
   onConfirmHandler?: Function;
   submitting?: boolean;
   [key: string]: any;

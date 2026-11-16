@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 // components
 import { Alert, Form, Modal, ReportContext } from "components";
 // types
@@ -31,6 +31,7 @@ export const CloseOutModal = ({
   modalDisclosure,
   selectedEntity,
 }: Props) => {
+  const formRef = useRef<HTMLFormElement>(null);
   const { updateReport } = useContext(ReportContext);
   const { report, setSelectedEntity } = useStore();
   const { full_name, state } = useStore().user ?? {};
@@ -96,6 +97,11 @@ export const CloseOutModal = ({
     modalDisclosure.onClose();
   };
 
+  const submitForm = (event: SubmitEvent) => {
+    event.preventDefault();
+    formRef.current?.requestSubmit();
+  };
+
   return (
     <Modal
       content={{
@@ -104,8 +110,10 @@ export const CloseOutModal = ({
         actionButtonText: disabled ? "Return" : "Save",
         closeButtonText: "Cancel",
       }}
-      formId={"closeout-modal"}
+      formId={form.id}
+      handleSubmit={submitForm}
       modalDisclosure={modalDisclosure}
+      nestedForm={true}
       submitButtonDisabled={submitting}
       submitting={submitting}
     >
@@ -114,8 +122,10 @@ export const CloseOutModal = ({
         dontReset={false}
         formData={selectedEntity}
         formJson={form}
-        id={"closeout-modal"}
-        onSubmit={handleSubmit}
+        id={form.id}
+        nestedForm={true}
+        onSubmit={(data: AnyObject) => handleSubmit(data)}
+        ref={formRef}
         validateOnRender={false}
       />
       {errorMessage && (
