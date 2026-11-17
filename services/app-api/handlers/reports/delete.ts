@@ -14,33 +14,34 @@ import { hasPermissions } from "../../utils/auth/authorization";
 import { UserRoles } from "../../utils/types";
 
 //should not be callable if dev tool is not enabled
-export const deleteReport = handler(async (event, _context) => {
-  const { allParamsValid, reportType, state, id } =
-    parseSpecificReportParameters(event);
+export const deleteReport = handler(async (event) => {
+  const { allParamsValid, state } = parseSpecificReportParameters(event);
 
   if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
     return forbidden(error.UNAUTHORIZED);
   }
-
   if (!allParamsValid) {
     return badRequest(error.NO_KEY);
+  }
+  // If request body is missing, return a 400 error.
+  if (!event?.body) {
+    return badRequest(error.MISSING_DATA);
   }
 
   const useDevTools = await isFeatureFlagEnabled("devTools");
   if (useDevTools) {
-    await deleteReportFromDatabase({ reportType, state, id });
+    await deleteReportFromDatabase(JSON.parse(event.body));
   }
   return ok();
 });
 
-export const deleteReportsForState = handler(async (event, _context) => {
+export const deleteReportsForState = handler(async (event) => {
   const { allParamsValid, reportType, state } =
     parseStateReportParameters(event);
 
   if (!hasPermissions(event, [UserRoles.STATE_USER], state)) {
     return forbidden(error.UNAUTHORIZED);
   }
-
   if (!allParamsValid) {
     return badRequest(error.NO_KEY);
   }
@@ -49,8 +50,7 @@ export const deleteReportsForState = handler(async (event, _context) => {
   if (useDevTools) {
     const reports = await queryReportMetadatasForState(reportType, state);
     for (var i = 0; i < reports.length; i++) {
-      const id = reports[i].id;
-      await deleteReportFromDatabase({ reportType, state, id });
+      await deleteReportFromDatabase(reports[i]);
     }
   }
 

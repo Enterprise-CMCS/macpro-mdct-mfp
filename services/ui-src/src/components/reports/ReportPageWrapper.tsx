@@ -24,6 +24,7 @@ import {
   PageTypes,
   ReportRoute,
   StandardReportPageShape,
+  ReportType,
 } from "types";
 // utils
 import {
@@ -43,6 +44,8 @@ export const ReportPageWrapper = () => {
   const showSidebar = () => {
     if (sidebarHidden) setSidebarHidden(false);
   };
+
+  if (!report) return;
 
   // these should be built off the form template, which comes from the report.
   const renderPageSection = (route: ReportRoute) => {
@@ -99,7 +102,7 @@ export const ReportPageWrapper = () => {
     }
   };
 
-  const reportTemplate = report?.formTemplate.flatRoutes!.find(
+  const reportTemplate = report.formTemplate.flatRoutes!.find(
     (route: ReportRoute) => route.path === pathname
   );
 
@@ -109,7 +112,10 @@ export const ReportPageWrapper = () => {
         <Sidebar isHidden={sidebarHidden} />
         {reportTemplate && (
           <Stack>
-            <DevTools type={ToolType.REPORT}></DevTools>
+            <DevTools
+              type={ToolType.REPORT}
+              reportType={report.reportType as ReportType}
+            ></DevTools>
             <Flex
               as="main"
               id="report-content"

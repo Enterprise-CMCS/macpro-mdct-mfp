@@ -3,6 +3,7 @@ import { DevTools, ToolType } from "./DevTools";
 import { useFlags } from "launchdarkly-react-client-sdk";
 import userEvent from "@testing-library/user-event";
 import { DevDashboardTools } from "./DevDashboardTools";
+import { ReportType } from "types";
 
 vi.mock("launchdarkly-react-client-sdk");
 const mockFlags = vi.mocked(useFlags);
@@ -18,7 +19,7 @@ const DevToolsDashboardType = (
     state={"PA"}
     reload={() => {}}
     type={ToolType.DASHBOARD}
-    datasets={[]}
+    reportType={ReportType.WP}
   />
 );
 

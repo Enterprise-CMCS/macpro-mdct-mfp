@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { DevDashboardTools } from "./DevDashboardTools";
 import userEvent from "@testing-library/user-event";
+import { ReportType } from "types";
 
 const mockReload = vi.fn();
 const mockUpload = vi.fn();
@@ -31,12 +32,7 @@ describe("Test DevDashboardTools component", () => {
       <DevDashboardTools
         state={"PA"}
         reload={mockReload}
-        datasets={[
-          {
-            label: "Flowers",
-            value: "1234",
-          },
-        ]}
+        reportType={ReportType.WP}
       />
     );
   });

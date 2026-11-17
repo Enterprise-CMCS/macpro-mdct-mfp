@@ -134,7 +134,7 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
     return !workPlanToCopyFrom && activeSarList?.length === 0;
   }, [reportsToDisplay, workPlanToCopyFrom]);
 
-  useEffect(() => {
+  const retrieveReports = () => {
     // if no activeState, go to homepage
     if (!activeState) {
       navigate("/");
@@ -152,6 +152,10 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
       default:
         break;
     }
+  };
+
+  useEffect(() => {
+    retrieveReports();
   }, []);
 
   useEffect(() => {
@@ -363,7 +367,12 @@ export const DashboardPage = ({ reportType, showFilter, modal }: Props) => {
   return (
     <PageTemplate type="report" sx={sx.layout}>
       {/* page title */}
-      <DevTools type={ToolType.DASHBOARD} state={userState}></DevTools>
+      <DevTools
+        type={ToolType.DASHBOARD}
+        state={userState}
+        reload={retrieveReports}
+        reportType={reportType}
+      ></DevTools>
       <Helmet>
         <title>{`${reportTitle} - ${APP_TITLE}`}</title>
       </Helmet>

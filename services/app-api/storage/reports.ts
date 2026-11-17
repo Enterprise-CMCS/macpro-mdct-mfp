@@ -4,6 +4,7 @@ import {
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
 import {
+  DeleteCommand,
   GetCommand,
   paginateQuery,
   PutCommand,
@@ -148,23 +149,49 @@ export const getReportFormTemplate = async ({
 export const deleteReportFromDatabase = async ({
   reportType,
   state,
+  formTemplateId,
+  fieldDataId,
+  versionNumber,
   id,
-}: Pick<ReportMetadataShape, "reportType" | "state" | "id">) => {
+}: Pick<
+  ReportMetadataShape,
+  | "reportType"
+  | "state"
+  | "formTemplateId"
+  | "fieldDataId"
+  | "id"
+  | "versionNumber"
+>) => {
+  const table = reportTables[reportType];
   const bucket = reportBuckets[reportType];
+  await dynamoClient.send(
+    new DeleteCommand({
+      TableName: table,
+      Key: { state, id },
+    })
+  );
+  await dynamoClient.send(
+    new DeleteCommand({
+      TableName: formTemplateVersionTable,
+      Key: { reportType, versionNumber },
+      ExpressionAttributeValues: {
+        ":id": id,
+      },
+    })
+  );
   await s3Client.send(
     new DeleteObjectCommand({
       Bucket: bucket,
-      Key: `formTemplates/${id}.json`,
+      Key: `formTemplates/${formTemplateId}.json`,
     })
   );
-
-  //need to also delete fieldData form too
-  // await s3Client.send(
-  //   new DeleteObjectCommand({
-  //     Bucket: bucket,
-  //     Key: `fieldData/${state}/${fieldDataId}.json`,
-  //   }),
-  // );
+  // need to also delete fieldData form too
+  await s3Client.send(
+    new DeleteObjectCommand({
+      Bucket: bucket,
+      Key: `fieldData/${state}/${fieldDataId}.json`,
+    })
+  );
 };
 
 /* FORM TEMPLATE VERSIONS (dynamo) */

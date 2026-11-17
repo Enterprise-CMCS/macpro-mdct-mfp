@@ -1,38 +1,42 @@
 import { Button, Select, Divider, Text } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
-import { DropdownOptions } from "types";
+import { ReportType } from "types";
 import { deleteReport, deleteReportsForState, useStore } from "utils";
 
 interface Props {
+  reportType: ReportType;
   reload?: Function;
   state?: string;
-  datasets: DropdownOptions[];
 }
 
-export const DevDashboardTools = ({ reload, state }: Props) => {
+export const DevDashboardTools = ({ reload, state, reportType }: Props) => {
   const [loading, setLoading] = useState(false);
   const { reportsByState } = useStore();
-  const [selectedReport, setSelectedReport] = useState<string>("");
-  const reportType = "WP";
+  const [selectedReportId, setSelectedReportId] = useState<string>("");
 
   if (!reportsByState || !state) return;
 
   const onDeleteReport = async () => {
     setLoading(true);
-    const id = selectedReport; // split value from select option below
-    await deleteReport({ reportType, state, id });
-    if (reload) reload(reportType, state);
+    const selectedReport = reportsByState.find(
+      (report) => report.id === selectedReportId
+    );
+    if (selectedReport) {
+      await deleteReport(selectedReport);
+      if (reload) reload();
+    }
     setLoading(false);
   };
 
   const onDeleteAll = async () => {
     setLoading(true);
     if (!state) return;
-    const id = selectedReport; // split value from select option below
-    await deleteReportsForState({ reportType, state, id });
+    await deleteReportsForState(reportType, state);
     if (reload) reload();
     setLoading(false);
   };
+
+  console.log(reportsByState);
 
   return (
     <>
@@ -40,7 +44,7 @@ export const DevDashboardTools = ({ reload, state }: Props) => {
       <Select
         placeholder="Select a report to delete"
         onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-          setSelectedReport(e.target.value);
+          setSelectedReportId(e.target.value);
         }}
         aria-label="select a report to delete"
       >
@@ -50,7 +54,7 @@ export const DevDashboardTools = ({ reload, state }: Props) => {
           </option>
         ))}
       </Select>
-      <Button onClick={onDeleteReport} disabled={!selectedReport || loading}>
+      <Button onClick={onDeleteReport} disabled={!selectedReportId || loading}>
         Delete Report
       </Button>
       <Divider />

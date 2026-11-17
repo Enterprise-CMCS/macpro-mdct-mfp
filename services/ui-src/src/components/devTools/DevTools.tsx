@@ -2,14 +2,14 @@ import { Box, Button, Stack, Text } from "@chakra-ui/react";
 import { useFlags } from "launchdarkly-react-client-sdk";
 import { DevDashboardTools } from "./DevDashboardTools";
 import { useState } from "react";
-import { DropdownOptions } from "types";
+import { ReportType } from "types";
 import { DevReportTools } from "./DevReportTools";
 
 interface Props {
   type: ToolType;
   reload?: Function;
   state?: string;
-  datasets?: DropdownOptions[];
+  reportType: ReportType;
 }
 
 export enum ToolType {
@@ -18,8 +18,8 @@ export enum ToolType {
   REPORT = "report",
 }
 
-export const DevTools = ({ type, reload, state }: Props) => {
-  const devTools = true; //useFlags()?.devTools;
+export const DevTools = ({ type, reload, state, reportType }: Props) => {
+  const devTools = useFlags()?.devTools;
   if (!devTools) return;
 
   const [showOptions, setShowOptions] = useState<boolean>();
@@ -34,7 +34,11 @@ export const DevTools = ({ type, reload, state }: Props) => {
       {showOptions && (
         <Stack sx={sx.menuBox} gap="1rem">
           {type === ToolType.DASHBOARD && (
-            <DevDashboardTools state={state} reload={reload} datasets={[]} />
+            <DevDashboardTools
+              state={state}
+              reload={reload}
+              reportType={reportType}
+            />
           )}
           {type === ToolType.REPORT && <DevReportTools></DevReportTools>}
         </Stack>
