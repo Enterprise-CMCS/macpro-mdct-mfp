@@ -224,6 +224,16 @@ export function createApiComponents(props: CreateApiComponentsProps) {
 
   //paths made only for dev tool, not to be used on real data
   if (!isProduction) {
+    new Lambda(scope, "approveReportDev", {
+      entry: "services/app-api/handlers/reports/approve.ts",
+      handler: "approveReportDev",
+      path: "/reports/approve/{reportType}/{state}/{id}/dev",
+      method: "PUT",
+      memorySize: 2048,
+      timeout: Duration.seconds(30),
+      ...commonProps,
+    });
+
     new Lambda(scope, "deleteReport", {
       entry: "services/app-api/handlers/reports/delete.ts",
       handler: "deleteReport",

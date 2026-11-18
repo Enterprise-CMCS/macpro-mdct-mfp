@@ -61,12 +61,23 @@ async function submitReport(reportKeys: ReportKeys) {
   return post<ReportShape>(path);
 }
 
-async function approveReport(reportKeys: ReportKeys, report: AnyObject) {
+async function approveReport(report: ReportMetadataShape) {
   const options: any = {
     body: { ...report },
   };
-  const { reportType, state, id } = reportKeys;
+  const { reportType, state, id } = report;
   const path = `/reports/approve/${reportType}/${state}/${id}`;
+  return put<AnyObject>(path, options);
+}
+
+//---- Start of devTool requests ------
+
+async function approveReportDev(report: ReportMetadataShape) {
+  const options: any = {
+    body: { ...report },
+  };
+  const { reportType, state, id } = report;
+  const path = `/reports/approve/${reportType}/${state}/${id}/dev`;
   return put<AnyObject>(path, options);
 }
 
@@ -84,6 +95,7 @@ async function deleteReportsForState(reportType: ReportType, state: string) {
   const path = `/reports/${reportType}/${state}`;
   return del(path);
 }
+//---- End of devTool requests ------
 
 export {
   archiveReport,
@@ -94,6 +106,7 @@ export {
   releaseReport,
   submitReport,
   approveReport,
+  approveReportDev,
   deleteReport,
   deleteReportsForState,
 };

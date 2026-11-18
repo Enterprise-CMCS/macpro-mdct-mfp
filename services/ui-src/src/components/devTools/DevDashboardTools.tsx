@@ -1,7 +1,12 @@
 import { Button, Select, Divider, Text } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
-import { ReportType } from "types";
-import { deleteReport, deleteReportsForState, useStore } from "utils";
+import { ReportStatus, ReportType } from "types";
+import {
+  approveReportDev,
+  deleteReport,
+  deleteReportsForState,
+  useStore,
+} from "utils";
 
 interface Props {
   reportType: ReportType;
@@ -12,14 +17,27 @@ interface Props {
 export const DevDashboardTools = ({ reload, state, reportType }: Props) => {
   const [loading, setLoading] = useState(false);
   const { reportsByState } = useStore();
-  const [selectedReportId, setSelectedReportId] = useState<string>("");
+  const [reportIdForApproval, setReportIdForApproval] = useState<string>("");
+  const [reportIdForDelete, setReportIdForDelete] = useState<string>("");
 
   if (!reportsByState || !state) return;
+
+  const onApproveReport = async () => {
+    setLoading(true);
+    const selectedReport = reportsByState.find(
+      (report) => report.id === reportIdForApproval
+    );
+    if (selectedReport) {
+      await approveReportDev(selectedReport);
+      if (reload) reload();
+    }
+    setLoading(false);
+  };
 
   const onDeleteReport = async () => {
     setLoading(true);
     const selectedReport = reportsByState.find(
-      (report) => report.id === selectedReportId
+      (report) => report.id === reportIdForDelete
     );
     if (selectedReport) {
       await deleteReport(selectedReport);
@@ -38,11 +56,34 @@ export const DevDashboardTools = ({ reload, state, reportType }: Props) => {
 
   return (
     <>
+      <Text fontWeight="bold">Approve a Report</Text>
+      <Select
+        placeholder="Select a report to approve"
+        onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+          setReportIdForApproval(e.target.value);
+        }}
+        aria-label="select a report to approve"
+      >
+        {reportsByState
+          .filter((report) => report.status == ReportStatus.SUBMITTED)
+          .map((report) => (
+            <option key={`${report.id}`} value={`${report.id}`}>
+              {report.submissionName}
+            </option>
+          ))}
+      </Select>
+      <Button
+        onClick={onApproveReport}
+        disabled={!reportIdForApproval || loading}
+      >
+        Approve Report
+      </Button>
+      <Divider />
       <Text fontWeight="bold">Delete a Report</Text>
       <Select
         placeholder="Select a report to delete"
         onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-          setSelectedReportId(e.target.value);
+          setReportIdForDelete(e.target.value);
         }}
         aria-label="select a report to delete"
       >
@@ -52,7 +93,7 @@ export const DevDashboardTools = ({ reload, state, reportType }: Props) => {
           </option>
         ))}
       </Select>
-      <Button onClick={onDeleteReport} disabled={!selectedReportId || loading}>
+      <Button onClick={onDeleteReport} disabled={!reportIdForDelete || loading}>
         Delete Report
       </Button>
       <Divider />

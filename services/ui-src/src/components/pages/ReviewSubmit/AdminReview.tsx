@@ -75,7 +75,7 @@ export const AdminReview = ({
     setIsApproving(true);
     setApproveError(undefined);
     try {
-      await approveReport(reportKeys, report!);
+      await approveReport(report!);
       await navigate(report?.formTemplate?.basePath || "/");
     } catch {
       setApproveError(reportErrors.APPROVE_REPORT_FAILED);

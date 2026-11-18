@@ -1,28 +1,20 @@
+import { MockedFunction } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { DevDashboardTools } from "./DevDashboardTools";
 import userEvent from "@testing-library/user-event";
 import { ReportType } from "types";
+import { mockUseStore } from "utils/testing/setupTest";
+import { useStore } from "utils";
 
 const mockReload = vi.fn();
-const mockUpload = vi.fn();
 const mockDelete = vi.fn();
 
-vi.mock("utils/api/requestMethods/uploads", async (importOriginal) => ({
-  ...(await importOriginal()),
-  uploadFileToS3: () => {
-    mockUpload();
-  },
-  recordFileInDatabaseAndGetUploadUrl: vi
-    .fn()
-    .mockReturnValue({ presignedUploadUrl: "1234", fileId: "" }),
-  getUploadedFiles: vi
-    .fn()
-    .mockReturnValue([
-      { filename: "mock-name", fileSize: 100, fileId: "mock-id" },
-    ]),
-  deleteUploadsForState: () => {
-    mockDelete();
-  },
+vi.mock("utils/state/useStore");
+const mockedUseStore = useStore as MockedFunction<typeof useStore>;
+mockedUseStore.mockReturnValue(mockUseStore);
+
+vi.mock("utils/api/requestMethods/report", () => ({
+  deleteReportsForState: () => mockDelete(),
 }));
 
 describe("Test DevDashboardTools component", () => {
@@ -36,6 +28,8 @@ describe("Test DevDashboardTools component", () => {
     );
   });
   test("DevDashboardTools renders", () => {
+    screen.debug();
+
     expect(screen.getByRole("button", { name: "Delete Report" })).toBeVisible();
     expect(
       screen.getByRole("button", { name: "Delete All Reports" })
