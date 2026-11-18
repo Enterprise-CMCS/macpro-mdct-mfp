@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { DevDashboardTools } from "./DevDashboardTools";
 import userEvent from "@testing-library/user-event";
 import { ReportType } from "types";
@@ -6,7 +6,6 @@ import { ReportType } from "types";
 const mockReload = vi.fn();
 const mockUpload = vi.fn();
 const mockDelete = vi.fn();
-const mockPng = new File(["0xMockPngData"], "bar.png", { type: "image/png" });
 
 vi.mock("utils/api/requestMethods/uploads", async (importOriginal) => ({
   ...(await importOriginal()),
@@ -38,28 +37,10 @@ describe("Test DevDashboardTools component", () => {
   });
   test("DevDashboardTools renders", () => {
     expect(screen.getByText("Choose from folder")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Delete Report" })).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "Generate Uploads" })
+      screen.getByRole("button", { name: "Delete All Reports" })
     ).toBeVisible();
-    expect(
-      screen.getByRole("button", { name: "Delete All Uploads" })
-    ).toBeVisible();
-  });
-  test("Mock generating uploads", async () => {
-    const dropArea = screen.getByLabelText("file drop area");
-    await act(async () => {
-      fireEvent.drop(dropArea, {
-        dataTransfer: { items: [{ getAsFile: () => mockPng }] },
-      });
-    });
-    await userEvent.type(
-      screen.getByRole("textbox", { name: "Amount To Generate:" }),
-      "2"
-    );
-    await userEvent.click(
-      screen.getByRole("button", { name: "Generate Uploads" })
-    );
-    expect(mockUpload).toHaveBeenCalled();
   });
   test("Mock delete all", async () => {
     const deleteBtn = screen.getByRole("button", {
