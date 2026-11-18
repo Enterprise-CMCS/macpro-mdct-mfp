@@ -43,8 +43,9 @@ const checkboxTargetPopulation = (fieldData: AnyObject) => {
 };
 
 export const workplanTools = (template: ReportRoute, fieldData: AnyObject) => {
-  switch (template.name) {
-    case "Transition Benchmarks":
+  const page = template.path.split("/").at(-1);
+  switch (page) {
+    case "transition-benchmarks":
       if ("drawerForm" in template) {
         const fieldId = template.drawerForm?.fields[0].id as string;
         const choiceId = template.drawerForm?.fields[0].props?.choices[1]?.id;
@@ -72,7 +73,7 @@ export const workplanTools = (template: ReportRoute, fieldData: AnyObject) => {
         };
       }
       break;
-    case "State or Territory-Specific Initiatives":
+    case "initiatives":
       const overlayFields =
         "overlayForm" in template ? fillField(template.overlayForm.fields) : {};
 

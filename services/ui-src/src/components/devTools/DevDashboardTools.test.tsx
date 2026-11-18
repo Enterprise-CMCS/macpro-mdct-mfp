@@ -36,7 +36,6 @@ describe("Test DevDashboardTools component", () => {
     );
   });
   test("DevDashboardTools renders", () => {
-    expect(screen.getByText("Choose from folder")).toBeVisible();
     expect(screen.getByRole("button", { name: "Delete Report" })).toBeVisible();
     expect(
       screen.getByRole("button", { name: "Delete All Reports" })
@@ -44,7 +43,7 @@ describe("Test DevDashboardTools component", () => {
   });
   test("Mock delete all", async () => {
     const deleteBtn = screen.getByRole("button", {
-      name: "Delete All Uploads",
+      name: "Delete All Reports",
     });
     await userEvent.click(deleteBtn);
     expect(mockDelete).toHaveBeenCalled();

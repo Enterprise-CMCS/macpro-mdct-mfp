@@ -12,6 +12,8 @@ const saveReport = async (
   fieldData: any,
   updateReport: Function
 ) => {
+  if (!fieldData) return;
+
   const reportKeys = {
     reportType: report.reportType,
     state: report.state,
@@ -37,22 +39,41 @@ export const DevReportTools = () => {
   );
   const { updateReport } = useContext(ReportContext);
 
-  //figure out what page i'm on
+  const fillReport = () => {
+    let newFieldData = structuredClone(report?.fieldData!);
+    report?.formTemplate.flatRoutes?.forEach((route) => {
+      newFieldData = { ...newFieldData, ...workplanTools(route, newFieldData) };
+    });
+    saveReport(report!, full_name!, newFieldData, updateReport);
+  };
+
   return (
     <>
-      <Text fontWeight="bold">Current Page: {currentPage?.name}</Text>
-      <Button
-        onClick={() => {
-          saveReport(
-            report!,
-            full_name!,
-            workplanTools(currentPage!, report?.fieldData!),
-            updateReport
-          );
-        }}
-      >
-        Fill Page
-      </Button>
+      <Text fontWeight="bold">{currentPage?.name}</Text>
+      {currentPage?.pageType === "reviewSubmit" ? (
+        <>
+          <Text>
+            Click the [Fill Report] button to autofill the whole report
+          </Text>
+          <Button onClick={fillReport}>Fill Report</Button>
+        </>
+      ) : (
+        <>
+          <Text>Click the [Auto Fill Page] button to autofill the page</Text>
+          <Button
+            onClick={() => {
+              saveReport(
+                report!,
+                full_name!,
+                workplanTools(currentPage!, report?.fieldData!),
+                updateReport
+              );
+            }}
+          >
+            Auto Fill Page
+          </Button>
+        </>
+      )}
     </>
   );
 };

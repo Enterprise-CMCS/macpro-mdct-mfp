@@ -36,8 +36,6 @@ export const DevDashboardTools = ({ reload, state, reportType }: Props) => {
     setLoading(false);
   };
 
-  console.log(reportsByState);
-
   return (
     <>
       <Text fontWeight="bold">Delete a Report</Text>
