@@ -11,7 +11,6 @@ import {
 // utils
 import { mockReportKeys, mockWPReport } from "utils/testing/setupTest";
 import { initAuthManager } from "utils/auth/authLifecycle";
-import { ReportMetadataShape } from "types";
 
 const mockDelete = vi.fn();
 const mockGet = vi.fn();
@@ -34,7 +33,7 @@ describe("utils/requestMethods/report", () => {
   });
 
   test("approveReport()", async () => {
-    await approveReport(mockWPReport as unknown as ReportMetadataShape);
+    await approveReport(mockReportKeys, mockWPReport);
     expect(mockPut).toHaveBeenCalledTimes(1);
   });
 

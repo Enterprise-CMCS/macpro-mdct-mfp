@@ -4,7 +4,7 @@ import { Button, Text } from "@chakra-ui/react";
 import { ReportContext } from "components/reports/ReportProvider";
 import { useContext } from "react";
 import { ReportStatus } from "types";
-import { workplanTools } from "./WPUtil";
+import { fillWorkPlanPage } from "./utils/wp";
 
 const saveReport = async (
   report: { reportType: string; state: string; id: string },
@@ -42,9 +42,19 @@ export const DevReportTools = () => {
   const fillReport = () => {
     let newFieldData = structuredClone(report?.fieldData!);
     report?.formTemplate.flatRoutes?.forEach((route) => {
-      newFieldData = { ...newFieldData, ...workplanTools(route, newFieldData) };
+      newFieldData = {
+        ...newFieldData,
+        ...fillWorkPlanPage(route, newFieldData),
+      };
     });
     saveReport(report!, full_name!, newFieldData, updateReport);
+  };
+
+  const getReportAnswers = (reportType: string) => {
+    switch (reportType) {
+      case "WP":
+        return fillWorkPlanPage(currentPage!, report?.fieldData!);
+    }
   };
 
   return (
@@ -65,7 +75,7 @@ export const DevReportTools = () => {
               saveReport(
                 report!,
                 full_name!,
-                workplanTools(currentPage!, report?.fieldData!),
+                getReportAnswers(report?.reportType!),
                 updateReport
               );
             }}

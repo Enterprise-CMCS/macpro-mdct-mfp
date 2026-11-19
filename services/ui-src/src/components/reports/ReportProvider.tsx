@@ -181,9 +181,9 @@ export const ReportProvider = ({ children }: Props) => {
     }
   };
 
-  const approveReport = async (report: ReportShape) => {
+  const approveReport = async (reportKeys: ReportKeys, report: ReportShape) => {
     try {
-      await approveReportRequest(report);
+      await approveReportRequest(reportKeys, report);
       setLastSavedTime(getLocalHourMinuteTime());
       setError(undefined);
     } catch {

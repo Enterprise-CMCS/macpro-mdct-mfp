@@ -61,11 +61,11 @@ async function submitReport(reportKeys: ReportKeys) {
   return post<ReportShape>(path);
 }
 
-async function approveReport(report: ReportMetadataShape) {
+async function approveReport(reportKeys: ReportKeys, report: AnyObject) {
   const options: any = {
     body: { ...report },
   };
-  const { reportType, state, id } = report;
+  const { reportType, state, id } = reportKeys;
   const path = `/reports/approve/${reportType}/${state}/${id}`;
   return put<AnyObject>(path, options);
 }
