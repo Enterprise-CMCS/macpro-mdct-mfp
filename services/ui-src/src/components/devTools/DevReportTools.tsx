@@ -31,7 +31,7 @@ const saveReport = async (
 };
 
 export const DevReportTools = () => {
-  const { report } = useStore();
+  const { report, selectedEntity } = useStore();
   const { full_name } = useStore().user ?? {};
   const { pathname } = useLocation();
   const currentPage = report?.formTemplate.flatRoutes?.find((route) =>
@@ -57,6 +57,30 @@ export const DevReportTools = () => {
     }
   };
 
+  const renderView = () => {
+    //TODO: update when we add actually path url for init pages
+    if (selectedEntity) {
+      return <Text>No tools avaliable for this page</Text>;
+    }
+    return (
+      <>
+        <Text>Click the [Auto Fill Page] button to autofill the page</Text>
+        <Button
+          onClick={() => {
+            saveReport(
+              report!,
+              full_name!,
+              getReportAnswers(report?.reportType!),
+              updateReport
+            );
+          }}
+        >
+          Auto Fill Page
+        </Button>
+      </>
+    );
+  };
+
   return (
     <>
       <Text fontWeight="bold">{currentPage?.name}</Text>
@@ -68,21 +92,7 @@ export const DevReportTools = () => {
           <Button onClick={fillReport}>Fill Report</Button>
         </>
       ) : (
-        <>
-          <Text>Click the [Auto Fill Page] button to autofill the page</Text>
-          <Button
-            onClick={() => {
-              saveReport(
-                report!,
-                full_name!,
-                getReportAnswers(report?.reportType!),
-                updateReport
-              );
-            }}
-          >
-            Auto Fill Page
-          </Button>
-        </>
+        renderView()
       )}
     </>
   );
