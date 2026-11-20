@@ -20,8 +20,9 @@ export const getAnswerFromField = (field: FormField | FormLayoutElement) => {
     case "radio":
       const choice = field.props?.choices?.[0] as { id: string; label: string };
       return [{ key: `${field.id}-${choice.id}`, value: choice.label }];
+    default:
+      return undefined;
   }
-  return "";
 };
 
 export const fillField = (fields: (FormField | FormLayoutElement)[]) => {

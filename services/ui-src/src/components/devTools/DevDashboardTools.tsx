@@ -17,16 +17,13 @@ interface Props {
 export const DevDashboardTools = ({ reload, state, reportType }: Props) => {
   const [loading, setLoading] = useState(false);
   const { reportsByState } = useStore();
-  const [reportIdForApproval, setReportIdForApproval] = useState<string>("");
   const [reportIdForDelete, setReportIdForDelete] = useState<string>("");
 
   if (!reportsByState || !state) return;
 
   const onApproveReport = async () => {
     setLoading(true);
-    const selectedReport = reportsByState.find(
-      (report) => report.id === reportIdForApproval
-    );
+    const selectedReport = getLastSubmittedReport();
     if (selectedReport) {
       await approveReportDev(selectedReport);
       if (reload) reload();
@@ -54,27 +51,22 @@ export const DevDashboardTools = ({ reload, state, reportType }: Props) => {
     setLoading(false);
   };
 
+  const getLastSubmittedReport = () => {
+    return reportsByState.find(
+      (report) => report.status === ReportStatus.SUBMITTED
+    );
+  };
+
   return (
     <>
-      <Text fontWeight="bold">Approve a Report</Text>
-      <Select
-        placeholder="Select a report to approve"
-        onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-          setReportIdForApproval(e.target.value);
-        }}
-        aria-label="select a report to approve"
-      >
-        {reportsByState
-          .filter((report) => report.status == ReportStatus.SUBMITTED)
-          .map((report) => (
-            <option key={`${report.id}`} value={`${report.id}`}>
-              {report.submissionName}
-            </option>
-          ))}
-      </Select>
+      <Text fontWeight="bold">Approve Last Submitted Report</Text>
+      <Text>
+        {getLastSubmittedReport()?.submissionName ??
+          "No report waiting for approval"}
+      </Text>
       <Button
         onClick={onApproveReport}
-        disabled={!reportIdForApproval || loading}
+        disabled={!getLastSubmittedReport() || loading}
       >
         Approve Report
       </Button>
