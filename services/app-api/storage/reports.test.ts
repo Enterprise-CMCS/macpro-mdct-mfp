@@ -10,10 +10,12 @@ import {
   putFormTemplateVersion,
   queryFormTemplateVersionByHash,
   queryLatestFormTemplateVersionNumber,
+  deleteReportFromDatabase,
 } from "./reports";
 // Mocks
 import { mockClient } from "aws-sdk-client-mock";
 import {
+  DeleteCommand,
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
@@ -257,5 +259,12 @@ describe("Report storage", () => {
       ReportType.WP
     );
     expect(versionNumber).toBe(0);
+  });
+
+  it("Should call S3 and Dynamo to delete report", async () => {
+    const mockDelete = vi.fn();
+    mockDynamo.on(DeleteCommand).callsFake(mockDelete);
+    await deleteReportFromDatabase(mockReportMetadata);
+    expect(mockDelete).toHaveBeenCalled();
   });
 });
