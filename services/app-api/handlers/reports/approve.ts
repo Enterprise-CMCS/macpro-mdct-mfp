@@ -39,7 +39,7 @@ const updateReportForApproval = async (
     return internalServerError(error.DYNAMO_UPDATE_ERROR);
   }
 
-  return updatedReport;
+  return ok(updatedReport);
 };
 
 export const approveReport = handler(async (event) => {
@@ -54,7 +54,7 @@ export const approveReport = handler(async (event) => {
     return forbidden(error.UNAUTHORIZED);
   }
 
-  return ok(await updateReportForApproval(reportType, state, id));
+  return await updateReportForApproval(reportType, state, id);
 });
 
 //created a separate handler for quick approving reports when in dev tools
@@ -67,6 +67,6 @@ export const approveReportDev = handler(async (event) => {
 
   const useDevTools = await isFeatureFlagEnabled("devTools");
   return useDevTools
-    ? ok(await updateReportForApproval(reportType, state, id))
+    ? await updateReportForApproval(reportType, state, id)
     : ok();
 });
