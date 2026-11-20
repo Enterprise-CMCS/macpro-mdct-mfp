@@ -5,7 +5,7 @@ import { hasPermissions } from "../../utils/auth/authorization";
 import { parseSpecificReportParameters } from "../../utils/auth/parameters";
 import { getReportMetadata, putReportMetadata } from "../../storage/reports";
 // types
-import { ReportStatus, UserRoles } from "../../utils/types";
+import { ReportStatus, ReportType, State, UserRoles } from "../../utils/types";
 import {
   badRequest,
   forbidden,
@@ -13,19 +13,13 @@ import {
   notFound,
   ok,
 } from "../../utils/responses/response-lib";
+import { isFeatureFlagEnabled } from "../../utils/featureFlags/featureFlags";
 
-export const approveReport = handler(async (event) => {
-  const { allParamsValid, reportType, state, id } =
-    parseSpecificReportParameters(event);
-  if (!allParamsValid) {
-    return badRequest(error.NO_KEY);
-  }
-
-  // Return a 403 status if the user is not an admin.
-  if (!hasPermissions(event, [UserRoles.ADMIN, UserRoles.APPROVER])) {
-    return forbidden(error.UNAUTHORIZED);
-  }
-
+const updateReportForApproval = async (
+  reportType: ReportType,
+  state: State,
+  id: string
+) => {
   const currentReport = await getReportMetadata(reportType, state, id);
 
   if (!currentReport) {
@@ -46,4 +40,33 @@ export const approveReport = handler(async (event) => {
   }
 
   return ok(updatedReport);
+};
+
+export const approveReport = handler(async (event) => {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
+    return badRequest(error.NO_KEY);
+  }
+
+  // Return a 403 status if the user is not an admin.
+  if (!hasPermissions(event, [UserRoles.ADMIN, UserRoles.APPROVER])) {
+    return forbidden(error.UNAUTHORIZED);
+  }
+
+  return await updateReportForApproval(reportType, state, id);
+});
+
+//created a separate handler for quick approving reports when in dev tools
+export const approveReportDev = handler(async (event) => {
+  const { allParamsValid, reportType, state, id } =
+    parseSpecificReportParameters(event);
+  if (!allParamsValid) {
+    return badRequest(error.NO_KEY);
+  }
+
+  const useDevTools = await isFeatureFlagEnabled("devTools");
+  return useDevTools
+    ? await updateReportForApproval(reportType, state, id)
+    : ok();
 });
