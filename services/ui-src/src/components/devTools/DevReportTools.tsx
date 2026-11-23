@@ -3,9 +3,10 @@ import { useStore } from "utils";
 import { Button, Text } from "@chakra-ui/react";
 import { ReportContext } from "components/reports/ReportProvider";
 import { useContext, useState } from "react";
-import { ReportStatus } from "types";
+import { ReportRoute, ReportStatus } from "types";
 import { fillWorkPlanPage } from "./utils/wp";
 import { fillSARPage } from "./utils/sar";
+import { AnyObject } from "yup/lib/types";
 
 const saveReport = async (
   report: { reportType: string; state: string; id: string },
@@ -47,19 +48,19 @@ export const DevReportTools = () => {
     report?.formTemplate.flatRoutes?.forEach((route) => {
       newFieldData = {
         ...newFieldData,
-        ...fillWorkPlanPage(route, newFieldData),
+        ...getReportAnswers(route, newFieldData),
       };
     });
     await saveReport(report!, full_name!, newFieldData, updateReport);
     setLoading(false);
   };
 
-  const getReportAnswers = (reportType: string) => {
-    switch (reportType) {
+  const getReportAnswers = (route: ReportRoute, fieldData: AnyObject) => {
+    switch (report!.reportType) {
       case "WP":
-        return fillWorkPlanPage(currentPage!, report?.fieldData!);
+        return fillWorkPlanPage(route, fieldData);
       case "SAR":
-        return fillSARPage(currentPage!, report?.fieldData!);
+        return fillSARPage(route, fieldData);
     }
   };
 
@@ -72,13 +73,15 @@ export const DevReportTools = () => {
       <>
         <Text>Click the [Auto Fill Page] button to autofill the page</Text>
         <Button
-          onClick={() => {
-            saveReport(
+          onClick={async () => {
+            setLoading(true);
+            await saveReport(
               report!,
               full_name!,
-              getReportAnswers(report?.reportType!),
+              getReportAnswers(currentPage!, report?.fieldData!),
               updateReport
             );
+            setLoading(false);
           }}
           disabled={loading}
         >

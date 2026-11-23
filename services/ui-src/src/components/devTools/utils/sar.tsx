@@ -2,8 +2,12 @@ import { AnyObject, ReportRoute } from "types";
 import { getAnswerFromField } from "./reports";
 
 export const fillSARPage = (template: ReportRoute, fieldData: AnyObject) => {
-  switch (template.path) {
-    case "":
+  const page = template.path.split("/").at(-1);
+  console.log(page);
+  switch (page) {
+    case "state-or-territory-specific-initiatives":
+      console.log("template", template);
+      console.log("fieldData", fieldData);
       return;
     default:
       {
