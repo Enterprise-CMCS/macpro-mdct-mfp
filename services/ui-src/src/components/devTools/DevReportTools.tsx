@@ -2,7 +2,7 @@ import { useLocation } from "react-router";
 import { useStore } from "utils";
 import { Button, Text } from "@chakra-ui/react";
 import { ReportContext } from "components/reports/ReportProvider";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ReportStatus } from "types";
 import { fillWorkPlanPage } from "./utils/wp";
 
@@ -38,8 +38,10 @@ export const DevReportTools = () => {
     route.path.includes(pathname)
   );
   const { updateReport } = useContext(ReportContext);
+  const [loading, setLoading] = useState(false);
 
-  const fillReport = () => {
+  const fillReport = async () => {
+    setLoading(true);
     let newFieldData = structuredClone(report?.fieldData!);
     report?.formTemplate.flatRoutes?.forEach((route) => {
       newFieldData = {
@@ -47,7 +49,8 @@ export const DevReportTools = () => {
         ...fillWorkPlanPage(route, newFieldData),
       };
     });
-    saveReport(report!, full_name!, newFieldData, updateReport);
+    await saveReport(report!, full_name!, newFieldData, updateReport);
+    setLoading(false);
   };
 
   const getReportAnswers = (reportType: string) => {
@@ -74,6 +77,7 @@ export const DevReportTools = () => {
               updateReport
             );
           }}
+          disabled={loading}
         >
           Auto Fill Page
         </Button>
@@ -89,7 +93,9 @@ export const DevReportTools = () => {
           <Text>
             Click the [Fill Report] button to autofill the whole report
           </Text>
-          <Button onClick={fillReport}>Fill Report</Button>
+          <Button onClick={fillReport} disabled={loading}>
+            Fill Report
+          </Button>
         </>
       ) : (
         renderView()
