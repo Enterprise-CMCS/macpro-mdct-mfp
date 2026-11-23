@@ -1,14 +1,18 @@
 import { AnyObject, ReportRoute } from "types";
-import { getAnswerFromField } from "./reports";
+import { fillField, getAnswerFromField } from "./reports";
 
 export const fillSARPage = (template: ReportRoute, fieldData: AnyObject) => {
   const page = template.path.split("/").at(-1);
-  console.log(page);
   switch (page) {
     case "state-or-territory-specific-initiatives":
-      console.log("template", template);
-      console.log("fieldData", fieldData);
-      return;
+      const overlayFields =
+        "overlayForm" in template ? fillField(template.overlayForm.fields) : {};
+      const filledInit = (fieldData?.["initiative"] as [])?.map(
+        (fieldData: any) => ({ ...fieldData, ...overlayFields })
+      );
+      return {
+        ["initiative"]: [...(filledInit ?? [])],
+      };
     default:
       {
         if ("form" in template) {
