@@ -1,6 +1,9 @@
 import {
   approveReport,
+  approveReportDev,
   archiveReport,
+  deleteReport,
+  deleteReportsForState,
   getReport,
   getReportsByState,
   postReport,
@@ -11,6 +14,7 @@ import {
 // utils
 import { mockReportKeys, mockWPReport } from "utils/testing/setupTest";
 import { initAuthManager } from "utils/auth/authLifecycle";
+import { ReportMetadataShape, ReportType } from "types";
 
 const mockDelete = vi.fn();
 const mockGet = vi.fn();
@@ -70,5 +74,18 @@ describe("utils/requestMethods/report", () => {
   test("submitReport()", async () => {
     await submitReport(mockReportKeys);
     expect(mockPost).toHaveBeenCalledTimes(1);
+  });
+
+  test("approveReportDev()", async () => {
+    await approveReportDev(mockWPReport as unknown as ReportMetadataShape);
+    expect(mockPut).toHaveBeenCalledTimes(1);
+  });
+  test("deleteReport()", async () => {
+    await deleteReport(mockWPReport as unknown as ReportMetadataShape);
+    expect(mockDelete).toHaveBeenCalledTimes(1);
+  });
+  test("deleteReportsForState()", async () => {
+    await deleteReportsForState(ReportType.WP, "NJ");
+    expect(mockDelete).toHaveBeenCalledTimes(1);
   });
 });

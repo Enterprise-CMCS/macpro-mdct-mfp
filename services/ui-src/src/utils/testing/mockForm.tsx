@@ -784,6 +784,23 @@ export const mockTableRowPage = {
   status: true,
 };
 
+export const mockTransitionBenchmarks = {
+  ...mockTableRowPage,
+  drawerForm: {
+    fields: [
+      {
+        id: "mock-field-1",
+        props: {
+          choices: [
+            { id: "choice-1" },
+            { id: "choice-2", children: [{ id: "choice-child-1" }] },
+          ],
+        },
+      },
+    ],
+  },
+};
+
 export const mockRETTableRowPage = {
   name: "Number of HCBS participants admitted to a facility from the community, by length of stay and age group",
   path: "/sar/recruitment-enrollment-transitions/number-of-hcbs-participants-admitted-to-facility-from-community",
