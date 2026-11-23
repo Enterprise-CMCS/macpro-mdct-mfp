@@ -4,6 +4,10 @@ export const getAnswerFromField = (field: FormField | FormLayoutElement) => {
   switch (field.type) {
     case "text":
     case "textarea":
+      if ("validation" in field) {
+        if (field.validation === "email") return "mock@mail.com";
+        else if (field.validation === "url") return "https://www.test.com";
+      }
       return "mock text";
     case "number":
       return 1234;

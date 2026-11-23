@@ -5,6 +5,7 @@ import { ReportContext } from "components/reports/ReportProvider";
 import { useContext, useState } from "react";
 import { ReportStatus } from "types";
 import { fillWorkPlanPage } from "./utils/wp";
+import { fillSARPage } from "./utils/sar";
 
 const saveReport = async (
   report: { reportType: string; state: string; id: string },
@@ -57,6 +58,8 @@ export const DevReportTools = () => {
     switch (reportType) {
       case "WP":
         return fillWorkPlanPage(currentPage!, report?.fieldData!);
+      case "SAR":
+        return fillSARPage(currentPage!, report?.fieldData!);
     }
   };
 
