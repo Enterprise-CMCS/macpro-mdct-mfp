@@ -149,9 +149,7 @@ export const getReportFormTemplate = async ({
 export const deleteReportFromDatabase = async ({
   reportType,
   state,
-  formTemplateId,
   fieldDataId,
-  versionNumber,
   id,
 }: Pick<
   ReportMetadataShape,
@@ -168,21 +166,6 @@ export const deleteReportFromDatabase = async ({
     new DeleteCommand({
       TableName: table,
       Key: { state, id },
-    })
-  );
-  await dynamoClient.send(
-    new DeleteCommand({
-      TableName: formTemplateVersionTable,
-      Key: { reportType, versionNumber },
-      ExpressionAttributeValues: {
-        ":id": id,
-      },
-    })
-  );
-  await s3Client.send(
-    new DeleteObjectCommand({
-      Bucket: bucket,
-      Key: `formTemplates/${formTemplateId}.json`,
     })
   );
   // need to also delete fieldData form too
