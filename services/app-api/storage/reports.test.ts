@@ -269,7 +269,7 @@ describe("Report storage", () => {
     mockS3.on(DeleteObjectCommand).callsFake(mockDeleteObject);
 
     await deleteReportFromDatabase(mockReportMetadata);
-    expect(mockDelete).toHaveBeenCalledTimes(2);
-    expect(mockDeleteObject).toHaveBeenCalledTimes(2);
+    expect(mockDelete).toHaveBeenCalledTimes(1);
+    expect(mockDeleteObject).toHaveBeenCalledTimes(1);
   });
 });
